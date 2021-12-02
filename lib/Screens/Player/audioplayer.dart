@@ -98,10 +98,8 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     try {
-      print(" Audio Test 1");
       super.initState();
       main();
-      print(" Audio Test 2");
       response = widget.songsList;
       globalIndex = widget.index;
       if (globalIndex == -1) {
@@ -118,19 +116,18 @@ class _PlayScreenState extends State<PlayScreen> {
       } else {
         offline = widget.offline!;
       }
-      print(" Audio Test 3");
 
+      if (!audioHandler.playbackState.value.playing) audioHandler.stop();
       fromMiniplayer = widget.fromMiniplayer;
       if (!fromMiniplayer) {
         if (offline) {
+          print(" TESTING 1:$response");
           fromDownloads ? setDownValues(response) : setOffValues(response);
         } else {
           setValues(response);
           updateNplay();
         }
       }
-
-      print(" Audio Test 4");
     } catch (e) {
       print(" ERROR In audio $e");
     }
@@ -1337,12 +1334,12 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.width * 0.9,
+      height: widget.width * 0.8,
       child: Align(
         alignment: Alignment.topCenter,
         child: SizedBox(
-          height: widget.width * 0.85,
-          width: widget.width * 0.85,
+          height: widget.width * 0.75,
+          width: widget.width * 0.75,
           child: Hero(
             tag: 'currentArtwork',
             child: FlipCard(
@@ -1548,8 +1545,8 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                   .startsWith('file')
                               ? Image(
                                   fit: BoxFit.cover,
-                                  height: widget.width * 0.85,
-                                  width: widget.width * 0.85,
+                                  height: widget.width * 0.75,
+                                  width: widget.width * 0.75,
                                   gaplessPlayback: true,
                                   image: FileImage(
                                     File(
@@ -1827,7 +1824,7 @@ class NameNControls extends StatelessWidget {
 
             /// Final row starts from here
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              padding: const EdgeInsets.only(left: 5.0, right: 5, bottom: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
