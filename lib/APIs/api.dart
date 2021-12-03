@@ -11,11 +11,11 @@ class SaavnAPI {
   List preferredLanguages = Hive.box('settings')
       .get('preferredLanguage', defaultValue: ['Hindi']) as List;
   Map<String, String> headers = {};
-  String baseUrl = 'www.jiosaavn.com';
-  String apiStr = '/api.php?_format=json&_marker=0&api_version=4&ctx=web6dot0';
+  String baseUrl = 'https://api2.yogi-tunes.com/';
+  String apiStr = 'api/';
   Box settingsBox = Hive.box('settings');
   Map<String, String> endpoints = {
-    'homeData': '__call=webapi.getLaunchData',
+    'homeData': 'browse/',
     'topSearches': '__call=content.getTopSearches',
     'fromToken': '__call=webapi.get',
     'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -44,28 +44,33 @@ class SaavnAPI {
     if (!usev4) {
       url = Uri.https(
         baseUrl,
-        '$apiStr&$params'.replaceAll('&api_version=4', ''),
+        '$apiStr$params',
       );
     } else {
-      url = Uri.https(baseUrl, '$apiStr&$params');
+      url = Uri.parse('$baseUrl$apiStr$params');
+      print("URL ::: $url");
     }
-    preferredLanguages =
-        preferredLanguages.map((lang) => lang.toLowerCase()).toList();
-    final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
-    headers = {'cookie': languageHeader, 'Accept': '*/*'};
+    // preferredLanguages =
+    //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
+    // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
+    headers = {
+      'Authorization': 'Bearer QVzcc75IYnDJ9DPrQb9QwtnzPxvp6yYSIksy3zUN0ztyBBQGgVvUb4IIgZAY', 'Accept': '*/*'
+    };
 
-    if (useProxy && settingsBox.get('useProxy', defaultValue: false) as bool) {
-      final proxyIP = settingsBox.get('proxyIp');
-      final proxyPort = settingsBox.get('proxyPort');
-      final HttpClient httpClient = HttpClient();
-      httpClient.findProxy = (uri) {
-        return 'PROXY $proxyIP:$proxyPort;';
-      };
-      httpClient.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => Platform.isAndroid;
-      final IOClient myClient = IOClient(httpClient);
-      return myClient.get(url, headers: headers);
-    }
+    print("URL ::: $url");
+
+    // if (useProxy && settingsBox.get('useProxy', defaultValue: false) as bool) {
+    //   final proxyIP = settingsBox.get('proxyIp');
+    //   final proxyPort = settingsBox.get('proxyPort');
+    //   final HttpClient httpClient = HttpClient();
+    //   httpClient.findProxy = (uri) {
+    //     return 'PROXY $proxyIP:$proxyPort;';
+    //   };
+    //   httpClient.badCertificateCallback =
+    //       (X509Certificate cert, String host, int port) => Platform.isAndroid;
+    //   final IOClient myClient = IOClient(httpClient);
+    //   return myClient.get(url, headers: headers);
+    // }
     return get(url, headers: headers).onError((error, stackTrace) {
       return Response('', 404);
     });

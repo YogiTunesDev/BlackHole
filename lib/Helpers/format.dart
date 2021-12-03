@@ -488,8 +488,8 @@ class FormatResponse {
 
   static Future<Map> formatHomePageData(Map data) async {
     try {
-      data['new_trending'] = await formatSongsInList(
-        data['new_trending'] as List,
+      data['Trending_albums'] = await formatSongsInList(
+        data['Trending_albums'] as List,
         fetchDetails: false,
       );
       data['new_albums'] = await formatSongsInList(
@@ -521,13 +521,16 @@ class FormatResponse {
         );
       }
       data['collections'] = [
-        'new_trending',
-        'charts',
-        'new_albums',
-        'top_playlists',
-        'radio',
-        'city_mod',
-        'artist_recos',
+        'My_recently_played_songs',
+        'Featured_albums',
+        'Trending_albums',
+        'Trending_songs',
+        'Popular_playlists',
+        'Popular_yoga_playlists',
+        'New releases',
+        'Recently_added',
+        'Browse_by_activity',
+        'Browse_by_genres_&_moods',
         ...promoList
       ];
       data['collections_temp'] = promoListTemp;
