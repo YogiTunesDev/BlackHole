@@ -488,52 +488,61 @@ class FormatResponse {
 
   static Future<Map> formatHomePageData(Map data) async {
     try {
-      data['Trending_albums'] = await formatSongsInList(
-        data['Trending_albums'] as List,
-        fetchDetails: false,
-      );
-      data['new_albums'] = await formatSongsInList(
-        data['new_albums'] as List,
-        fetchDetails: false,
-      );
-      if (data['city_mod'] != null) {
-        data['city_mod'] = await formatSongsInList(
-          data['city_mod'] as List,
-          fetchDetails: true,
-        );
+      // data['Trending_albums'] = await formatSongsInList(
+      //   data['Trending_albums'] as List,
+      //   fetchDetails: false,
+      // );
+      // data['new_albums'] = await formatSongsInList(
+      //   data['new_albums'] as List,
+      //   fetchDetails: false,
+      // );
+      // if (data['city_mod'] != null) {
+      //   data['city_mod'] = await formatSongsInList(
+      //     data['city_mod'] as List,
+      //     fetchDetails: true,
+      //   );
+      // }
+      // final List promoList = [];
+      // final List promoListTemp = [];
+      // data['modules'].forEach((k, v) {
+      //   if (k.startsWith('promo') as bool) {
+      //     if (data[k][0]['type'] == 'song' &&
+      //         (data[k][0]['mini_obj'] as bool? ?? false)) {
+      //       promoListTemp.add(k.toString());
+      //     } else {
+      //       promoList.add(k.toString());
+      //     }
+      //   }
+      // });
+      // for (int i = 0; i < promoList.length; i++) {
+      //   data[promoList[i]] = await formatSongsInList(
+      //     data[promoList[i]] as List,
+      //     fetchDetails: false,
+      //   );
+      // }
+      final List albumList = [];
+      for (var e in data.entries) {
+ Map lstMap = {
+          "name":e.key,
+          "value":e.value,
+        };
+        albumList.add(lstMap);
       }
-      final List promoList = [];
-      final List promoListTemp = [];
-      data['modules'].forEach((k, v) {
-        if (k.startsWith('promo') as bool) {
-          if (data[k][0]['type'] == 'song' &&
-              (data[k][0]['mini_obj'] as bool? ?? false)) {
-            promoListTemp.add(k.toString());
-          } else {
-            promoList.add(k.toString());
-          }
-        }
-      });
-      for (int i = 0; i < promoList.length; i++) {
-        data[promoList[i]] = await formatSongsInList(
-          data[promoList[i]] as List,
-          fetchDetails: false,
-        );
-      }
+      
       data['collections'] = [
-        'My_recently_played_songs',
-        'Featured_albums',
-        'Trending_albums',
-        'Trending_songs',
-        'Popular_playlists',
-        'Popular_yoga_playlists',
-        'New releases',
-        'Recently_added',
-        'Browse_by_activity',
-        'Browse_by_genres_&_moods',
-        ...promoList
+        // 'My recently played songs',
+        // 'Featured albums',
+        // 'Trending albums',
+        // 'Trending songs',
+        // 'Popular playlists',
+        // 'Popular yoga playlists',
+        // 'New releases',
+        // 'Recently added',
+        // 'Browse by activity',
+        // 'Browse by genres & moods',
+        ...albumList
       ];
-      data['collections_temp'] = promoListTemp;
+      // data['collections_temp'] = promoListTemp;
     } catch (e) {
       log('Error in formatHomePageData: $e');
     }

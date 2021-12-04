@@ -54,7 +54,9 @@ class SaavnAPI {
     //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
     // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
     headers = {
-      'Authorization': 'Bearer QVzcc75IYnDJ9DPrQb9QwtnzPxvp6yYSIksy3zUN0ztyBBQGgVvUb4IIgZAY', 'Accept': '*/*'
+      'Authorization':
+          'Bearer QVzcc75IYnDJ9DPrQb9QwtnzPxvp6yYSIksy3zUN0ztyBBQGgVvUb4IIgZAY',
+      'Accept': '*/*'
     };
 
     print("URL ::: $url");
@@ -82,7 +84,7 @@ class SaavnAPI {
       final res = await getResponse(endpoints['homeData']!);
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
-        result = await FormatResponse.formatHomePageData(data);
+        result = await FormatResponse.formatHomePageData(data['data'] as Map);
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
