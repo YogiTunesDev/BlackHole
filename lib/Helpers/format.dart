@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/Helpers/home_model.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
 
@@ -486,7 +487,7 @@ class FormatResponse {
     }
   }
 
-  static Future<Map> formatHomePageData(Map data) async {
+  static Future<HomeResponse?> formatHomePageData(HomeResponse? data) async {
     try {
       // data['Trending_albums'] = await formatSongsInList(
       //   data['Trending_albums'] as List,
@@ -520,29 +521,42 @@ class FormatResponse {
       //     fetchDetails: false,
       //   );
       // }
-      final List albumList = [];
-      for (var e in data.entries) {
- Map lstMap = {
-          "name":e.key,
-          "value":e.value,
-        };
-        albumList.add(lstMap);
-      }
-      
-      data['collections'] = [
-        // 'My recently played songs',
-        // 'Featured albums',
-        // 'Trending albums',
-        // 'Trending songs',
-        // 'Popular playlists',
-        // 'Popular yoga playlists',
-        // 'New releases',
-        // 'Recently added',
-        // 'Browse by activity',
-        // 'Browse by genres & moods',
-        ...albumList
-      ];
+
+//       final List albumList = [];
+//       for (var e in data.entries) {
+//  Map lstMap = {
+//           "name":e.key,
+//           "value":e.value,
+//         };
+//         albumList.add(lstMap);
+//       }
+
+//       data['collections'] = [
+//         // 'My recently played songs',
+//         // 'Featured albums',
+//         // 'Trending albums',
+//         // 'Trending songs',
+//         // 'Popular playlists',
+//         // 'Popular yoga playlists',
+//         // 'New releases',
+//         // 'Recently added',
+//         // 'Browse by activity',
+//         // 'Browse by genres & moods',
+//         ...albumList
+//       ];
       // data['collections_temp'] = promoListTemp;
+
+      List list = [
+        data!.data!.featuredAlbums,
+        data.data!.trendingAlbums,
+        data.data!.trendingSongs,
+        data.data!.popularPlaylists,
+        data.data!.popularYogaPlaylists,
+        data.data!.newReleases,
+        data.data!.recentlyAdded,
+        data.data!.browseByActivity,
+        data.data!.browseByGenresMoods,
+      ];
     } catch (e) {
       log('Error in formatHomePageData: $e');
     }

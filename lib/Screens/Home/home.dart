@@ -705,10 +705,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      TopCharts(
-                        pageController: _pageController,
-                      ),
-                      const YouTube(),
+                      Container(), //Container(),
+                      // TopCharts(
+                      //   pageController: _pageController,
+                      // ),
+                      // const YouTube(),
                       const LibraryPage(),
                     ],
                   ),
@@ -739,15 +740,15 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     SalomonBottomBarItem(
-                      icon: const Icon(Icons.trending_up_rounded),
-                      title: Text(AppLocalizations.of(context)!.spotifyCharts),
+                      icon: const Icon(Icons.search),
+                      title: Text(AppLocalizations.of(context)!.search),
                       selectedColor: Theme.of(context).colorScheme.secondary,
                     ),
-                    SalomonBottomBarItem(
-                      icon: const Icon(MdiIcons.youtube),
-                      title: Text(AppLocalizations.of(context)!.youTube),
-                      selectedColor: Theme.of(context).colorScheme.secondary,
-                    ),
+                    // SalomonBottomBarItem(
+                    //   icon: const Icon(MdiIcons.youtube),
+                    //   title: Text(AppLocalizations.of(context)!.youTube),
+                    //   selectedColor: Theme.of(context).colorScheme.secondary,
+                    // ),
                     SalomonBottomBarItem(
                       icon: const Icon(Icons.my_library_music_rounded),
                       title: Text(AppLocalizations.of(context)!.library),

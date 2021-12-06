@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:blackhole/Helpers/format.dart';
+import 'package:blackhole/Helpers/home_model.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -73,18 +74,19 @@ class SaavnAPI {
     //   final IOClient myClient = IOClient(httpClient);
     //   return myClient.get(url, headers: headers);
     // }
+
     return get(url, headers: headers).onError((error, stackTrace) {
       return Response('', 404);
     });
   }
 
-  Future<Map> fetchHomePageData() async {
-    Map result = {};
+  Future<HomeResponse?> fetchHomePageData() async {
+    HomeResponse? result;
     try {
       final res = await getResponse(endpoints['homeData']!);
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
-        result = await FormatResponse.formatHomePageData(data['data'] as Map);
+        result = HomeResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
