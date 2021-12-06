@@ -98,7 +98,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
             : MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: apiLoading
-          ? CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : data != null
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
