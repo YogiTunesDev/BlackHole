@@ -61,7 +61,7 @@ class _SongsListPageState extends State<SongsListPage> {
     loading = true;
     switch (widget.listItem['type'].toString()) {
       case 'songs':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchSongSearchResults(
           searchQuery: widget.listItem['id'].toString(),
           page: page,
@@ -75,7 +75,7 @@ class _SongsListPageState extends State<SongsListPage> {
         });
         break;
       case 'album':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchAlbumSongs(widget.listItem['id'].toString())
             .then((value) {
           setState(() {
@@ -85,7 +85,7 @@ class _SongsListPageState extends State<SongsListPage> {
         });
         break;
       case 'playlist':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchPlaylistSongs(widget.listItem['id'].toString())
             .then((value) {
           setState(() {

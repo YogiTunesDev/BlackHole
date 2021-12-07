@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:blackhole/Helpers/format.dart';
-import 'package:blackhole/Helpers/home_model.dart';
+import 'package:blackhole/model/home_model.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
-class SaavnAPI {
+class YogitunesAPI {
   List preferredLanguages = Hive.box('settings')
       .get('preferredLanguage', defaultValue: ['Hindi']) as List;
   Map<String, String> headers = {};

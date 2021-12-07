@@ -42,7 +42,7 @@ class SongUrlHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SaavnAPI().getSongFromToken(token, type).then((value) {
+    YogitunesAPI().getSongFromToken(token, type).then((value) {
       if (type == 'song') {
         Navigator.push(
           context,

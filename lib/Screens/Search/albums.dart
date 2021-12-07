@@ -56,7 +56,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
     loading = true;
     switch (widget.type) {
       case 'Playlists':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchAlbums(
           searchQuery: widget.query,
           type: 'playlist',
@@ -72,7 +72,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
         });
         break;
       case 'Albums':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchAlbums(
           searchQuery: widget.query,
           type: 'album',
@@ -88,7 +88,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
         });
         break;
       case 'Artists':
-        SaavnAPI()
+        YogitunesAPI()
             .fetchAlbums(
           searchQuery: widget.query,
           type: 'artist',

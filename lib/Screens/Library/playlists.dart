@@ -628,7 +628,7 @@ Future<void> fetchPlaylists(
                             }
                             try {
                               final List result =
-                                  await SaavnAPI().fetchTopSearchResult(
+                                  await YogitunesAPI().fetchTopSearchResult(
                                 '$trackName by $trackArtist',
                               );
                               addMapToPlaylist(
@@ -734,7 +734,7 @@ Future<void> fetchPlaylists(
             yield {'done': ++_done, 'name': ''};
           }
           try {
-            final List result = await SaavnAPI()
+            final List result = await YogitunesAPI()
                 .fetchTopSearchResult('$trackName by $trackArtist');
             addMapToPlaylist(playName, result[0] as Map);
           } catch (e) {

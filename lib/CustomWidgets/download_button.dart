@@ -305,7 +305,8 @@ class _AlbumDownloadButtonState extends State<AlbumDownloadButton> {
                           '${AppLocalizations.of(context)!.downingAlbum} "${widget.albumName}"',
                         );
 
-                        data = await SaavnAPI().fetchAlbumSongs(widget.albumId);
+                        data = await YogitunesAPI()
+                            .fetchAlbumSongs(widget.albumId);
                         for (final items in data) {
                           down.prepareDownload(
                             context,

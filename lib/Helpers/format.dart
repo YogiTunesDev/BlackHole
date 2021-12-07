@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/Helpers/home_model.dart';
+import 'package:blackhole/model/home_model.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
 
@@ -593,8 +593,8 @@ class FormatResponse {
               Map cachedDetails =
                   Hive.box('cache').get(item['id'], defaultValue: {}) as Map;
               if (cachedDetails.isEmpty) {
-                cachedDetails =
-                    await SaavnAPI().fetchSongDetails(item['id'].toString());
+                cachedDetails = await YogitunesAPI()
+                    .fetchSongDetails(item['id'].toString());
                 Hive.box('cache').put(cachedDetails['id'], cachedDetails);
               }
               list[i] = cachedDetails;

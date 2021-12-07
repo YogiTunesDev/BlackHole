@@ -44,7 +44,7 @@ class SearchAddPlaylist {
       }
       try {
         final List result =
-            await SaavnAPI().fetchTopSearchResult(trackName!.split('|')[0]);
+            await YogitunesAPI().fetchTopSearchResult(trackName!.split('|')[0]);
         addMapToPlaylist(playName, result[0] as Map);
       } catch (e) {
         // print('Error in $_done: $e');

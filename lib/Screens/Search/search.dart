@@ -69,15 +69,15 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> fetchResults() async {
     // this fetches top 5 songs results
-    final List songResults = await SaavnAPI().fetchSongSearchResults(
+    final List songResults = await YogitunesAPI().fetchSongSearchResults(
       searchQuery: query == '' ? widget.query : query,
       count: 5,
     );
     if (songResults.isNotEmpty) searchedData['Songs'] = songResults;
     fetched = true;
     // this fetches albums, playlists, artists, etc
-    final List<Map> value =
-        await SaavnAPI().fetchSearchResults(query == '' ? widget.query : query);
+    final List<Map> value = await YogitunesAPI()
+        .fetchSearchResults(query == '' ? widget.query : query);
 
     searchedData.addEntries(value[0].entries);
     position = value[1];
@@ -89,7 +89,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> getTrendingSearch() async {
-    topSearch.value = await SaavnAPI().getTopSearches();
+    topSearch.value = await YogitunesAPI().getTopSearches();
   }
 
   Widget nothingFound(BuildContext context) {

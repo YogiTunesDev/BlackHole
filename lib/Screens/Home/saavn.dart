@@ -1,15 +1,8 @@
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/CustomWidgets/horizontal_albumlist.dart';
-import 'package:blackhole/CustomWidgets/snackbar.dart';
-import 'package:blackhole/Helpers/format.dart';
-import 'package:blackhole/Helpers/home_model.dart';
-import 'package:blackhole/Screens/Common/song_list.dart';
-import 'package:blackhole/Screens/Player/audioplayer.dart';
-import 'package:blackhole/Screens/Search/artists.dart';
+import 'package:blackhole/model/home_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 
 bool fetched = false;
@@ -38,8 +31,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
   Future<void> getHomePageData() async {
     apiLoading = true;
     setState(() {});
-    HomeResponse? recievedData = await SaavnAPI().fetchHomePageData();
-    print("RESPONSE DATA ::::: $recievedData");
+    final HomeResponse? recievedData = await YogitunesAPI().fetchHomePageData();
+    // print("RESPONSE DATA ::::: $recievedData");
 
     if (recievedData!.data != null) {
       // Hive.box('cache').put('homepage', recievedData);
@@ -98,16 +91,16 @@ class _SaavnHomePageState extends State<SaavnHomePage>
             : MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: apiLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : data != null
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (data!.data!.popularYogaPlaylists != null)
-                      if (data!.data!.popularYogaPlaylists!.length != 0)
-                        HeaderTitle(title: "Yoga Playlist"),
+                      if (data!.data!.popularYogaPlaylists!.isNotEmpty)
+                        const HeaderTitle(title: 'Yoga Playlists'),
                     if (data!.data!.popularYogaPlaylists != null)
-                      if (data!.data!.popularYogaPlaylists!.length != 0)
+                      if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -116,14 +109,12 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.popularYogaPlaylists!.length,
                             itemBuilder: (context, index) {
-                              PopularPlaylist item =
+                              final PopularPlaylist item =
                                   data!.data!.popularYogaPlaylists![index];
                               return SongItem(
-                                itemImage: item.quadImages!.length != 0
-                                    ? (item.quadImages![0].imageUrl! +
-                                        "/" +
-                                        item.quadImages![0].image!)
-                                    : "",
+                                itemImage: item.quadImages!.isNotEmpty
+                                    ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                    : '',
                                 itemName: item.name!,
                                 isRound: true,
                               );
@@ -131,10 +122,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                           ),
                         ),
                     if (data!.data!.browseByActivity != null)
-                      if (data!.data!.browseByActivity!.length != 0)
-                        HeaderTitle(title: "Other Activities"),
+                      if (data!.data!.browseByActivity!.isNotEmpty)
+                        const HeaderTitle(title: 'Other Activities'),
                     if (data!.data!.browseByActivity != null)
-                      if (data!.data!.browseByActivity!.length != 0)
+                      if (data!.data!.browseByActivity!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -143,10 +134,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.browseByActivity!.length,
                             itemBuilder: (context, index) {
-                              BrowseBy item =
+                              final BrowseBy item =
                                   data!.data!.browseByActivity![index];
                               return SongItem(
-                                itemImage: "",
+                                itemImage: '',
                                 itemName: item.name!,
                                 isRound: true,
                               );
@@ -154,18 +145,16 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                           ),
                         ),
                     if (data!.data!.featuredAlbums != null)
-                      if (data!.data!.featuredAlbums!.length != 0)
+                      if (data!.data!.featuredAlbums!.isNotEmpty)
                         if (data!.data!.featuredAlbums![0].albumsClean != null)
-                          if (data!.data!.featuredAlbums![0].albumsClean!
-                                  .length !=
-                              0)
-                            HeaderTitle(title: "Featured Albums"),
+                          if (data!
+                              .data!.featuredAlbums![0].albumsClean!.isNotEmpty)
+                            const HeaderTitle(title: 'Featured Albums'),
                     if (data!.data!.featuredAlbums != null)
-                      if (data!.data!.featuredAlbums!.length != 0)
+                      if (data!.data!.featuredAlbums!.isNotEmpty)
                         if (data!.data!.featuredAlbums![0].albumsClean != null)
-                          if (data!.data!.featuredAlbums![0].albumsClean!
-                                  .length !=
-                              0)
+                          if (data!
+                              .data!.featuredAlbums![0].albumsClean!.isNotEmpty)
                             SizedBox(
                               height: boxSize / 2 + 10,
                               child: ListView.builder(
@@ -176,14 +165,12 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemCount: data!.data!.featuredAlbums![0]
                                     .albumsClean!.length,
                                 itemBuilder: (context, index) {
-                                  AlbumsClean item = data!.data!
+                                  final AlbumsClean item = data!.data!
                                       .featuredAlbums![0].albumsClean![index];
                                   return SongItem(
                                     itemImage: item.cover != null
-                                        ? (item.cover!.imgUrl! +
-                                            "/" +
-                                            item.cover!.image!)
-                                        : "",
+                                        ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
+                                        : '',
                                     itemName: item.name!,
                                     isRound: true,
                                   );
@@ -191,10 +178,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               ),
                             ),
                     if (data!.data!.popularPlaylists != null)
-                      if (data!.data!.popularPlaylists!.length != 0)
-                        HeaderTitle(title: "Popular Playlists"),
+                      if (data!.data!.popularPlaylists!.isNotEmpty)
+                        const HeaderTitle(title: 'Popular Playlists'),
                     if (data!.data!.popularPlaylists != null)
-                      if (data!.data!.popularPlaylists!.length != 0)
+                      if (data!.data!.popularPlaylists!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -203,16 +190,14 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.popularPlaylists!.length,
                             itemBuilder: (context, index) {
-                              PopularPlaylist item =
+                              final PopularPlaylist item =
                                   data!.data!.popularPlaylists![index];
                               return SongItem(
                                 itemImage: item.quadImages != null
-                                    ? item.quadImages!.length > 0
-                                        ? (item.quadImages![0].imageUrl! +
-                                            "/" +
-                                            item.quadImages![0].image!)
-                                        : ""
-                                    : "",
+                                    ? item.quadImages!.isNotEmpty
+                                        ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                        : ''
+                                    : '',
                                 itemName: item.name!,
                                 isRound: true,
                               );
@@ -220,10 +205,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                           ),
                         ),
                     if (data!.data!.newReleases != null)
-                      if (data!.data!.newReleases!.length != 0)
-                        HeaderTitle(title: "New Releases"),
+                      if (data!.data!.newReleases!.isNotEmpty)
+                        const HeaderTitle(title: 'New Releases'),
                     if (data!.data!.newReleases != null)
-                      if (data!.data!.newReleases!.length != 0)
+                      if (data!.data!.newReleases!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -232,13 +217,12 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.newReleases!.length,
                             itemBuilder: (context, index) {
-                              NewRelease item = data!.data!.newReleases![index];
+                              final NewRelease item =
+                                  data!.data!.newReleases![index];
                               return SongItem(
                                 itemImage: item.cover != null
-                                    ? item.cover!.imgUrl! +
-                                        "/" +
-                                        item.cover!.image!
-                                    : "",
+                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                    : '',
                                 itemName: item.name!,
                                 isRound: true,
                               );
@@ -246,10 +230,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                           ),
                         ),
                     if (data!.data!.trendingSongs != null)
-                      if (data!.data!.trendingSongs!.length != 0)
-                        HeaderTitle(title: "Popular Songs"),
+                      if (data!.data!.trendingSongs!.isNotEmpty)
+                        const HeaderTitle(title: 'Popular Songs'),
                     if (data!.data!.trendingSongs != null)
-                      if (data!.data!.trendingSongs!.length != 0)
+                      if (data!.data!.trendingSongs!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -258,25 +242,22 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.trendingSongs!.length,
                             itemBuilder: (context, index) {
-                              TrendingAlbum item =
+                              final TrendingAlbum item =
                                   data!.data!.trendingSongs![index];
                               return SongItem(
                                 itemImage: item.cover != null
-                                    ? item.cover!.imgUrl! +
-                                        "/" +
-                                        item.cover!.image!
-                                    : "",
+                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                    : '',
                                 itemName: item.name!,
-                                isRound: false,
                               );
                             },
                           ),
                         ),
                     if (data!.data!.trendingAlbums != null)
-                      if (data!.data!.trendingAlbums!.length != 0)
-                        HeaderTitle(title: "Popular Songs"),
+                      if (data!.data!.trendingAlbums!.isNotEmpty)
+                        const HeaderTitle(title: 'Popular Album'),
                     if (data!.data!.trendingAlbums != null)
-                      if (data!.data!.trendingAlbums!.length != 0)
+                      if (data!.data!.trendingAlbums!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -285,25 +266,23 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.trendingAlbums!.length,
                             itemBuilder: (context, index) {
-                              TrendingAlbum item =
+                              final TrendingAlbum item =
                                   data!.data!.trendingAlbums![index];
                               return SongItem(
                                 itemImage: item.cover != null
-                                    ? item.cover!.imgUrl! +
-                                        "/" +
-                                        item.cover!.image!
-                                    : "",
+                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                    : '',
                                 itemName: item.name!,
-                                isRound: false,
+                                isRound: true,
                               );
                             },
                           ),
                         ),
                     if (data!.data!.browseByGenresMoods != null)
-                      if (data!.data!.browseByGenresMoods!.length != 0)
-                        HeaderTitle(title: "Genres & Moods"),
+                      if (data!.data!.browseByGenresMoods!.isNotEmpty)
+                        const HeaderTitle(title: 'Genres & Moods'),
                     if (data!.data!.browseByGenresMoods != null)
-                      if (data!.data!.browseByGenresMoods!.length != 0)
+                      if (data!.data!.browseByGenresMoods!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
@@ -312,10 +291,10 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: data!.data!.browseByGenresMoods!.length,
                             itemBuilder: (context, index) {
-                              BrowseBy item =
+                              final BrowseBy item =
                                   data!.data!.browseByGenresMoods![index];
                               return SongItem(
-                                itemImage: "",
+                                itemImage: '',
                                 itemName: item.name!,
                                 isRound: true,
                               );
@@ -473,7 +452,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     //                     //     AppLocalizations.of(context)!.connectingRadio,
     //                     //     duration: const Duration(seconds: 2),
     //                     //   );
-    //                     //   SaavnAPI()
+    //                     //   YogitunesAPI()
     //                     //       .createRadio(
     //                     //     item['more_info']['featured_station_type']
     //                     //                 .toString() ==
@@ -485,7 +464,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     //                     //   )
     //                     //       .then((value) {
     //                     //     if (value != null) {
-    //                     //       SaavnAPI().getRadioSongs(value).then(
+    //                     //       YogitunesAPI().getRadioSongs(value).then(
     //                     //             (value) => Navigator.push(
     //                     //               context,
     //                     //               PageRouteBuilder(
@@ -830,7 +809,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     //     //                         AppLocalizations.of(context)!.connectingRadio,
     //     //                         duration: const Duration(seconds: 2),
     //     //                       );
-    //     //                       SaavnAPI()
+    //     //                       YogitunesAPI()
     //     //                           .createRadio(
     //     //                         item['more_info']['featured_station_type']
     //     //                                     .toString() ==
@@ -844,7 +823,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     //     //                       )
     //     //                           .then((value) {
     //     //                         if (value != null) {
-    //     //                           SaavnAPI().getRadioSongs(value).then(
+    //     //                           YogitunesAPI().getRadioSongs(value).then(
     //     //                                 (value) => Navigator.push(
     //     //                                   context,
     //     //                                   PageRouteBuilder(
@@ -1028,7 +1007,7 @@ class HeaderTitle extends StatelessWidget {
           InkWell(
             onTap: viewAllOnTap,
             child: const Text(
-              "View All",
+              'View All',
               textAlign: TextAlign.center,
               softWrap: false,
               overflow: TextOverflow.ellipsis,

@@ -41,7 +41,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
   Widget build(BuildContext context) {
     if (!status) {
       status = true;
-      SaavnAPI()
+      YogitunesAPI()
           .fetchArtistSongs(
         artistToken: widget.data['artistToken'].toString(),
         category: category,
