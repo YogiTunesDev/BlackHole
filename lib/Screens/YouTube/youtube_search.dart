@@ -162,30 +162,30 @@ class _YouTubeSearchPageState extends State<YouTubeSearchPage> {
                                               setState(() {
                                                 done = true;
                                               });
-                                              response == null
-                                                  ? ShowSnackBar().showSnackBar(
-                                                      context,
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!
-                                                          .ytLiveAlert,
-                                                    )
-                                                  : Navigator.push(
-                                                      context,
-                                                      PageRouteBuilder(
-                                                        opaque: false,
-                                                        pageBuilder:
-                                                            (_, __, ___) =>
-                                                                PlayScreen(
-                                                          fromMiniplayer: false,
-                                                          songsList: [response],
-                                                          index: 0,
-                                                          offline: false,
-                                                          fromDownloads: false,
-                                                          recommend: false,
-                                                        ),
-                                                      ),
-                                                    );
+                                              // response == null
+                                              //     ? ShowSnackBar().showSnackBar(
+                                              //         context,
+                                              //         AppLocalizations.of(
+                                              //           context,
+                                              //         )!
+                                              //             .ytLiveAlert,
+                                              //       )
+                                              //     : Navigator.push(
+                                              //         context,
+                                              //         PageRouteBuilder(
+                                              //           opaque: false,
+                                              //           pageBuilder:
+                                              //               (_, __, ___) =>
+                                              //                   PlayScreen(
+                                              //             fromMiniplayer: false,
+                                              //             songsList: [response],
+                                              //             index: 0,
+                                              //             offline: false,
+                                              //             fromDownloads: false,
+                                              //             recommend: false,
+                                              //           ),
+                                              //         ),
+                                              //       );
                                             },
                                             child: Column(
                                               children: [

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeResponse {
@@ -75,6 +76,7 @@ class Data {
     this.featuredAlbums,
     this.trendingAlbums,
     this.trendingSongs,
+    this.trendingSongsNew,
     this.popularPlaylists,
     this.popularYogaPlaylists,
     this.newReleases,
@@ -87,6 +89,7 @@ class Data {
   final List<FeaturedAlbum>? featuredAlbums;
   final List<TrendingAlbum>? trendingAlbums;
   final List<TrendingAlbum>? trendingSongs;
+  final List<SongItemModel>? trendingSongsNew;
   final List<PopularPlaylist>? popularPlaylists;
   final List<PopularPlaylist>? popularYogaPlaylists;
   final List<NewRelease>? newReleases;
@@ -99,6 +102,7 @@ class Data {
     List<FeaturedAlbum>? featuredAlbums,
     List<TrendingAlbum>? trendingAlbums,
     List<TrendingAlbum>? trendingSongs,
+    List<SongItemModel>? trendingSongsNew,
     List<PopularPlaylist>? popularPlaylists,
     List<PopularPlaylist>? popularYogaPlaylists,
     List<NewRelease>? newReleases,
@@ -112,6 +116,7 @@ class Data {
       featuredAlbums: featuredAlbums ?? this.featuredAlbums,
       trendingAlbums: trendingAlbums ?? this.trendingAlbums,
       trendingSongs: trendingSongs ?? this.trendingSongs,
+      trendingSongsNew: trendingSongsNew ?? this.trendingSongsNew,
       popularPlaylists: popularPlaylists ?? this.popularPlaylists,
       popularYogaPlaylists: popularYogaPlaylists ?? this.popularYogaPlaylists,
       newReleases: newReleases ?? this.newReleases,
@@ -132,6 +137,9 @@ class Data {
           : null,
       'trendingSongs': trendingSongs != null
           ? trendingSongs?.map((x) => x.toMap()).toList()
+          : null,
+      'trendingSongsNew': trendingSongsNew != null
+          ? trendingSongsNew?.map((e) => e.toMap()).toList()
           : null,
       'popularPlaylists': popularPlaylists != null
           ? popularPlaylists?.map((x) => x.toMap()).toList()
@@ -172,6 +180,11 @@ class Data {
       trendingSongs: map['Trending songs'] != null
           ? List<TrendingAlbum>.from(map['Trending songs']
                   ?.map((x) => TrendingAlbum.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
+          : null,
+      trendingSongsNew: map['Trending songs new'] != null
+          ? List<SongItemModel>.from(map['Trending songs new']
+                  ?.map((x) => SongItemModel.fromMap(x as Map<String, dynamic>))
               as Iterable<dynamic>)
           : null,
       popularPlaylists: map['Popular playlists'] != null
@@ -226,6 +239,7 @@ class Data {
         listEquals(other.featuredAlbums, featuredAlbums) &&
         listEquals(other.trendingAlbums, trendingAlbums) &&
         listEquals(other.trendingSongs, trendingSongs) &&
+        listEquals(other.trendingSongsNew, trendingSongsNew) &&
         listEquals(other.popularPlaylists, popularPlaylists) &&
         listEquals(other.popularYogaPlaylists, popularYogaPlaylists) &&
         listEquals(other.newReleases, newReleases) &&

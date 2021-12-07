@@ -5,6 +5,7 @@ import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Services/youtube_services.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class SongTileTrailingMenu extends StatefulWidget {
-  final Map data;
+  final SongItemModel data;
   const SongTileTrailingMenu({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -103,9 +104,9 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
       ],
       onSelected: (int? value) {
         final MediaItem mediaItem =
-            MediaItemConverter.mapToMediaItem(widget.data);
+            MediaItemConverter.mapToMediaItem(widget.data.toMap());
         if (value == 3) {
-          Share.share(widget.data['perma_url'].toString());
+          Share.share(widget.data.url.toString());
         }
         if (value == 4) {
           Navigator.push(
@@ -258,31 +259,31 @@ class _YtSongTileTrailingMenuState extends State<YtSongTileTrailingMenu> {
             ),
           );
         }
-        if (value == 1 || value == 2 || value == 3) {
-          YouTubeServices()
-              .formatVideo(
-            video: widget.data,
-            quality: Hive.box('settings')
-                .get(
-                  'ytQuality',
-                  defaultValue: 'High',
-                )
-                .toString(),
-          )
-              .then((songMap) {
-            final MediaItem mediaItem =
-                MediaItemConverter.mapToMediaItem(songMap!);
-            if (value == 1) {
-              playNext(mediaItem, context);
-            }
-            if (value == 2) {
-              addToNowPlaying(context: context, mediaItem: mediaItem);
-            }
-            if (value == 3) {
-              AddToPlaylist().addToPlaylist(context, mediaItem);
-            }
-          });
-        }
+        // if (value == 1 || value == 2 || value == 3) {
+        //   YouTubeServices()
+        //       .formatVideo(
+        //     video: widget.data,
+        //     quality: Hive.box('settings')
+        //         .get(
+        //           'ytQuality',
+        //           defaultValue: 'High',
+        //         )
+        //         .toString(),
+        //   )
+        //       .then((songMap) {
+        //     final MediaItem mediaItem =
+        //         MediaItemConverter.mapToMediaItem(songMap!);
+        //     if (value == 1) {
+        //       playNext(mediaItem, context);
+        //     }
+        //     if (value == 2) {
+        //       addToNowPlaying(context: context, mediaItem: mediaItem);
+        //     }
+        //     if (value == 3) {
+        //       AddToPlaylist().addToPlaylist(context, mediaItem);
+        //     }
+        //   });
+        // }
         if (value == 4) {
           launch(widget.data.url);
         }

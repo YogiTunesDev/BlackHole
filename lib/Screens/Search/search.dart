@@ -400,11 +400,11 @@ class _SearchPageState extends State<SearchPage> {
                                                                           index]
                                                                       as Map,
                                                                 ),
-                                                                SongTileTrailingMenu(
-                                                                  data: value[
-                                                                          index]
-                                                                      as Map,
-                                                                ),
+                                                                // SongTileTrailingMenu(
+                                                                //   data: value[
+                                                                //           index]
+                                                                //       as Map,
+                                                                // ),
                                                               ],
                                                             )
                                                           : null
@@ -425,48 +425,48 @@ class _SearchPageState extends State<SearchPage> {
                                                     );
                                                   },
                                                   onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      PageRouteBuilder(
-                                                        opaque: false,
-                                                        pageBuilder: (
-                                                          _,
-                                                          __,
-                                                          ___,
-                                                        ) =>
-                                                            key == 'Artists' ||
-                                                                    (key == 'Top Result' &&
-                                                                        value[0]['type'] ==
-                                                                            'artist')
-                                                                ? ArtistSearchPage(
-                                                                    data: value[
-                                                                            index]
-                                                                        as Map,
-                                                                  )
-                                                                : key == 'Songs'
-                                                                    ? PlayScreen(
-                                                                        songsList: [
-                                                                          value[
-                                                                              index]
-                                                                        ],
-                                                                        index:
-                                                                            0,
-                                                                        offline:
-                                                                            false,
-                                                                        fromMiniplayer:
-                                                                            false,
-                                                                        fromDownloads:
-                                                                            false,
-                                                                        recommend:
-                                                                            true,
-                                                                      )
-                                                                    : SongsListPage(
-                                                                        listItem:
-                                                                            value[index]
-                                                                                as Map,
-                                                                      ),
-                                                      ),
-                                                    );
+                                                    // Navigator.push(
+                                                    //   context,
+                                                    //   PageRouteBuilder(
+                                                    //     opaque: false,
+                                                    //     pageBuilder: (
+                                                    //       _,
+                                                    //       __,
+                                                    //       ___,
+                                                    //     ) =>
+                                                    //         key == 'Artists' ||
+                                                    //                 (key == 'Top Result' &&
+                                                    //                     value[0]['type'] ==
+                                                    //                         'artist')
+                                                    //             ? ArtistSearchPage(
+                                                    //                 data: value[
+                                                    //                         index]
+                                                    //                     as Map,
+                                                    //               )
+                                                    //             : key == 'Songs'
+                                                    //                 ? PlayScreen(
+                                                    //                     songsList: [
+                                                    //                       value[
+                                                    //                           index]
+                                                    //                     ],
+                                                    //                     index:
+                                                    //                         0,
+                                                    //                     offline:
+                                                    //                         false,
+                                                    //                     fromMiniplayer:
+                                                    //                         false,
+                                                    //                     fromDownloads:
+                                                    //                         false,
+                                                    //                     recommend:
+                                                    //                         true,
+                                                    //                   )
+                                                    //                 : SongsListPage(
+                                                    //                     listItem:
+                                                    //                         value[index]
+                                                    //                             as Map,
+                                                    //                   ),
+                                                    //   ),
+                                                    // );
                                                   },
                                                 );
                                               },

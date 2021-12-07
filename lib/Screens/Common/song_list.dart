@@ -10,6 +10,7 @@ import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/playlist_popupmenu.dart';
 import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -31,7 +32,7 @@ class SongsListPage extends StatefulWidget {
 class _SongsListPageState extends State<SongsListPage> {
   int page = 1;
   bool loading = false;
-  List songList = [];
+  List<SongItemModel> songList = [];
   bool fetched = false;
   HtmlUnescape unescape = HtmlUnescape();
   final ScrollController _scrollController = ScrollController();
@@ -61,38 +62,38 @@ class _SongsListPageState extends State<SongsListPage> {
     loading = true;
     switch (widget.listItem['type'].toString()) {
       case 'songs':
-        YogitunesAPI()
-            .fetchSongSearchResults(
-          searchQuery: widget.listItem['id'].toString(),
-          page: page,
-        )
-            .then((value) {
-          setState(() {
-            songList.addAll(value);
-            fetched = true;
-            loading = false;
-          });
-        });
+        // YogitunesAPI()
+        //     .fetchSongSearchResults(
+        //   searchQuery: widget.listItem['id'].toString(),
+        //   page: page,
+        // )
+        //     .then((value) {
+        //   setState(() {
+        //     songList.addAll(value);
+        //     fetched = true;
+        //     loading = false;
+        //   });
+        // });
         break;
       case 'album':
-        YogitunesAPI()
-            .fetchAlbumSongs(widget.listItem['id'].toString())
-            .then((value) {
-          setState(() {
-            songList = value;
-            fetched = true;
-          });
-        });
+        // YogitunesAPI()
+        //     .fetchAlbumSongs(widget.listItem['id'].toString())
+        //     .then((value) {
+        //   setState(() {
+        //     songList = value;
+        //     fetched = true;
+        //   });
+        // });
         break;
       case 'playlist':
-        YogitunesAPI()
-            .fetchPlaylistSongs(widget.listItem['id'].toString())
-            .then((value) {
-          setState(() {
-            songList = value;
-            fetched = true;
-          });
-        });
+        // YogitunesAPI()
+        //     .fetchPlaylistSongs(widget.listItem['id'].toString())
+        //     .then((value) {
+        //   setState(() {
+        //     songList = value;
+        //     fetched = true;
+        //   });
+        // });
         break;
       default:
         break;
@@ -235,21 +236,21 @@ class _SongsListPageState extends State<SongsListPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                PlayScreen(
-                                              songsList: songList,
-                                              index: 0,
-                                              offline: false,
-                                              fromDownloads: false,
-                                              fromMiniplayer: false,
-                                              recommend: true,
-                                            ),
-                                          ),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   PageRouteBuilder(
+                                        //     opaque: false,
+                                        //     pageBuilder: (_, __, ___) =>
+                                        //         PlayScreen(
+                                        //       songsList: songList,
+                                        //       index: 0,
+                                        //       offline: false,
+                                        //       fromDownloads: false,
+                                        //       fromMiniplayer: false,
+                                        //       recommend: true,
+                                        //     ),
+                                        //   ),
+                                        // );
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.only(
@@ -310,21 +311,21 @@ class _SongsListPageState extends State<SongsListPage> {
                                         final List tempList =
                                             List.from(songList);
                                         tempList.shuffle();
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                PlayScreen(
-                                              songsList: tempList,
-                                              index: 0,
-                                              offline: false,
-                                              fromDownloads: false,
-                                              fromMiniplayer: false,
-                                              recommend: true,
-                                            ),
-                                          ),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   PageRouteBuilder(
+                                        //     opaque: false,
+                                        //     pageBuilder: (_, __, ___) =>
+                                        //         PlayScreen(
+                                        //       songsList: tempList,
+                                        //       index: 0,
+                                        //       offline: false,
+                                        //       fromDownloads: false,
+                                        //       fromMiniplayer: false,
+                                        //       recommend: true,
+                                        //     ),
+                                        //   ),
+                                        // );
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.only(
@@ -375,7 +376,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                     contentPadding:
                                         const EdgeInsets.only(left: 15.0),
                                     title: Text(
-                                      '${entry["title"]}',
+                                      '${entry.title}',
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -384,11 +385,11 @@ class _SongsListPageState extends State<SongsListPage> {
                                     onLongPress: () {
                                       copyToClipboard(
                                         context: context,
-                                        text: '${entry["title"]}',
+                                        text: '${entry.title}',
                                       );
                                     },
                                     subtitle: Text(
-                                      '${entry["subtitle"]}',
+                                      '${entry.subtitle}',
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     leading: Card(
@@ -408,7 +409,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                           ),
                                         ),
                                         imageUrl:
-                                            '${entry["image"].replaceAll('http:', 'https:')}',
+                                            '${entry.image}',
                                         placeholder: (context, url) =>
                                             const Image(
                                           fit: BoxFit.cover,
@@ -425,31 +426,31 @@ class _SongsListPageState extends State<SongsListPage> {
                                           data: entry as Map,
                                           icon: 'download',
                                         ),
-                                        LikeButton(
-                                          mediaItem: null,
-                                          data: entry,
-                                        ),
+                                        // LikeButton(
+                                        //   mediaItem: null,
+                                        //   data: entry,
+                                        // ),
                                         SongTileTrailingMenu(data: entry),
                                       ],
                                     ),
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          opaque: false,
-                                          pageBuilder: (_, __, ___) =>
-                                              PlayScreen(
-                                            songsList: songList,
-                                            index: songList.indexWhere(
-                                              (element) => element == entry,
-                                            ),
-                                            offline: false,
-                                            fromDownloads: false,
-                                            fromMiniplayer: false,
-                                            recommend: true,
-                                          ),
-                                        ),
-                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   PageRouteBuilder(
+                                      //     opaque: false,
+                                      //     pageBuilder: (_, __, ___) =>
+                                      //         PlayScreen(
+                                      //       songsList: songList,
+                                      //       index: songList.indexWhere(
+                                      //         (element) => element == entry,
+                                      //       ),
+                                      //       offline: false,
+                                      //       fromDownloads: false,
+                                      //       fromMiniplayer: false,
+                                      //       recommend: true,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     },
                                   );
                                 }).toList()

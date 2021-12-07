@@ -3,12 +3,13 @@ import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
 class PlaylistPopupMenu extends StatefulWidget {
-  final List data;
+  final List<SongItemModel> data;
   final String title;
   const PlaylistPopupMenu({
     Key? key,
@@ -75,7 +76,7 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
             // TODO: make sure to check if song is already in queue
             final queue = audioHandler.queue.value;
             widget.data.map((e) {
-              final element = MediaItemConverter.mapToMediaItem(e as Map);
+              final element = MediaItemConverter.mapToMediaItem(e.toMap());
               if (!queue.contains(element)) {
                 audioHandler.addQueueItem(element);
               }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class SongModel {
+class SongItemModel {
   final String? id;
   final String? artist;
   final String? album;
@@ -17,7 +17,7 @@ class SongModel {
   final String? albumId;
   final String? subtitle;
   final String? permaUrl;
-  SongModel({
+  SongItemModel({
     this.id,
     this.artist,
     this.album,
@@ -36,7 +36,7 @@ class SongModel {
     this.permaUrl,
   });
 
-  SongModel copyWith({
+  SongItemModel copyWith({
     String? id,
     String? artist,
     String? album,
@@ -54,7 +54,7 @@ class SongModel {
     String? subtitle,
     String? permaUrl,
   }) {
-    return SongModel(
+    return SongItemModel(
       id: id ?? this.id,
       artist: artist ?? this.artist,
       album: album ?? this.album,
@@ -95,8 +95,8 @@ class SongModel {
     };
   }
 
-  factory SongModel.fromMap(Map<String, dynamic> map) {
-    return SongModel(
+  factory SongItemModel.fromMap(Map<String, dynamic> map) {
+    return SongItemModel(
       id: map['id'] != null ? map['id'] as String : null,
       artist: map['artist'] != null ? map['artist'] as String : null,
       album: map['album'] != null ? map['album'] as String : null,
@@ -119,19 +119,19 @@ class SongModel {
 
   String toJson() => json.encode(toMap());
 
-  factory SongModel.fromJson(String source) =>
-      SongModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SongItemModel.fromJson(String source) =>
+      SongItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'SongModel(id: $id, artist: $artist, album: $album, image: $image, duration: $duration, title: $title, url: $url, year: $year, language: $language, genre: $genre, kbs: $kbs, hasLyrics: $hasLyrics, releaseDate: $releaseDate, albumId: $albumId, subtitle: $subtitle, permaUrl: $permaUrl)';
+    return 'SongItemModel(id: $id, artist: $artist, album: $album, image: $image, duration: $duration, title: $title, url: $url, year: $year, language: $language, genre: $genre, kbs: $kbs, hasLyrics: $hasLyrics, releaseDate: $releaseDate, albumId: $albumId, subtitle: $subtitle, permaUrl: $permaUrl)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SongModel &&
+    return other is SongItemModel &&
         other.id == id &&
         other.artist == artist &&
         other.album == album &&

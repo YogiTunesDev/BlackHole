@@ -44,20 +44,20 @@ class SongUrlHandler extends StatelessWidget {
   Widget build(BuildContext context) {
     YogitunesAPI().getSongFromToken(token, type).then((value) {
       if (type == 'song') {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            opaque: false,
-            pageBuilder: (_, __, ___) => PlayScreen(
-              songsList: value['songs'] as List,
-              index: 0,
-              offline: false,
-              fromDownloads: false,
-              recommend: true,
-              fromMiniplayer: false,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   PageRouteBuilder(
+        //     opaque: false,
+        //     pageBuilder: (_, __, ___) => PlayScreen(
+        //       songsList: value['songs'] as List,
+        //       index: 0,
+        //       offline: false,
+        //       fromDownloads: false,
+        //       recommend: true,
+        //       fromMiniplayer: false,
+        //     ),
+        //   ),
+        // );
       }
       if (type == 'album' || type == 'playlist') {
         Navigator.push(
@@ -92,20 +92,20 @@ class OfflinePlayHandler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     playOfflineSong(id).then((value) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          opaque: false,
-          pageBuilder: (_, __, ___) => PlayScreen(
-            songsList: value[1] as List<SongModel>,
-            index: value[0] as int,
-            offline: true,
-            fromDownloads: false,
-            recommend: false,
-            fromMiniplayer: false,
-          ),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   PageRouteBuilder(
+      //     opaque: false,
+      //     pageBuilder: (_, __, ___) => PlayScreen(
+      //       songsList: value[1] as List<SongModel>,
+      //       index: value[0] as int,
+      //       offline: true,
+      //       fromDownloads: false,
+      //       recommend: false,
+      //       fromMiniplayer: false,
+      //     ),
+      //   ),
+      // );
     });
     return Container();
   }

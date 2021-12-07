@@ -1223,19 +1223,19 @@ class _SongsTabState extends State<SongsTab>
                         ],
                       ),
                       onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            opaque: false,
-                            pageBuilder: (_, __, ___) => PlayScreen(
-                              songsList: widget.songs,
-                              index: index,
-                              offline: true,
-                              fromDownloads: false,
-                              fromMiniplayer: false,
-                              recommend: false,
-                            ),
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   PageRouteBuilder(
+                        //     opaque: false,
+                        //     pageBuilder: (_, __, ___) => PlayScreen(
+                        //       songsList: widget.songs,
+                        //       index: index,
+                        //       offline: true,
+                        //       fromDownloads: false,
+                        //       fromMiniplayer: false,
+                        //       recommend: false,
+                        //     ),
+                        //   ),
+                        // );
                       },
                     );
                   },

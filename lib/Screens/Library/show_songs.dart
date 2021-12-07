@@ -294,19 +294,19 @@ class _SongsListState extends State<SongsList> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                    PageRouteBuilder(
-                                      opaque: false, // set to false
-                                      pageBuilder: (_, __, ___) => PlayScreen(
-                                        songsList: _songs,
-                                        index: index,
-                                        offline: offline,
-                                        fromDownloads: offline,
-                                        fromMiniplayer: false,
-                                        recommend: false,
-                                      ),
-                                    ),
-                                  );
+                                  // Navigator.of(context).push(
+                                  //   PageRouteBuilder(
+                                  //     opaque: false, // set to false
+                                  //     pageBuilder: (_, __, ___) => PlayScreen(
+                                  //       songsList: _songs,
+                                  //       index: index,
+                                  //       offline: offline,
+                                  //       fromDownloads: offline,
+                                  //       fromMiniplayer: false,
+                                  //       recommend: false,
+                                  //     ),
+                                  //   ),
+                                  // );
                                 },
                               );
                       },

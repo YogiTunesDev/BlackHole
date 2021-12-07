@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
 
@@ -487,8 +488,33 @@ class FormatResponse {
     }
   }
 
-  static Future<HomeResponse?> formatHomePageData(HomeResponse? data) async {
+  static Future<HomeResponse?> formatHomePageData(
+      HomeResponse? homeResponse) async {
     try {
+      final HomeResponse res = homeResponse!;
+      List<SongItemModel> songList = [];
+      if (res.data != null) {
+        if (res.data!.trendingSongs != null) {
+          for (var i = 0; i < res.data!.trendingSongs!.length; i++) {
+            final TrendingAlbum item = res.data!.trendingSongs![i];
+            final String imageUrl = item.cover != null
+                ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                : '';
+            songList.add(SongItemModel(
+              id: item.tracks![0].id!.toString(),
+              title: item.name,
+              album: item.tracks![0].name,
+              image: imageUrl,
+              url: item.tracks![0].files![item.tracks![0].files!.length - 1]
+                  .trackUrl,
+              artist: item.tracks![0].name,
+            ));
+          }
+        }
+      }
+      final Data data = res.data!.copyWith(trendingSongsNew: songList);
+      final tempres = res.copyWith(data: data);
+      return tempres;
       // data['Trending_albums'] = await formatSongsInList(
       //   data['Trending_albums'] as List,
       //   fetchDetails: false,
@@ -546,21 +572,21 @@ class FormatResponse {
 //       ];
       // data['collections_temp'] = promoListTemp;
 
-      List list = [
-        data!.data!.featuredAlbums,
-        data.data!.trendingAlbums,
-        data.data!.trendingSongs,
-        data.data!.popularPlaylists,
-        data.data!.popularYogaPlaylists,
-        data.data!.newReleases,
-        data.data!.recentlyAdded,
-        data.data!.browseByActivity,
-        data.data!.browseByGenresMoods,
-      ];
+      // List list = [
+      //   data!.data!.featuredAlbums,
+      //   data.data!.trendingAlbums,
+      //   data.data!.trendingSongs,
+      //   data.data!.popularPlaylists,
+      //   data.data!.popularYogaPlaylists,
+      //   data.data!.newReleases,
+      //   data.data!.recentlyAdded,
+      //   data.data!.browseByActivity,
+      //   data.data!.browseByGenresMoods,
+      // ];
     } catch (e) {
       log('Error in formatHomePageData: $e');
+      return homeResponse;
     }
-    return data;
   }
 
   static Future<Map> formatPromoLists(Map data) async {

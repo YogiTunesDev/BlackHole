@@ -86,7 +86,9 @@ class YogitunesAPI {
       final res = await getResponse(endpoints['homeData']!);
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
-        result = HomeResponse?.fromMap(data as Map<String, dynamic>);
+        result = await FormatResponse.formatHomePageData(
+          HomeResponse?.fromMap(data as Map<String, dynamic>),
+        );
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');

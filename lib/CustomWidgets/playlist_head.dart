@@ -35,19 +35,19 @@ class PlaylistHead extends StatelessWidget {
             onPressed: () {
               final tempList = songsList.toList();
               tempList.shuffle();
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  opaque: false,
-                  pageBuilder: (_, __, ___) => PlayScreen(
-                    songsList: tempList,
-                    index: 0,
-                    offline: offline,
-                    fromMiniplayer: false,
-                    fromDownloads: fromDownloads,
-                    recommend: recommend,
-                  ),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   PageRouteBuilder(
+              //     opaque: false,
+              //     pageBuilder: (_, __, ___) => PlayScreen(
+              //       songsList: tempList,
+              //       index: 0,
+              //       offline: offline,
+              //       fromMiniplayer: false,
+              //       fromDownloads: fromDownloads,
+              //       recommend: recommend,
+              //     ),
+              //   ),
+              // );
             },
             icon: const Icon(Icons.shuffle_rounded),
             label: Text(
@@ -57,19 +57,19 @@ class PlaylistHead extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  opaque: false,
-                  pageBuilder: (_, __, ___) => PlayScreen(
-                    songsList: songsList,
-                    index: 0,
-                    offline: offline,
-                    fromMiniplayer: false,
-                    fromDownloads: fromDownloads,
-                    recommend: recommend,
-                  ),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   PageRouteBuilder(
+              //     opaque: false,
+              //     pageBuilder: (_, __, ___) => PlayScreen(
+              //       songsList: songsList,
+              //       index: 0,
+              //       offline: offline,
+              //       fromMiniplayer: false,
+              //       fromDownloads: fromDownloads,
+              //       recommend: recommend,
+              //     ),
+              //   ),
+              // );
             },
             tooltip: AppLocalizations.of(context)!.shuffle,
             icon: const Icon(Icons.play_arrow_rounded),

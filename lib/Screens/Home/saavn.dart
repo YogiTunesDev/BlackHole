@@ -1,5 +1,7 @@
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -229,26 +231,46 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
-                    if (data!.data!.trendingSongs != null)
-                      if (data!.data!.trendingSongs!.isNotEmpty)
+                    if (data!.data!.trendingSongsNew != null)
+                      if (data!.data!.trendingSongsNew!.isNotEmpty)
                         const HeaderTitle(title: 'Popular Songs'),
-                    if (data!.data!.trendingSongs != null)
-                      if (data!.data!.trendingSongs!.isNotEmpty)
+                    if (data!.data!.trendingSongsNew != null)
+                      if (data!.data!.trendingSongsNew!.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.trendingSongs!.length,
+                            itemCount: data!.data!.trendingSongsNew!.length,
                             itemBuilder: (context, index) {
-                              final TrendingAlbum item =
-                                  data!.data!.trendingSongs![index];
+                              final SongItemModel item =
+                                  data!.data!.trendingSongsNew![index];
+                              // String imageUrl = item.cover != null
+                              //     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                              //     : '';
                               return SongItem(
-                                itemImage: item.cover != null
-                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                                    : '',
-                                itemName: item.name!,
+                                itemImage: item.image!,
+                                itemName: item.title!,
+                                onTap: () {
+                                  // List<SongItemModel> lstSongs = [];
+                                  // lstSongs.add(item);
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) => PlayScreen(
+                                        songsList:
+                                            data!.data!.trendingSongsNew!,
+                                        index: index,
+                                        offline: false,
+                                        fromDownloads: false,
+                                        fromMiniplayer: false,
+                                        recommend: true,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -1026,11 +1048,13 @@ class SongItem extends StatelessWidget {
   final String itemImage;
   final String itemName;
   final bool isRound;
+  final Function()? onTap;
   const SongItem(
       {Key? key,
       required this.itemImage,
       required this.itemName,
-      this.isRound = false})
+      this.isRound = false,
+      this.onTap})
       : super(key: key);
 
   @override
@@ -1039,8 +1063,8 @@ class SongItem extends StatelessWidget {
         MediaQuery.of(context).size.height > MediaQuery.of(context).size.width
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
-    return GestureDetector(
-      onTap: () {},
+    return InkWell(
+      onTap: onTap,
       child: SizedBox(
         width: boxSize / 2 - 30,
         child: Stack(

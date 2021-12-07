@@ -95,19 +95,19 @@ class DataSearch extends SearchDelegate {
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () async {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, __, ___) => PlayScreen(
-                songsList: suggestionList,
-                index: index,
-                offline: true,
-                fromMiniplayer: false,
-                fromDownloads: false,
-                recommend: false,
-              ),
-            ),
-          );
+          // Navigator.of(context).push(
+          //   PageRouteBuilder(
+          //     opaque: false,
+          //     pageBuilder: (_, __, ___) => PlayScreen(
+          //       songsList: suggestionList,
+          //       index: index,
+          //       offline: true,
+          //       fromMiniplayer: false,
+          //       fromDownloads: false,
+          //       recommend: false,
+          //     ),
+          //   ),
+          // );
         },
       ),
     );
@@ -251,19 +251,19 @@ class DownloadsSearch extends SearchDelegate {
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
-          Navigator.of(context).push(
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, __, ___) => PlayScreen(
-                songsList: suggestionList,
-                index: index,
-                offline: isDowns,
-                fromMiniplayer: false,
-                fromDownloads: isDowns,
-                recommend: false,
-              ),
-            ),
-          );
+          // Navigator.of(context).push(
+          //   PageRouteBuilder(
+          //     opaque: false,
+          //     pageBuilder: (_, __, ___) => PlayScreen(
+          //       songsList: suggestionList,
+          //       index: index,
+          //       offline: isDowns,
+          //       fromMiniplayer: false,
+          //       fromDownloads: isDowns,
+          //       recommend: false,
+          //     ),
+          //   ),
+          // );
         },
       ),
     );

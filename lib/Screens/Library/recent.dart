@@ -129,20 +129,20 @@ class _RecentlyPlayedState extends State<RecentlyPlayed> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        opaque: false,
-                                        pageBuilder: (_, __, ___) => PlayScreen(
-                                          songsList: _songs,
-                                          index: index,
-                                          offline: false,
-                                          fromDownloads: false,
-                                          fromMiniplayer: false,
-                                          recommend: true,
-                                        ),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   PageRouteBuilder(
+                                    //     opaque: false,
+                                    //     pageBuilder: (_, __, ___) => PlayScreen(
+                                    //       songsList: _songs,
+                                    //       index: index,
+                                    //       offline: false,
+                                    //       fromDownloads: false,
+                                    //       fromMiniplayer: false,
+                                    //       recommend: true,
+                                    //     ),
+                                    //   ),
+                                    // );
                                   },
                                 ),
                               );

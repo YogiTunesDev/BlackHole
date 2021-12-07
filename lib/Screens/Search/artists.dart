@@ -105,12 +105,12 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                     );
                                   },
                                 ),
-                                if (data['Top Songs'] != null)
-                                  PlaylistPopupMenu(
-                                    data: data['Top Songs']!,
-                                    title: widget.data['title']?.toString() ??
-                                        'Songs',
-                                  ),
+                                // if (data['Top Songs'] != null)
+                                //   PlaylistPopupMenu(
+                                //     data: data['Top Songs']!,
+                                //     title: widget.data['title']?.toString() ??
+                                //         'Songs',
+                                //   ),
                               ],
                               flexibleSpace: FlexibleSpaceBar(
                                 title: Text(
@@ -473,50 +473,51 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                                                 index] as Map,
                                                             mediaItem: null,
                                                           ),
-                                                          SongTileTrailingMenu(
-                                                            data: entry.value[
-                                                                index] as Map,
-                                                          ),
+                                                          // SongTileTrailingMenu(
+                                                          //   data: entry.value[
+                                                          //       index],
+                                                          // ),
                                                         ],
                                                       )
                                                     : null,
                                                 onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    PageRouteBuilder(
-                                                      opaque: false,
-                                                      pageBuilder: (
-                                                        _,
-                                                        __,
-                                                        ___,
-                                                      ) =>
-                                                          (entry.key ==
-                                                                      'Top Songs' ||
-                                                                  entry.key ==
-                                                                      'Latest Release' ||
-                                                                  entry.key ==
-                                                                      'Singles')
-                                                              ? PlayScreen(
-                                                                  songsList:
-                                                                      entry
-                                                                          .value,
-                                                                  index: index,
-                                                                  offline:
-                                                                      false,
-                                                                  fromMiniplayer:
-                                                                      false,
-                                                                  fromDownloads:
-                                                                      false,
-                                                                  recommend:
-                                                                      true,
-                                                                )
-                                                              : SongsListPage(
-                                                                  listItem: entry
-                                                                          .value[
-                                                                      index] as Map,
-                                                                ),
-                                                    ),
-                                                  );
+                                                  // Navigator.push(
+                                                  //   context,
+                                                  //   PageRouteBuilder(
+                                                  //     opaque: false,
+                                                  //     pageBuilder: (
+                                                  //       _,
+                                                  //       __,
+                                                  //       ___,
+                                                  //     ) =>
+                                                  //         (entry.key ==
+                                                  //                     'Top Songs' ||
+                                                  //                 entry.key ==
+                                                  //                     'Latest Release' ||
+                                                  //                 entry.key ==
+                                                  //                     'Singles')
+                                                  //             ? 
+                                                  //             PlayScreen(
+                                                  //                 songsList:
+                                                  //                     entry
+                                                  //                         .value,
+                                                  //                 index: index,
+                                                  //                 offline:
+                                                  //                     false,
+                                                  //                 fromMiniplayer:
+                                                  //                     false,
+                                                  //                 fromDownloads:
+                                                  //                     false,
+                                                  //                 recommend:
+                                                  //                     true,
+                                                  //               )
+                                                  //             : SongsListPage(
+                                                  //                 listItem: entry
+                                                  //                         .value[
+                                                  //                     index] as Map,
+                                                  //               ),
+                                                  //   ),
+                                                  // );
                                                 },
                                               );
                                             },

@@ -222,46 +222,46 @@ class _YouTubePlaylistState extends State<YouTubePlaylist> {
                                       setState(() {
                                         done = true;
                                       });
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          opaque: false,
-                                          pageBuilder: (_, __, ___) =>
-                                              PlayScreen(
-                                            songsList: [response],
-                                            index: 0,
-                                            recommend: false,
-                                            fromDownloads: false,
-                                            fromMiniplayer: false,
-                                            offline: false,
-                                          ),
-                                        ),
-                                      );
-                                      for (var i = 0;
-                                          i < searchedList.length;
-                                          i++) {
-                                        YouTubeServices()
-                                            .formatVideo(
-                                          video: searchedList[i],
-                                          quality: Hive.box('settings')
-                                              .get(
-                                                'ytQuality',
-                                                defaultValue: 'High',
-                                              )
-                                              .toString(),
-                                        )
-                                            .then((songMap) {
-                                          final MediaItem mediaItem =
-                                              MediaItemConverter.mapToMediaItem(
-                                            songMap!,
-                                          );
-                                          addToNowPlaying(
-                                            context: context,
-                                            mediaItem: mediaItem,
-                                            showNotification: false,
-                                          );
-                                        });
-                                      }
+                                      // Navigator.push(
+                                      //   context,
+                                      //   PageRouteBuilder(
+                                      //     opaque: false,
+                                      //     pageBuilder: (_, __, ___) =>
+                                      //         PlayScreen(
+                                      //       songsList: [response],
+                                      //       index: 0,
+                                      //       recommend: false,
+                                      //       fromDownloads: false,
+                                      //       fromMiniplayer: false,
+                                      //       offline: false,
+                                      //     ),
+                                      //   ),
+                                      // );
+                                      // for (var i = 0;
+                                      //     i < searchedList.length;
+                                      //     i++) {
+                                      //   YouTubeServices()
+                                      //       .formatVideo(
+                                      //     video: searchedList[i],
+                                      //     quality: Hive.box('settings')
+                                      //         .get(
+                                      //           'ytQuality',
+                                      //           defaultValue: 'High',
+                                      //         )
+                                      //         .toString(),
+                                      //   )
+                                      //       .then((songMap) {
+                                      //     final MediaItem mediaItem =
+                                      //         MediaItemConverter.mapToMediaItem(
+                                      //       songMap!,
+                                      //     );
+                                      //     addToNowPlaying(
+                                      //       context: context,
+                                      //       mediaItem: mediaItem,
+                                      //       showNotification: false,
+                                      //     );
+                                      //   });
+                                      // }
                                     },
                                     trailing:
                                         YtSongTileTrailingMenu(data: entry),

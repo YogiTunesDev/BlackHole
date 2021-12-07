@@ -867,19 +867,19 @@ class _DownSongsTabState extends State<DownSongsTab>
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            opaque: false,
-                            pageBuilder: (_, __, ___) => PlayScreen(
-                              songsList: widget.songs,
-                              index: index,
-                              offline: true,
-                              fromDownloads: true,
-                              fromMiniplayer: false,
-                              recommend: false,
-                            ),
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   PageRouteBuilder(
+                        //     opaque: false,
+                        //     pageBuilder: (_, __, ___) => PlayScreen(
+                        //       songsList: widget.songs,
+                        //       index: index,
+                        //       offline: true,
+                        //       fromDownloads: true,
+                        //       fromMiniplayer: false,
+                        //       recommend: false,
+                        //     ),
+                        //   ),
+                        // );
                       },
                       title: Text(
                         '${widget.songs[index]['title']}',

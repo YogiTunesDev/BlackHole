@@ -18,6 +18,8 @@ import 'package:blackhole/Helpers/dominant_color.dart';
 import 'package:blackhole/Helpers/lyrics.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
+import 'package:blackhole/Screens/Home/saavn.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,7 +38,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlayScreen extends StatefulWidget {
-  final List songsList;
+  final List<SongItemModel> songsList;
   final bool fromMiniplayer;
   final bool? offline;
   final int index;
@@ -70,7 +72,7 @@ class _PlayScreenState extends State<PlayScreen> {
       .get('useFullScreenGradient', defaultValue: false) as bool;
   List<MediaItem> globalQueue = [];
   int globalIndex = 0;
-  List response = [];
+  List<SongItemModel> response = [];
   bool offline = false;
   bool fromDownloads = false;
   String defaultCover = '';
@@ -127,19 +129,20 @@ class _PlayScreenState extends State<PlayScreen> {
     }
   }
 
-  Future<MediaItem> setTags(SongModel response, Directory tempDir) async {
-    String playTitle = response.title;
-    playTitle == ''
-        ? playTitle = response.displayNameWOExt
-        : playTitle = response.title;
+  Future<MediaItem> setTags(SongItemModel response, Directory tempDir) async {
+    String playTitle = response.title!;
+    playTitle = response.title!; //''
+    // ? playTitle = response.displayNameWOExt
+    //: playTitle = response.title!;
     String playArtist = response.artist!;
     playArtist == '<unknown>'
         ? playArtist = 'Unknown'
         : playArtist = response.artist!;
 
     final String playAlbum = response.album!;
-    final int playDuration = response.duration ?? 180000;
-    final String imagePath = '${tempDir.path}/${response.displayNameWOExt}.jpg';
+    final int playDuration = 180000; // response.duration ??
+    final String imagePath =
+        response.image!; //'${tempDir.path}/${response.displayNameWOExt}.jpg';
 
     final MediaItem tempDict = MediaItem(
       id: response.id.toString(),
@@ -150,16 +153,16 @@ class _PlayScreenState extends State<PlayScreen> {
       genre: response.genre,
       artUri: Uri.file(imagePath),
       extras: {
-        'url': response.data,
-        'date_added': response.dateAdded,
-        'date_modified': response.dateModified,
-        'size': response.size,
+        'url': response.url,
+        'date_added': '', //response.dateAdded,
+        'date_modified': '', //response.dateModified,
+        'size': '', //response.size,
       },
     );
     return tempDict;
   }
 
-  void setOffValues(List response, {bool downloaed = false}) {
+  void setOffValues(List<SongItemModel> response, {bool downloaed = false}) {
     getTemporaryDirectory().then((tempDir) async {
       final File file = File('${tempDir.path}/cover.jpg');
       if (!await file.exists()) {
@@ -171,14 +174,14 @@ class _PlayScreenState extends State<PlayScreen> {
       }
       for (int i = 0; i < response.length; i++) {
         globalQueue.add(
-          await setTags(response[i] as SongModel, tempDir),
+          await setTags(response[i] as SongItemModel, tempDir),
         );
       }
       updateNplay();
     });
   }
 
-  void setDownValues(List response) {
+  void setDownValues(List<SongItemModel> response) {
     globalQueue.addAll(
       response.map(
         (song) => MediaItemConverter.downMapToMediaItem(song as Map),
@@ -187,11 +190,11 @@ class _PlayScreenState extends State<PlayScreen> {
     updateNplay();
   }
 
-  void setValues(List response) {
+  void setValues(List<SongItemModel> response) {
     globalQueue.addAll(
       response.map(
         (song) => MediaItemConverter.mapToMediaItem(
-          song as Map,
+          song.toMap(),
           autoplay: widget.recommend,
         ),
       ),
