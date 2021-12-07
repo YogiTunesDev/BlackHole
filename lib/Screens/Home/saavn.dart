@@ -118,7 +118,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                     : '',
                                 itemName: item.name!,
-                                isRound: true,
                               );
                             },
                           ),
@@ -174,7 +173,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                         ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
                                         : '',
                                     itemName: item.name!,
-                                    isRound: true,
                                   );
                                 },
                               ),
@@ -201,7 +199,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                         : ''
                                     : '',
                                 itemName: item.name!,
-                                isRound: true,
                               );
                             },
                           ),
@@ -226,7 +223,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                     : '',
                                 itemName: item.name!,
-                                isRound: true,
                               );
                             },
                           ),
@@ -295,7 +291,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                     : '',
                                 itemName: item.name!,
-                                isRound: true,
                               );
                             },
                           ),
@@ -1013,7 +1008,7 @@ class HeaderTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 5),
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 15),
       child: Row(
         children: [
           Expanded(
@@ -1067,54 +1062,61 @@ class SongItem extends StatelessWidget {
       onTap: onTap,
       child: SizedBox(
         width: boxSize / 2 - 30,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox.square(
-                  dimension: boxSize / 2 - 30,
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        isRound ? 1000.0 : 10.0,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  SizedBox.square(
+                    dimension: boxSize / 2 - 30,
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          isRound ? 1000.0 : 10.0,
+                        ),
                       ),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      errorWidget: (context, _, __) => Image(
+                      clipBehavior: Clip.antiAlias,
+                      child: CachedNetworkImage(
                         fit: BoxFit.cover,
-                        image: AssetImage(
-                            isRound ? 'assets/album.png' : 'assets/cover.jpg'),
-                      ),
-                      imageUrl: itemImage,
-                      //  item['image']
-                      //     .toString()
-                      //     .replaceAll('http:', 'https:')
-                      //     .replaceAll('50x50', '500x500')
-                      //     .replaceAll('150x150', '500x500'),
-                      placeholder: (context, url) => Image(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          isRound ? 'assets/album.png' : 'assets/cover.jpg',
+                        errorWidget: (context, _, __) => Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage(isRound
+                              ? 'assets/album.png'
+                              : 'assets/cover.jpg'),
+                        ),
+                        imageUrl: itemImage,
+                        //  item['image']
+                        //     .toString()
+                        //     .replaceAll('http:', 'https:')
+                        //     .replaceAll('50x50', '500x500')
+                        //     .replaceAll('150x150', '500x500'),
+                        placeholder: (context, url) => Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage(
+                            isRound ? 'assets/album.png' : 'assets/cover.jpg',
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Text(
-                  formatString(itemName),
-                  textAlign: TextAlign.center,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(
+                    height: 5,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    formatString(itemName),
+                    textAlign: TextAlign.center,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
