@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:blackhole/Helpers/format.dart';
+import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/playlist_response.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -49,8 +51,9 @@ class YogitunesAPI {
       );
     } else {
       url = Uri.parse('$baseUrl$apiStr$params');
-      print("URL ::: $url");
     }
+    print("URL ::: $url");
+    print("Send Request");
     // preferredLanguages =
     //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
     // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
@@ -76,6 +79,8 @@ class YogitunesAPI {
     // }
 
     return get(url, headers: headers).onError((error, stackTrace) {
+      print(error);
+      print(stackTrace);
       return Response('', 404);
     });
   }
@@ -92,6 +97,43 @@ class YogitunesAPI {
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<PlaylistResponse?> fetchYogiPlaylistData(
+    String url,
+    int pageNo,
+  ) async {
+    PlaylistResponse? result;
+    try {
+      final res = await getResponse('$url?page=$pageNo');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiPlaylistData(
+            PlaylistResponse?.fromMap(data as Map<String, dynamic>));
+      }
+    } catch (e) {
+      log('Error in fetchYogiPlaylistData: $e');
+    }
+    return result;
+  }
+
+  Future<AlbumResponse?> fetchYogiAlbumData(
+    String url,
+    int pageNo,
+  ) async {
+    AlbumResponse? result;
+    try {
+      final res = await getResponse('$url?page=$pageNo');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
     }
     return result;
   }

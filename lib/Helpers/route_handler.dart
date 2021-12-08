@@ -59,17 +59,17 @@ class SongUrlHandler extends StatelessWidget {
         //   ),
         // );
       }
-      if (type == 'album' || type == 'playlist') {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            opaque: false,
-            pageBuilder: (_, __, ___) => SongsListPage(
-              listItem: value,
-            ),
-          ),
-        );
-      }
+      // if (type == 'album' || type == 'playlist') {
+      //   Navigator.push(
+      //     context,
+      //     PageRouteBuilder(
+      //       opaque: false,
+      //       pageBuilder: (_, __, ___) => SongsListPage(
+      //         listItem: value,
+      //       ),
+      //     ),
+      //   );
+      // }
     });
     return Container();
   }

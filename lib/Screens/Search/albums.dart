@@ -251,20 +251,20 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                                                 albumId: entry['id'].toString(),
                                               ),
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            PageRouteBuilder(
-                                              opaque: false,
-                                              pageBuilder: (_, __, ___) =>
-                                                  widget.type == 'Artists'
-                                                      ? ArtistSearchPage(
-                                                          data: entry,
-                                                        )
-                                                      : SongsListPage(
-                                                          listItem: entry,
-                                                        ),
-                                            ),
-                                          );
+                                          // Navigator.push(
+                                          //   context,
+                                          //   PageRouteBuilder(
+                                          //     opaque: false,
+                                          //     pageBuilder: (_, __, ___) =>
+                                          //         widget.type == 'Artists'
+                                          //             ? ArtistSearchPage(
+                                          //                 data: entry,
+                                          //               )
+                                          //             : SongsListPage(
+                                          //                 listItem: entry,
+                                          //               ),
+                                          //   ),
+                                          // );
                                         },
                                       ),
                                     );

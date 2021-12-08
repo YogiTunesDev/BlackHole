@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import 'album_list.dart';
+
 bool fetched = false;
 List preferredLanguage = Hive.box('settings')
     .get('preferredLanguage', defaultValue: ['Hindi']) as List;
@@ -100,7 +102,21 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                   children: [
                     if (data!.data!.popularYogaPlaylists != null)
                       if (data!.data!.popularYogaPlaylists!.isNotEmpty)
-                        const HeaderTitle(title: 'Yoga Playlists'),
+                        HeaderTitle(
+                          title: 'Yoga Playlists',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.yogaPlaylist,
+                                  albumName: 'Yoga Playlists',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.popularYogaPlaylists != null)
                       if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                         SizedBox(
@@ -150,7 +166,23 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                         if (data!.data!.featuredAlbums![0].albumsClean != null)
                           if (data!
                               .data!.featuredAlbums![0].albumsClean!.isNotEmpty)
-                            const HeaderTitle(title: 'Featured Albums'),
+                            HeaderTitle(
+                              title: 'Featured Albums',
+                              viewAllOnTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (_, __, ___) =>
+                                        const AlbumList(
+                                      albumListType:
+                                          AlbumListType.featuredAlbums,
+                                      albumName: 'Featured Albums',
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                     if (data!.data!.featuredAlbums != null)
                       if (data!.data!.featuredAlbums!.isNotEmpty)
                         if (data!.data!.featuredAlbums![0].albumsClean != null)
@@ -179,7 +211,21 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             ),
                     if (data!.data!.popularPlaylists != null)
                       if (data!.data!.popularPlaylists!.isNotEmpty)
-                        const HeaderTitle(title: 'Popular Playlists'),
+                        HeaderTitle(
+                          title: 'Popular Playlists',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.popularPlaylist,
+                                  albumName: 'Popular Playlists',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.popularPlaylists != null)
                       if (data!.data!.popularPlaylists!.isNotEmpty)
                         SizedBox(
@@ -205,7 +251,21 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                         ),
                     if (data!.data!.newReleases != null)
                       if (data!.data!.newReleases!.isNotEmpty)
-                        const HeaderTitle(title: 'New Releases'),
+                        HeaderTitle(
+                          title: 'New Releases',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.newRelease,
+                                  albumName: 'New Releases',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.newReleases != null)
                       if (data!.data!.newReleases!.isNotEmpty)
                         SizedBox(
@@ -273,7 +333,21 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                         ),
                     if (data!.data!.trendingAlbums != null)
                       if (data!.data!.trendingAlbums!.isNotEmpty)
-                        const HeaderTitle(title: 'Popular Album'),
+                        HeaderTitle(
+                          title: 'Popular Album',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.popularAlbum,
+                                  albumName: 'Popular Album',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.trendingAlbums != null)
                       if (data!.data!.trendingAlbums!.isNotEmpty)
                         SizedBox(
@@ -1064,56 +1138,52 @@ class SongItem extends StatelessWidget {
         width: boxSize / 2 - 30,
         child: Padding(
           padding: const EdgeInsets.only(right: 5),
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                children: [
-                  SizedBox.square(
-                    dimension: boxSize / 2 - 30,
-                    child: Card(
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          isRound ? 1000.0 : 10.0,
-                        ),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        errorWidget: (context, _, __) => Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(isRound
-                              ? 'assets/album.png'
-                              : 'assets/cover.jpg'),
-                        ),
-                        imageUrl: itemImage,
-                        //  item['image']
-                        //     .toString()
-                        //     .replaceAll('http:', 'https:')
-                        //     .replaceAll('50x50', '500x500')
-                        //     .replaceAll('150x150', '500x500'),
-                        placeholder: (context, url) => Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(
-                            isRound ? 'assets/album.png' : 'assets/cover.jpg',
-                          ),
-                        ),
+              SizedBox.square(
+                dimension: boxSize / 2 - 40,
+                child: Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      isRound ? 1000.0 : 10.0,
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    errorWidget: (context, _, __) => Image(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                          isRound ? 'assets/album.png' : 'assets/cover.jpg'),
+                    ),
+                    imageUrl: itemImage,
+                    //  item['image']
+                    //     .toString()
+                    //     .replaceAll('http:', 'https:')
+                    //     .replaceAll('50x50', '500x500')
+                    //     .replaceAll('150x150', '500x500'),
+                    placeholder: (context, url) => Image(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        isRound ? 'assets/album.png' : 'assets/cover.jpg',
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    formatString(itemName),
-                    textAlign: TextAlign.center,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                formatString(itemName),
+                textAlign: TextAlign.center,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),

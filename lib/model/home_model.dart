@@ -38,7 +38,7 @@ class HomeResponse {
     print(map);
     return HomeResponse(
       statusCode: map['statusCode'] != null
-          ? int.parse(map['statusCode'].toString())
+          ? int.parse(map['statusCode'] as String)
           : null,
       status: map['status'] != null ? map['status'] as bool : null,
       data: map['data'] != null
@@ -292,7 +292,7 @@ class BrowseBy {
   factory BrowseBy.fromMap(Map<String, dynamic> map) {
     return BrowseBy(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
     );
   }
 
@@ -351,7 +351,7 @@ class FeaturedAlbum {
   factory FeaturedAlbum.fromMap(Map<String, dynamic> map) {
     return FeaturedAlbum(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       albumsClean: map['albums_clean'] != null
           ? List<AlbumsClean>.from(map['albums_clean']
                   ?.map((x) => AlbumsClean.fromMap(x as Map<String, dynamic>))
@@ -432,7 +432,7 @@ class AlbumsClean {
   factory AlbumsClean.fromMap(Map<String, dynamic> map) {
     return AlbumsClean(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
       pivot: map['pivot'] != null
           ? Pivot.fromMap(map['pivot'] as Map<String, dynamic>)
@@ -521,8 +521,8 @@ class Cover {
       id: map['id'] != null ? map['id'] as int : null,
       coverableId:
           map['coverable_id'] != null ? map['coverable_id'] as int : null,
-      image: map['image'] != null ? map['image'].toString() : null,
-      imgUrl: map['img_url'] != null ? map['img_url'].toString() : null,
+      image: map['image'] != null ? map['image'] as String : null,
+      imgUrl: map['img_url'] != null ? map['img_url'] as String : null,
     );
   }
 
@@ -644,7 +644,7 @@ class Profile {
   factory Profile.fromMap(Map<String, dynamic> map) {
     return Profile(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       cover: map['cover'] != null
           ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
           : null,
@@ -722,7 +722,7 @@ class NewRelease {
   factory NewRelease.fromMap(Map<String, dynamic> map) {
     return NewRelease(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
       cover: map['cover'] != null
           ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
@@ -906,8 +906,8 @@ class Track {
     return Track(
       id: map['id'] != null ? map['id'] as int : null,
       albumId: map['album_id'] != null ? map['album_id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
-      duration: map['duration'] != null ? map['duration'].toString() : null,
+      name: map['name'] != null ? map['name'] as String  : null,
+      duration: map['duration'] != null ? map['duration'] as String : null,
       files: map['files'] != null
           ? List<FileElement>.from(map['files']
                   ?.map((x) => FileElement.fromMap(x as Map<String, dynamic>))
@@ -993,9 +993,9 @@ class FileElement {
     return FileElement(
       id: map['id'] != null ? map['id'] as int : null,
       trackId: map['track_id'] != null ? map['track_id'] as int : null,
-      format: map['format'] != null ? map['format'].toString() : null,
+      format: map['format'] != null ? map['format'] as String : null,
       bitrate: map['bitrate'] != null ? map['bitrate'] as int : null,
-      trackUrl: map['track_url'] != null ? map['track_url'].toString() : null,
+      trackUrl: map['track_url'] != null ? map['track_url'] as String : null,
     );
   }
 
@@ -1067,7 +1067,7 @@ class PopularPlaylist {
   factory PopularPlaylist.fromMap(Map<String, dynamic> map) {
     return PopularPlaylist(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       quadImages: map['quadImages'] != null
           ? List<QuadImage>.from(map['quadImages']
                   ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
@@ -1127,8 +1127,8 @@ class QuadImage {
 
   factory QuadImage.fromMap(Map<String, dynamic> map) {
     return QuadImage(
-      imageUrl: map['image_url'] != null ? map['image_url'].toString() : null,
-      image: map['image'] != null ? map['image'].toString() : null,
+      imageUrl: map['image_url'] != null ? map['image_url'] as String : null,
+      image: map['image'] != null ? map['image'] as String : null,
     );
   }
 

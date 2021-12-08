@@ -511,29 +511,29 @@ class _SearchPageState extends State<SearchPage> {
                                                           );
                                                         }
                                                         if (key == 'Songs') {
-                                                          Navigator.push(
-                                                            context,
-                                                            PageRouteBuilder(
-                                                              opaque: false,
-                                                              pageBuilder: (
-                                                                _,
-                                                                __,
-                                                                ___,
-                                                              ) =>
-                                                                  SongsListPage(
-                                                                listItem: {
-                                                                  'id': query ==
-                                                                          ''
-                                                                      ? widget
-                                                                          .query
-                                                                      : query,
-                                                                  'title': key,
-                                                                  'type':
-                                                                      'songs',
-                                                                },
-                                                              ),
-                                                            ),
-                                                          );
+                                                          // Navigator.push(
+                                                          //   context,
+                                                          //   PageRouteBuilder(
+                                                          //     opaque: false,
+                                                          //     pageBuilder: (
+                                                          //       _,
+                                                          //       __,
+                                                          //       ___,
+                                                          //     ) =>
+                                                          //         SongsListPage(
+                                                          //       listItem: {
+                                                          //         'id': query ==
+                                                          //                 ''
+                                                          //             ? widget
+                                                          //                 .query
+                                                          //             : query,
+                                                          //         'title': key,
+                                                          //         'type':
+                                                          //             'songs',
+                                                          //       },
+                                                          //     ),
+                                                          //   ),
+                                                          // );
                                                         }
                                                       },
                                                       child: Row(

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/playlist_response.dart' as PlayListResponse;
 import 'package:blackhole/model/song_model.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
@@ -485,6 +486,57 @@ class FormatResponse {
       };
     } catch (e) {
       return {'Error': e};
+    }
+  }
+
+  static Future<PlayListResponse.PlaylistResponse?> formatYogiPlaylistData(
+      PlayListResponse.PlaylistResponse? playlistRes) async {
+    PlayListResponse.PlaylistResponse? mainRes;
+    try {
+      final PlayListResponse.PlaylistResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          final PlayListResponse.Data? resData = res.data;
+          if (resData != null) {
+            if (res.data!.playListData!.isNotEmpty) {
+              List<PlayListResponse.PlayListData>? playListDataTemp =
+                  res.data!.playListData;
+              for (var i = 0; i < playListDataTemp!.length; i++) {
+                final PlayListResponse.PlayListData item =
+                    res.data!.playListData![i];
+                List<SongItemModel> songList = [];
+                for (var j = 0; j < item.tracksOnly!.length; j++) {
+                  PlayListResponse.TracksOnly trackonly = item.tracksOnly![j];
+                  final String imageUrl = trackonly.album!.cover != null
+                      ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
+                      : '';
+                  songList.add(SongItemModel(
+                    id: trackonly.id!.toString(),
+                    title: trackonly.name,
+                    subtitle: trackonly.album!.profile!.name,
+                    album: trackonly.album!.name,
+                    image: imageUrl,
+                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                    artist: trackonly.album!.profile!.name,
+                  ));
+                }
+                playListDataTemp[i] = item.copyWith(songlist: songList);
+              }
+              PlayListResponse.Data tempdata =
+                  resData.copyWith(playListData: playListDataTemp);
+              mainRes = playlistRes!.copyWith(data: tempdata);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      log('Error in formatYogiPlaylistData: $e');
+    }
+
+    if (mainRes == null) {
+      return playlistRes;
+    } else {
+      return mainRes;
     }
   }
 

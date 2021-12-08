@@ -348,29 +348,29 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                             child: HorizontalAlbumsList(
                                               songsList: entry.value,
                                               onTap: (int idx) {
-                                                Navigator.push(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    opaque: false,
-                                                    pageBuilder: (
-                                                      _,
-                                                      __,
-                                                      ___,
-                                                    ) =>
-                                                        entry.key ==
-                                                                'Related Artists'
-                                                            ? ArtistSearchPage(
-                                                                data: entry
-                                                                        .value[
-                                                                    idx] as Map,
-                                                              )
-                                                            : SongsListPage(
-                                                                listItem: entry
-                                                                        .value[
-                                                                    idx] as Map,
-                                                              ),
-                                                  ),
-                                                );
+                                                // Navigator.push(
+                                                //   context,
+                                                //   PageRouteBuilder(
+                                                //     opaque: false,
+                                                //     pageBuilder: (
+                                                //       _,
+                                                //       __,
+                                                //       ___,
+                                                //     ) =>
+                                                //         entry.key ==
+                                                //                 'Related Artists'
+                                                //             ? ArtistSearchPage(
+                                                //                 data: entry
+                                                //                         .value[
+                                                //                     idx] as Map,
+                                                //               )
+                                                //             : SongsListPage(
+                                                //                 listItem: entry
+                                                //                         .value[
+                                                //                     idx] as Map,
+                                                //               ),
+                                                //   ),
+                                                // );
                                               },
                                             ),
                                           )

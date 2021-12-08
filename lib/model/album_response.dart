@@ -7,7 +7,7 @@ import 'home_model.dart';
 class AlbumResponse {
   final bool? status;
   final int? statusCode;
-  final AlbumData? data;
+  final Data? data;
   AlbumResponse({
     this.status,
     this.statusCode,
@@ -17,7 +17,7 @@ class AlbumResponse {
   AlbumResponse copyWith({
     bool? status,
     int? statusCode,
-    AlbumData? data,
+    Data? data,
   }) {
     return AlbumResponse(
       status: status ?? this.status,
@@ -37,9 +37,9 @@ class AlbumResponse {
   factory AlbumResponse.fromMap(Map<String, dynamic> map) {
     return AlbumResponse(
       status: map['status'] != null ? map['status'] as bool : null,
-      statusCode: map['statusCode'] != null ? map['statusCode'] as int : null,
+      statusCode: map['status_code'] != null ? map['status_code'] as int : null,
       data: map['data'] != null
-          ? AlbumData.fromMap(map['data'] as Map<String, dynamic>)
+          ? Data.fromMap(map['data'] as Map<String, dynamic>)
           : null,
     );
   }
@@ -67,9 +67,9 @@ class AlbumResponse {
   int get hashCode => status.hashCode ^ statusCode.hashCode ^ data.hashCode;
 }
 
-class AlbumData {
+class Data {
   final int? currentPage;
-  final List<Datum>? data;
+  final List<AlbumData>? data;
   final String? firstPageUrl;
   final int? from;
   final int? lastPage;
@@ -80,7 +80,7 @@ class AlbumData {
   final String? prevPageUrl;
   final int? to;
   final int? total;
-  AlbumData({
+  Data({
     this.currentPage,
     this.data,
     this.firstPageUrl,
@@ -95,9 +95,9 @@ class AlbumData {
     this.total,
   });
 
-  AlbumData copyWith({
+  Data copyWith({
     int? currentPage,
-    List<Datum>? data,
+    List<AlbumData>? data,
     String? firstPageUrl,
     int? from,
     int? lastPage,
@@ -109,7 +109,7 @@ class AlbumData {
     int? to,
     int? total,
   }) {
-    return AlbumData(
+    return Data(
       currentPage: currentPage ?? this.currentPage,
       data: data ?? this.data,
       firstPageUrl: firstPageUrl ?? this.firstPageUrl,
@@ -142,27 +142,28 @@ class AlbumData {
     };
   }
 
-  factory AlbumData.fromMap(Map<String, dynamic> map) {
-    return AlbumData(
+  factory Data.fromMap(Map<String, dynamic> map) {
+    return Data(
       currentPage:
-          map['currentPage'] != null ? map['currentPage'] as int : null,
+          map['current_page'] != null ? map['current_page'] as int : null,
       data: map['data'] != null
-          ? List<Datum>.from(
-              map['data']?.map((x) => Datum.fromMap(x as Map<String, dynamic>))
+          ? List<AlbumData>.from(
+              map['data']?.map((x) => AlbumData.fromMap(x as Map<String, dynamic>))
                   as Iterable<dynamic>)
           : null,
-      firstPageUrl:
-          map['firstPageUrl'] != null ? map['firstPageUrl'] as String : null,
+      firstPageUrl: map['first_page_url'] != null
+          ? map['first_page_url'] as String
+          : null,
       from: map['from'] != null ? map['from'] as int : null,
-      lastPage: map['lastPage'] != null ? map['lastPage'] as int : null,
+      lastPage: map['last_page'] != null ? map['last_page'] as int : null,
       lastPageUrl:
-          map['lastPageUrl'] != null ? map['lastPageUrl'] as String : null,
+          map['last_page_url'] != null ? map['last_page_url'] as String : null,
       nextPageUrl:
-          map['nextPageUrl'] != null ? map['nextPageUrl'] as String : null,
+          map['next_page_url'] != null ? map['next_page_url'] as String : null,
       path: map['path'] != null ? map['path'] as String : null,
-      perPage: map['perPage'] != null ? map['perPage'] as int : null,
+      perPage: map['per_page'] != null ? map['per_page'] as int : null,
       prevPageUrl:
-          map['prevPageUrl'] != null ? map['prevPageUrl'] as String : null,
+          map['prev_page_url'] != null ? map['prev_page_url'] as String : null,
       to: map['to'] != null ? map['to'] as int : null,
       total: map['total'] != null ? map['total'] as int : null,
     );
@@ -170,8 +171,8 @@ class AlbumData {
 
   String toJson() => json.encode(toMap());
 
-  factory AlbumData.fromJson(String source) =>
-      AlbumData.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Data.fromJson(String source) =>
+      Data.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -182,7 +183,7 @@ class AlbumData {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is AlbumData &&
+    return other is Data &&
         other.currentPage == currentPage &&
         listEquals(other.data, data) &&
         other.firstPageUrl == firstPageUrl &&
@@ -214,8 +215,8 @@ class AlbumData {
   }
 }
 
-class Datum {
-  Datum({
+class AlbumData {
+  AlbumData({
     this.id,
     this.name,
     this.description,
@@ -235,7 +236,7 @@ class Datum {
   final Profile? profile;
   final List<Track>? tracks;
 
-  Datum copyWith({
+  AlbumData copyWith({
     int? id,
     String? name,
     String? description,
@@ -245,7 +246,7 @@ class Datum {
     Profile? profile,
     List<Track>? tracks,
   }) {
-    return Datum(
+    return AlbumData(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -270,15 +271,16 @@ class Datum {
     };
   }
 
-  factory Datum.fromMap(Map<String, dynamic> map) {
-    return Datum(
+  factory AlbumData.fromMap(Map<String, dynamic> map) {
+    return AlbumData(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
-      artistId: map['artistId'] != null ? map['artistId'] as int : null,
-      albumDuration:
-          map['albumDuration'] != null ? map['albumDuration'] as String : null,
+      artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
+      albumDuration: map['album_duration'] != null
+          ? map['album_duration'] as String
+          : null,
       cover: map['cover'] != null
           ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
           : null,
@@ -295,19 +297,19 @@ class Datum {
 
   String toJson() => json.encode(toMap());
 
-  factory Datum.fromJson(String source) =>
-      Datum.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AlbumData.fromJson(String source) =>
+      AlbumData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Datum(id: $id, name: $name, description: $description, artistId: $artistId, albumDuration: $albumDuration, cover: $cover, profile: $profile, tracks: $tracks)';
+    return 'AlbumData(id: $id, name: $name, description: $description, artistId: $artistId, albumDuration: $albumDuration, cover: $cover, profile: $profile, tracks: $tracks)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Datum &&
+    return other is AlbumData &&
         other.id == id &&
         other.name == name &&
         other.description == description &&

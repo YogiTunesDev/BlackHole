@@ -363,20 +363,20 @@ class _PlayScreenState extends State<PlayScreen> {
                             );
                           }
                           if (value == 5) {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => SongsListPage(
-                                  listItem: {
-                                    'type': 'album',
-                                    'id': mediaItem.extras?['album_id'],
-                                    'title': mediaItem.album,
-                                    'image': mediaItem.artUri,
-                                  },
-                                ),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     opaque: false,
+                            //     pageBuilder: (_, __, ___) => SongsListPage(
+                            //       listItem: {
+                            //         'type': 'album',
+                            //         'id': mediaItem.extras?['album_id'],
+                            //         'title': mediaItem.album,
+                            //         'image': mediaItem.artUri,
+                            //       },
+                            //     ),
+                            //   ),
+                            // );
                           }
                           if (value == 4) {
                             showDialog(
@@ -1715,20 +1715,20 @@ class NameNControls extends StatelessWidget {
               offset: const Offset(1.0, 0.0),
               onSelected: (int value) {
                 if (value == 0) {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      opaque: false,
-                      pageBuilder: (_, __, ___) => SongsListPage(
-                        listItem: {
-                          'type': 'album',
-                          'id': mediaItem.extras?['album_id'],
-                          'title': mediaItem.album,
-                          'image': mediaItem.artUri,
-                        },
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   PageRouteBuilder(
+                  //     opaque: false,
+                  //     pageBuilder: (_, __, ___) => SongsListPage(
+                  //       listItem: {
+                  //         'type': 'album',
+                  //         'id': mediaItem.extras?['album_id'],
+                  //         'title': mediaItem.album,
+                  //         'image': mediaItem.artUri,
+                  //       },
+                  //     ),
+                  //   ),
+                  // );
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[

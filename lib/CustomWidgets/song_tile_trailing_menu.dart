@@ -108,22 +108,22 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         if (value == 3) {
           Share.share(widget.data.url.toString());
         }
-        if (value == 4) {
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              opaque: false,
-              pageBuilder: (_, __, ___) => SongsListPage(
-                listItem: {
-                  'type': 'album',
-                  'id': mediaItem.extras?['album_id'],
-                  'title': mediaItem.album,
-                  'image': mediaItem.artUri,
-                },
-              ),
-            ),
-          );
-        }
+        // if (value == 4) {
+        //   Navigator.push(
+        //     context,
+        //     PageRouteBuilder(
+        //       opaque: false,
+        //       pageBuilder: (_, __, ___) => SongsListPage(
+        //         listItem: {
+        //           'type': 'album',
+        //           'id': mediaItem.extras?['album_id'],
+        //           'title': mediaItem.album,
+        //           'image': mediaItem.artUri,
+        //         },
+        //       ),
+        //     ),
+        //   );
+        // }
         if (value == 0) {
           AddToPlaylist().addToPlaylist(context, mediaItem);
         }
