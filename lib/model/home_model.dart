@@ -816,7 +816,7 @@ class TrendingAlbum {
   factory TrendingAlbum.fromMap(Map<String, dynamic> map) {
     return TrendingAlbum(
       id: map['id'] != null ? map['id'] as int : null,
-      name: map['name'] != null ? map['name'].toString() : null,
+      name: map['name'] != null ? map['name'] as String : null,
       cover: map['cover'] != null
           ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
           : null,
