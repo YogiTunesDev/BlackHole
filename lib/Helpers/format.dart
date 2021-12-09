@@ -5,7 +5,12 @@ import 'dart:typed_data';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/playlist_response.dart' as PlayListResponse;
+import 'package:blackhole/model/single_album_response.dart';
+import 'package:blackhole/model/single_playlist_response.dart'
+    as SinglePlaylistResponse;
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/model/track_model.dart';
+import 'package:blackhole/model/trending_song_response.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
 
@@ -540,6 +545,199 @@ class FormatResponse {
     }
   }
 
+  static Future<SingleAlbumResponse?> formatYogiSingleALbumData(
+      SingleAlbumResponse? playlistRes) async {
+    SingleAlbumResponse? mainRes;
+    try {
+      final SingleAlbumResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          if (res.data != null) {
+            List<SongItemModel> songList = [];
+            if (res.data!.tracks != null) {
+              final List<Track>? playListDataTemp = res.data!.tracks;
+              for (var i = 0; i < playListDataTemp!.length; i++) {
+                final Track trackonly = playListDataTemp[i];
+                final String imageUrl = res.data!.cover != null
+                    ? '${res.data!.cover!.imgUrl!}/${res.data!.cover!.image!}'
+                    : '';
+                songList.add(
+                  SongItemModel(
+                    id: trackonly.id!.toString(),
+                    title: trackonly.name,
+                    subtitle: res.data!.profile!.name,
+                    album: res.data!.name,
+                    albumId: res.data!.id.toString(),
+                    image: imageUrl,
+                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                    artist: res.data!.profile!.name,
+                  ),
+                );
+              }
+            }
+            final SingleAlbumData singleAlbumData =
+                res.data!.copyWith(lstSongItemModel: songList);
+            final SingleAlbumResponse finalSingleAlbum =
+                res.copyWith(data: singleAlbumData);
+            mainRes = finalSingleAlbum;
+          }
+        }
+      }
+    } catch (e) {
+      log('Error in formatYogiPlaylistData: $e');
+    }
+
+    if (mainRes == null) {
+      return playlistRes;
+    } else {
+      return mainRes;
+    }
+  }
+
+  static Future<SinglePlaylistResponse.SinglePlaylistResponse?>
+      formatYogiSinglePlaylistData(
+          SinglePlaylistResponse.SinglePlaylistResponse? playlistRes) async {
+    SinglePlaylistResponse.SinglePlaylistResponse? mainRes;
+    try {
+      final SinglePlaylistResponse.SinglePlaylistResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          if (res.data != null) {
+            String? subtitle;
+            if (res.data!.profile != null) {
+              if (res.data!.profile!.name != null) {
+                subtitle = res.data!.profile!.name;
+              }
+            }
+            List<SongItemModel> songList = [];
+            if (res.data!.playlistTracks != null) {
+              final List<SinglePlaylistResponse.PlaylistTracks>
+                  playListDataTemp = res.data!.playlistTracks!;
+              for (var i = 0; i < playListDataTemp.length; i++) {
+                final SinglePlaylistResponse.PlaylistTracks playlisttrackonly =
+                    playListDataTemp[i];
+                final SinglePlaylistResponse.Track trackonly =
+                    playlisttrackonly.track!;
+                final String imageUrl = trackonly.album!.cover != null
+                    ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
+                    : '';
+                String? albumName;
+                String? albumId;
+                String? artistName;
+                String? artistId;
+                if (trackonly.album != null) {
+                  if (trackonly.album!.name != null) {
+                    albumName = trackonly.album!.name;
+                    albumId = trackonly.album!.id.toString();
+                  }
+                  if (trackonly.album!.profile != null) {
+                    if (trackonly.album!.profile!.name != null) {
+                      artistName = trackonly.album!.profile!.name;
+                      artistId = trackonly.album!.profile!.id.toString();
+                    }
+                  }
+                }
+                songList.add(
+                  SongItemModel(
+                    id: trackonly.id!.toString(),
+                    title: trackonly.name,
+                    subtitle: subtitle,
+                    album: albumName,
+                    albumId: albumId,
+                    image: imageUrl,
+                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                    artist: artistName,
+                  ),
+                );
+              }
+            }
+            final SinglePlaylistResponse.SinglePlaylistData singleAlbumData =
+                res.data!.copyWith(lstSongItemModel: songList);
+            final SinglePlaylistResponse.SinglePlaylistResponse
+                finalSingleAlbum = res.copyWith(data: singleAlbumData);
+            mainRes = finalSingleAlbum;
+          }
+        }
+      }
+    } catch (e) {
+      log('Error in formatYogiPlaylistData: $e');
+    }
+
+    if (mainRes == null) {
+      return playlistRes;
+    } else {
+      return mainRes;
+    }
+  }
+
+  static Future<TrendingSongResponse?> formatYogiTrendingSongData(
+      TrendingSongResponse? playlistRes) async {
+    TrendingSongResponse? mainRes;
+    try {
+      final TrendingSongResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          if (res.data != null) {
+            // List<SongItemModel> songList = [];
+            if (res.data!.data != null) {
+              List<SinglePlaylistResponse.Track> playListDataTemp =
+                  res.data!.data!;
+              for (var i = 0; i < playListDataTemp.length; i++) {
+                final SinglePlaylistResponse.Track trackonly =
+                    playListDataTemp[i];
+                final String imageUrl = trackonly.album!.cover != null
+                    ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
+                    : '';
+                String? albumName;
+                String? albumId;
+                String? artistName;
+                String? artistId;
+                if (trackonly.album != null) {
+                  if (trackonly.album!.name != null) {
+                    albumName = trackonly.album!.name;
+                    albumId = trackonly.album!.id.toString();
+                  }
+                  if (trackonly.album!.profile != null) {
+                    if (trackonly.album!.profile!.name != null) {
+                      artistName = trackonly.album!.profile!.name;
+                      artistId = trackonly.album!.profile!.id.toString();
+                    }
+                  }
+                }
+
+                final songItem = SongItemModel(
+                  id: trackonly.id!.toString(),
+                  title: trackonly.name,
+                  subtitle: '', //subtitle,
+                  album: albumName,
+                  albumId: albumId,
+                  image: imageUrl,
+                  url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                  artist: artistName,
+                );
+                playListDataTemp[i] =
+                    trackonly.copyWith(songItemModel: songItem);
+              }
+              final TrendingSongData singleAlbumData =
+                  res.data!.copyWith(data: playListDataTemp);
+              final TrendingSongResponse finalSingleAlbum =
+                  res.copyWith(data: singleAlbumData);
+              mainRes = finalSingleAlbum;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      log('Error in formatYogiPlaylistData: $e');
+    }
+
+    if (mainRes == null) {
+      return playlistRes;
+    } else {
+      return mainRes;
+    }
+  }
+
   static Future<HomeResponse?> formatHomePageData(
       HomeResponse? homeResponse) async {
     try {
@@ -552,89 +750,23 @@ class FormatResponse {
             final String imageUrl = item.cover != null
                 ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                 : '';
-            songList.add(SongItemModel(
-              id: item.tracks![0].id!.toString(),
-              title: item.name,
-              album: item.tracks![0].name,
-              image: imageUrl,
-              url: item.tracks![0].files![item.tracks![0].files!.length - 1]
-                  .trackUrl,
-              artist: item.tracks![0].name,
-            ));
+            songList.add(
+              SongItemModel(
+                id: item.tracks![0].id!.toString(),
+                title: item.name,
+                album: item.tracks![0].name,
+                image: imageUrl,
+                url: item.tracks![0].files![item.tracks![0].files!.length - 1]
+                    .trackUrl,
+                artist: item.tracks![0].name,
+              ),
+            );
           }
         }
       }
       final Data data = res.data!.copyWith(trendingSongsNew: songList);
       final tempres = res.copyWith(data: data);
       return tempres;
-      // data['Trending_albums'] = await formatSongsInList(
-      //   data['Trending_albums'] as List,
-      //   fetchDetails: false,
-      // );
-      // data['new_albums'] = await formatSongsInList(
-      //   data['new_albums'] as List,
-      //   fetchDetails: false,
-      // );
-      // if (data['city_mod'] != null) {
-      //   data['city_mod'] = await formatSongsInList(
-      //     data['city_mod'] as List,
-      //     fetchDetails: true,
-      //   );
-      // }
-      // final List promoList = [];
-      // final List promoListTemp = [];
-      // data['modules'].forEach((k, v) {
-      //   if (k.startsWith('promo') as bool) {
-      //     if (data[k][0]['type'] == 'song' &&
-      //         (data[k][0]['mini_obj'] as bool? ?? false)) {
-      //       promoListTemp.add(k.toString());
-      //     } else {
-      //       promoList.add(k.toString());
-      //     }
-      //   }
-      // });
-      // for (int i = 0; i < promoList.length; i++) {
-      //   data[promoList[i]] = await formatSongsInList(
-      //     data[promoList[i]] as List,
-      //     fetchDetails: false,
-      //   );
-      // }
-
-//       final List albumList = [];
-//       for (var e in data.entries) {
-//  Map lstMap = {
-//           "name":e.key,
-//           "value":e.value,
-//         };
-//         albumList.add(lstMap);
-//       }
-
-//       data['collections'] = [
-//         // 'My recently played songs',
-//         // 'Featured albums',
-//         // 'Trending albums',
-//         // 'Trending songs',
-//         // 'Popular playlists',
-//         // 'Popular yoga playlists',
-//         // 'New releases',
-//         // 'Recently added',
-//         // 'Browse by activity',
-//         // 'Browse by genres & moods',
-//         ...albumList
-//       ];
-      // data['collections_temp'] = promoListTemp;
-
-      // List list = [
-      //   data!.data!.featuredAlbums,
-      //   data.data!.trendingAlbums,
-      //   data.data!.trendingSongs,
-      //   data.data!.popularPlaylists,
-      //   data.data!.popularYogaPlaylists,
-      //   data.data!.newReleases,
-      //   data.data!.recentlyAdded,
-      //   data.data!.browseByActivity,
-      //   data.data!.browseByGenresMoods,
-      // ];
     } catch (e) {
       log('Error in formatHomePageData: $e');
       return homeResponse;

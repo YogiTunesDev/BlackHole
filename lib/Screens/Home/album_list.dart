@@ -5,10 +5,16 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
+import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/album_response.dart';
+import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/model/trending_song_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:blackhole/model/single_playlist_response.dart'
+    as singlePlaylistResponse;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum AlbumListType {
@@ -19,16 +25,19 @@ enum AlbumListType {
   newRelease,
   popularAlbum,
   genresMoods,
+  popularSong,
 }
-enum MainType { album, playlist, genres }
+enum MainType { album, playlist, genres, genresAlbum, song }
 
 class AlbumList extends StatefulWidget {
   final AlbumListType albumListType;
   final String? albumName;
+  final int? id;
   const AlbumList({
     Key? key,
     required this.albumListType,
     required this.albumName,
+    this.id,
   }) : super(key: key);
 
   @override
@@ -42,6 +51,8 @@ class _AlbumListState extends State<AlbumList> {
   bool apiLoading = false;
   int pageNo = 1;
   bool isFinish = false;
+  List<GenresData> lstGenresData = [];
+  List<singlePlaylistResponse.Track> lstSongTrending = [];
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -90,6 +101,67 @@ class _AlbumListState extends State<AlbumList> {
             if (playlistRes.data != null) {
               if (playlistRes.data!.data!.isNotEmpty) {
                 lstAlbumData.addAll(playlistRes.data!.data!);
+              } else {
+                isFinish = true;
+              }
+            } else {
+              isFinish = true;
+            }
+          } else {
+            isFinish = true;
+          }
+        } else {
+          isFinish = true;
+        }
+      } else if (mainType == MainType.genres) {
+        final GenresResponse? playlistRes =
+            await YogitunesAPI().fetchYogiGenresData(getListUrl()!);
+        pageNo++;
+        if (playlistRes != null) {
+          if (playlistRes.status!) {
+            if (playlistRes.data != null) {
+              lstGenresData.addAll(playlistRes.data!);
+              isFinish = true;
+            } else {
+              isFinish = true;
+            }
+          } else {
+            isFinish = true;
+          }
+        } else {
+          isFinish = true;
+        }
+      } else if (mainType == MainType.genresAlbum) {
+        final AlbumResponse? playlistRes = await YogitunesAPI()
+            .fetchYogiGenresAlbumData(getListUrl()!, widget.id!, pageNo);
+        pageNo++;
+        if (playlistRes != null) {
+          if (playlistRes.status!) {
+            if (playlistRes.data != null) {
+              if (playlistRes.data!.data!.isNotEmpty) {
+                lstAlbumData.addAll(playlistRes.data!.data!);
+              } else {
+                isFinish = true;
+              }
+            } else {
+              isFinish = true;
+            }
+          } else {
+            isFinish = true;
+          }
+        } else {
+          isFinish = true;
+        }
+      } else if (mainType == MainType.song) {
+        final TrendingSongResponse? playlistRes = await YogitunesAPI()
+            .fetchYogiTrendingSongData(getListUrl()!, pageNo);
+
+        pageNo++;
+        if (playlistRes != null) {
+          if (playlistRes.status!) {
+            if (playlistRes.data != null) {
+              if (playlistRes.data!.data!.isNotEmpty) {
+                lstSongTrending.addAll(playlistRes.data!.data!);
               } else {
                 isFinish = true;
               }
@@ -321,7 +393,13 @@ class _AlbumListState extends State<AlbumList> {
                       if (((lstPlaylistData.isEmpty &&
                                   mainType == MainType.playlist) ||
                               (lstAlbumData.isEmpty &&
-                                  mainType == MainType.album)) &&
+                                  mainType == MainType.album) ||
+                              (lstGenresData.isEmpty &&
+                                  mainType == MainType.genres) ||
+                              (lstAlbumData.isEmpty &&
+                                  mainType == MainType.genresAlbum) ||
+                              (lstSongTrending.isEmpty &&
+                                  mainType == MainType.song)) &&
                           !apiLoading)
                         emptyScreen(
                           context,
@@ -373,7 +451,8 @@ class _AlbumListState extends State<AlbumList> {
                                     );
                                   },
                                 )
-                              : mainType == MainType.album
+                              : mainType == MainType.album ||
+                                      mainType == MainType.genresAlbum
                                   ? GridView.builder(
                                       gridDelegate:
                                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -395,26 +474,105 @@ class _AlbumListState extends State<AlbumList> {
                                           itemImage: itemImage,
                                           itemName: item.name!,
                                           onTap: () {
-                                            // Navigator.push(
-                                            //   context,
-                                            //   PageRouteBuilder(
-                                            //     opaque: false,
-                                            //     pageBuilder: (_, __, ___) =>
-                                            //         SongsListPage(
-                                            //       songList: item.songlist,
-                                            //       playlistName: item.name!,
-                                            //       playlistImage: itemImage,
-                                            //       id: item.id,
-                                            //     ),
-                                            //   ),
-                                            // );
+                                            Navigator.push(
+                                              context,
+                                              PageRouteBuilder(
+                                                opaque: false,
+                                                pageBuilder: (_, __, ___) =>
+                                                    SongsListPage(
+                                                  songListType:
+                                                      SongListType.album,
+                                                  playlistName: item.name!,
+                                                  playlistImage: itemImage,
+                                                  id: item.id,
+                                                ),
+                                              ),
+                                            );
                                           },
                                         );
                                       },
                                     )
                                   : mainType == MainType.genres
-                                      ? Container()
-                                      : Container(),
+                                      ? GridView.builder(
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                          ),
+                                          itemCount: lstGenresData.length,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            final GenresData item =
+                                                lstGenresData[index];
+
+                                            return SongItem(
+                                              itemImage: '',
+                                              itemName: item.name!,
+                                              isRound: true,
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    opaque: false,
+                                                    pageBuilder: (_, __, ___) =>
+                                                        AlbumList(
+                                                      albumListType:
+                                                          AlbumListType
+                                                              .genresMoods,
+                                                      albumName: item.name,
+                                                      id: item.id,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+                                      : mainType == MainType.song
+                                          ? GridView.builder(
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                              ),
+                                              itemCount: lstSongTrending.length,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                final SongItemModel item =
+                                                    lstSongTrending[index]
+                                                        .songItemModel!;
+
+                                                return SongItem(
+                                                  itemImage: item.image ?? '',
+                                                  itemName: item.title ?? '',
+                                                  onTap: () {
+                                                    List<SongItemModel>
+                                                        lstMainSongs = [];
+                                                    lstMainSongs.add(item);
+                                                    Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                        opaque: false,
+                                                        pageBuilder:
+                                                            (_, __, ___) =>
+                                                                PlayScreen(
+                                                          songsList:
+                                                              lstMainSongs,
+                                                          index: 0,
+                                                          offline: false,
+                                                          fromDownloads: false,
+                                                          fromMiniplayer: false,
+                                                          recommend: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            )
+                                          : Container(),
                         ),
                       if (apiLoading)
                         SizedBox(
@@ -474,19 +632,26 @@ class _AlbumListState extends State<AlbumList> {
       mainType = MainType.album;
       return 'browse/trending_albums';
     } else if (albumListType == AlbumListType.genresMoods) {
-      mainType = MainType.genres;
+      if (widget.id != null) {
+        mainType = MainType.genresAlbum;
+      } else {
+        mainType = MainType.genres;
+      }
       return 'browse/genres_moods';
+    } else if (albumListType == AlbumListType.popularSong) {
+      mainType = MainType.song;
+      return 'browse/trending_songs';
     }
   }
 
   void _listScrollListener() {
-    if (lstPlaylistData.isNotEmpty) {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 100) {
-        if (!isFinish & !apiLoading) {
-          getApiData();
-        }
+    // if (lstPlaylistData.isNotEmpty) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      if (!isFinish & !apiLoading) {
+        getApiData();
       }
     }
+    // }
   }
 }

@@ -4,8 +4,12 @@ import 'dart:io';
 
 import 'package:blackhole/Helpers/format.dart';
 import 'package:blackhole/model/album_response.dart';
+import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/single_album_response.dart';
+import 'package:blackhole/model/single_playlist_response.dart';
+import 'package:blackhole/model/trending_song_response.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -131,6 +135,105 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<GenresResponse?> fetchYogiGenresData(
+    String url,
+  ) async {
+    GenresResponse? result;
+    try {
+      final res = await getResponse('$url');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = GenresResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<AlbumResponse?> fetchYogiGenresAlbumData(
+    String url,
+    int id,
+    int pageNo,
+  ) async {
+    AlbumResponse? result;
+    try {
+      final res = await getResponse('$url/$id?page=$pageNo');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<SingleAlbumResponse?> fetchYogiSingleAlbumData(
+    int id,
+  ) async {
+    SingleAlbumResponse? result;
+    try {
+      final res = await getResponse('browse/albums/$id');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiSingleALbumData(
+          SingleAlbumResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<SinglePlaylistResponse?> fetchYogiSinglePlaylistData(
+    int id,
+  ) async {
+    SinglePlaylistResponse? result;
+    try {
+      final res = await getResponse('browse/playlists/$id');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiSinglePlaylistData(
+          SinglePlaylistResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<TrendingSongResponse?> fetchYogiTrendingSongData(
+    String url,
+    int pageNo,
+  ) async {
+    TrendingSongResponse? result;
+    try {
+      final res = await getResponse('$url?page=$pageNo');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiTrendingSongData(
+          TrendingSongResponse?.fromMap(data as Map<String, dynamic>),
+        );
       }
     } catch (e) {
       log('Error in fetchYogiAlbumData: $e');

@@ -1,4 +1,5 @@
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/song_model.dart';
@@ -14,7 +15,7 @@ List preferredLanguage = Hive.box('settings')
     .get('preferredLanguage', defaultValue: ['Hindi']) as List;
 List likedRadio =
     Hive.box('settings').get('likedRadio', defaultValue: []) as List;
-HomeResponse? data;
+
 //     Hive.box('cache').get('homepage', defaultValue: {}) as HomeResponse?;
 // List lists = ['recent', ...?data['collections']];
 
@@ -25,6 +26,7 @@ class SaavnHomePage extends StatefulWidget {
 
 class _SaavnHomePageState extends State<SaavnHomePage>
     with AutomaticKeepAliveClientMixin<SaavnHomePage> {
+      HomeResponse? data;
   List recentList =
       Hive.box('cache').get('recentSongs', defaultValue: []) as List;
   Map likedArtists =
@@ -95,7 +97,11 @@ class _SaavnHomePageState extends State<SaavnHomePage>
             : MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: apiLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ))
           : data != null
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,18 +135,49 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final PopularPlaylist item =
                                   data!.data!.popularYogaPlaylists![index];
+                              final String itemImage = item
+                                      .quadImages!.isNotEmpty
+                                  ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                  : '';
                               return SongItem(
-                                itemImage: item.quadImages!.isNotEmpty
-                                    ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                                    : '',
+                                itemImage: itemImage,
                                 itemName: item.name!,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) =>
+                                          SongsListPage(
+                                        songListType: SongListType.playlist,
+                                        playlistName: item.name!,
+                                        playlistImage: itemImage,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
                         ),
                     if (data!.data!.browseByActivity != null)
                       if (data!.data!.browseByActivity!.isNotEmpty)
-                        const HeaderTitle(title: 'Other Activities'),
+                        HeaderTitle(
+                          title: 'Other Activities',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.otherActivity,
+                                  albumName: 'Other Activities',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.browseByActivity != null)
                       if (data!.data!.browseByActivity!.isNotEmpty)
                         SizedBox(
@@ -157,6 +194,20 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemImage: '',
                                 itemName: item.name!,
                                 isRound: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) => AlbumList(
+                                        albumListType:
+                                            AlbumListType.genresMoods,
+                                        albumName: item.name,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -200,11 +251,27 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemBuilder: (context, index) {
                                   final AlbumsClean item = data!.data!
                                       .featuredAlbums![0].albumsClean![index];
+                                  final String itemImage = item.cover != null
+                                      ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
+                                      : '';
                                   return SongItem(
-                                    itemImage: item.cover != null
-                                        ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
-                                        : '',
+                                    itemImage: itemImage,
                                     itemName: item.name!,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          opaque: false,
+                                          pageBuilder: (_, __, ___) =>
+                                              SongsListPage(
+                                            songListType: SongListType.album,
+                                            playlistName: item.name!,
+                                            playlistImage: itemImage,
+                                            id: item.id,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                               ),
@@ -238,13 +305,29 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final PopularPlaylist item =
                                   data!.data!.popularPlaylists![index];
+                              final String itemImage = item.quadImages != null
+                                  ? item.quadImages!.isNotEmpty
+                                      ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                      : ''
+                                  : '';
                               return SongItem(
-                                itemImage: item.quadImages != null
-                                    ? item.quadImages!.isNotEmpty
-                                        ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                                        : ''
-                                    : '',
+                                itemImage: itemImage,
                                 itemName: item.name!,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) =>
+                                          SongsListPage(
+                                        songListType: SongListType.playlist,
+                                        playlistName: item.name!,
+                                        playlistImage: itemImage,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -278,18 +361,45 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final NewRelease item =
                                   data!.data!.newReleases![index];
+                              final String itemImage = item.cover != null
+                                  ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                  : '';
                               return SongItem(
-                                itemImage: item.cover != null
-                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                                    : '',
+                                itemImage: itemImage,
                                 itemName: item.name!,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) =>
+                                          SongsListPage(
+                                        songListType: SongListType.album,
+                                        playlistName: item.name!,
+                                        playlistImage: itemImage,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
                         ),
                     if (data!.data!.trendingSongsNew != null)
                       if (data!.data!.trendingSongsNew!.isNotEmpty)
-                        const HeaderTitle(title: 'Popular Songs'),
+                         HeaderTitle(title: 'Popular Songs',viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.popularSong,
+                                  albumName: 'Popular Songs',
+                                ),
+                              ),
+                            );
+                          },),
                     if (data!.data!.trendingSongsNew != null)
                       if (data!.data!.trendingSongsNew!.isNotEmpty)
                         SizedBox(
@@ -360,18 +470,48 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final TrendingAlbum item =
                                   data!.data!.trendingAlbums![index];
+                              final String itemImage = item.cover != null
+                                  ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                  : '';
                               return SongItem(
-                                itemImage: item.cover != null
-                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                                    : '',
+                                itemImage: itemImage,
                                 itemName: item.name!,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) =>
+                                          SongsListPage(
+                                        songListType: SongListType.album,
+                                        playlistName: item.name!,
+                                        playlistImage: itemImage,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
                         ),
                     if (data!.data!.browseByGenresMoods != null)
                       if (data!.data!.browseByGenresMoods!.isNotEmpty)
-                        const HeaderTitle(title: 'Genres & Moods'),
+                        HeaderTitle(
+                          title: 'Genres & Moods',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType: AlbumListType.genresMoods,
+                                  albumName: 'Genres & Moods',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                     if (data!.data!.browseByGenresMoods != null)
                       if (data!.data!.browseByGenresMoods!.isNotEmpty)
                         SizedBox(
@@ -388,6 +528,20 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemImage: '',
                                 itemName: item.name!,
                                 isRound: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) => AlbumList(
+                                        albumListType:
+                                            AlbumListType.genresMoods,
+                                        albumName: item.name,
+                                        id: item.id,
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
