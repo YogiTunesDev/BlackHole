@@ -144,10 +144,13 @@ class _SongsListPageState extends State<SongsListPage> {
                     pinned: true,
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     actions: [
-                      // MultiDownloadButton(
-                      //   data: songList,
-                      //   playlistName: widget.playlistName,
-                      // ),
+                      if (!apiloading && songList.isNotEmpty)
+                        MultiDownloadButton(
+                          data: List<dynamic>.from(
+                            songList.map((x) => x.toMap()),
+                          ),
+                          playlistName: widget.playlistName,
+                        ),
                       if (!apiloading && songList.isNotEmpty)
                         IconButton(
                           icon: const Icon(Icons.share_rounded),
@@ -408,7 +411,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                   );
                                 },
                                 subtitle: Text(
-                                  '${entry.subtitle}',
+                                  entry.artist ?? 'Unkown',
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 leading: Card(

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -129,20 +132,25 @@ class _RecentlyPlayedState extends State<RecentlyPlayed> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   PageRouteBuilder(
-                                    //     opaque: false,
-                                    //     pageBuilder: (_, __, ___) => PlayScreen(
-                                    //       songsList: _songs,
-                                    //       index: index,
-                                    //       offline: false,
-                                    //       fromDownloads: false,
-                                    //       fromMiniplayer: false,
-                                    //       recommend: true,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => PlayScreen(
+                                          songsList: List<SongItemModel>.from(
+                                              _songs.map(
+                                            (x) => SongItemModel.fromMap(
+                                                json.decode(json.encode(x))
+                                                    as Map<String, dynamic>),
+                                          )),
+                                          index: index,
+                                          offline: false,
+                                          fromDownloads: false,
+                                          fromMiniplayer: false,
+                                          recommend: true,
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
                               );

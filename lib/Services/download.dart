@@ -21,7 +21,7 @@ class Download with ChangeNotifier {
   final ValueNotifier<bool> remember = ValueNotifier<bool>(false);
   String preferredDownloadQuality = Hive.box('settings')
       .get('downloadQuality', defaultValue: '320 kbps') as String;
-  String downloadFormat = 'm4a';
+  String downloadFormat = 'mp3';
   // Hive.box('settings').get('downloadFormat', defaultValue: 'm4a');
   bool createDownloadFolder = Hive.box('settings')
       .get('createDownloadFolder', defaultValue: false) as bool;
@@ -66,7 +66,7 @@ class Download with ChangeNotifier {
       filename = tempList.join(', ');
     }
 
-    filename = '${filename.replaceAll(avoid, "").replaceAll("  ", " ")}.m4a';
+    filename = '${filename.replaceAll(avoid, "").replaceAll("  ", " ")}.mp3';
     if (dlPath == '') {
       final String? temp =
           await ExtStorageProvider.getExtStorage(dirName: 'Music');
@@ -99,7 +99,7 @@ class Download with ChangeNotifier {
             break;
           case 2:
             while (await File('$dlPath/$filename').exists()) {
-              filename = filename.replaceAll('.m4a', ' (1).m4a');
+              filename = filename.replaceAll('.mp3', ' (1).mp3');
             }
             break;
           default:
@@ -178,20 +178,23 @@ class Download with ChangeNotifier {
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            primary:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.grey[700],
+                        Expanded(
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                            ),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              Hive.box('downloads').delete(data['id']);
+                              downloadSong(context, dlPath, filename, data);
+                              rememberOption = 1;
+                            },
+                            child:
+                                Text(AppLocalizations.of(context)!.yesReplace),
                           ),
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            Hive.box('downloads').delete(data['id']);
-                            downloadSong(context, dlPath, filename, data);
-                            rememberOption = 1;
-                          },
-                          child: Text(AppLocalizations.of(context)!.yesReplace),
                         ),
                         const SizedBox(width: 5.0),
                         TextButton(
@@ -204,7 +207,7 @@ class Download with ChangeNotifier {
                             Navigator.pop(context);
                             while (await File('$dlPath/$filename').exists()) {
                               filename =
-                                  filename.replaceAll('.m4a', ' (1).m4a');
+                                  filename.replaceAll('.mp3', ' (1).mp3');
                             }
                             rememberOption = 2;
                             downloadSong(context, dlPath, filename, data);
@@ -249,7 +252,7 @@ class Download with ChangeNotifier {
     String? appPath;
     final List<int> _bytes = [];
     String lyrics;
-    final artname = fileName.replaceAll('.m4a', '.jpg');
+    final artname = fileName.replaceAll('.mp3', '.jpg');
     if (!Platform.isWindows) {
       appPath = Hive.box('settings').get('tempDirPath')?.toString();
       appPath ??= (await getTemporaryDirectory()).path;

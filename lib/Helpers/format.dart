@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/playlist_response.dart' as PlayListResponse;
+import 'package:blackhole/model/radio_station_stream_response.dart';
+import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart'
     as SinglePlaylistResponse;
@@ -13,6 +15,7 @@ import 'package:blackhole/model/track_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:dart_des/dart_des.dart';
 import 'package:hive/hive.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class FormatResponse {
@@ -515,15 +518,52 @@ class FormatResponse {
                   final String imageUrl = trackonly.album!.cover != null
                       ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
                       : '';
-                  songList.add(SongItemModel(
-                    id: trackonly.id!.toString(),
-                    title: trackonly.name,
-                    subtitle: trackonly.album!.profile!.name,
-                    album: trackonly.album!.name,
-                    image: imageUrl,
-                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
-                    artist: trackonly.album!.profile!.name,
-                  ));
+                  String? albumName;
+                  String? artistName;
+
+                  if (trackonly.album != null) {
+                    if (trackonly.album!.name != null) {
+                      albumName = trackonly.album!.name;
+                    }
+                  }
+                  if (trackonly.album != null) {
+                    if (trackonly.album!.profile != null) {
+                      if (trackonly.album!.profile!.name != null) {
+                        artistName = trackonly.album!.profile!.name;
+                      }
+                    }
+                  }
+                  int? mDur;
+                  if (trackonly.duration != null) {
+                    final String mDuration = trackonly.duration!;
+                    final List<String> lstTime = mDuration.split(':');
+                    if (lstTime.length == 3) {
+                      mDur = Duration(
+                        hours: int.parse(
+                          lstTime[0],
+                        ),
+                        minutes: int.parse(
+                          lstTime[1],
+                        ),
+                        seconds: int.parse(
+                          lstTime[2],
+                        ),
+                      ).inSeconds;
+                    }
+                  }
+                  songList.add(
+                    SongItemModel(
+                      id: trackonly.id!.toString(),
+                      title: trackonly.name,
+                      subtitle: trackonly.album!.profile!.name,
+                      album: albumName,
+                      image: imageUrl,
+                      url: trackonly
+                          .files![trackonly.files!.length - 1].trackUrl,
+                      artist: artistName,
+                      duration: mDur,
+                    ),
+                  );
                 }
                 playListDataTemp[i] = item.copyWith(songlist: songList);
               }
@@ -561,16 +601,50 @@ class FormatResponse {
                 final String imageUrl = res.data!.cover != null
                     ? '${res.data!.cover!.imgUrl!}/${res.data!.cover!.image!}'
                     : '';
+                String? albumName;
+                String? artistName;
+
+                if (res.data != null) {
+                  if (res.data!.name != null) {
+                    albumName = res.data!.name;
+                  }
+                }
+                if (res.data != null) {
+                  if (res.data!.profile != null) {
+                    if (res.data!.profile!.name != null) {
+                      artistName = res.data!.profile!.name;
+                    }
+                  }
+                }
+                int? mDur;
+                if (trackonly.duration != null) {
+                  final String mDuration = trackonly.duration!;
+                  final List<String> lstTime = mDuration.split(':');
+                  if (lstTime.length == 3) {
+                    mDur = Duration(
+                      hours: int.parse(
+                        lstTime[0],
+                      ),
+                      minutes: int.parse(
+                        lstTime[1],
+                      ),
+                      seconds: int.parse(
+                        lstTime[2],
+                      ),
+                    ).inSeconds;
+                  }
+                }
                 songList.add(
                   SongItemModel(
                     id: trackonly.id!.toString(),
                     title: trackonly.name,
                     subtitle: res.data!.profile!.name,
-                    album: res.data!.name,
+                    album: albumName,
                     albumId: res.data!.id.toString(),
                     image: imageUrl,
                     url: trackonly.files![trackonly.files!.length - 1].trackUrl,
-                    artist: res.data!.profile!.name,
+                    artist: artistName,
+                    duration: mDur,
                   ),
                 );
               }
@@ -637,6 +711,24 @@ class FormatResponse {
                     }
                   }
                 }
+                int? mDur;
+                if (trackonly.duration != null) {
+                  final String mDuration = trackonly.duration!;
+                  final List<String> lstTime = mDuration.split(':');
+                  if (lstTime.length == 3) {
+                    mDur = Duration(
+                      hours: int.parse(
+                        lstTime[0],
+                      ),
+                      minutes: int.parse(
+                        lstTime[1],
+                      ),
+                      seconds: int.parse(
+                        lstTime[2],
+                      ),
+                    ).inSeconds;
+                  }
+                }
                 songList.add(
                   SongItemModel(
                     id: trackonly.id!.toString(),
@@ -647,6 +739,7 @@ class FormatResponse {
                     image: imageUrl,
                     url: trackonly.files![trackonly.files!.length - 1].trackUrl,
                     artist: artistName,
+                    duration: mDur,
                   ),
                 );
               }
@@ -704,7 +797,24 @@ class FormatResponse {
                     }
                   }
                 }
-
+                int? mDur;
+                if (trackonly.duration != null) {
+                  final String mDuration = trackonly.duration!;
+                  final List<String> lstTime = mDuration.split(':');
+                  if (lstTime.length == 3) {
+                    mDur = Duration(
+                      hours: int.parse(
+                        lstTime[0],
+                      ),
+                      minutes: int.parse(
+                        lstTime[1],
+                      ),
+                      seconds: int.parse(
+                        lstTime[2],
+                      ),
+                    ).inSeconds;
+                  }
+                }
                 final songItem = SongItemModel(
                   id: trackonly.id!.toString(),
                   title: trackonly.name,
@@ -714,6 +824,7 @@ class FormatResponse {
                   image: imageUrl,
                   url: trackonly.files![trackonly.files!.length - 1].trackUrl,
                   artist: artistName,
+                  duration: mDur,
                 );
                 playListDataTemp[i] =
                     trackonly.copyWith(songItemModel: songItem);
@@ -750,15 +861,46 @@ class FormatResponse {
             final String imageUrl = item.cover != null
                 ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                 : '';
+            String? albumName;
+            String? artistName;
+
+            if (item.tracks != null) {
+              if (item.tracks![0].name != null) {
+                albumName = item.tracks![0].name;
+              }
+            }
+            int? mDur;
+            if (item.tracks != null) {
+              if (item.tracks!.isNotEmpty) {
+                if (item.tracks![0].duration != null) {
+                  final String mDuration = item.tracks![0].duration!;
+                  final List<String> lstTime = mDuration.split(':');
+                  if (lstTime.length == 3) {
+                    mDur = Duration(
+                      hours: int.parse(
+                        lstTime[0],
+                      ),
+                      minutes: int.parse(
+                        lstTime[1],
+                      ),
+                      seconds: int.parse(
+                        lstTime[2],
+                      ),
+                    ).inSeconds;
+                  }
+                }
+              }
+            }
             songList.add(
               SongItemModel(
                 id: item.tracks![0].id!.toString(),
                 title: item.name,
-                album: item.tracks![0].name,
+                album: albumName,
                 image: imageUrl,
                 url: item.tracks![0].files![item.tracks![0].files!.length - 1]
                     .trackUrl,
-                artist: item.tracks![0].name,
+                artist: artistName,
+                duration: mDur,
               ),
             );
           }
@@ -770,6 +912,70 @@ class FormatResponse {
     } catch (e) {
       log('Error in formatHomePageData: $e');
       return homeResponse;
+    }
+  }
+
+  static Future<RadioStationsStreamResponse?> formatYogiRadioStationStreamData(
+      RadioStationsStreamResponse? playlistRes) async {
+    RadioStationsStreamResponse? mainRes;
+    try {
+      final RadioStationsStreamResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          if (res.data != null) {
+            List<SongItemModel> songList = [];
+
+            final List<RadioStationsStreamData>? playListDataTemp = res.data!;
+            for (var i = 0; i < playListDataTemp!.length; i++) {
+              final RadioStationsStreamData trackonly = playListDataTemp[i];
+              // final String imageUrl = ;
+              int? mDur;
+              if (trackonly.duration != null) {
+                final String mDuration = trackonly.duration!;
+                final List<String> lstTime = mDuration.split(':');
+                if (lstTime.length == 3) {
+                  mDur = Duration(
+                    hours: int.parse(
+                      lstTime[0],
+                    ),
+                    minutes: int.parse(
+                      lstTime[1],
+                    ),
+                    seconds: int.parse(
+                      lstTime[2],
+                    ),
+                  ).inSeconds;
+                }
+              }
+              songList.add(
+                SongItemModel(
+                  id: trackonly.hashCode.toString(),
+                  title: trackonly.title,
+                  subtitle: trackonly.title,
+                  album: trackonly.artist,
+                  albumId: trackonly.artist,
+                  image: trackonly.poster,
+                  url: trackonly.mp3,
+                  artist: trackonly.artist,
+                  duration: mDur,
+                ),
+              );
+            }
+
+            final RadioStationsStreamResponse finalSingleAlbum =
+                res.copyWith(songItemModel: songList);
+            mainRes = finalSingleAlbum;
+          }
+        }
+      }
+    } catch (e) {
+      log('Error in formatYogiPlaylistData: $e');
+    }
+
+    if (mainRes == null) {
+      return playlistRes;
+    } else {
+      return mainRes;
     }
   }
 

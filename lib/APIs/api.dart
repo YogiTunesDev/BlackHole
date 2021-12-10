@@ -7,6 +7,8 @@ import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/radio_station_stream_response.dart';
+import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
@@ -23,23 +25,24 @@ class YogitunesAPI {
   Box settingsBox = Hive.box('settings');
   Map<String, String> endpoints = {
     'homeData': 'browse/',
-    'topSearches': '__call=content.getTopSearches',
-    'fromToken': '__call=webapi.get',
-    'featuredRadio': '__call=webradio.createFeaturedStation',
-    'artistRadio': '__call=webradio.createArtistStation',
-    'entityRadio': '__call=webradio.createEntityStation',
-    'radioSongs': '__call=webradio.getSong',
-    'songDetails': '__call=song.getDetails',
-    'playlistDetails': '__call=playlist.getDetails',
-    'albumDetails': '__call=content.getAlbumDetails',
-    'getResults': '__call=search.getResults',
-    'albumResults': '__call=search.getAlbumResults',
-    'artistResults': '__call=search.getArtistResults',
-    'playlistResults': '__call=search.getPlaylistResults',
-    'getReco': '__call=reco.getreco',
-    'getAlbumReco': '__call=reco.getAlbumReco', // still not used
-    'artistOtherTopSongs':
-        '__call=search.artistOtherTopSongs', // still not used
+    'radioStations': 'browse/radio_stations',
+    // 'topSearches': '__call=content.getTopSearches',
+    // 'fromToken': '__call=webapi.get',
+    // 'featuredRadio': '__call=webradio.createFeaturedStation',
+    // 'artistRadio': '__call=webradio.createArtistStation',
+    // 'entityRadio': '__call=webradio.createEntityStation',
+    // 'radioSongs': '__call=webradio.getSong',
+    // 'songDetails': '__call=song.getDetails',
+    // 'playlistDetails': '__call=playlist.getDetails',
+    // 'albumDetails': '__call=content.getAlbumDetails',
+    // 'getResults': '__call=search.getResults',
+    // 'albumResults': '__call=search.getAlbumResults',
+    // 'artistResults': '__call=search.getArtistResults',
+    // 'playlistResults': '__call=search.getPlaylistResults',
+    // 'getReco': '__call=reco.getreco',
+    // 'getAlbumReco': '__call=reco.getAlbumReco', // still not used
+    // 'artistOtherTopSongs':
+    //     '__call=search.artistOtherTopSongs', // still not used
   };
 
   Future<Response> getResponse(
@@ -98,6 +101,41 @@ class YogitunesAPI {
         result = await FormatResponse.formatHomePageData(
           HomeResponse?.fromMap(data as Map<String, dynamic>),
         );
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<RadioStationsResponse?> fetchYogiRadioStationPageData(
+      int pageNo) async {
+    RadioStationsResponse? result;
+    try {
+      final res =
+          await getResponse('${endpoints['radioStations']!}?page=$pageNo');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = RadioStationsResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<RadioStationsStreamResponse?> fetchYogiRadioStationStreamData(
+      int id) async {
+    RadioStationsStreamResponse? result;
+    try {
+      final res =
+          await getResponse('${endpoints['radioStations']!}/$id/stream');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiRadioStationStreamData(
+            RadioStationsStreamResponse?.fromMap(data as Map<String, dynamic>));
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
