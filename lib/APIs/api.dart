@@ -4,10 +4,16 @@ import 'dart:io';
 
 import 'package:blackhole/Helpers/format.dart';
 import 'package:blackhole/model/album_response.dart';
+import 'package:blackhole/model/forgot_password_response.dart';
+import 'package:blackhole/model/forgot_password_verification_response.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/login_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/reset_password_response.dart';
+import 'package:blackhole/model/signup_response.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
 class YogitunesAPI {
@@ -18,6 +24,11 @@ class YogitunesAPI {
   String apiStr = 'api/';
   Box settingsBox = Hive.box('settings');
   Map<String, String> endpoints = {
+    'login': 'users/login',
+    'signup': 'users/signup',
+    'forgotPassword': 'users/request-verification-code',
+    'forgotPasswordVerification': 'users/validate-verification-code',
+    'resetPassword': 'users/reset-password',
     'homeData': 'browse/',
     'topSearches': '__call=content.getTopSearches',
     'fromToken': '__call=webapi.get',
@@ -52,8 +63,8 @@ class YogitunesAPI {
     } else {
       url = Uri.parse('$baseUrl$apiStr$params');
     }
-    print("URL ::: $url");
-    print("Send Request");
+    print('URL ::: $url');
+    print('Send Request');
     // preferredLanguages =
     //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
     // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
@@ -63,7 +74,7 @@ class YogitunesAPI {
       'Accept': '*/*'
     };
 
-    print("URL ::: $url");
+    print('URL ::: $url');
 
     // if (useProxy && settingsBox.get('useProxy', defaultValue: false) as bool) {
     //   final proxyIP = settingsBox.get('proxyIp');
@@ -83,6 +94,129 @@ class YogitunesAPI {
       print(stackTrace);
       return Response('', 404);
     });
+  }
+
+  Future<LoginResponse?> login(String email, String password) async {
+    LoginResponse? result;
+    try {
+      final url = "$baseUrl$apiStr${endpoints['login']}";
+
+      final res = await http.post(Uri.parse(url), body: {
+        'email': email,
+        'password': password,
+      });
+      print('DATA ::::${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        result = LoginResponse?.fromMap(data as Map<String, dynamic>);
+        var box = await Hive.openBox('api-token');
+        box.put('token', result.apiToken);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<SignupResponse?> signup(String name, String email, String password,
+      bool isNewsLetterChecked) async {
+    SignupResponse? result;
+    try {
+      final url = "$baseUrl$apiStr${endpoints['signup']}";
+
+      final res = await http.post(Uri.parse(url), body: {
+        'name': name,
+        'email': email,
+        'password': password,
+        'newsletter': isNewsLetterChecked.toString(),
+        'initial_platform': Platform.isIOS ? 'ios' : 'Android',
+      }, headers: {
+        'Accept': '*/*',
+        'User-Agent': Platform.isIOS ? 'test/iOS' : 'test/Android',
+      });
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        print('DATA ::::$data');
+        result = SignupResponse?.fromMap(data as Map<String, dynamic>);
+        var box = await Hive.openBox('api-token');
+        box.put('token', result.apiToken);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<ForgotPasswordResponse?> forgotPassword(String email) async {
+    ForgotPasswordResponse? result;
+    try {
+      final url = "$baseUrl$apiStr${endpoints['forgotPassword']}";
+
+      final res = await http.post(Uri.parse(url), body: {
+        'email': email,
+      });
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        print('$data');
+        result = ForgotPasswordResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<ForgotPasswordVerificationResponse?> forgotPasswordVerification(
+      String email, String code) async {
+    ForgotPasswordVerificationResponse? result;
+    try {
+      final url = "$baseUrl$apiStr${endpoints['forgotPasswordVerification']}";
+      final res = await http.post(Uri.parse(url), body: {
+        'email': email,
+        'verification_code': code,
+      });
+      print('DATA ::::${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        print('DATA ::::$data');
+        result = ForgotPasswordVerificationResponse?.fromMap(
+            data as Map<String, dynamic>);
+        var box = await Hive.openBox('api-token');
+        box.put('token', result.apiToken);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<ResetPasswordResponse?> resetPassword(String password) async {
+    ResetPasswordResponse? result;
+    final box = await Hive.openBox('api-token');
+
+    final String apiToken = box.get('token').toString();
+    print('API TOKEN :::: $apiToken');
+    try {
+      final url =
+          "$baseUrl$apiStr${endpoints['resetPassword']}?password=$password";
+
+      final res = await http.post(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $apiToken',
+      });
+      print('DATA ::::${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+
+        print('DATA ::::$data');
+        result = ResetPasswordResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
   }
 
   Future<HomeResponse?> fetchHomePageData() async {

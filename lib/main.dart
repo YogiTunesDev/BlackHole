@@ -28,7 +28,11 @@ import 'package:blackhole/Screens/Library/nowplaying.dart';
 import 'package:blackhole/Screens/Library/playlists.dart';
 import 'package:blackhole/Screens/Library/recent.dart';
 import 'package:blackhole/Screens/Login/auth.dart';
+import 'package:blackhole/Screens/Login/forgot_password.dart';
+import 'package:blackhole/Screens/Login/forgot_password_verification.dart';
 import 'package:blackhole/Screens/Login/pref.dart';
+import 'package:blackhole/Screens/Login/reset_password.dart';
+import 'package:blackhole/Screens/Login/signup.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Services/audio_service.dart';
@@ -96,7 +100,10 @@ Future<void> startService() async {
   GetIt.I.registerSingleton<MyTheme>(MyTheme());
 }
 
+var apiTokenBox;
+
 Future<void> openHiveBox(String boxName, {bool limit = false}) async {
+   apiTokenBox = await  Hive.openBox('api-token');
   final box = await Hive.openBox(boxName).onError((error, stackTrace) async {
     final Directory dir = await getApplicationDocumentsDirectory();
     final String dirPath = dir.path;
@@ -155,7 +162,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget initialFuntion() {
-    return Hive.box('settings').get('userId') != null
+    
+    return apiTokenBox.get('token') != null
         ? HomePage()
         : AuthScreen();
   }
@@ -207,6 +215,13 @@ class _MyAppState extends State<MyApp> {
       ],
       routes: {
         '/': (context) => initialFuntion(),
+        '/login': (context) => const AuthScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        '/forgotPasswordVerification': (context) =>
+            const ForgotPasswordVerificationScreen(),
+        '/resetPassword': (context) => const ResetPasswordScreen(),
+        '/home': (context) => HomePage(),
         '/pref': (context) => const PrefScreen(),
         '/setting': (context) => const SettingPage(),
         '/about': (context) => AboutScreen(),

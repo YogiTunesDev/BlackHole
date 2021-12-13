@@ -3,6 +3,7 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/supabase.dart';
+import 'package:blackhole/model/forgot_password_response.dart';
 import 'package:blackhole/model/login_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,60 +11,16 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen();
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen();
   @override
-  _AuthScreenState createState() => _AuthScreenState();
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  Uuid uuid = const Uuid();
   bool isLoading = false;
-  bool isObscure = true;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
-  Future _addUserData(String name) async {
-    int? status;
-    await Hive.box('settings').put('name', name.trim());
-    final DateTime now = DateTime.now();
-    final List createDate = now
-        .toUtc()
-        .add(const Duration(hours: 5, minutes: 30))
-        .toString()
-        .split('.')
-      ..removeLast()
-      ..join('.');
-
-    String userId = uuid.v1();
-    status = await SupaBase().createUser({
-      'id': userId,
-      'name': name,
-      'accountCreatedOn': '${createDate[0]} IST',
-      'timeZone':
-          "Zone: ${now.timeZoneName} Offset: ${now.timeZoneOffset.toString().replaceAll('.000000', '')}",
-    });
-
-    while (status == null || status == 409) {
-      userId = uuid.v1();
-      status = await SupaBase().createUser({
-        'id': userId,
-        'name': name,
-        'accountCreatedOn': '${createDate[0]} IST',
-        'timeZone':
-            "Zone: ${now.timeZoneName} Offset: ${now.timeZoneOffset.toString().replaceAll('.000000', '')}",
-      });
-    }
-    await Hive.box('settings').put('userId', userId);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,43 +48,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.popAndPushNamed(context, '/signup');
-                        },
-                        child: const Text(
-                          'Signup',
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await restore(context);
-                          GetIt.I<MyTheme>().refresh();
-                          Navigator.popAndPushNamed(context, '/');
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.restore,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await _addUserData(
-                            AppLocalizations.of(context)!.guest,
-                          );
-                          Navigator.popAndPushNamed(context, '/pref');
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.skip,
-                          style: const TextStyle(
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   Expanded(
                     child: Center(
                       child: SingleChildScrollView(
@@ -140,14 +60,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Login',
+                                    text: 'Forgot Password',
                                     style: TextStyle(
                                       height: 0.97,
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Colors.white,
                                     ),
                                     // children: <TextSpan>[
                                     //   const TextSpan(
@@ -187,7 +105,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                       left: 10,
                                       right: 10,
                                     ),
-                                    // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
                                       color: Colors.grey[900],
@@ -221,24 +138,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                               .secondary,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: "Enter Your Email",
+                                        hintText: 'Enter Your Email',
                                         hintStyle: const TextStyle(
                                           color: Colors.white60,
                                         ),
                                       ),
-                                      // onSubmitted: (String value) async {
-                                      //   if (value.trim() == '') {
-                                      //     await _addUserData(
-                                      //       AppLocalizations.of(context)!.guest,
-                                      //     );
-                                      //   } else {
-                                      //     await _addUserData(value.trim());
-                                      //   }
-                                      //   Navigator.popAndPushNamed(
-                                      //     context,
-                                      //     '/pref',
-                                      //   );
-                                      // },
                                       validator: (value) {
                                         final RegExp emailRegex = RegExp(
                                             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
@@ -247,92 +151,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                         } else if (!emailRegex
                                             .hasMatch(value)) {
                                           return 'Please enter valid email';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 5,
-                                      bottom: 5,
-                                      left: 10,
-                                      right: 10,
-                                    ),
-                                    margin: const EdgeInsets.only(
-                                      top: 10,
-                                    ),
-                                    // height: 57.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 5.0,
-                                          offset: Offset(0.0, 3.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      obscureText: isObscure,
-                                      controller: passwordController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
-                                      decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        suffixIcon: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              isObscure = !isObscure;
-                                            });
-                                          },
-                                          child: Icon(
-                                            isObscure
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
-                                        ),
-                                        prefixIcon: Icon(
-                                          Icons.lock,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText: 'Enter Your Password',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      // onSubmitted: (String value) async {
-                                      //   if (value.trim() == '') {
-                                      //     await _addUserData(
-                                      //       AppLocalizations.of(context)!.guest,
-                                      //     );
-                                      //   } else {
-                                      //     await _addUserData(value.trim());
-                                      //   }
-                                      //   Navigator.popAndPushNamed(
-                                      //     context,
-                                      //     '/pref',
-                                      //   );
-                                      // },
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter valid password';
                                         }
                                         return null;
                                       },
@@ -347,16 +165,22 @@ class _AuthScreenState extends State<AuthScreen> {
                                       final bool valid =
                                           formKey.currentState!.validate();
                                       if (valid) {
-                                        final LoginResponse? loginResponse =
-                                            await YogitunesAPI().login(
+                                        final ForgotPasswordResponse?
+                                            forgotPasswordResponse =
+                                            await YogitunesAPI().forgotPassword(
                                           emailController.text,
-                                          passwordController.text,
                                         );
-                                        if (loginResponse != null) {
-                                          if (loginResponse.statusCode == 200) {
-                                            Navigator.popAndPushNamed(
-                                                context, '/home');
-                                          } 
+
+                                        if (forgotPasswordResponse != null) {
+                                          if (forgotPasswordResponse.status!) {
+                                            Navigator.popAndPushNamed(context,
+                                                '/forgotPasswordVerification',
+                                                arguments: {
+                                                  'email': emailController.text,
+                                                });
+                                          } else {
+                                            print(forgotPasswordResponse.data);
+                                          }
                                         }
                                       }
 
@@ -385,9 +209,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                       ),
                                       child: Center(
                                         child: isLoading
-                                            ? CircularProgressIndicator()
+                                            ? const CircularProgressIndicator()
                                             : const Text(
-                                                'Login',
+                                                'Send Verification Code',
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold,
@@ -396,20 +220,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                               ),
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.pushNamed(
-                                              context, '/forgotPassword');
-                                        },
-                                        child: const Text(
-                                          'Forgot Password',
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
