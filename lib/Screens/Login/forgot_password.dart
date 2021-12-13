@@ -21,7 +21,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
   bool isLoading = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  String? errorMessage;
   @override
   Widget build(BuildContext context) {
     return GradientContainer(
@@ -59,11 +59,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             Row(
                               children: [
                                 RichText(
-                                  text: TextSpan(
+                                  text: const TextSpan(
                                     text: 'Forgot Password',
                                     style: TextStyle(
                                       height: 0.97,
-                                      fontSize: 40,
+                                      fontSize: 34,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
@@ -120,9 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       controller: emailController,
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
+                                      keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
                                         focusedBorder:
                                             const UnderlineInputBorder(
@@ -156,71 +154,98 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       },
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-
-                                      final bool valid =
-                                          formKey.currentState!.validate();
-                                      if (valid) {
-                                        final ForgotPasswordResponse?
-                                            forgotPasswordResponse =
-                                            await YogitunesAPI().forgotPassword(
-                                          emailController.text,
-                                        );
-
-                                        if (forgotPasswordResponse != null) {
-                                          if (forgotPasswordResponse.status!) {
-                                            Navigator.popAndPushNamed(context,
-                                                '/forgotPasswordVerification',
-                                                arguments: {
-                                                  'email': emailController.text,
-                                                });
-                                          } else {
-                                            print(forgotPasswordResponse.data);
-                                          }
-                                        }
-                                      }
-
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0,
-                                      ),
-                                      height: 55.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 5.0,
-                                            offset: Offset(0.0, 3.0),
-                                          )
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: isLoading
-                                            ? const CircularProgressIndicator()
-                                            : const Text(
-                                                'Send Verification Code',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20.0,
-                                                ),
-                                              ),
+                                  if (errorMessage != null)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          errorMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  if (isLoading)
+                                    const Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  else
+                                    GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                          errorMessage = null;
+                                          isLoading = true;
+                                        });
+
+                                        final bool valid =
+                                            formKey.currentState!.validate();
+                                        if (valid) {
+                                          final ForgotPasswordResponse?
+                                              forgotPasswordResponse =
+                                              await YogitunesAPI()
+                                                  .forgotPassword(
+                                            emailController.text,
+                                          );
+
+                                          if (forgotPasswordResponse != null) {
+                                            if (forgotPasswordResponse
+                                                .status!) {
+                                              Navigator.popAndPushNamed(context,
+                                                  '/forgotPasswordVerification',
+                                                  arguments: {
+                                                    'email':
+                                                        emailController.text,
+                                                  });
+                                            } else {
+                                              errorMessage =
+                                                  forgotPasswordResponse.data
+                                                      .toString();
+                                            }
+                                          } else {
+                                            errorMessage = 'Server Down!!!';
+                                          }
+                                        }
+
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0,
+                                        ),
+                                        height: 55.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5.0,
+                                              offset: Offset(0.0, 3.0),
+                                            )
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: const Text(
+                                            'Send Verification Code',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,

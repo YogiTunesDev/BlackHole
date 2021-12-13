@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Uuid uuid = const Uuid();
   bool isLoading = false;
   bool isObscure = true;
+  String? errorMessage;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -91,43 +92,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.popAndPushNamed(context, '/signup');
-                        },
-                        child: const Text(
-                          'Signup',
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await restore(context);
-                          GetIt.I<MyTheme>().refresh();
-                          Navigator.popAndPushNamed(context, '/');
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.restore,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await _addUserData(
-                            AppLocalizations.of(context)!.guest,
-                          );
-                          Navigator.popAndPushNamed(context, '/pref');
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.skip,
-                          style: const TextStyle(
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   Expanded(
                     child: Center(
                       child: SingleChildScrollView(
@@ -140,7 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Login',
+                                    text: 'Welcome',
                                     style: TextStyle(
                                       height: 0.97,
                                       fontSize: 40,
@@ -149,29 +113,24 @@ class _AuthScreenState extends State<AuthScreen> {
                                           .colorScheme
                                           .secondary,
                                     ),
-                                    // children: <TextSpan>[
-                                    //   const TextSpan(
-                                    //     text: 'Music',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Colors.white,
-                                    //     ),
-                                    //   ),
-                                    //   TextSpan(
-                                    //     text: '.',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Theme.of(context)
-                                    //           .colorScheme
-                                    //           .secondary,
-                                    //     ),
-                                    //   ),
-                                    // ],
+                                    //
                                   ),
                                 ),
                               ],
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    '\nLet\'s get you listerning to the best yoga music library around!',
+                                style: TextStyle(
+                                  // height: 0.97,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w400,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                //
+                              ),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.1,
@@ -203,9 +162,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       controller: emailController,
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
+                                      keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
                                         focusedBorder:
                                             const UnderlineInputBorder(
@@ -252,165 +209,115 @@ class _AuthScreenState extends State<AuthScreen> {
                                       },
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 5,
-                                      bottom: 5,
-                                      left: 10,
-                                      right: 10,
-                                    ),
-                                    margin: const EdgeInsets.only(
-                                      top: 10,
-                                    ),
-                                    // height: 57.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 5.0,
-                                          offset: Offset(0.0, 3.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      obscureText: isObscure,
-                                      controller: passwordController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
-                                      decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            color: Colors.transparent,
+
+                                  if (errorMessage != null)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          errorMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
                                           ),
                                         ),
-                                        suffixIcon: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              isObscure = !isObscure;
-                                            });
-                                          },
-                                          child: Icon(
-                                            isObscure
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
+                                      ),
+                                    ),
+                                  if (isLoading)
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  else
+                                    GestureDetector(
+                                      onTap: () async {
+                                        errorMessage = null;
+                                        setState(() {
+                                          isLoading = true;
+                                        });
+
+                                        final bool valid =
+                                            formKey.currentState!.validate();
+                                        if (valid) {
+                                          final bool? loginResponse =
+                                              await YogitunesAPI().logincheck(
+                                            emailController.text,
+                                          );
+
+                                          if (loginResponse != null) {
+                                            if (loginResponse) {
+                                              Navigator.pushNamed(
+                                                  context, '/loginmain',
+                                                  arguments: {
+                                                    'email':
+                                                        emailController.text
+                                                  });
+                                            } else {
+                                              Navigator.pushNamed(
+                                                  context, '/signup',
+                                                  arguments: {
+                                                    'email':
+                                                        emailController.text
+                                                  });
+
+                                              // setState(() {});
+                                            }
+                                          } else {
+                                            errorMessage = 'Server Down!!!';
+                                            // setState(() {});
+                                          }
+                                        }
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0,
                                         ),
-                                        prefixIcon: Icon(
-                                          Icons.lock,
+                                        height: 55.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Theme.of(context)
                                               .colorScheme
                                               .secondary,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5.0,
+                                              offset: Offset(0.0, 3.0),
+                                            )
+                                          ],
                                         ),
-                                        border: InputBorder.none,
-                                        hintText: 'Enter Your Password',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        child: Center(
+                                          child: const Text(
+                                            'Signin / Register',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      // onSubmitted: (String value) async {
-                                      //   if (value.trim() == '') {
-                                      //     await _addUserData(
-                                      //       AppLocalizations.of(context)!.guest,
-                                      //     );
-                                      //   } else {
-                                      //     await _addUserData(value.trim());
-                                      //   }
-                                      //   Navigator.popAndPushNamed(
-                                      //     context,
-                                      //     '/pref',
-                                      //   );
-                                      // },
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter valid password';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-
-                                      final bool valid =
-                                          formKey.currentState!.validate();
-                                      if (valid) {
-                                        final LoginResponse? loginResponse =
-                                            await YogitunesAPI().login(
-                                          emailController.text,
-                                          passwordController.text,
-                                        );
-                                        if (loginResponse != null) {
-                                          if (loginResponse.statusCode == 200) {
-                                            Navigator.popAndPushNamed(
-                                                context, '/home');
-                                          } 
-                                        }
-                                      }
-
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0,
-                                      ),
-                                      height: 55.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 5.0,
-                                            offset: Offset(0.0, 3.0),
-                                          )
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: isLoading
-                                            ? CircularProgressIndicator()
-                                            : const Text(
-                                                'Login',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20.0,
-                                                ),
-                                              ),
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.pushNamed(
-                                              context, '/forgotPassword');
-                                        },
-                                        child: const Text(
-                                          'Forgot Password',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.end,
+                                  //   children: [
+                                  //     TextButton(
+                                  //       onPressed: () async {
+                                  //         Navigator.pushNamed(
+                                  //             context, '/forgotPassword');
+                                  //       },
+                                  //       child: const Text(
+                                  //         'Forgot Password',
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,

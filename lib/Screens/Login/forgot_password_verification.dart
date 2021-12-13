@@ -28,7 +28,7 @@ class _ForgotPasswordVerificationScreenState
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+  String? errorMessage;
   @override
   Widget build(BuildContext context) {
     final args =
@@ -65,47 +65,61 @@ class _ForgotPasswordVerificationScreenState
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width - 60,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: 'otp verification',
-                                      style: TextStyle(
-                                        height: 0.97,
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                      children: const <TextSpan>[
-                                        TextSpan(
-                                          text: '\n\nWe send verification code to your email.',
-                                      
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        // TextSpan(
-                                        //   text: '.',
-                                        //   style: TextStyle(
-                                        //     fontWeight: FontWeight.bold,
-                                        //     fontSize: 80,
-                                        //     color: Theme.of(context)
-                                        //         .colorScheme
-                                        //         .secondary,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
+                            // Row(
+                            //   children: [
+                            //     SizedBox(
+                            //       width: MediaQuery.of(context).size.width - 60,
+                            //       child: RichText(
+                            //         text: TextSpan(
+                            //           text: 'otp verification',
+                            //           style: TextStyle(
+                            //             height: 0.97,
+                            //             fontSize: 40,
+                            //             fontWeight: FontWeight.bold,
+                            //             color: Theme.of(context)
+                            //                 .colorScheme
+                            //                 .secondary,
+                            //           ),
+                            //           children: const <TextSpan>[
+                            //             TextSpan(
+                            //               text:
+                            //                   '\n\nWe send verification code to your email.',
+                            //               style: TextStyle(
+                            //                 overflow: TextOverflow.ellipsis,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 fontSize: 20,
+                            //                 color: Colors.white,
+                            //               ),
+                            //             ),
+                            //             // TextSpan(
+                            //             //   text: '.',
+                            //             //   style: TextStyle(
+                            //             //     fontWeight: FontWeight.bold,
+                            //             //     fontSize: 80,
+                            //             //     color: Theme.of(context)
+                            //             //         .colorScheme
+                            //             //         .secondary,
+                            //             //   ),
+                            //             // ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    'An email is on it\'s way with instruction to access your accont. Enter the verification code from that email below.',
+                                style: TextStyle(
+                                  // height: 0.97,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
-                              ],
+                                //
+                              ),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.1,
@@ -172,73 +186,97 @@ class _ForgotPasswordVerificationScreenState
                                       },
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                      final bool valid =
-                                          formKey.currentState!.validate();
-                                      if (valid) {
-                                        ForgotPasswordVerificationResponse?
-                                            forgotPasswordVerificationResponse =
-                                            await YogitunesAPI()
-                                                .forgotPasswordVerification(
-                                          args['email'].toString(),
-                                          passwordController.text,
-                                        );
-
-                                        if (forgotPasswordVerificationResponse !=
-                                            null) {
-                                          if (forgotPasswordVerificationResponse
-                                              .status!) {
-                                            Navigator.popAndPushNamed(
-                                                context, '/resetPassword');
-                                          } else {
-                                            print(
-                                                forgotPasswordVerificationResponse
-                                                    .data);
-                                          }
-                                        }
-                                      }
-
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0,
-                                      ),
-                                      height: 55.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 5.0,
-                                            offset: Offset(0.0, 3.0),
-                                          )
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: isLoading
-                                            ? const CircularProgressIndicator()
-                                            : const Text(
-                                                'Verify Code',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20.0,
-                                                ),
-                                              ),
+                                  if (errorMessage != null)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          errorMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  if (isLoading)
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  else
+                                    GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                          errorMessage = null;
+                                          isLoading = true;
+                                        });
+                                        print(args['email'].toString());
+                                        final bool valid =
+                                            formKey.currentState!.validate();
+                                        if (valid) {
+                                          ForgotPasswordVerificationResponse?
+                                              forgotPasswordVerificationResponse =
+                                              await YogitunesAPI()
+                                                  .forgotPasswordVerification(
+                                            args['email'].toString(),
+                                            passwordController.text,
+                                          );
+
+                                          if (forgotPasswordVerificationResponse !=
+                                              null) {
+                                            if (forgotPasswordVerificationResponse
+                                                .status!) {
+                                              Navigator.pushNamed(
+                                                  context, '/resetPassword');
+                                            } else {
+                                              errorMessage =
+                                                  forgotPasswordVerificationResponse
+                                                      .data
+                                                      .toString();
+                                            }
+                                          } else {
+                                            errorMessage = 'Server down!!!';
+                                          }
+                                        }
+
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0,
+                                        ),
+                                        height: 55.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5.0,
+                                              offset: Offset(0.0, 3.0),
+                                            )
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: const Text(
+                                            'Verify Code',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,

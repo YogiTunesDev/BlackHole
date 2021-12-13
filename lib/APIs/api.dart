@@ -31,6 +31,7 @@ class YogitunesAPI {
   Box settingsBox = Hive.box('settings');
   Map<String, String> endpoints = {
     'login': 'users/login',
+    'logincheck': 'users/check-email',
     'signup': 'users/signup',
     'forgotPassword': 'users/request-verification-code',
     'forgotPasswordVerification': 'users/validate-verification-code',
@@ -101,6 +102,32 @@ class YogitunesAPI {
       print(stackTrace);
       return Response('', 404);
     });
+  }
+
+  Future<bool?> logincheck(String email) async {
+    LoginResponse? result;
+    try {
+      final url = "$baseUrl$apiStr${endpoints['logincheck']}";
+
+      final res = await http.post(Uri.parse(url), body: {
+        'email': email,
+      });
+      print('DATA ::::${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        // result = LoginResponse?.fromMap(data as Map<String, dynamic>);
+        if(data['data']['status'] == true) {
+return true;
+        } else {
+          return false;
+        }
+        // var box = await Hive.openBox('api-token');
+        // box.put('token', result.apiToken);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    
   }
 
   Future<LoginResponse?> login(String email, String password) async {
@@ -209,7 +236,7 @@ class YogitunesAPI {
     try {
       final url =
           "$baseUrl$apiStr${endpoints['resetPassword']}?password=$password";
-
+      print("$url");
       final res = await http.post(Uri.parse(url), headers: {
         'Authorization': 'Bearer $apiToken',
       });

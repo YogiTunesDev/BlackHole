@@ -3,30 +3,76 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/supabase.dart';
-import 'package:blackhole/model/reset_password_response.dart';
+import 'package:blackhole/model/forgot_password_response.dart';
+import 'package:blackhole/model/login_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen();
-
+class LoginScreen extends StatefulWidget {
+  const LoginScreen();
   @override
-  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmController = TextEditingController();
+  Uuid uuid = const Uuid();
   bool isLoading = false;
   bool isObscure = true;
-  bool iscObscure = true;
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? errorMessage;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  bool forgotLoader = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future _addUserData(String name) async {
+    int? status;
+    await Hive.box('settings').put('name', name.trim());
+    final DateTime now = DateTime.now();
+    final List createDate = now
+        .toUtc()
+        .add(const Duration(hours: 5, minutes: 30))
+        .toString()
+        .split('.')
+      ..removeLast()
+      ..join('.');
+
+    String userId = uuid.v1();
+    status = await SupaBase().createUser({
+      'id': userId,
+      'name': name,
+      'accountCreatedOn': '${createDate[0]} IST',
+      'timeZone':
+          "Zone: ${now.timeZoneName} Offset: ${now.timeZoneOffset.toString().replaceAll('.000000', '')}",
+    });
+
+    while (status == null || status == 409) {
+      userId = uuid.v1();
+      status = await SupaBase().createUser({
+        'id': userId,
+        'name': name,
+        'accountCreatedOn': '${createDate[0]} IST',
+        'timeZone':
+            "Zone: ${now.timeZoneName} Offset: ${now.timeZoneOffset.toString().replaceAll('.000000', '')}",
+      });
+    }
+    await Hive.box('settings').put('userId', userId);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return GradientContainer(
       child: SafeArea(
         child: Scaffold(
@@ -62,13 +108,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             Row(
                               children: [
                                 RichText(
-                                  text: const TextSpan(
-                                    text: 'Reset Password',
+                                  text: TextSpan(
+                                    text: 'Login',
                                     style: TextStyle(
                                       height: 0.97,
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                     // children: <TextSpan>[
                                     //   const TextSpan(
@@ -94,6 +142,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 ),
                               ],
                             ),
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    '\nPlease take a moment to confirm it\'s you, and we will get you on your way.',
+                                style: TextStyle(
+                                  // height: 0.97,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                //
+                              ),
+                            ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.1,
                             ),
@@ -109,8 +171,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                       right: 10,
                                     ),
                                     margin: const EdgeInsets.only(
-                                      bottom: 10,
+                                      top: 10,
                                     ),
+                                    // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
                                       color: Colors.grey[900],
@@ -123,14 +186,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                       ],
                                     ),
                                     child: TextFormField(
+                                      obscureText: isObscure,
                                       controller: passwordController,
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       textCapitalization:
                                           TextCapitalization.sentences,
-                                      obscureText: isObscure,
                                       keyboardType: TextInputType.name,
-                                      textAlign: TextAlign.left,
                                       decoration: InputDecoration(
                                         focusedBorder:
                                             const UnderlineInputBorder(
@@ -161,90 +223,27 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                               .secondary,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: 'Enter New Password',
+                                        hintText: 'Enter Your Password',
                                         hintStyle: const TextStyle(
                                           color: Colors.white60,
                                         ),
                                       ),
+                                      // onSubmitted: (String value) async {
+                                      //   if (value.trim() == '') {
+                                      //     await _addUserData(
+                                      //       AppLocalizations.of(context)!.guest,
+                                      //     );
+                                      //   } else {
+                                      //     await _addUserData(value.trim());
+                                      //   }
+                                      //   Navigator.popAndPushNamed(
+                                      //     context,
+                                      //     '/pref',
+                                      //   );
+                                      // },
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Please enter valid password';
-                                        } else if (value.length < 8) {
-                                          return 'Paswword must be 8 digit';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 5,
-                                      bottom: 5,
-                                      left: 10,
-                                      right: 10,
-                                    ),
-                                    // height: 57.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 5.0,
-                                          offset: Offset(0.0, 3.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      controller: confirmController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      obscureText: iscObscure,
-                                      keyboardType: TextInputType.name,
-                                      textAlign: TextAlign.left,
-                                      decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        suffixIcon: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              iscObscure = !iscObscure;
-                                            });
-                                          },
-                                          child: Icon(
-                                            iscObscure
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
-                                        ),
-                                        prefixIcon: Icon(
-                                          Icons.lock,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText: 'Enter Confirm Password',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter valid password';
-                                        } else if (value !=
-                                            passwordController.text) {
-                                          return 'Password does not match';
                                         }
                                         return null;
                                       },
@@ -273,47 +272,35 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                   else
                                     GestureDetector(
                                       onTap: () async {
+                                        errorMessage = null;
                                         setState(() {
-                                          errorMessage = null;
                                           isLoading = true;
                                         });
 
                                         final bool valid =
                                             formKey.currentState!.validate();
                                         if (valid) {
-                                          if (passwordController.text ==
-                                              confirmController.text) {
-                                            ResetPasswordResponse?
-                                                resetPasswordResponse =
-                                                await YogitunesAPI()
-                                                    .resetPassword(
-                                              passwordController.text,
-                                            );
+                                          final LoginResponse? loginResponse =
+                                              await YogitunesAPI().login(
+                                            args['email'].toString(),
+                                            passwordController.text,
+                                          );
 
-                                            if (resetPasswordResponse != null) {
-                                              if (resetPasswordResponse
-                                                  .status!) {
-                                                var box = await Hive.openBox(
-                                                    'api-token');
-                                                box.put('token', null);
-                                                Navigator.popAndPushNamed(
-                                                    context, '/login');
-                                              } else {
-                                                errorMessage =
-                                                    resetPasswordResponse.data
-                                                        .toString();
-                                              }
+                                          if (loginResponse != null) {
+                                            if (loginResponse.status!) {
+                                              Navigator.pushNamed(
+                                                  context, '/home');
                                             } else {
-                                              errorMessage = 'Server Down!!!';
+                                              errorMessage =
+                                                  loginResponse.data.toString();
+
+                                              // setState(() {});
                                             }
                                           } else {
-                                            errorMessage =
-                                                'Confirm password is not matched';
+                                            errorMessage = 'Server Down!!!';
+                                            // setState(() {});
                                           }
                                         }
-
-                                        // Navigator.popAndPushNamed(
-                                        //     context, '/resetPassword');
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -339,7 +326,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         ),
                                         child: Center(
                                           child: const Text(
-                                            'Reset Password',
+                                            'Login',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
@@ -349,6 +336,54 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         ),
                                       ),
                                     ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      forgotLoader
+                                          ? Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : TextButton(
+                                              onPressed: () async {
+                                                setState(() {
+                                                  forgotLoader = true;
+                                                });
+                                                final ForgotPasswordResponse?
+                                                    forgotPasswordResponse =
+                                                    await YogitunesAPI()
+                                                        .forgotPassword(
+                                                  args['email'].toString(),
+                                                );
+
+                                                if (forgotPasswordResponse !=
+                                                    null) {
+                                                  if (forgotPasswordResponse
+                                                      .status!) {
+                                                    Navigator.pushNamed(context,
+                                                        '/forgotPasswordVerification',
+                                                        arguments: {
+                                                          'email': args['email']
+                                                              .toString(),
+                                                        });
+                                                  } else {
+                                                    // errorMessage =
+                                                    //     forgotPasswordResponse.data
+                                                    //         .toString();
+                                                  }
+                                                } else {
+                                                  // errorMessage = 'Server Down!!!';
+                                                }
+                                                setState(() {
+                                                  forgotLoader = false;
+                                                });
+                                              },
+                                              child: const Text(
+                                                'Forgot Password',
+                                              ),
+                                            ),
+                                    ],
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,

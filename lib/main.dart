@@ -30,6 +30,7 @@ import 'package:blackhole/Screens/Library/recent.dart';
 import 'package:blackhole/Screens/Login/auth.dart';
 import 'package:blackhole/Screens/Login/forgot_password.dart';
 import 'package:blackhole/Screens/Login/forgot_password_verification.dart';
+import 'package:blackhole/Screens/Login/login.dart';
 import 'package:blackhole/Screens/Login/pref.dart';
 import 'package:blackhole/Screens/Login/reset_password.dart';
 import 'package:blackhole/Screens/Login/signup.dart';
@@ -103,7 +104,7 @@ Future<void> startService() async {
 var apiTokenBox;
 
 Future<void> openHiveBox(String boxName, {bool limit = false}) async {
-   apiTokenBox = await  Hive.openBox('api-token');
+  apiTokenBox = await Hive.openBox('api-token');
   final box = await Hive.openBox(boxName).onError((error, stackTrace) async {
     final Directory dir = await getApplicationDocumentsDirectory();
     final String dirPath = dir.path;
@@ -162,10 +163,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget initialFuntion() {
-    
-    return apiTokenBox.get('token') != null
-        ? HomePage()
-        : AuthScreen();
+    print(
+        " apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
+    return apiTokenBox.get('token') != null ? HomePage() : AuthScreen();
   }
 
   @override
@@ -216,8 +216,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => initialFuntion(),
         '/login': (context) => const AuthScreen(),
+        '/loginmain': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-        '/forgotPassword': (context) => const ForgotPasswordScreen(),
+        // '/forgotPassword': (context) => const ForgotPasswordScreen(),
         '/forgotPasswordVerification': (context) =>
             const ForgotPasswordVerificationScreen(),
         '/resetPassword': (context) => const ResetPasswordScreen(),

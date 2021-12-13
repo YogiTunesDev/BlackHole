@@ -418,6 +418,22 @@ class _HomePageState extends State<HomePage> {
                               Navigator.pushNamed(context, '/about');
                             },
                           ),
+                          ListTile(
+                            title: Text('Logout'),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            leading: Icon(
+                              Icons.lock,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
+                            onTap: () async {
+                              Navigator.pop(context);
+                              var box = await Hive.openBox('api-token');
+                              box.put('token', null);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/login', (route) => false);
+                            },
+                          ),
                         ],
                       ),
                     ),

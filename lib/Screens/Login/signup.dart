@@ -24,9 +24,11 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isObscure = true;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isNewsLetterChecked = false;
-
+  String? errorMessage;
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return GradientContainer(
       child: SafeArea(
         child: Scaffold(
@@ -51,19 +53,19 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.popAndPushNamed(context, '/login');
-                        },
-                        child: const Text(
-                          'login',
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     TextButton(
+                  //       onPressed: () async {
+                  //         Navigator.popAndPushNamed(context, '/login');
+                  //       },
+                  //       child: const Text(
+                  //         'login',
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   Expanded(
                     child: Center(
                       child: SingleChildScrollView(
@@ -172,64 +174,62 @@ class _SignupScreenState extends State<SignupScreen> {
                                       },
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      top: 5,
-                                      bottom: 5,
-                                      left: 10,
-                                      right: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 5.0,
-                                          offset: Offset(0.0, 3.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: TextFormField(
-                                      controller: emailController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
-                                      decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            width: 1.5,
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        prefixIcon: Icon(
-                                          Icons.mail,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText: "Enter Your Email",
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        final RegExp emailRegex = RegExp(
-                                            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
-                                        if (value!.isEmpty) {
-                                          return 'Please enter valid email';
-                                        } else if (!emailRegex
-                                            .hasMatch(value)) {
-                                          return 'Please enter valid email';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   padding: const EdgeInsets.only(
+                                  //     top: 5,
+                                  //     bottom: 5,
+                                  //     left: 10,
+                                  //     right: 10,
+                                  //   ),
+                                  //   decoration: BoxDecoration(
+                                  //     borderRadius: BorderRadius.circular(10.0),
+                                  //     color: Colors.grey[900],
+                                  //     boxShadow: const [
+                                  //       BoxShadow(
+                                  //         color: Colors.black26,
+                                  //         blurRadius: 5.0,
+                                  //         offset: Offset(0.0, 3.0),
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  //   child: TextFormField(
+                                  //     controller: emailController,
+                                  //     textAlignVertical:
+                                  //         TextAlignVertical.center,
+                                  //     keyboardType: TextInputType.emailAddress,
+                                  //     decoration: InputDecoration(
+                                  //       focusedBorder:
+                                  //           const UnderlineInputBorder(
+                                  //         borderSide: BorderSide(
+                                  //           width: 1.5,
+                                  //           color: Colors.transparent,
+                                  //         ),
+                                  //       ),
+                                  //       prefixIcon: Icon(
+                                  //         Icons.mail,
+                                  //         color: Theme.of(context)
+                                  //             .colorScheme
+                                  //             .secondary,
+                                  //       ),
+                                  //       border: InputBorder.none,
+                                  //       hintText: "Enter Your Email",
+                                  //       hintStyle: const TextStyle(
+                                  //         color: Colors.white60,
+                                  //       ),
+                                  //     ),
+                                  //     validator: (value) {
+                                  //       final RegExp emailRegex = RegExp(
+                                  //           r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+                                  //       if (value!.isEmpty) {
+                                  //         return 'Please enter valid email';
+                                  //       } else if (!emailRegex
+                                  //           .hasMatch(value)) {
+                                  //         return 'Please enter valid email';
+                                  //       }
+                                  //       return null;
+                                  //     },
+                                  //   ),
+                                  // ),
                                   Container(
                                     padding: const EdgeInsets.only(
                                       top: 5,
@@ -297,6 +297,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Please enter valid password';
+                                        } else if (value.length < 8) {
+                                          return 'Paswword must be 8 digit';
                                         }
                                         return null;
                                       },
@@ -304,9 +306,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      const Text(
-                                        'News Letter :',
-                                      ),
                                       Checkbox(
                                         checkColor: Colors.white,
                                         value: isNewsLetterChecked,
@@ -316,69 +315,100 @@ class _SignupScreenState extends State<SignupScreen> {
                                           });
                                         },
                                       ),
+                                      const Expanded(
+                                        child: Text(
+                                          'Subscribe our newsletter for our latest updates',
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-
-                                      final bool valid =
-                                          formKey.currentState!.validate();
-                                      if (valid) {
-                                        final SignupResponse? signupResponse =
-                                            await YogitunesAPI().signup(
-                                          nameController.text,
-                                          emailController.text,
-                                          passwordController.text,
-                                          isNewsLetterChecked,
-                                        );
-                                        if (signupResponse != null) {
-                                          if (signupResponse.statusCode ==
-                                              200) {
-                                            Navigator.popAndPushNamed(
-                                                context, '/home');
-                                          }
-                                        }
-                                      }
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0,
-                                      ),
-                                      height: 55.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 5.0,
-                                            offset: Offset(0.0, 3.0),
-                                          )
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: isLoading
-                                            ? CircularProgressIndicator()
-                                            : const Text(
-                                                'Signup',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20.0,
-                                                ),
-                                              ),
+                                  if (errorMessage != null)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          errorMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  if (isLoading)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  else
+                                    GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                          isLoading = true;
+                                          errorMessage = null;
+                                        });
+
+                                        final bool valid =
+                                            formKey.currentState!.validate();
+                                        if (valid) {
+                                          final SignupResponse? signupResponse =
+                                              await YogitunesAPI().signup(
+                                            nameController.text,
+                                            args['email'].toString(),
+                                            passwordController.text,
+                                            isNewsLetterChecked,
+                                          );
+                                          if (signupResponse != null) {
+                                            if (signupResponse.status!) {
+                                              Navigator.popAndPushNamed(
+                                                  context, '/home');
+                                            } else {
+                                              errorMessage = signupResponse.data
+                                                  .toString();
+                                            }
+                                          } else {
+                                            errorMessage = 'Server down!!!';
+                                          }
+                                        }
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0,
+                                        ),
+                                        height: 55.0,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 5.0,
+                                              offset: Offset(0.0, 3.0),
+                                            )
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: isLoading
+                                              ? CircularProgressIndicator()
+                                              : const Text(
+                                                  'Signup',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20.0,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,
