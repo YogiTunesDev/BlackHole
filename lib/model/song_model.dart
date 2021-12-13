@@ -5,7 +5,7 @@ class SongItemModel {
   final String? artist;
   final String? album;
   final String? image;
-  final String? duration;
+  final int? duration;
   final String? title;
   final String? url;
   final String? year;
@@ -41,7 +41,7 @@ class SongItemModel {
     String? artist,
     String? album,
     String? image,
-    String? duration,
+    int? duration,
     String? title,
     String? url,
     String? year,
@@ -83,6 +83,7 @@ class SongItemModel {
       'duration': duration,
       'title': title,
       'url': url,
+      'path': url,
       'year': year,
       'language': language,
       'genre': genre,
@@ -96,14 +97,19 @@ class SongItemModel {
   }
 
   factory SongItemModel.fromMap(Map<String, dynamic> map) {
+    
     return SongItemModel(
       id: map['id'] != null ? map['id'] as String : null,
       artist: map['artist'] != null ? map['artist'] as String : null,
       album: map['album'] != null ? map['album'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
-      duration: map['duration'] != null ? map['duration'] as String : null,
+      duration: map['duration'] != null ? map['duration'] as int : null,
       title: map['title'] != null ? map['title'] as String : null,
-      url: map['url'] != null ? map['url'] as String : null,
+      url: map['url'] != null
+          ? map['url'] as String
+          : map['path'] != null
+              ? map['path'] as String
+              : null,
       year: map['year'] != null ? map['year'] as String : null,
       language: map['language'] != null ? map['language'] as String : null,
       genre: map['genre'] != null ? map['genre'] as String : null,

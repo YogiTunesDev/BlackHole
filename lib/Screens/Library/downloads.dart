@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:audiotagger/audiotagger.dart';
@@ -12,6 +13,7 @@ import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/picker.dart';
 import 'package:blackhole/Screens/Library/liked.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -867,19 +869,29 @@ class _DownSongsTabState extends State<DownSongsTab>
                         ),
                       ),
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   PageRouteBuilder(
-                        //     opaque: false,
-                        //     pageBuilder: (_, __, ___) => PlayScreen(
-                        //       songsList: widget.songs,
-                        //       index: index,
-                        //       offline: true,
-                        //       fromDownloads: true,
-                        //       fromMiniplayer: false,
-                        //       recommend: false,
-                        //     ),
-                        //   ),
-                        // );
+                        print(widget.songs);
+                        // print(List<SongItemModel>.from(widget.songs.map(
+                        //   (x) => SongItemModel.fromMap(json
+                        //       .decode(json.encode(x)) as Map<String, dynamic>),
+                        // )));
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (_, __, ___) => PlayScreen(
+                              songsList:
+                                  List<SongItemModel>.from(widget.songs.map(
+                                (x) => SongItemModel.fromMap(
+                                    json.decode(json.encode(x))
+                                        as Map<String, dynamic>),
+                              )),
+                              index: index,
+                              offline: true,
+                              fromDownloads: true,
+                              fromMiniplayer: false,
+                              recommend: false,
+                            ),
+                          ),
+                        );
                       },
                       title: Text(
                         '${widget.songs[index]['title']}',

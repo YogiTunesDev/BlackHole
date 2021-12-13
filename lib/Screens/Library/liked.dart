@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blackhole/CustomWidgets/add_playlist.dart';
 import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/custom_physics.dart';
@@ -12,6 +14,7 @@ import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Helpers/songs_count.dart' as songs_count;
 import 'package:blackhole/Screens/Library/show_songs.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -681,19 +684,26 @@ class _SongsTabState extends State<SongsTab>
                         ),
                       ),
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   PageRouteBuilder(
-                        //     opaque: false,
-                        //     pageBuilder: (_, __, ___) => PlayScreen(
-                        //       songsList: widget.songs,
-                        //       index: index,
-                        //       offline: false,
-                        //       fromMiniplayer: false,
-                        //       fromDownloads: false,
-                        //       recommend: false,
-                        //     ),
-                        //   ),
-                        // );
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (_, __, ___) => PlayScreen(
+                              songsList: List<SongItemModel>.from(
+                                widget.songs.map(
+                                  (x) => SongItemModel.fromMap(
+                                    json.decode(json.encode(x))
+                                        as Map<String, dynamic>,
+                                  ),
+                                ),
+                              ),
+                              index: index,
+                              offline: false,
+                              fromMiniplayer: false,
+                              fromDownloads: false,
+                              recommend: false,
+                            ),
+                          ),
+                        );
                       },
                       title: Text(
                         '${widget.songs[index]['title']}',
@@ -855,38 +865,38 @@ class _AlbumsTabState extends State<AlbumsTab>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.offline)
-                      OfflineCollage(
-                        fixSize: false,
-                        imageList: imageList,
-                        showGrid: widget.type == 'genre',
-                        artistName: widget.type == 'artist'
-                            ? widget
-                                .albums[widget.sortedAlbumKeysList[index]]![0]
-                                    ['artist']
-                                .toString()
-                            : null,
-                        tempDirPath: widget.tempPath,
-                        placeholderImage: widget.type == 'artist'
-                            ? 'assets/artist.png'
-                            : 'assets/album.png',
-                      )
-                    else
-                      Collage(
-                        fixSize: false,
-                        imageList: imageList,
-                        showGrid: widget.type == 'genre',
-                        artistName: widget.type == 'artist'
-                            ? widget
-                                .albums[widget.sortedAlbumKeysList[index]]![0]
-                                    ['artist']
-                                .toString()
-                            : null,
-                        tempDirPath: widget.tempPath,
-                        placeholderImage: widget.type == 'artist'
-                            ? 'assets/artist.png'
-                            : 'assets/album.png',
-                      ),
+                    Expanded(
+                        child: (widget.offline)
+                            ? OfflineCollage(
+                                fixSize: false,
+                                imageList: imageList,
+                                showGrid: widget.type == 'genre',
+                                artistName: widget.type == 'artist'
+                                    ? widget.albums[widget
+                                                .sortedAlbumKeysList[index]]![0]
+                                            ['artist']
+                                        .toString()
+                                    : null,
+                                tempDirPath: widget.tempPath,
+                                placeholderImage: widget.type == 'artist'
+                                    ? 'assets/artist.png'
+                                    : 'assets/album.png',
+                              )
+                            : Collage(
+                                fixSize: false,
+                                imageList: imageList,
+                                showGrid: widget.type == 'genre',
+                                artistName: widget.type == 'artist'
+                                    ? widget.albums[widget
+                                                .sortedAlbumKeysList[index]]![0]
+                                            ['artist']
+                                        .toString()
+                                    : null,
+                                tempDirPath: widget.tempPath,
+                                placeholderImage: widget.type == 'artist'
+                                    ? 'assets/artist.png'
+                                    : 'assets/album.png',
+                              )),
                     ListTile(
                       dense: true,
                       minVerticalPadding: 0.0,

@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -294,19 +296,24 @@ class _SongsListState extends State<SongsList> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 onTap: () {
-                                  // Navigator.of(context).push(
-                                  //   PageRouteBuilder(
-                                  //     opaque: false, // set to false
-                                  //     pageBuilder: (_, __, ___) => PlayScreen(
-                                  //       songsList: _songs,
-                                  //       index: index,
-                                  //       offline: offline,
-                                  //       fromDownloads: offline,
-                                  //       fromMiniplayer: false,
-                                  //       recommend: false,
-                                  //     ),
-                                  //   ),
-                                  // );
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      opaque: false, // set to false
+                                      pageBuilder: (_, __, ___) => PlayScreen(
+                                        songsList:
+                                            List<SongItemModel>.from(_songs.map(
+                                          (x) => SongItemModel.fromMap(
+                                              json.decode(json.encode(x))
+                                                  as Map<String, dynamic>),
+                                        )),
+                                        index: index,
+                                        offline: offline,
+                                        fromDownloads: offline,
+                                        fromMiniplayer: false,
+                                        recommend: false,
+                                      ),
+                                    ),
+                                  );
                                 },
                               );
                       },

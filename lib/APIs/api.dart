@@ -6,11 +6,17 @@ import 'package:blackhole/Helpers/format.dart';
 import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/forgot_password_response.dart';
 import 'package:blackhole/model/forgot_password_verification_response.dart';
+import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/login_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/reset_password_response.dart';
 import 'package:blackhole/model/signup_response.dart';
+import 'package:blackhole/model/radio_station_stream_response.dart';
+import 'package:blackhole/model/radio_stations_response.dart';
+import 'package:blackhole/model/single_album_response.dart';
+import 'package:blackhole/model/single_playlist_response.dart';
+import 'package:blackhole/model/trending_song_response.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -30,23 +36,24 @@ class YogitunesAPI {
     'forgotPasswordVerification': 'users/validate-verification-code',
     'resetPassword': 'users/reset-password',
     'homeData': 'browse/',
-    'topSearches': '__call=content.getTopSearches',
-    'fromToken': '__call=webapi.get',
-    'featuredRadio': '__call=webradio.createFeaturedStation',
-    'artistRadio': '__call=webradio.createArtistStation',
-    'entityRadio': '__call=webradio.createEntityStation',
-    'radioSongs': '__call=webradio.getSong',
-    'songDetails': '__call=song.getDetails',
-    'playlistDetails': '__call=playlist.getDetails',
-    'albumDetails': '__call=content.getAlbumDetails',
-    'getResults': '__call=search.getResults',
-    'albumResults': '__call=search.getAlbumResults',
-    'artistResults': '__call=search.getArtistResults',
-    'playlistResults': '__call=search.getPlaylistResults',
-    'getReco': '__call=reco.getreco',
-    'getAlbumReco': '__call=reco.getAlbumReco', // still not used
-    'artistOtherTopSongs':
-        '__call=search.artistOtherTopSongs', // still not used
+    'radioStations': 'browse/radio_stations',
+    // 'topSearches': '__call=content.getTopSearches',
+    // 'fromToken': '__call=webapi.get',
+    // 'featuredRadio': '__call=webradio.createFeaturedStation',
+    // 'artistRadio': '__call=webradio.createArtistStation',
+    // 'entityRadio': '__call=webradio.createEntityStation',
+    // 'radioSongs': '__call=webradio.getSong',
+    // 'songDetails': '__call=song.getDetails',
+    // 'playlistDetails': '__call=playlist.getDetails',
+    // 'albumDetails': '__call=content.getAlbumDetails',
+    // 'getResults': '__call=search.getResults',
+    // 'albumResults': '__call=search.getAlbumResults',
+    // 'artistResults': '__call=search.getArtistResults',
+    // 'playlistResults': '__call=search.getPlaylistResults',
+    // 'getReco': '__call=reco.getreco',
+    // 'getAlbumReco': '__call=reco.getAlbumReco', // still not used
+    // 'artistOtherTopSongs':
+    //     '__call=search.artistOtherTopSongs', // still not used
   };
 
   Future<Response> getResponse(
@@ -235,6 +242,41 @@ class YogitunesAPI {
     return result;
   }
 
+  Future<RadioStationsResponse?> fetchYogiRadioStationPageData(
+      int pageNo) async {
+    RadioStationsResponse? result;
+    try {
+      final res =
+          await getResponse('${endpoints['radioStations']!}?page=$pageNo');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = RadioStationsResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<RadioStationsStreamResponse?> fetchYogiRadioStationStreamData(
+      int id) async {
+    RadioStationsStreamResponse? result;
+    try {
+      final res =
+          await getResponse('${endpoints['radioStations']!}/$id/stream');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiRadioStationStreamData(
+            RadioStationsStreamResponse?.fromMap(data as Map<String, dynamic>));
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
   Future<PlaylistResponse?> fetchYogiPlaylistData(
     String url,
     int pageNo,
@@ -265,6 +307,105 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<GenresResponse?> fetchYogiGenresData(
+    String url,
+  ) async {
+    GenresResponse? result;
+    try {
+      final res = await getResponse('$url');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = GenresResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<AlbumResponse?> fetchYogiGenresAlbumData(
+    String url,
+    int id,
+    int pageNo,
+  ) async {
+    AlbumResponse? result;
+    try {
+      final res = await getResponse('$url/$id?page=$pageNo');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<SingleAlbumResponse?> fetchYogiSingleAlbumData(
+    int id,
+  ) async {
+    SingleAlbumResponse? result;
+    try {
+      final res = await getResponse('browse/albums/$id');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiSingleALbumData(
+          SingleAlbumResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<SinglePlaylistResponse?> fetchYogiSinglePlaylistData(
+    int id,
+  ) async {
+    SinglePlaylistResponse? result;
+    try {
+      final res = await getResponse('browse/playlists/$id');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiSinglePlaylistData(
+          SinglePlaylistResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<TrendingSongResponse?> fetchYogiTrendingSongData(
+    String url,
+    int pageNo,
+  ) async {
+    TrendingSongResponse? result;
+    try {
+      final res = await getResponse('$url?page=$pageNo');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiTrendingSongData(
+          TrendingSongResponse?.fromMap(data as Map<String, dynamic>),
+        );
       }
     } catch (e) {
       log('Error in fetchYogiAlbumData: $e');

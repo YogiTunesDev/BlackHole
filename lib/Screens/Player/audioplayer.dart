@@ -136,6 +136,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<MediaItem> setTags(SongItemModel response, Directory tempDir) async {
+    
     String playTitle = response.title!;
     playTitle = response.title!; //''
     // ? playTitle = response.displayNameWOExt
@@ -146,7 +147,8 @@ class _PlayScreenState extends State<PlayScreen> {
         : playArtist = response.artist!;
 
     final String playAlbum = response.album!;
-    final int playDuration = 180000; // response.duration ??
+    final int playDuration =
+        response.duration ?? 180000; // response.duration ??
     final String imagePath =
         response.image!; //'${tempDir.path}/${response.displayNameWOExt}.jpg';
 
@@ -180,7 +182,7 @@ class _PlayScreenState extends State<PlayScreen> {
       }
       for (int i = 0; i < response.length; i++) {
         globalQueue.add(
-          await setTags(response[i] as SongItemModel, tempDir),
+          await setTags(response[i], tempDir),
         );
       }
       updateNplay();
@@ -190,7 +192,7 @@ class _PlayScreenState extends State<PlayScreen> {
   void setDownValues(List<SongItemModel> response) {
     globalQueue.addAll(
       response.map(
-        (song) => MediaItemConverter.downMapToMediaItem(song as Map),
+        (song) => MediaItemConverter.downMapToMediaItem(song.toMap()),
       ),
     );
     updateNplay();
@@ -208,6 +210,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<void> updateNplay() async {
+    print(globalQueue);
     await audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
     await audioHandler.updateQueue(globalQueue);
     await audioHandler.skipToQueueItem(globalIndex);
