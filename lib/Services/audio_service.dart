@@ -134,6 +134,10 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
       if (item.artUri.toString().startsWith('http') &&
           item.genre != 'YouTube') {
         addRecentlyPlayed(item);
+        final String str = item.id;
+        final String endOffset = item.duration!.inSeconds.toString();
+        print("Send Request");
+        YogitunesAPI().updatePlaySong(str, endOffset);
         _recentSubject.add([item]);
 
         if (recommend && item.extras!['autoplay'] as bool) {

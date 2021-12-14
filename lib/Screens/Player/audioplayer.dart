@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/add_playlist.dart';
 import 'package:blackhole/CustomWidgets/animated_text.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
@@ -136,7 +137,6 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<MediaItem> setTags(SongItemModel response, Directory tempDir) async {
-    
     String playTitle = response.title!;
     playTitle = response.title!; //''
     // ? playTitle = response.displayNameWOExt
@@ -232,6 +232,13 @@ class _PlayScreenState extends State<PlayScreen> {
     } else {
       audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
       Hive.box('settings').put('repeatMode', 'None');
+    }
+    if (globalQueue.isNotEmpty) {
+      final MediaItem mediaItemTemp = globalQueue[globalIndex];
+      final String str = mediaItemTemp.id;
+      final String endOffset = mediaItemTemp.duration!.inSeconds.toString();
+      print("Send Request");
+      await YogitunesAPI().updatePlaySong(str, endOffset);
     }
   }
 

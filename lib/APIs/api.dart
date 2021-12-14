@@ -17,6 +17,7 @@ import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -37,6 +38,7 @@ class YogitunesAPI {
     'forgotPasswordVerification': 'users/validate-verification-code',
     'resetPassword': 'users/reset-password',
     'homeData': 'browse/',
+    'playSong': 'play',
     'radioStations': 'browse/radio_stations',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
@@ -76,11 +78,10 @@ class YogitunesAPI {
     // preferredLanguages =
     //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
     // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
-    headers = {
-      'Authorization':
-          'Bearer QVzcc75IYnDJ9DPrQb9QwtnzPxvp6yYSIksy3zUN0ztyBBQGgVvUb4IIgZAY',
-      'Accept': '*/*'
-    };
+    final box = await Hive.openBox('api-token');
+    final String apiToken = box.get('token').toString();
+    print('API TOKEN :::: $apiToken');
+    headers = {'Authorization': 'Bearer $apiToken', 'Accept': '*/*'};
 
     print('URL ::: $url');
 
@@ -116,8 +117,8 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         // result = LoginResponse?.fromMap(data as Map<String, dynamic>);
-        if(data['data']['status'] == true) {
-return true;
+        if (data['data']['status'] == true) {
+          return true;
         } else {
           return false;
         }
@@ -127,7 +128,6 @@ return true;
     } catch (e) {
       log('Error in fetchHomePageData: $e');
     }
-    
   }
 
   Future<LoginResponse?> login(String email, String password) async {
@@ -236,7 +236,7 @@ return true;
     try {
       final url =
           "$baseUrl$apiStr${endpoints['resetPassword']}?password=$password";
-      print("$url");
+      print('$url');
       final res = await http.post(Uri.parse(url), headers: {
         'Authorization': 'Bearer $apiToken',
       });
@@ -267,6 +267,43 @@ return true;
       log('Error in fetchHomePageData: $e');
     }
     return result;
+  }
+
+  Future<void> updatePlaySong(String id, String endOffset) async {
+    try {
+      // print('$baseUrl${apiStr}play');
+      List<Map<String, dynamic>> lstmap = [];
+      lstmap.add({
+        'source_type': '',
+        'source_id': '',
+        'track_id': id,
+        'start_offset': 0,
+        'end_offset': endOffset,
+      });
+      final box = await Hive.openBox('api-token');
+      final String apiToken = box.get('token').toString();
+
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $apiToken',
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      };
+      final mapData = {
+        'tracks': lstmap,
+      };
+      final res = await http.post(
+        Uri.parse('$baseUrl${apiStr}play'),
+        headers: headers,
+        // lstMap.ls
+        body: json
+            .encode(mapData), //json.decode(json.encode(mapData).toString()),
+      );
+      debugPrint('Body Data :: $res');
+    } catch (e, stack) {
+      log('Error in updatePlaySong: $e');
+      debugPrint(e.toString());
+      debugPrint(stack.toString());
+    }
   }
 
   Future<RadioStationsResponse?> fetchYogiRadioStationPageData(
