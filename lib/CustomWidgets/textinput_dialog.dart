@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 Future<void> showTextInputDialog({
   required BuildContext context,
   required String title,
@@ -60,7 +61,7 @@ Future<void> showTextInputDialog({
               backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             onPressed: () {
-              onSubmitted(_controller.text.trim());
+                onSubmitted(_controller.text.trim());
             },
             child: Text(
               AppLocalizations.of(context)!.ok,

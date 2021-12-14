@@ -40,6 +40,9 @@ class YogitunesAPI {
     'homeData': 'browse/',
     'playSong': 'play',
     'radioStations': 'browse/radio_stations',
+    'playlists': 'my-library/playlists',
+    'createPlaylist': 'my-library/playlists/create',
+    'editPlaylist': 'my-library/playlists/edit',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -126,7 +129,7 @@ class YogitunesAPI {
         // box.put('token', result.apiToken);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in logincheck: $e');
     }
   }
 
@@ -147,7 +150,7 @@ class YogitunesAPI {
         box.put('token', result.apiToken);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in login: $e');
     }
     return result;
   }
@@ -177,7 +180,7 @@ class YogitunesAPI {
         box.put('token', result.apiToken);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in signup: $e');
     }
     return result;
   }
@@ -197,7 +200,7 @@ class YogitunesAPI {
         result = ForgotPasswordResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in forgotPassword: $e');
     }
     return result;
   }
@@ -222,7 +225,7 @@ class YogitunesAPI {
         box.put('token', result.apiToken);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in forgotPasswordVerification: $e');
     }
     return result;
   }
@@ -248,7 +251,7 @@ class YogitunesAPI {
         result = ResetPasswordResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in resetPassword: $e');
     }
     return result;
   }
@@ -540,6 +543,95 @@ class YogitunesAPI {
       return FormatResponse.formatSongsResponse(responseList, 'song');
     }
     return [];
+  }
+
+  Future<HomeResponse?> fetchPlaylistData() async {
+    HomeResponse? result;
+    try {
+      final res = await getResponse(endpoints['playlists']!);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatHomePageData(
+          HomeResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<String?> createPlaylist(String name, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['createPlaylist']}?name=rajan";
+
+      final res = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          return data['data'].toString();
+        } else {
+          final snackBar = SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(data['data'].toString(),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary)));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return null;
+        }
+      }
+    } catch (e) {
+      log('Error in createPlaylist: $e');
+    }
+  }
+
+  Future<dynamic> editPlaylist(
+      String playlistId, String name, List<String> lst) async {
+    List<Map> dataList = [];
+
+    for (int i = 0; i < lst.length; i++) {
+      dataList.insert(i, {'id': lst[i], 'order': i + 1});
+    }
+
+    try {
+      final box = await Hive.openBox('api-token');
+      // print(dataList);
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['editPlaylist']}/$playlistId";
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $apiToken',
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      };
+      final mapData = {
+        'name': name,
+        'tracks': dataList,
+      };
+
+      final res = await http.post(
+        Uri.parse(url),
+        body: json.encode(mapData),
+        headers: headers,
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        return data;
+      }
+    } catch (e) {
+      log('Error in editPlaylist: $e');
+    }
   }
 
   Future<List<String>> getTopSearches() async {
