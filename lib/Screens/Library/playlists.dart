@@ -9,7 +9,10 @@ import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
 import 'package:blackhole/Helpers/import_export_playlist.dart';
 import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Helpers/search_add_playlist.dart';
+import 'package:blackhole/Screens/Common/song_list.dart';
+import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Library/liked.dart';
+import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,6 +30,25 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   List playlistNames = [];
   Map playlistDetails = {};
   bool loading = false;
+  bool dataLoader = false;
+  CustomPlaylistResponse? customPlaylistResponse;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchPlaylistData();
+    super.initState();
+  }
+
+  Future fetchPlaylistData() async {
+    setState(() {
+      dataLoader = true;
+    });
+    customPlaylistResponse = await YogitunesAPI().fetchPlaylistData();
+    setState(() {
+      dataLoader = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -582,7 +604,376 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   },
                                 );
                               },
+                            ),
+                          if (dataLoader)
+                            const Center(
+                              child: CircularProgressIndicator(),
                             )
+                          else
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: customPlaylistResponse!.data!.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading:
+                                      // (playlistDetails[name] == null ||
+                                      //         playlistDetails[name]['imagesList'] ==
+                                      //             null ||
+                                      //         (playlistDetails[name]['imagesList']
+                                      //                 as List)
+                                      //             .isEmpty)
+                                      //     ?
+                                      Card(
+                                    elevation: 5,
+                                    color: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: const SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child:
+                                            // name == 'Favorite Songs'
+                                            //     ?
+                                            const Image(
+                                          image: AssetImage(
+                                            'assets/cover.jpg',
+                                          ),
+                                        )
+                                        //     :
+                                        //     Image(
+                                        //   image: AssetImage(
+                                        //     'assets/album.png',
+                                        //   ),
+                                        // ),
+                                        ),
+                                  ),
+                                  // : Collage(
+                                  //     imageList: playlistDetails[name]
+                                  //         ['imagesList'] as List,
+                                  //     showGrid: true,
+                                  //     placeholderImage: 'assets/cover.jpg',
+                                  //   ),
+                                  title: Text(
+                                    customPlaylistResponse!
+                                        .data![index].playlist!.name
+                                        .toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  subtitle:
+                                      // playlistDetails[name] == null ||
+                                      //         playlistDetails[name]['count'] ==
+                                      //             null ||
+                                      //         playlistDetails[name]['count'] == 0
+                                      //     ? null
+                                      //     :
+                                      Text(
+                                    customPlaylistResponse!
+                                            .data![index].playlistTracks!.length
+                                            .toString() +
+                                        ' Songs',
+                                  ),
+                                  trailing: PopupMenuButton(
+                                    icon: const Icon(Icons.more_vert_rounded),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    onSelected: (int? value) async {
+                                      if (value == 1) {
+                                        exportPlaylist(
+                                          context,
+                                          customPlaylistResponse!
+                                              .data![index].playlist!.name
+                                              .toString(),
+                                          customPlaylistResponse!
+                                              .data![index].playlist!.name
+                                              .toString(),
+                                        );
+                                      }
+                                      if (value == 2) {
+                                        sharePlaylist(
+                                          context,
+                                          customPlaylistResponse!
+                                              .data![index].playlist!.name
+                                              .toString(),
+                                          customPlaylistResponse!
+                                              .data![index].playlist!.name
+                                              .toString(),
+                                        );
+                                      }
+                                      if (value == 0) {
+                                        // setState(() {
+                                        //   dataLoader = true;
+                                        // });
+
+                                        popupLoader(context, 'Loading');
+
+                                        await YogitunesAPI().deletePlylist(
+                                            customPlaylistResponse!
+                                                .data![index].playlist!.id
+                                                .toString(),
+                                            context);
+
+                                        customPlaylistResponse =
+                                            await YogitunesAPI()
+                                                .fetchPlaylistData();
+
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                        // setState(() {
+                                        //   dataLoader = false;
+                                        // });
+
+                                        // playlistDetails.remove(name);
+                                        // await settingsBox.put(
+                                        //   'playlistDetails',
+                                        //   playlistDetails,
+                                        // );
+                                        // await playlistNames.removeAt(index);
+                                        // await settingsBox.put(
+                                        //   'playlistNames',
+                                        //   playlistNames,
+                                        // );
+                                        // await Hive.openBox(name);
+                                        // await Hive.box(name).deleteFromDisk();
+                                        // setState(() {});
+                                      }
+                                      if (value == 3) {
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     final _controller =
+                                        //         TextEditingController(
+                                        //       text: showName,
+                                        //     );
+                                        //     return AlertDialog(
+                                        //       shape: RoundedRectangleBorder(
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(15.0),
+                                        //       ),
+                                        //       content: Column(
+                                        //         mainAxisSize: MainAxisSize.min,
+                                        //         children: [
+                                        //           Row(
+                                        //             children: [
+                                        //               Text(
+                                        //                 AppLocalizations.of(
+                                        //                   context,
+                                        //                 )!
+                                        //                     .rename,
+                                        //                 style: TextStyle(
+                                        //                   color:
+                                        //                       Theme.of(context)
+                                        //                           .colorScheme
+                                        //                           .secondary,
+                                        //                 ),
+                                        //               ),
+                                        //             ],
+                                        //           ),
+                                        //           TextField(
+                                        //             autofocus: true,
+                                        //             textAlignVertical:
+                                        //                 TextAlignVertical
+                                        //                     .bottom,
+                                        //             controller: _controller,
+                                        //             onSubmitted: (value) async {
+                                        //               Navigator.pop(context);
+                                        //               playlistDetails[name] ==
+                                        //                       null
+                                        //                   ? playlistDetails
+                                        //                       .addAll({
+                                        //                       name: {
+                                        //                         'name':
+                                        //                             value.trim()
+                                        //                       }
+                                        //                     })
+                                        //                   : playlistDetails[
+                                        //                           name]
+                                        //                       .addAll({
+                                        //                       'name':
+                                        //                           value.trim()
+                                        //                     });
+
+                                        //               await settingsBox.put(
+                                        //                 'playlistDetails',
+                                        //                 playlistDetails,
+                                        //               );
+                                        //               setState(() {});
+                                        //             },
+                                        //           ),
+                                        //         ],
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           style: TextButton.styleFrom(
+                                        //             primary: Theme.of(context)
+                                        //                 .iconTheme
+                                        //                 .color,
+                                        //           ),
+                                        //           onPressed: () {
+                                        //             Navigator.pop(context);
+                                        //           },
+                                        //           child: Text(
+                                        //             AppLocalizations.of(
+                                        //                     context)!
+                                        //                 .cancel,
+                                        //           ),
+                                        //         ),
+                                        //         TextButton(
+                                        //           style: TextButton.styleFrom(
+                                        //             primary: Colors.white,
+                                        //             backgroundColor:
+                                        //                 Theme.of(context)
+                                        //                     .colorScheme
+                                        //                     .secondary,
+                                        //           ),
+                                        //           onPressed: () async {
+                                        //             Navigator.pop(context);
+                                        //             playlistDetails[name] ==
+                                        //                     null
+                                        //                 ? playlistDetails
+                                        //                     .addAll({
+                                        //                     name: {
+                                        //                       'name':
+                                        //                           _controller
+                                        //                               .text
+                                        //                               .trim()
+                                        //                     }
+                                        //                   })
+                                        //                 : playlistDetails[name]
+                                        //                     .addAll({
+                                        //                     'name': _controller
+                                        //                         .text
+                                        //                         .trim()
+                                        //                   });
+
+                                        //             await settingsBox.put(
+                                        //               'playlistDetails',
+                                        //               playlistDetails,
+                                        //             );
+                                        //             setState(() {});
+                                        //           },
+                                        //           child: Text(
+                                        //             AppLocalizations.of(
+                                        //                     context)!
+                                        //                 .ok,
+                                        //             style: TextStyle(
+                                        //               color: Theme.of(context)
+                                        //                           .colorScheme
+                                        //                           .secondary ==
+                                        //                       Colors.white
+                                        //                   ? Colors.black
+                                        //                   : null,
+                                        //             ),
+                                        //           ),
+                                        //         ),
+                                        //         const SizedBox(
+                                        //           width: 5,
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
+                                      }
+                                    },
+                                    itemBuilder: (context) => [
+                                      // if (name != 'Favorite Songs')
+                                      //   PopupMenuItem(
+                                      //     value: 3,
+                                      //     child: Row(
+                                      //       children: [
+                                      //         const Icon(Icons.edit_rounded),
+                                      //         const SizedBox(width: 10.0),
+                                      //         Text(
+                                      //           AppLocalizations.of(context)!
+                                      //               .rename,
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // if (name != 'Favorite Songs')
+                                      PopupMenuItem(
+                                        value: 0,
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.delete_rounded),
+                                            const SizedBox(width: 10.0),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .delete,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Row(
+                                          children: [
+                                            const Icon(MdiIcons.export),
+                                            const SizedBox(width: 10.0),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .export,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 2,
+                                        child: Row(
+                                          children: [
+                                            const Icon(MdiIcons.share),
+                                            const SizedBox(width: 10.0),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .share,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.playlist,
+                                          playlistName: customPlaylistResponse!
+                                              .data![index].playlist!.name
+                                              .toString(),
+                                          playlistImage: '',
+                                          id: customPlaylistResponse!
+                                              .data![index].playlist!.id,
+                                          isMyPlaylist: true,
+                                        ),
+                                      ),
+                                    );
+                                    // await Hive.openBox(name);
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => LikedSongs(
+                                    //       playlistName: name,
+                                    //       showName: playlistDetails
+                                    //               .containsKey(name)
+                                    //           ? playlistDetails[name]['name']
+                                    //                   ?.toString() ??
+                                    //               name
+                                    //           : name,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  },
+                                );
+                              },
+                            ),
                         ],
                       ),
                     ),

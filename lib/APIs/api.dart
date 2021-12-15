@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/format.dart';
 import 'package:blackhole/model/album_response.dart';
+import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:blackhole/model/forgot_password_response.dart';
 import 'package:blackhole/model/forgot_password_verification_response.dart';
 import 'package:blackhole/model/genres_response.dart';
@@ -16,6 +18,7 @@ import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
+import 'package:blackhole/model/tracks_by_bpm_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -43,6 +46,8 @@ class YogitunesAPI {
     'playlists': 'my-library/playlists',
     'createPlaylist': 'my-library/playlists/create',
     'editPlaylist': 'my-library/playlists/edit',
+    'deletePlaylist': 'my-library/playlists/delete',
+    'playlistSongsList': 'browse/tracks-by-bpm',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -545,18 +550,39 @@ class YogitunesAPI {
     return [];
   }
 
-  Future<HomeResponse?> fetchPlaylistData() async {
-    HomeResponse? result;
+  Future<TracksBybpmResponse?> fetchPlaylistSongData(
+    int pageNo,
+  ) async {
+    TracksBybpmResponse? result;
     try {
-      final res = await getResponse(endpoints['playlists']!);
+      final res = await getResponse(
+          '${endpoints['playlistSongsList']!}/All?page=$pageNo&my_library=false&filter_style=electronic');
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
-        result = await FormatResponse.formatHomePageData(
-          HomeResponse?.fromMap(data as Map<String, dynamic>),
+        result = await TracksBybpmResponse.fromMap(
+          data as Map<String, dynamic>,
         );
       }
     } catch (e) {
-      log('Error in fetchHomePageData: $e');
+      log('Error in fetchYogiAlbumData: $e');
+    }
+    return result;
+  }
+
+  Future<CustomPlaylistResponse?> fetchPlaylistData() async {
+    CustomPlaylistResponse? result;
+    try {
+      final res = await getResponse(endpoints['playlists']!);
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.bodyBytes}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        result = CustomPlaylistResponse.fromMap(data as Map<String, dynamic>);
+        print(result);
+      }
+    } catch (e) {
+      log('Error in fetchPlaylistData: $e');
     }
     return result;
   }
@@ -594,6 +620,34 @@ class YogitunesAPI {
     }
   }
 
+  Future deletePlylist(String plylistId, BuildContext context) async {
+    var result;
+    try {
+      final res =
+          await getResponse('${endpoints['deletePlaylist']!}/$plylistId');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        // result = CustomPlaylistResponse.fromMap(data as Map<String, dynamic>);
+
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(
+            context,
+            'Playlist deleted Successfully!',
+          );
+        } else {
+          ShowSnackBar().showSnackBar(
+            context,
+            data['data'].toString(),
+          );
+        }
+        print('RESPONSE :::: $data');
+      }
+    } catch (e) {
+      log('Error in deletePlylist: $e');
+    }
+    // return result;
+  }
+
   Future<dynamic> editPlaylist(
       String playlistId, String name, List<String> lst) async {
     List<Map> dataList = [];
@@ -601,6 +655,10 @@ class YogitunesAPI {
     for (int i = 0; i < lst.length; i++) {
       dataList.insert(i, {'id': lst[i], 'order': i + 1});
     }
+
+    print(playlistId);
+    print(name);
+    print(dataList);
 
     try {
       final box = await Hive.openBox('api-token');
@@ -624,6 +682,7 @@ class YogitunesAPI {
         body: json.encode(mapData),
         headers: headers,
       );
+      print(res.body);
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 

@@ -80,7 +80,7 @@ class SinglePlaylistData {
   final int? creatorId;
   final bool? byop;
   final String? playlistDuration;
-  final List<QuadImage>? quadImages;
+  final List<QuadImage?>? quadImages;
   final Profile? profile;
   final List<Tag>? tags;
   final List<PlaylistTracks>? playlistTracks;
@@ -110,7 +110,7 @@ class SinglePlaylistData {
     int? creatorId,
     bool? byop,
     String? playlistDuration,
-    List<QuadImage>? quadImages,
+    List<QuadImage?>? quadImages,
     Profile? profile,
     List<Tag>? tags,
     List<PlaylistTracks>? playlistTracks,
@@ -143,7 +143,7 @@ class SinglePlaylistData {
       'creatorId': creatorId,
       'byop': byop,
       'playlistDuration': playlistDuration,
-      'quadImages': quadImages?.map((x) => x.toMap()).toList(),
+      'quadImages': quadImages?.map((x) => x?.toMap()).toList(),
       'profile': profile?.toMap(),
       'tags': tags?.map((x) => x.toMap()).toList(),
       'playlistTracks': playlistTracks?.map((x) => x.toMap()).toList(),
@@ -164,11 +164,14 @@ class SinglePlaylistData {
       playlistDuration: map['playlist_duration'] != null
           ? map['playlist_duration'] as String
           : null,
-      quadImages: map['quadImages'] != null
-          ? List<QuadImage>.from(map['quadImages']
-                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
-              as Iterable<dynamic>)
-          : null,
+      quadImages: map['quadImages'] != null ?map['quadImages'].toString() != 'null' ? List<QuadImage?>.from(map['quadImages']?.map((x) =>x!=null? QuadImage.fromMap(x as Map<String, dynamic>):null)as Iterable<dynamic>):null : null,
+      // map['quadImages'] != null
+      //     ? map['quadImages'].toString() != 'null'
+      //         ? List<QuadImage>.from(map['quadImages']?.map((x) => x != null
+      //             ? QuadImage.fromMap(x as Map<String, dynamic>)
+      //             : null) as Iterable<dynamic>)
+      //         : null
+      //     : null,
       profile: map['profile'] != null
           ? Profile.fromMap(map['profile'] as Map<String, dynamic>)
           : null,

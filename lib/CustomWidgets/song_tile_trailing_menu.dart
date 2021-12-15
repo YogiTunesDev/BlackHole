@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/add_playlist.dart';
 import 'package:blackhole/Helpers/add_mediitem_to_queue.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
@@ -16,7 +17,18 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class SongTileTrailingMenu extends StatefulWidget {
   final SongItemModel data;
-  const SongTileTrailingMenu({Key? key, required this.data}) : super(key: key);
+  final bool isMyPlaylist;
+  final List<String> selectedPlaylist;
+  final String playlistName;
+  final int playlistId;
+  const SongTileTrailingMenu({
+    Key? key,
+    required this.data,
+    required this.isMyPlaylist,
+    required this.selectedPlaylist,
+    required this.playlistName,
+    required this.playlistId,
+  }) : super(key: key);
 
   @override
   _SongTileTrailingMenuState createState() => _SongTileTrailingMenuState();
@@ -62,19 +74,34 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
             ],
           ),
         ),
-        PopupMenuItem(
-          value: 0,
-          child: Row(
-            children: [
-              Icon(
-                Icons.playlist_add_rounded,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              const SizedBox(width: 10.0),
-              Text(AppLocalizations.of(context)!.addToPlaylist),
-            ],
+        if (widget.isMyPlaylist)
+          PopupMenuItem(
+            value: 0,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.remove,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                const SizedBox(width: 10.0),
+                const Text('Remove from playlist'),
+              ],
+            ),
+          )
+        else
+          PopupMenuItem(
+            value: 0,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.playlist_add_rounded,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                const SizedBox(width: 10.0),
+                Text(AppLocalizations.of(context)!.addToPlaylist),
+              ],
+            ),
           ),
-        ),
         PopupMenuItem(
           value: 4,
           child: Row(
@@ -102,7 +129,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
           ),
         ),
       ],
-      onSelected: (int? value) {
+      onSelected: (int? value) async {
         final MediaItem mediaItem =
             MediaItemConverter.mapToMediaItem(widget.data.toMap());
         if (value == 3) {
@@ -125,7 +152,20 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         //   );
         // }
         if (value == 0) {
-          AddToPlaylist().addToPlaylist(context, mediaItem);
+          if (widget.isMyPlaylist) {
+            print(widget.selectedPlaylist);
+            widget.selectedPlaylist
+                .removeWhere((element) => element == widget.data.id.toString());
+            var res = await YogitunesAPI().editPlaylist(
+              widget.playlistId.toString(),
+              widget.playlistName,
+              widget.selectedPlaylist,
+            );
+
+            if (res['status'] as bool) {}
+          } else {
+            AddToPlaylist().addToPlaylist(context, mediaItem);
+          }
         }
         if (value == 1) {
           addToNowPlaying(context: context, mediaItem: mediaItem);

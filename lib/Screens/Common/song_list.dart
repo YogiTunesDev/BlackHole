@@ -28,13 +28,15 @@ class SongsListPage extends StatefulWidget {
   final String? playlistImage;
   final int? id;
   final SongListType? songListType;
-  const SongsListPage({
+  bool? isMyPlaylist = false;
+  SongsListPage({
     Key? key,
     this.songList,
     this.playlistImage,
     required this.playlistName,
     this.id,
     this.songListType,
+    this.isMyPlaylist,
   }) : super(key: key);
 
   @override
@@ -49,6 +51,7 @@ class _SongsListPageState extends State<SongsListPage> {
   bool fetched = true;
   HtmlUnescape unescape = HtmlUnescape();
   final ScrollController _scrollController = ScrollController();
+  List<String> selectedPlaylist = [];
 
   @override
   void initState() {
@@ -109,6 +112,13 @@ class _SongsListPageState extends State<SongsListPage> {
               if (playlistRes.data!.lstSongItemModel != null) {
                 if (playlistRes.data!.lstSongItemModel!.isNotEmpty) {
                   songList = playlistRes.data!.lstSongItemModel!;
+                  for (int i = 0;
+                      i < playlistRes.data!.lstSongItemModel!.length;
+                      i++) {
+                    selectedPlaylist.insert(i,
+                        playlistRes.data!.lstSongItemModel![i].id.toString());
+                    print(selectedPlaylist);
+                  }
                 }
               }
             }
@@ -449,7 +459,14 @@ class _SongsListPageState extends State<SongsListPage> {
                                     //   mediaItem: null,
                                     //   data: entry,
                                     // ),
-                                    SongTileTrailingMenu(data: entry),
+                                    SongTileTrailingMenu(
+                                      data: entry,
+                                      isMyPlaylist: widget.isMyPlaylist!,
+                                      selectedPlaylist: selectedPlaylist,
+                                      playlistName: widget.playlistName,
+                                      playlistId:
+                                          int.parse(widget.id.toString()),
+                                    ),
                                   ],
                                 ),
                                 onTap: () {

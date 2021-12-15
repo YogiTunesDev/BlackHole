@@ -308,10 +308,6 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                       selectedPlaylist
                                           .remove(item.id.toString());
                                     });
-
-                                    // selectedPlaylist.add({
-                                    //   {'id': item.id, 'order': index + 1}
-                                    // });
                                   },
                                   icon: const Icon(Icons.check),
                                 )
