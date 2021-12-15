@@ -461,7 +461,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                     // ),
                                     SongTileTrailingMenu(
                                       data: entry,
-                                      isMyPlaylist: widget.isMyPlaylist!,
+                                      isMyPlaylist:
+                                          widget.isMyPlaylist ?? false,
                                       selectedPlaylist: selectedPlaylist,
                                       playlistName: widget.playlistName,
                                       playlistId:
