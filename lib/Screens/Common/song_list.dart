@@ -28,7 +28,7 @@ class SongsListPage extends StatefulWidget {
   final String? playlistImage;
   final int? id;
   final SongListType? songListType;
-  bool? isMyPlaylist = false;
+  final bool? isMyPlaylist;
   SongsListPage({
     Key? key,
     this.songList,
@@ -80,6 +80,15 @@ class _SongsListPageState extends State<SongsListPage> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+  }
+
+  callback() {
+    print("FUNCTION CALLBACKa");
+
+    setState(() {
+      _fetchSongs();
+    });
+    print("FUNCTION CALLBACK");
   }
 
   void _fetchSongs() async {
@@ -467,6 +476,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                       playlistName: widget.playlistName,
                                       playlistId:
                                           int.parse(widget.id.toString()),
+                                      callback: () => callback(),
                                     ),
                                   ],
                                 ),

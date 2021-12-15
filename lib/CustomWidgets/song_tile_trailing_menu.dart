@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/add_playlist.dart';
+import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/add_mediitem_to_queue.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
@@ -21,6 +22,9 @@ class SongTileTrailingMenu extends StatefulWidget {
   final List<String> selectedPlaylist;
   final String playlistName;
   final int playlistId;
+
+  final VoidCallback callback;
+
   const SongTileTrailingMenu({
     Key? key,
     required this.data,
@@ -28,6 +32,7 @@ class SongTileTrailingMenu extends StatefulWidget {
     required this.selectedPlaylist,
     required this.playlistName,
     required this.playlistId,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -162,7 +167,12 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
               widget.selectedPlaylist,
             );
 
-            if (res['status'] as bool) {}
+            if (res['status'] as bool) {
+              print('FUNCTION');
+              widget.callback();
+            } else {
+              ShowSnackBar().showSnackBar(context, res['data'].toString());
+            }
           } else {
             AddToPlaylist().addToPlaylist(context, mediaItem);
           }
