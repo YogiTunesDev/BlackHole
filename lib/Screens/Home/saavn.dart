@@ -216,7 +216,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       opaque: false,
                                       pageBuilder: (_, __, ___) => AlbumList(
                                         albumListType:
-                                            AlbumListType.genresMoods,
+                                            AlbumListType.otherActivity,
                                         albumName: item.name,
                                         id: item.id,
                                       ),

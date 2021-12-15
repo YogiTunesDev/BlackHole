@@ -248,148 +248,6 @@ class _AlbumListState extends State<AlbumList> {
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      // Row(
-                      //   mainAxisAlignment:
-                      //       MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     GestureDetector(
-                      //       onTap: () {
-                      //         // Navigator.push(
-                      //         //   context,
-                      //         //   PageRouteBuilder(
-                      //         //     opaque: false,
-                      //         //     pageBuilder: (_, __, ___) =>
-                      //         //         PlayScreen(
-                      //         //       songsList: songList,
-                      //         //       index: 0,
-                      //         //       offline: false,
-                      //         //       fromDownloads: false,
-                      //         //       fromMiniplayer: false,
-                      //         //       recommend: true,
-                      //         //     ),
-                      //         //   ),
-                      //         // );
-                      //       },
-                      //       child: Container(
-                      //         margin: const EdgeInsets.only(
-                      //           top: 20,
-                      //           bottom: 5,
-                      //         ),
-                      //         height: 45.0,
-                      //         width: 120,
-                      //         decoration: BoxDecoration(
-                      //           borderRadius:
-                      //               BorderRadius.circular(100.0),
-                      //           color: Theme.of(context)
-                      //               .colorScheme
-                      //               .secondary,
-                      //           boxShadow: const [
-                      //             BoxShadow(
-                      //               color: Colors.black26,
-                      //               blurRadius: 5.0,
-                      //               offset: Offset(0.0, 3.0),
-                      //             )
-                      //           ],
-                      //         ),
-                      //         child: Row(
-                      //           mainAxisAlignment:
-                      //               MainAxisAlignment.center,
-                      //           children: [
-                      //             Icon(
-                      //               Icons.play_arrow_rounded,
-                      //               color: Theme.of(context)
-                      //                           .colorScheme
-                      //                           .secondary ==
-                      //                       Colors.white
-                      //                   ? Colors.black
-                      //                   : Colors.white,
-                      //             ),
-                      //             const SizedBox(width: 5.0),
-                      //             Text(
-                      //               AppLocalizations.of(context)!
-                      //                   .play,
-                      //               style: TextStyle(
-                      //                 fontWeight: FontWeight.bold,
-                      //                 fontSize: 18.0,
-                      //                 color: Theme.of(context)
-                      //                             .colorScheme
-                      //                             .secondary ==
-                      //                         Colors.white
-                      //                     ? Colors.black
-                      //                     : Colors.white,
-                      //               ),
-                      //               textAlign: TextAlign.center,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     GestureDetector(
-                      //       onTap: () {
-                      //         final List tempList =
-                      //             List.from(songList);
-                      //         tempList.shuffle();
-                      //         // Navigator.push(
-                      //         //   context,
-                      //         //   PageRouteBuilder(
-                      //         //     opaque: false,
-                      //         //     pageBuilder: (_, __, ___) =>
-                      //         //         PlayScreen(
-                      //         //       songsList: tempList,
-                      //         //       index: 0,
-                      //         //       offline: false,
-                      //         //       fromDownloads: false,
-                      //         //       fromMiniplayer: false,
-                      //         //       recommend: true,
-                      //         //     ),
-                      //         //   ),
-                      //         // );
-                      //       },
-                      //       child: Container(
-                      //         margin: const EdgeInsets.only(
-                      //           top: 20,
-                      //           bottom: 5,
-                      //         ),
-                      //         height: 45.0,
-                      //         width: 130,
-                      //         decoration: BoxDecoration(
-                      //           borderRadius:
-                      //               BorderRadius.circular(100.0),
-                      //           color: Colors.white,
-                      //           boxShadow: const [
-                      //             BoxShadow(
-                      //               color: Colors.black26,
-                      //               blurRadius: 5.0,
-                      //               offset: Offset(0.0, 3.0),
-                      //             )
-                      //           ],
-                      //         ),
-                      //         child: Row(
-                      //           mainAxisAlignment:
-                      //               MainAxisAlignment.center,
-                      //           children: [
-                      //             const Icon(
-                      //               Icons.shuffle_rounded,
-                      //               color: Colors.black,
-                      //             ),
-                      //             const SizedBox(width: 5.0),
-                      //             Text(
-                      //               AppLocalizations.of(context)!
-                      //                   .shuffle,
-                      //               style: const TextStyle(
-                      //                 fontWeight: FontWeight.bold,
-                      //                 fontSize: 18.0,
-                      //                 color: Colors.black,
-                      //               ),
-                      //               textAlign: TextAlign.center,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-
                       if (((lstPlaylistData.isEmpty &&
                                   mainType == MainType.playlist) ||
                               (lstAlbumData.isEmpty &&
@@ -518,8 +376,7 @@ class _AlbumListState extends State<AlbumList> {
                                                     pageBuilder: (_, __, ___) =>
                                                         AlbumList(
                                                       albumListType:
-                                                          AlbumListType
-                                                              .genresMoods,
+                                                          widget.albumListType,
                                                       albumName: item.name,
                                                       id: item.id,
                                                     ),
@@ -617,8 +474,13 @@ class _AlbumListState extends State<AlbumList> {
       mainType = MainType.playlist;
       return 'browse/popular_yoga_playlists';
     } else if (albumListType == AlbumListType.otherActivity) {
-      mainType = MainType.genres;
-      return 'browse/activities';
+      if (widget.id != null) {
+        mainType = MainType.playlist;
+        return 'browse/activities/${widget.id}';
+      } else {
+        mainType = MainType.genres;
+        return 'browse/activities';
+      }
     } else if (albumListType == AlbumListType.featuredAlbums) {
       mainType = MainType.album;
       return 'browse/featured_albums';

@@ -404,7 +404,6 @@ class QuadImage {
   int get hashCode => imageUrl.hashCode ^ image.hashCode;
 }
 
-
 class TracksOnly {
   TracksOnly({
     this.id,
@@ -674,7 +673,6 @@ class Cover {
         imgUrl.hashCode;
   }
 }
-
 
 class BpmClass {
   BpmClass({
