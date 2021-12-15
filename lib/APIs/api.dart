@@ -356,6 +356,8 @@ class YogitunesAPI {
     PlaylistResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo');
+      print("res :: $res");
+      print("res :: ${res.body}");
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiPlaylistData(
