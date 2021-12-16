@@ -553,12 +553,18 @@ class YogitunesAPI {
   }
 
   Future<TracksBybpmResponse?> fetchPlaylistSongData(
+    String? vocals,
+    String? tempo,
+    String? style,
+    bool isMyLibrary,
     int pageNo,
   ) async {
     TracksBybpmResponse? result;
     try {
       final res = await getResponse(
-          '${endpoints['playlistSongsList']!}/All?page=$pageNo&my_library=false&filter_style=');
+          '${endpoints['playlistSongsList']!}/${tempo != null && tempo != '' ? tempo : 'All'}?page=${pageNo}&my_library=$isMyLibrary${vocals != null ? '&filter_vocal=${vocals.toLowerCase()}' : ''}${style != null ? '&filter_style=${style.replaceAll('Electro acoustic', 'acoustic').toLowerCase()}' : ''}');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await TracksBybpmResponse.fromMap(

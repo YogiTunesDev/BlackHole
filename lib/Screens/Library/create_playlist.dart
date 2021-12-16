@@ -43,12 +43,18 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
   final ScrollController _scrollController = ScrollController();
   bool loading = false;
   int mainDuration = 0;
+
+  String? tempo;
+  String? vocals;
+  String? style;
+  bool isMyLibrary = false;
+
   Future fetchData() async {
     try {
       apiLoading = true;
       setState(() {});
-      final TracksBybpmResponse? playlistRes =
-          await YogitunesAPI().fetchPlaylistSongData(pageNo);
+      final TracksBybpmResponse? playlistRes = await YogitunesAPI()
+          .fetchPlaylistSongData(vocals, tempo, style, isMyLibrary, pageNo);
 
       pageNo++;
       if (playlistRes != null) {
@@ -254,9 +260,51 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                   borderRadius: BorderRadius.circular(18),
                                 ),
                                 builder: (BuildContext contex) {
-                                  return Filters();
+                                  return Filters(
+                                    tempo: tempo,
+                                    myLibrary: isMyLibrary,
+                                    style: style,
+                                    vocal: vocals,
+                                  );
                                 },
-                              );
+                              ).then((value) {
+                                lstSongBpm = [];
+                                if (value != null) {
+                                  if (value is Map) {
+                                    pageNo = 1;
+                                    if (value['tempo'] is String?) {
+                                      tempo = value['tempo'] as String?;
+                                    } else {
+                                      tempo = null;
+                                    }
+
+                                    if (value['vocals'] is String?) {
+                                      vocals = value['vocals'] as String?;
+                                    } else {
+                                      vocals = null;
+                                    }
+
+                                    if (value['style'] is String?) {
+                                      style = value['style'] as String?;
+                                    } else {
+                                      style = null;
+                                    }
+
+                                    if (value['isMyLibrary'] is bool) {
+                                      isMyLibrary =
+                                          value['isMyLibrary'] as bool;
+                                    } else {
+                                      isMyLibrary = false;
+                                    }
+                                  } else {
+                                    tempo = null;
+                                    vocals = null;
+                                    style = null;
+                                    isMyLibrary = false;
+                                  }
+                                  fetchData();
+                                }
+                              });
                             },
                             child: const Text(
                               'Filter',
@@ -446,16 +494,23 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 }
 
 class Filters extends StatefulWidget {
-  Filters({Key? key}) : super(key: key);
+  Filters(
+      {Key? key, this.vocal, this.tempo, this.style, this.myLibrary = false})
+      : super(key: key);
+
+  final String? vocal;
+  final String? tempo;
+  final String? style;
+  final bool myLibrary;
 
   @override
   _FiltersState createState() => _FiltersState();
 }
 
 class _FiltersState extends State<Filters> {
-  int? selectedVocal;
-  int? selectedTempo;
-  int? selectedStyle;
+  String? selectedVocal;
+  String? selectedTempo;
+  String? selectedStyle;
   int selectedCategory = 0;
 
   List<Map<String, dynamic>> vocals = [
@@ -471,19 +526,19 @@ class _FiltersState extends State<Filters> {
 
   List<Map<String, dynamic>> tempo = [
     {
-      'key': 'slow',
+      'key': 'Slow',
       'val': 'Slow',
     },
     {
-      'key': 'medium',
+      'key': 'Medium',
       'val': 'Medium',
     },
     {
-      'key': 'fast',
+      'key': 'Fast',
       'val': 'Fast',
     },
     {
-      'key': 'ambient',
+      'key': 'Ambient',
       'val': 'Ambient',
     },
   ];
@@ -495,13 +550,23 @@ class _FiltersState extends State<Filters> {
     },
     {
       'key': 'electro-acoustic',
-      'val': 'Electro-acoustic',
+      'val': 'Electro acoustic',
     },
     {
       'key': 'acoustic',
       'val': 'Acoustic',
     },
   ];
+
+  @override
+  void initState() {
+    selectedVocal = widget.vocal;
+    selectedTempo = widget.tempo;
+    selectedStyle = widget.style;
+    selectedCategory = widget.myLibrary ? 1 : 0;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -516,7 +581,9 @@ class _FiltersState extends State<Filters> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   icon: Icon(
                     Icons.arrow_back_ios,
                     color: Theme.of(context).colorScheme.primary,
@@ -524,7 +591,17 @@ class _FiltersState extends State<Filters> {
                 ),
                 const Expanded(child: SizedBox()),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(
+                      context,
+                      {
+                        'tempo': selectedTempo != null ? selectedTempo! : null,
+                        'style': selectedStyle != null ? selectedStyle! : null,
+                        'vocals': selectedVocal != null ? selectedVocal! : null,
+                        'isMyLibrary': selectedCategory == 0 ? false : true,
+                      },
+                    );
+                  },
                   child: Center(
                     child: Text(
                       'view results',
@@ -633,13 +710,13 @@ class _FiltersState extends State<Filters> {
                 return InkWell(
                   onTap: () {
                     setState(() {
-                      selectedVocal = index;
+                      selectedVocal = vocals[index]['val'].toString();
                     });
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: selectedVocal == index
+                        color: selectedVocal == vocals[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.primary),
                     child: Center(
@@ -684,13 +761,13 @@ class _FiltersState extends State<Filters> {
                 return InkWell(
                   onTap: () {
                     setState(() {
-                      selectedTempo = index;
+                      selectedTempo = tempo[index]['val'].toString();
                     });
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: selectedTempo == index
+                        color: selectedTempo == tempo[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.primary),
                     child: Center(
@@ -735,13 +812,13 @@ class _FiltersState extends State<Filters> {
                 return InkWell(
                   onTap: () {
                     setState(() {
-                      selectedStyle = index;
+                      selectedStyle = style[index]['val'].toString();
                     });
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: selectedStyle == index
+                        color: selectedStyle == style[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.primary),
                     child: Center(
@@ -760,12 +837,10 @@ class _FiltersState extends State<Filters> {
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  selectedCategory = 0;
-                  selectedVocal = null;
-                  selectedTempo = null;
-                  selectedStyle = null;
-                });
+                Navigator.pop(
+                  context,
+                  {},
+                );
               },
               child: const Text(
                 'clear filter',
