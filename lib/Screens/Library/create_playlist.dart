@@ -245,6 +245,22 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
+                          TextButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                builder: (BuildContext contex) {
+                                  return Filters();
+                                },
+                              );
+                            },
+                            child: const Text(
+                              'Filter',
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -377,5 +393,338 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
       }
     }
     // }
+  }
+}
+
+class Filters extends StatefulWidget {
+  Filters({Key? key}) : super(key: key);
+
+  @override
+  _FiltersState createState() => _FiltersState();
+}
+
+class _FiltersState extends State<Filters> {
+  int? selectedVocal;
+  int? selectedTempo;
+  int? selectedStyle;
+  int selectedCategory = 0;
+
+  List<Map<String, dynamic>> vocals = [
+    {
+      'key': 'lyrics',
+      'val': 'Lyrics',
+    },
+    {
+      'key': 'no_lyrics',
+      'val': 'No Lyrics',
+    },
+  ];
+
+  List<Map<String, dynamic>> tempo = [
+    {
+      'key': 'slow',
+      'val': 'Slow',
+    },
+    {
+      'key': 'medium',
+      'val': 'Medium',
+    },
+    {
+      'key': 'fast',
+      'val': 'Fast',
+    },
+    {
+      'key': 'ambient',
+      'val': 'Ambient',
+    },
+  ];
+
+  List<Map<String, dynamic>> style = [
+    {
+      'key': 'electronic',
+      'val': 'Electronic',
+    },
+    {
+      'key': 'electro-acoustic',
+      'val': 'Electro-acoustic',
+    },
+    {
+      'key': 'acoustic',
+      'val': 'Acoustic',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+                TextButton(
+                  onPressed: () {},
+                  child: Center(
+                    child: Text(
+                      'view results',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = 0;
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: selectedCategory == 0
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(100),
+                            bottomLeft: Radius.circular(100),
+                          )),
+                      child: Center(
+                        child: Text(
+                          'All of YogiTunes',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.primaryVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedCategory = 1;
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: selectedCategory == 1
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary,
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(100),
+                            bottomRight: Radius.circular(100),
+                          )),
+                      child: Center(
+                        child: Text(
+                          'My Library',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.primaryVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'VOCALS',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 5,
+                mainAxisExtent: 40,
+                mainAxisSpacing: 5,
+              ),
+              itemCount: vocals.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedVocal = index;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: selectedVocal == index
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary),
+                    child: Center(
+                      child: Text(
+                        vocals[index]['val'].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.primaryVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Text(
+              'TEMPO',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 5,
+                mainAxisExtent: 40,
+                mainAxisSpacing: 5,
+              ),
+              itemCount: tempo.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedTempo = index;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: selectedTempo == index
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary),
+                    child: Center(
+                      child: Text(
+                        tempo[index]['val'].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.primaryVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Text(
+              'STYLE',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 5,
+                mainAxisExtent: 40,
+                mainAxisSpacing: 5,
+              ),
+              itemCount: style.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedStyle = index;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: selectedStyle == index
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.primary),
+                    child: Center(
+                      child: Text(
+                        style[index]['val'].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Theme.of(context).colorScheme.primaryVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedCategory = 0;
+                  selectedVocal = null;
+                  selectedTempo = null;
+                  selectedStyle = null;
+                });
+              },
+              child: const Text(
+                'clear filter',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

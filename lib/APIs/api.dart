@@ -595,7 +595,7 @@ class YogitunesAPI {
 
       final String apiToken = box.get('token').toString();
 
-      final url = "$baseUrl$apiStr${endpoints['createPlaylist']}?name=rajan";
+      final url = "$baseUrl$apiStr${endpoints['createPlaylist']}?name=$name";
 
       final res = await http.post(
         Uri.parse(url),
