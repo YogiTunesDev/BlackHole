@@ -97,13 +97,14 @@ class SongItemModel {
   }
 
   factory SongItemModel.fromMap(Map<String, dynamic> map) {
-    
     return SongItemModel(
       id: map['id'] != null ? map['id'] as String : null,
       artist: map['artist'] != null ? map['artist'] as String : null,
       album: map['album'] != null ? map['album'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
-      duration: map['duration'] != null ? map['duration'] as int : null,
+      duration: map['duration'] != null
+          ? int.parse(map['duration'].toString())
+          : null,
       title: map['title'] != null ? map['title'] as String : null,
       url: map['url'] != null
           ? map['url'] as String

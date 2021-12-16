@@ -562,7 +562,7 @@ class YogitunesAPI {
     TracksBybpmResponse? result;
     try {
       final res = await getResponse(
-          '${endpoints['playlistSongsList']!}/${tempo != null && tempo != '' ? tempo : 'All'}?page=${pageNo}&my_library=$isMyLibrary${vocals != null ? '&filter_vocal=${vocals.toLowerCase()}' : ''}${style != null ? '&filter_style=${style.replaceAll('Electro acoustic', 'acoustic').toLowerCase()}' : ''}');
+          '${endpoints['playlistSongsList']!}/${tempo != null && tempo != '' ? tempo : 'All'}?page=${pageNo}&my_library=$isMyLibrary${vocals != null ? '&filter_vocal=${vocals.trim().replaceAll(" ", "-").toLowerCase()}' : ''}${style != null ? '&filter_style=${style.replaceAll('Electro acoustic', 'acoustic').toLowerCase()}' : ''}');
       print('Playlist ::::: ${res.statusCode}');
       print('Playlist ::::: ${res.body}');
       if (res.statusCode == 200) {
