@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/foundation.dart';
 
 // import 'cover_model.dart';
@@ -237,6 +238,7 @@ class TracksBybpmData {
   final Album? album;
   final List<FileElement>? files;
   final BpmClass? bpm;
+  
 
   TracksBybpmData copyWith({
     int? id,

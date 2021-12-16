@@ -9,6 +9,7 @@ import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
 import 'package:blackhole/Helpers/import_export_playlist.dart';
 import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Helpers/search_add_playlist.dart';
+import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Library/liked.dart';
@@ -618,6 +619,21 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                               shrinkWrap: true,
                               itemCount: customPlaylistResponse!.data!.length,
                               itemBuilder: (context, index) {
+                                String? imageUrl;
+                                PlaylistResponseData itemData =
+                                    customPlaylistResponse!.data![index];
+                                if (itemData.quadImages != null) {
+                                  if (itemData.quadImages!.isNotEmpty) {
+                                    if (itemData.quadImages![0] != null) {
+                                      if (itemData.quadImages![0]!.imageUrl !=
+                                          null) {
+                                        imageUrl =
+                                            '${itemData.quadImages![0]!.imageUrl}/${itemData.quadImages![0]!.image}';
+                                        ;
+                                      }
+                                    }
+                                  }
+                                }
                                 return ListTile(
                                   leading:
                                       // (playlistDetails[name] == null ||
@@ -634,24 +650,28 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       borderRadius: BorderRadius.circular(7.0),
                                     ),
                                     clipBehavior: Clip.antiAlias,
-                                    child: const SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child:
-                                            // name == 'Favorite Songs'
-                                            //     ?
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, _, __) =>
                                             const Image(
+                                          fit: BoxFit.cover,
                                           image: AssetImage(
                                             'assets/cover.jpg',
                                           ),
-                                        )
-                                        //     :
-                                        //     Image(
-                                        //   image: AssetImage(
-                                        //     'assets/album.png',
-                                        //   ),
-                                        // ),
                                         ),
+                                        imageUrl: '${imageUrl}',
+                                        placeholder: (context, url) =>
+                                            const Image(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            'assets/cover.jpg',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   // : Collage(
                                   //     imageList: playlistDetails[name]
@@ -951,7 +971,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           playlistName: customPlaylistResponse!
                                               .data![index].playlist!.name
                                               .toString(),
-                                          playlistImage: '',
+                                          playlistImage: imageUrl,
                                           id: customPlaylistResponse!
                                               .data![index].playlist!.id,
                                           isMyPlaylist: true,

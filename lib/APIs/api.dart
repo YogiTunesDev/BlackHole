@@ -558,7 +558,7 @@ class YogitunesAPI {
     TracksBybpmResponse? result;
     try {
       final res = await getResponse(
-          '${endpoints['playlistSongsList']!}/All?page=$pageNo&my_library=false&filter_style=electronic');
+          '${endpoints['playlistSongsList']!}/All?page=$pageNo&my_library=false&filter_style=');
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await TracksBybpmResponse.fromMap(

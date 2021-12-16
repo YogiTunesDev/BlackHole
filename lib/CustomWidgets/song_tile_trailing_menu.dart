@@ -4,6 +4,7 @@ import 'package:blackhole/CustomWidgets/add_playlist.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/add_mediitem_to_queue.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
+import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Services/youtube_services.dart';
@@ -159,14 +160,17 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         if (value == 0) {
           if (widget.isMyPlaylist) {
             print(widget.selectedPlaylist);
+
             widget.selectedPlaylist
                 .removeWhere((element) => element == widget.data.id.toString());
+            popupLoader(context, 'Loading');
             var res = await YogitunesAPI().editPlaylist(
               widget.playlistId.toString(),
               widget.playlistName,
               widget.selectedPlaylist,
             );
 
+            Navigator.pop(context);
             if (res['status'] as bool) {
               print('FUNCTION');
               widget.callback();
