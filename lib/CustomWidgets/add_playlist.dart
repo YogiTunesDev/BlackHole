@@ -1,10 +1,13 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
 import 'package:blackhole/Helpers/audio_query.dart';
 import 'package:blackhole/Helpers/playlist.dart';
+import 'package:blackhole/Screens/Home/saavn.dart';
+import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
@@ -131,111 +134,192 @@ class AddToPlaylist {
       backgroundColor: Colors.transparent,
       context: context,
       builder: (BuildContext context) {
-        return BottomGradientContainer(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  title: Text(AppLocalizations.of(context)!.createPlaylist),
-                  leading: Card(
-                    elevation: 0,
-                    color: Colors.transparent,
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Center(
-                        child: Icon(
-                          Icons.add_rounded,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? null
-                              : Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    showTextInputDialog(
-                      context: context,
-                      keyboardType: TextInputType.name,
-                      title: AppLocalizations.of(context)!.createNewPlaylist,
-                      onSubmitted: (String value) async {
-                        final RegExp avoid = RegExp(r'[\.\\\*\:\"\?#/;\|]');
-                        value.replaceAll(avoid, '').replaceAll('  ', ' ');
-                        if (value.trim() == '') {
-                          value = 'Playlist ${playlistNames.length}';
-                        }
-                        if (playlistNames.contains(value) ||
-                            await Hive.boxExists(value)) {
-                          value = '$value (1)';
-                        }
-                        playlistNames.add(value);
-                        settingsBox.put('playlistNames', playlistNames);
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-                if (playlistNames.isEmpty)
-                  const SizedBox()
-                else
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: playlistNames.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: playlistDetails[playlistNames[index]] ==
-                                    null ||
-                                playlistDetails[playlistNames[index]]
-                                        ['imagesList'] ==
-                                    null
-                            ? Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(7.0),
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: const SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: Image(
-                                    image: AssetImage(
-                                      'assets/album.png',
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Collage(
-                                imageList: playlistDetails[playlistNames[index]]
-                                    ['imagesList'] as List,
-                                showGrid: true,
-                                placeholderImage: 'assets/cover.jpg',
-                              ),
-                        title: Text(
-                          '${playlistDetails.containsKey(playlistNames[index]) ? playlistDetails[playlistNames[index]]["name"] ?? playlistNames[index] : playlistNames[index]}',
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          if (mediaItem != null) {
-                            addItemToPlaylist(
-                              playlistNames[index].toString(),
-                              mediaItem,
-                            );
-                            ShowSnackBar().showSnackBar(
-                              context,
-                              '${AppLocalizations.of(context)!.addedTo} ${playlistDetails.containsKey(playlistNames[index]) ? playlistDetails[playlistNames[index]]["name"] ?? playlistNames[index] : playlistNames[index]}',
-                            );
-                          }
-                        },
-                      );
-                    },
-                  ),
-              ],
-            ),
-          ),
+        return AddSongToPlayList(
+          trackId: mediaItem!.id.toString(),
         );
       },
+    );
+  }
+}
+
+class AddSongToPlayList extends StatefulWidget {
+  const AddSongToPlayList({Key? key, this.trackId}) : super(key: key);
+  final String? trackId;
+
+  @override
+  _AddSongToPlayListState createState() => _AddSongToPlayListState();
+}
+
+class _AddSongToPlayListState extends State<AddSongToPlayList> {
+  bool loading = false;
+  bool dataLoader = false;
+  CustomPlaylistResponse? customPlaylistResponse;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchPlaylistData();
+    super.initState();
+  }
+
+  Future fetchPlaylistData() async {
+    setState(() {
+      dataLoader = true;
+    });
+    customPlaylistResponse = await YogitunesAPI().fetchPlaylistData();
+    setState(() {
+      dataLoader = false;
+    });
+  }
+
+  List<String> selectedPlaylist = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomGradientContainer(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.createPlaylist),
+              leading: Card(
+                elevation: 0,
+                color: Colors.transparent,
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: Center(
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? null
+                          : Colors.grey[700],
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                // showTextInputDialog(
+                //   context: context,
+                //   keyboardType: TextInputType.name,
+                //   title: AppLocalizations.of(context)!.createNewPlaylist,
+                //   onSubmitted: (String value) async {
+                //     final RegExp avoid = RegExp(r'[\.\\\*\:\"\?#/;\|]');
+                //     value.replaceAll(avoid, '').replaceAll('  ', ' ');
+                //     if (value.trim() == '') {
+                //       value = 'Playlist ${playlistNames.length}';
+                //     }
+                //     if (playlistNames.contains(value) ||
+                //         await Hive.boxExists(value)) {
+                //       value = '$value (1)';
+                //     }
+                //     playlistNames.add(value);
+                //     settingsBox.put('playlistNames', playlistNames);
+                //     Navigator.pop(context);
+                //   },
+                // );
+              },
+            ),
+            if (dataLoader)
+              const Center(
+                child: CircularProgressIndicator(),
+              )
+            else
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: customPlaylistResponse!
+                    .data!.length, //playlistNames.length,
+                itemBuilder: (context, index) {
+                  var playlist = customPlaylistResponse!.data![index].playlist!;
+                  var playlistTracks =
+                      customPlaylistResponse!.data![index].playlistTracks!;
+                  return ListTile(
+                    leading:
+                        // playlistDetails[playlistNames[index]] ==
+                        //             null ||
+                        //         playlistDetails[playlistNames[index]]
+                        //                 ['imagesList'] ==
+                        //             null
+                        //     ?
+                        Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7.0),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: const SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: Image(
+                          image: AssetImage(
+                            'assets/album.png',
+                          ),
+                        ),
+                      ),
+                      //   )
+                      // : Collage(
+                      //     imageList: playlistDetails[playlistNames[index]]
+                      //         ['imagesList'] as List,
+                      //     showGrid: true,
+                      //     placeholderImage: 'assets/cover.jpg',
+                    ),
+                    title: Text(
+                      playlist.name.toString(),
+                    ),
+                    onTap: () async {
+                      popupLoader(context, 'Loading');
+
+                      for (int i = 0; i < playlistTracks.length; i++) {
+                        selectedPlaylist.insert(
+                            i, playlistTracks[i].playlistId.toString());
+                        print(selectedPlaylist);
+                      }
+
+                      if (selectedPlaylist.contains(widget.trackId)) {
+                        ShowSnackBar().showSnackBar(
+                            context, 'song already exist in playlist');
+                        Navigator.pop(context);
+                      } else {
+                        selectedPlaylist.add(widget.trackId.toString());
+
+                        final res = await YogitunesAPI().editPlaylist(
+                          playlist.id!.toString(),
+                          playlist.name!,
+                          selectedPlaylist,
+                        );
+
+                        if (res['status'] as bool) {
+                          ShowSnackBar().showSnackBar(
+                              context, 'song successfully added!');
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } else {
+                          ShowSnackBar()
+                              .showSnackBar(context, res['data'].toString());
+                          Navigator.pop(context);
+                        }
+                      }
+
+                      // Navigator.pop(context);
+                      // if (mediaItem != null) {
+                      //   addItemToPlaylist(
+                      //     playlistNames[index].toString(),
+                      //     mediaItem,
+                      //   );
+                      //   ShowSnackBar().showSnackBar(
+                      //     context,
+                      //     '${AppLocalizations.of(context)!.addedTo} ${playlistDetails.containsKey(playlistNames[index]) ? playlistDetails[playlistNames[index]]["name"] ?? playlistNames[index] : playlistNames[index]}',
+                      //   );
+                      // }
+                    },
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
