@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/format.dart';
 import 'package:blackhole/model/album_response.dart';
+import 'package:blackhole/model/artist_data_response.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:blackhole/model/forgot_password_response.dart';
 import 'package:blackhole/model/forgot_password_verification_response.dart';
@@ -13,6 +14,11 @@ import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/login_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/reset_password_response.dart';
+import 'package:blackhole/model/search_all_album_response.dart';
+import 'package:blackhole/model/search_all_artists_response.dart';
+import 'package:blackhole/model/search_all_playlists_response.dart';
+import 'package:blackhole/model/search_all_track_response.dart';
+import 'package:blackhole/model/search_response.dart';
 import 'package:blackhole/model/signup_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
@@ -48,6 +54,9 @@ class YogitunesAPI {
     'editPlaylist': 'my-library/playlists/edit',
     'deletePlaylist': 'my-library/playlists/delete',
     'playlistSongsList': 'browse/tracks-by-bpm',
+    'search': 'search',
+    'getSingleSong': 'browse/tracks',
+    'getArtist': 'browse/artists',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -349,6 +358,24 @@ class YogitunesAPI {
     return result;
   }
 
+  Future<RadioStationsStreamResponse?> fetchSingleSongData(int id) async {
+    RadioStationsStreamResponse? result;
+    try {
+      final res =
+          await getResponse('${endpoints['getSingleSong']!}/$id/stream');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatYogiRadioStationStreamData(
+            RadioStationsStreamResponse?.fromMap(data as Map<String, dynamic>));
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
   Future<PlaylistResponse?> fetchYogiPlaylistData(
     String url,
     int pageNo,
@@ -552,6 +579,164 @@ class YogitunesAPI {
     return [];
   }
 
+  Future<SearchResponse?> search(String keyword, bool isMyLibrary) async {
+    SearchResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['search']!}?keyword=$keyword&my_library=$isMyLibrary');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in search: $e');
+    }
+    return result;
+  }
+
+  Future<SearchAllAlbumResponse?> searchAllAlbum(
+      String keyword, bool isMyLibrary) async {
+    SearchAllAlbumResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['search']!}/albums?keyword=$keyword&my_library=$isMyLibrary');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchAllAlbumResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in searchAllAlbum: $e');
+    }
+    return result;
+  }
+
+  Future<SearchAllTracksResponse?> searchAllTrack(
+      String keyword, bool isMyLibrary) async {
+    SearchAllTracksResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['search']!}/tracks?keyword=$keyword&my_library=$isMyLibrary');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchAllTracksResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in searchAllTrack: $e');
+    }
+    return result;
+  }
+
+  Future<SearchAllPlaylistsResponse?> searchAllPlaylist(
+      String keyword, bool isMyLibrary) async {
+    SearchAllPlaylistsResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['search']!}/playlists?keyword=$keyword&my_library=$isMyLibrary');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchAllPlaylistsResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in searchAllPlaylist: $e');
+    }
+    return result;
+  }
+
+  Future<SearchAllArtistsResponse?> searchAllArtists(
+      String keyword, bool isMyLibrary) async {
+    SearchAllArtistsResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['search']!}/artists?keyword=$keyword&my_library=$isMyLibrary');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchAllArtistsResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in searchAllArtists: $e');
+    }
+    return result;
+  }
+
+  Future<ArtistDataResponse?> artistData(int id) async {
+    ArtistDataResponse? result;
+    try {
+      final res = await getResponse('${endpoints['getArtist']!}/$id');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = ArtistDataResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in searchAllArtists: $e');
+    }
+    return result;
+  }
+
+  Future<dynamic> editPlaylist(
+      String playlistId, String name, List<String> lst) async {
+    List<Map> dataList = [];
+
+    for (int i = 0; i < lst.length; i++) {
+      dataList.insert(i, {'id': lst[i], 'order': i + 1});
+    }
+
+    try {
+      final box = await Hive.openBox('api-token');
+      // print(dataList);
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['editPlaylist']}/$playlistId";
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $apiToken',
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      };
+      final mapData = {
+        'name': name,
+        'tracks': dataList,
+      };
+
+      final res = await http.post(
+        Uri.parse(url),
+        body: json.encode(mapData),
+        headers: headers,
+      );
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        return data;
+      }
+    } catch (e) {
+      log('Error in editPlaylist: $e');
+    }
+  }
+
   Future<TracksBybpmResponse?> fetchPlaylistSongData(
     String? vocals,
     String? tempo,
@@ -654,51 +839,6 @@ class YogitunesAPI {
       log('Error in deletePlylist: $e');
     }
     // return result;
-  }
-
-  Future<dynamic> editPlaylist(
-      String playlistId, String name, List<String> lst) async {
-    List<Map> dataList = [];
-
-    for (int i = 0; i < lst.length; i++) {
-      dataList.insert(i, {'id': lst[i], 'order': i + 1});
-    }
-
-    print(playlistId);
-    print(name);
-    print(dataList);
-
-    try {
-      final box = await Hive.openBox('api-token');
-      // print(dataList);
-
-      final String apiToken = box.get('token').toString();
-
-      final url = "$baseUrl$apiStr${endpoints['editPlaylist']}/$playlistId";
-      final Map<String, String> headers = {
-        'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
-        'Content-Type': 'application/json',
-      };
-      final mapData = {
-        'name': name,
-        'tracks': dataList,
-      };
-
-      final res = await http.post(
-        Uri.parse(url),
-        body: json.encode(mapData),
-        headers: headers,
-      );
-      print(res.body);
-      if (res.statusCode == 200) {
-        final Map data = json.decode(res.body) as Map<String, dynamic>;
-
-        return data;
-      }
-    } catch (e) {
-      log('Error in editPlaylist: $e');
-    }
   }
 
   Future<List<String>> getTopSearches() async {
