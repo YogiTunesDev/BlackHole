@@ -12,6 +12,7 @@ import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Library/library.dart';
 import 'package:blackhole/Screens/LocalMusic/downed_songs.dart';
 import 'package:blackhole/Screens/Search/search.dart';
+import 'package:blackhole/Screens/Search/search_screen.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Top Charts/top.dart';
 import 'package:blackhole/Screens/YouTube/youtube_home.dart';
@@ -721,7 +722,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      Container(), //Container(),
+                      SearchScreen(), //Container(),
                       // TopCharts(
                       //   pageController: _pageController,
                       // ),

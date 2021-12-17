@@ -99,7 +99,6 @@ class _SongsListPageState extends State<SongsListPage> {
       if (widget.songListType == SongListType.album) {
         final SingleAlbumResponse? playlistRes =
             await YogitunesAPI().fetchYogiSingleAlbumData(widget.id!);
-
         if (playlistRes != null) {
           if (playlistRes.status!) {
             if (playlistRes.data != null) {
