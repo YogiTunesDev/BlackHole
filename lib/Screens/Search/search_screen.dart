@@ -6,6 +6,7 @@ import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/Screens/Search/artist_data.dart';
 import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
@@ -379,11 +380,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     title: 'Tracks',
                                     searchAllType: SearchAllType.tracks,
                                   ),
-
-                                  // const AlbumList(
-                                  //   albumListType: AlbumListType.yogaPlaylist,
-                                  //   albumName: 'Yoga Playlists',
-                                  // ),
                                 ),
                               );
                             },
@@ -469,10 +465,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     title: 'Album',
                                     searchAllType: SearchAllType.albums,
                                   ),
-                                  // const AlbumList(
-                                  //   albumListType: AlbumListType.yogaPlaylist,
-                                  //   albumName: 'Yoga Playlists',
-                                  // ),
                                 ),
                               );
                             },
@@ -529,10 +521,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     title: 'Playlists',
                                     searchAllType: SearchAllType.playlists,
                                   ),
-                                  // const AlbumList(
-                                  //   albumListType: AlbumListType.yogaPlaylist,
-                                  //   albumName: 'Yoga Playlists',
-                                  // ),
                                 ),
                               );
                             },
@@ -591,10 +579,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                     title: 'Artists',
                                     searchAllType: SearchAllType.artists,
                                   ),
-                                  // const AlbumList(
-                                  //   albumListType: AlbumListType.yogaPlaylist,
-                                  //   albumName: 'Yoga Playlists',
-                                  // ),
                                 ),
                               );
                             },
@@ -623,11 +607,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       PageRouteBuilder(
                                         opaque: false,
                                         pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
-                                          songListType: SongListType.playlist,
-                                          playlistName: item.name!,
-                                          playlistImage: '',
-                                          id: item.id,
+                                        ArtistData(
+                                          id: item.id!,
+                                          title: item.name!,
+                                          image: itemImage,
                                         ),
                                       ),
                                     );

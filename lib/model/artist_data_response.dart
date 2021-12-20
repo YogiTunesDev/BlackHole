@@ -38,7 +38,7 @@ class ArtistDataResponse {
   factory ArtistDataResponse.fromMap(Map<String, dynamic> map) {
     return ArtistDataResponse(
       status: map['status'] != null ? map['status'] as bool : null,
-      statusCode: map['statusCode'] != null ? map['statusCode'] as int : null,
+      statusCode: map['status_code'] != null ? map['status_code'] as int : null,
       data: map['data'] != null
           ? ArtistDataResponseData.fromMap(map['data'] as Map<String, dynamic>)
           : null,
@@ -125,8 +125,8 @@ class ArtistDataResponseData {
       name: map['name'] != null ? map['name'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
-      topHits: map['topHits'] != null
-          ? List<TracksOnly>.from(map['topHits']
+      topHits: map['top_hits'] != null
+          ? List<TracksOnly>.from(map['top_hits']
                   ?.map((x) => TracksOnly.fromMap(x as Map<String, dynamic>))
               as Iterable<dynamic>)
           : null,
@@ -224,7 +224,7 @@ class Playlist {
   factory Playlist.fromMap(Map<String, dynamic> map) {
     return Playlist(
       id: map['id'] != null ? map['id'] as int : null,
-      creatorId: map['creatorId'] != null ? map['creatorId'] as int : null,
+      creatorId: map['creator_id'] != null ? map['creator_id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       quadImages: map['quadImages'] != null
           ? List<QuadImage>.from(map['quadImages']
@@ -263,3 +263,24 @@ class Playlist {
         quadImages.hashCode;
   }
 }
+
+
+// class TopHit {
+//     TopHit({
+//         this.id,
+//         this.name,
+//         this.duration,
+//         this.albumId,
+//         this.album,
+//         this.files,
+//         this.bpm,
+//     });
+
+//     final int? id;
+//     final String? name;
+//     final String? duration;
+//     final int? albumId;
+//     final Album? album;
+//     final List<FileElement>? files;
+//     final BpmClass? bpm;
+// }

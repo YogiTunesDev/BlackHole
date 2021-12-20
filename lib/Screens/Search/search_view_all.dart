@@ -3,9 +3,11 @@ import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
+import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/Screens/Search/artist_data.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/search_all_album_response.dart';
 import 'package:blackhole/model/search_all_artists_response.dart';
@@ -233,19 +235,6 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                     }
                                   }
                                 }
-                                // Navigator.push(
-                                //   context,
-                                //   PageRouteBuilder(
-                                //     opaque: false,
-                                //     pageBuilder: (_, __, ___) =>
-                                //         SongsListPage(
-                                //       songList: item.songlist,
-                                //       playlistName: item.name!,
-                                //       playlistImage: itemImage,
-                                //       id: item.id,
-                                //     ),
-                                //   ),
-                                // );
                               },
                             );
                           },
@@ -271,19 +260,18 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               itemImage: itemImage,
                               itemName: item.name!,
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   PageRouteBuilder(
-                                //     opaque: false,
-                                //     pageBuilder: (_, __, ___) =>
-                                //         SongsListPage(
-                                //       songList: item.songlist,
-                                //       playlistName: item.name!,
-                                //       playlistImage: itemImage,
-                                //       id: item.id,
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (_, __, ___) => SongsListPage(
+                                      songListType: SongListType.album,
+                                      playlistName: item.name!,
+                                      playlistImage: itemImage,
+                                      id: item.id,
+                                    ),
+                                  ),
+                                );
                               },
                             );
                           },
@@ -309,19 +297,18 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               itemImage: itemImage,
                               itemName: item.name!,
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   PageRouteBuilder(
-                                //     opaque: false,
-                                //     pageBuilder: (_, __, ___) =>
-                                //         SongsListPage(
-                                //       songList: item.songlist,
-                                //       playlistName: item.name!,
-                                //       playlistImage: itemImage,
-                                //       id: item.id,
-                                //     ),
-                                //   ),
-                                // );
+                               Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (_, __, ___) => SongsListPage(
+                                      songListType: SongListType.playlist,
+                                      playlistName: item.name!,
+                                      playlistImage: itemImage,
+                                      id: item.id,
+                                    ),
+                                  ),
+                                );
                               },
                             );
                           },
@@ -347,19 +334,17 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               itemImage: itemImage,
                               itemName: item.name!,
                               onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   PageRouteBuilder(
-                                //     opaque: false,
-                                //     pageBuilder: (_, __, ___) =>
-                                //         SongsListPage(
-                                //       songList: item.songlist,
-                                //       playlistName: item.name!,
-                                //       playlistImage: itemImage,
-                                //       id: item.id,
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (_, __, ___) => ArtistData(
+                                      id: item.id!,
+                                      title: item.name!,
+                                      image: itemImage,
+                                    ),
+                                  ),
+                                );
                               },
                             );
                           },

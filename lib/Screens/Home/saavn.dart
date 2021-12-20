@@ -169,7 +169,6 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                         playlistName: item.name!,
                                         playlistImage: itemImage,
                                         id: item.id,
-                                      
                                       ),
                                     ),
                                   );
@@ -743,7 +742,34 @@ class HeaderTitle extends StatelessWidget {
   }
 }
 
+class Header extends StatelessWidget {
+  final String title;
+  const Header({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 15),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              formatString(title),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class SongItem extends StatelessWidget {
   final String itemImage;
