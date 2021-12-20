@@ -487,11 +487,10 @@ class _SongsListPageState extends State<SongsListPage> {
                                     PageRouteBuilder(
                                       opaque: false,
                                       pageBuilder: (_, __, ___) => PlayScreen(
-                                        songsList: songItemModel,
-                                        index: 0,
-                                        // songList.indexWhere(
-                                        //   (element) => element == entry,
-                                        // ),
+                                        songsList: songList,
+                                        index: songList.indexWhere(
+                                          (element) => element == entry,
+                                        ),
                                         offline: false,
                                         fromDownloads: false,
                                         fromMiniplayer: false,

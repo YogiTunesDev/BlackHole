@@ -8,6 +8,8 @@ import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Search/artist_data.dart';
+import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/search_all_album_response.dart';
 import 'package:blackhole/model/search_all_artists_response.dart';
@@ -17,19 +19,19 @@ import 'package:blackhole/model/song_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-enum SearchAllType { albums, playlists, tracks, artists }
+enum SearchAllType { albums, playlists, tracks, artists, recent }
 
 class SearchViewAll extends StatefulWidget {
   SearchViewAll({
     Key? key,
     required this.title,
-    required this.keyword,
-    required this.isMyLibrary,
+    this.keyword,
+    this.isMyLibrary,
     required this.searchAllType,
   }) : super(key: key);
   final String title;
-  final String keyword;
-  final bool isMyLibrary;
+  final String? keyword;
+  final bool? isMyLibrary;
   final SearchAllType searchAllType;
   @override
   _SearchViewAllState createState() => _SearchViewAllState();
@@ -42,6 +44,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
   SearchAllTracksResponse? searchAllTracksResponse;
   SearchAllPlaylistsResponse? searchAllPlaylistsResponse;
   SearchAllArtistsResponse? searchAllArtistsResponse;
+  MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse;
   bool apiLoading = false;
 
   @override
@@ -58,16 +61,18 @@ class _SearchViewAllState extends State<SearchViewAll> {
     });
     if (searchAllType == SearchAllType.tracks) {
       searchAllTracksResponse = await YogitunesAPI()
-          .searchAllTrack(widget.keyword, widget.isMyLibrary);
+          .searchAllTrack(widget.keyword!, widget.isMyLibrary!);
     } else if (searchAllType == SearchAllType.albums) {
       searchAllAlbumResponse = await YogitunesAPI()
-          .searchAllAlbum(widget.keyword, widget.isMyLibrary);
+          .searchAllAlbum(widget.keyword!, widget.isMyLibrary!);
     } else if (searchAllType == SearchAllType.playlists) {
       searchAllPlaylistsResponse = await YogitunesAPI()
-          .searchAllPlaylist(widget.keyword, widget.isMyLibrary);
+          .searchAllPlaylist(widget.keyword!, widget.isMyLibrary!);
     } else if (searchAllType == SearchAllType.artists) {
       searchAllArtistsResponse = await YogitunesAPI()
-          .searchAllArtists(widget.keyword, widget.isMyLibrary);
+          .searchAllArtists(widget.keyword!, widget.isMyLibrary!);
+    } else if (searchAllType == SearchAllType.recent) {
+      myRecentlyPlayedSongResponse = await YogitunesAPI().viewAllRecentTrack();
     }
 
     setState(() {
@@ -155,7 +160,9 @@ class _SearchViewAllState extends State<SearchViewAll> {
                             ),
                           ),
                         )
-                      else if (((searchAllTracksResponse == null &&
+                      else if (((myRecentlyPlayedSongResponse == null &&
+                                  searchAllType == SearchAllType.recent) ||
+                              (searchAllTracksResponse == null &&
                                   searchAllType == SearchAllType.tracks) ||
                               (searchAllAlbumResponse == null &&
                                   searchAllType == SearchAllType.albums) ||
@@ -174,9 +181,72 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           AppLocalizations.of(context)!.resultsNotFound,
                           20,
                         )
+                      else if (searchAllType == SearchAllType.recent &&
+                          myRecentlyPlayedSongResponse != null)
+                        GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          itemCount: myRecentlyPlayedSongResponse!.data!.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final MyRecentlyPlayedSong item =
+                                myRecentlyPlayedSongResponse!.data![index];
+                            String itemImage = item.album != null
+                                ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
+                                : '';
+                            return SongItem(
+                              itemImage: itemImage,
+                              itemName: item.track!.name!,
+                              onTap: () async {
+                                popupLoader(
+                                    context,
+                                    AppLocalizations.of(
+                                      context,
+                                    )!
+                                        .fetchingStream);
+
+                                final RadioStationsStreamResponse?
+                                    radioStationsStreamResponse =
+                                    await YogitunesAPI()
+                                        .fetchSingleSongData(item.track!.id!);
+                                Navigator.pop(context);
+                                if (radioStationsStreamResponse != null) {
+                                  if (radioStationsStreamResponse
+                                          .songItemModel !=
+                                      null) {
+                                    if (radioStationsStreamResponse
+                                        .songItemModel!.isNotEmpty) {
+                                      List<SongItemModel> lstSong = [];
+
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          opaque: false,
+                                          pageBuilder: (_, __, ___) =>
+                                              PlayScreen(
+                                            songsList:
+                                                radioStationsStreamResponse
+                                                    .songItemModel!,
+                                            index: 0,
+                                            offline: false,
+                                            fromDownloads: false,
+                                            fromMiniplayer: false,
+                                            recommend: false,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                            );
+                          },
+                        )
                       else if (searchAllType == SearchAllType.tracks &&
                           searchAllTracksResponse != null)
-                        // else
                         GridView.builder(
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -297,7 +367,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               itemImage: itemImage,
                               itemName: item.name!,
                               onTap: () {
-                               Navigator.push(
+                                Navigator.push(
                                   context,
                                   PageRouteBuilder(
                                     opaque: false,

@@ -597,105 +597,105 @@ class _HomePageState extends State<HomePage> {
                                     },
                                   ),
                                 ),
-                                SliverAppBar(
-                                  automaticallyImplyLeading: false,
-                                  pinned: true,
-                                  backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  stretch: true,
-                                  toolbarHeight: 65,
-                                  title: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: AnimatedBuilder(
-                                      animation: _scrollController,
-                                      builder: (context, child) {
-                                        return GestureDetector(
-                                          child: AnimatedContainer(
-                                            width: (!_scrollController
-                                                        .hasClients ||
-                                                    _scrollController
-                                                            // ignore: invalid_use_of_protected_member
-                                                            .positions
-                                                            .length >
-                                                        1)
-                                                ? MediaQuery.of(context)
-                                                    .size
-                                                    .width
-                                                : max(
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width -
-                                                        _scrollController.offset
-                                                            .roundToDouble(),
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width -
-                                                        75,
-                                                  ),
-                                            height: 52.0,
-                                            duration: const Duration(
-                                              milliseconds: 150,
-                                            ),
-                                            padding: const EdgeInsets.all(2.0),
-                                            // margin: EdgeInsets.zero,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              color:
-                                                  Theme.of(context).cardColor,
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 5.0,
-                                                  offset: Offset(1.5, 1.5),
-                                                  // shadow direction: bottom right
-                                                )
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 10.0),
-                                                Icon(
-                                                  CupertinoIcons.search,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                const SizedBox(width: 10.0),
-                                                Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .searchText,
-                                                  style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .caption!
-                                                        .color,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SearchPage(
-                                                query: '',
-                                                fromHome: true,
-                                                autofocus: true,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
+                                // SliverAppBar(
+                                //   automaticallyImplyLeading: false,
+                                //   pinned: true,
+                                //   backgroundColor: Colors.transparent,
+                                //   elevation: 0,
+                                //   stretch: true,
+                                //   toolbarHeight: 65,
+                                //   title: Align(
+                                //     alignment: Alignment.centerRight,
+                                //     child: AnimatedBuilder(
+                                //       animation: _scrollController,
+                                //       builder: (context, child) {
+                                //         return GestureDetector(
+                                //           child: AnimatedContainer(
+                                //             width: (!_scrollController
+                                //                         .hasClients ||
+                                //                     _scrollController
+                                //                             // ignore: invalid_use_of_protected_member
+                                //                             .positions
+                                //                             .length >
+                                //                         1)
+                                //                 ? MediaQuery.of(context)
+                                //                     .size
+                                //                     .width
+                                //                 : max(
+                                //                     MediaQuery.of(context)
+                                //                             .size
+                                //                             .width -
+                                //                         _scrollController.offset
+                                //                             .roundToDouble(),
+                                //                     MediaQuery.of(context)
+                                //                             .size
+                                //                             .width -
+                                //                         75,
+                                //                   ),
+                                //             height: 52.0,
+                                //             duration: const Duration(
+                                //               milliseconds: 150,
+                                //             ),
+                                //             padding: const EdgeInsets.all(2.0),
+                                //             // margin: EdgeInsets.zero,
+                                //             decoration: BoxDecoration(
+                                //               borderRadius:
+                                //                   BorderRadius.circular(10.0),
+                                //               color:
+                                //                   Theme.of(context).cardColor,
+                                //               boxShadow: const [
+                                //                 BoxShadow(
+                                //                   color: Colors.black26,
+                                //                   blurRadius: 5.0,
+                                //                   offset: Offset(1.5, 1.5),
+                                //                   // shadow direction: bottom right
+                                //                 )
+                                //               ],
+                                //             ),
+                                //             child: Row(
+                                //               children: [
+                                //                 const SizedBox(width: 10.0),
+                                //                 Icon(
+                                //                   CupertinoIcons.search,
+                                //                   color: Theme.of(context)
+                                //                       .colorScheme
+                                //                       .secondary,
+                                //                 ),
+                                //                 const SizedBox(width: 10.0),
+                                //                 Text(
+                                //                   AppLocalizations.of(
+                                //                     context,
+                                //                   )!
+                                //                       .searchText,
+                                //                   style: TextStyle(
+                                //                     fontSize: 16.0,
+                                //                     color: Theme.of(context)
+                                //                         .textTheme
+                                //                         .caption!
+                                //                         .color,
+                                //                     fontWeight:
+                                //                         FontWeight.normal,
+                                //                   ),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //           onTap: () => Navigator.push(
+                                //             context,
+                                //             MaterialPageRoute(
+                                //               builder: (context) =>
+                                //                   const SearchPage(
+                                //                 query: '',
+                                //                 fromHome: true,
+                                //                 autofocus: true,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         );
+                                //       },
+                                //     ),
+                                //   ),
+                                // ),
                               ];
                             },
                             body: SaavnHomePage(),

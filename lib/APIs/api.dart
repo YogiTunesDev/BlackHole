@@ -12,6 +12,7 @@ import 'package:blackhole/model/forgot_password_verification_response.dart';
 import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/login_response.dart';
+import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/reset_password_response.dart';
 import 'package:blackhole/model/search_all_album_response.dart';
@@ -57,6 +58,7 @@ class YogitunesAPI {
     'search': 'search',
     'getSingleSong': 'browse/tracks',
     'getArtist': 'browse/artists',
+    'recentSongsViewAll': 'browse/main/my-recently-played-songs',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -594,6 +596,24 @@ class YogitunesAPI {
       }
     } catch (e) {
       log('Error in search: $e');
+    }
+    return result;
+  }
+
+  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack() async {
+    MyRecentlyPlayedSongResponse? result;
+    try {
+      final res = await getResponse(endpoints['recentSongsViewAll']!);
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = MyRecentlyPlayedSongResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in viewAllRecentTrack: $e');
     }
     return result;
   }

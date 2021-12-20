@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:blackhole/model/song_model.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'cover_model.dart';
@@ -91,7 +92,7 @@ class Data {
     this.browseByGenresMoods,
   });
 
-  final List<dynamic>? myRecentlyPlayedSongs;
+  final List<MyRecentlyPlayedSong>? myRecentlyPlayedSongs;
   final List<FeaturedAlbum>? featuredAlbums;
   final List<TrendingAlbum>? trendingAlbums;
   final List<TrendingAlbum>? trendingSongs;
@@ -104,7 +105,7 @@ class Data {
   final List<BrowseBy>? browseByGenresMoods;
 
   Data copyWith({
-    List<dynamic>? myRecentlyPlayedSongs,
+    List<MyRecentlyPlayedSong>? myRecentlyPlayedSongs,
     List<FeaturedAlbum>? featuredAlbums,
     List<TrendingAlbum>? trendingAlbums,
     List<TrendingAlbum>? trendingSongs,
@@ -134,7 +135,9 @@ class Data {
 
   Map<String, dynamic> toMap() {
     return {
-      'myRecentlyPlayedSongs': myRecentlyPlayedSongs,
+      'myRecentlyPlayedSongs': myRecentlyPlayedSongs != null
+          ? myRecentlyPlayedSongs?.map((x) => x.toMap()).toList()
+          : null,
       'featuredAlbums': featuredAlbums != null
           ? featuredAlbums?.map((x) => x.toMap()).toList()
           : null,
@@ -171,7 +174,10 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
       myRecentlyPlayedSongs: map['My recently played songs'] != null
-          ? List<dynamic>.from(map['My recently played songs'] as List<dynamic>)
+          ? List<MyRecentlyPlayedSong>.from(map['My recently played songs']
+                  ?.map((x) =>
+                      MyRecentlyPlayedSong.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
           : null,
       featuredAlbums: map['Featured albums'] != null
           ? List<FeaturedAlbum>.from(map['Featured albums']
@@ -266,6 +272,116 @@ class Data {
         recentlyAdded.hashCode ^
         browseByActivity.hashCode ^
         browseByGenresMoods.hashCode;
+  }
+}
+
+class MyRecentlyPlayedSong {
+  MyRecentlyPlayedSong({
+    this.trackId,
+    this.sourceId,
+    this.type,
+    this.quadImages,
+    this.playlist,
+    this.track,
+    this.album,
+  });
+
+  final int? trackId;
+  final int? sourceId;
+  final String? type;
+  final List<QuadImage>? quadImages;
+  final TrendingAlbum? playlist;
+  final BrowseBy? track;
+  final TrendingAlbum? album;
+
+  MyRecentlyPlayedSong copyWith({
+    int? trackId,
+    int? sourceId,
+    String? type,
+    List<QuadImage>? quadImages,
+    TrendingAlbum? playlist,
+    BrowseBy? track,
+    TrendingAlbum? album,
+  }) {
+    return MyRecentlyPlayedSong(
+      trackId: trackId ?? this.trackId,
+      sourceId: sourceId ?? this.sourceId,
+      type: type ?? this.type,
+      quadImages: quadImages ?? this.quadImages,
+      playlist: playlist ?? this.playlist,
+      track: track ?? this.track,
+      album: album ?? this.album,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'trackId': trackId,
+      'sourceId': sourceId,
+      'type': type,
+      'quadImages': quadImages?.map((x) => x.toMap()).toList(),
+      'playlist': playlist?.toMap(),
+      'track': track?.toMap(),
+      'album': album?.toMap(),
+    };
+  }
+
+  factory MyRecentlyPlayedSong.fromMap(Map<String, dynamic> map) {
+    return MyRecentlyPlayedSong(
+      trackId: map['track_id'] != null ? map['track_id'] as int : null,
+      sourceId: map['source_id'] != null ? map['source_id'] as int : null,
+      type: map['type'] != null ? map['type'] as String : null,
+      quadImages: map['quadImages'] != null
+          ? List<QuadImage>.from(map['quadImages']
+                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
+          : null,
+      playlist: map['playlist'] != null
+          ? TrendingAlbum.fromMap(map['playlist'] as Map<String, dynamic>)
+          : null,
+      track: map['track'] != null
+          ? BrowseBy.fromMap(map['track'] as Map<String, dynamic>)
+          : null,
+      album: map['album'] != null
+          ? TrendingAlbum.fromMap(map['album'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory MyRecentlyPlayedSong.fromJson(String source) =>
+      MyRecentlyPlayedSong.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'MyRecentlyPlayedSong(trackId: $trackId, sourceId: $sourceId, type: $type, quadImages: $quadImages, playlist: $playlist, track: $track, album: $album)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    final listEquals = const DeepCollectionEquality().equals;
+
+    return other is MyRecentlyPlayedSong &&
+        other.trackId == trackId &&
+        other.sourceId == sourceId &&
+        other.type == type &&
+        listEquals(other.quadImages, quadImages) &&
+        other.playlist == playlist &&
+        other.track == track &&
+        other.album == album;
+  }
+
+  @override
+  int get hashCode {
+    return trackId.hashCode ^
+        sourceId.hashCode ^
+        type.hashCode ^
+        quadImages.hashCode ^
+        playlist.hashCode ^
+        track.hashCode ^
+        album.hashCode;
   }
 }
 
@@ -486,7 +602,6 @@ class AlbumsClean {
   }
 }
 
-
 class NewRelease {
   NewRelease({
     this.id,
@@ -675,7 +790,6 @@ class TrendingAlbum {
   }
 }
 
-
 class PopularPlaylist {
   PopularPlaylist({
     this.id,
@@ -743,4 +857,3 @@ class PopularPlaylist {
   @override
   int get hashCode => id.hashCode ^ name.hashCode ^ quadImages.hashCode;
 }
-

@@ -3,6 +3,7 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
@@ -122,6 +123,113 @@ class _SaavnHomePageState extends State<SaavnHomePage>
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (data!.data!.myRecentlyPlayedSongs != null)
+                      if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
+                        HeaderTitle(
+                          title: 'My Recently Played Songs',
+                          viewAllOnTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                opaque: false,
+                                pageBuilder: (_, __, ___) => SearchViewAll(
+                                  // isMyLibrary: isMyLibrary,
+                                  // keyword: controller.text,
+                                  title: 'My Recently Played Songs',
+                                  searchAllType: SearchAllType.recent,
+                                ),
+                              ),
+                            );
+                            // Navigator.push(
+                            //   context,
+                            //   PageRouteBuilder(
+                            //     opaque: false,
+                            //     pageBuilder: (_, __, ___) => const AlbumList(
+                            //       albumListType: AlbumListType.yogaPlaylist,
+                            //       albumName: 'Recent Played',
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        ),
+                    if (data!.data!.myRecentlyPlayedSongs != null)
+                      if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
+                        SizedBox(
+                          height: boxSize / 2 + 10,
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            itemCount:
+                                data!.data!.myRecentlyPlayedSongs!.length,
+                            itemBuilder: (context, index) {
+                              final MyRecentlyPlayedSong item =
+                                  data!.data!.myRecentlyPlayedSongs![index];
+                              final String itemImage = item.quadImages != null
+                                  ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                  : '';
+                              return SongItem(
+                                itemImage: itemImage,
+                                itemName: item.track!.name!,
+                                onTap: () async {
+                                  popupLoader(
+                                      context,
+                                      AppLocalizations.of(
+                                        context,
+                                      )!
+                                          .fetchingStream);
+
+                                  final RadioStationsStreamResponse?
+                                      radioStationsStreamResponse =
+                                      await YogitunesAPI()
+                                          .fetchSingleSongData(item.track!.id!);
+                                  Navigator.pop(context);
+                                  if (radioStationsStreamResponse != null) {
+                                    if (radioStationsStreamResponse
+                                            .songItemModel !=
+                                        null) {
+                                      if (radioStationsStreamResponse
+                                          .songItemModel!.isNotEmpty) {
+                                        List<SongItemModel> lstSong = [];
+
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            opaque: false,
+                                            pageBuilder: (_, __, ___) =>
+                                                PlayScreen(
+                                              songsList:
+                                                  radioStationsStreamResponse
+                                                      .songItemModel!,
+                                              index: 0,
+                                              offline: false,
+                                              fromDownloads: false,
+                                              fromMiniplayer: false,
+                                              recommend: false,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                  // Navigator.push(
+                                  //   context,
+                                  //   PageRouteBuilder(
+                                  //     opaque: false,
+                                  //     pageBuilder: (_, __, ___) =>
+                                  //         SongsListPage(
+                                  //       songListType: SongListType.playlist,
+                                  //       playlistName: item.track!.name!,
+                                  //       playlistImage: itemImage,
+                                  //       id: item.track!.id,
+                                  //     ),
+                                  //   ),
+                                  // );
+                                },
+                              );
+                            },
+                          ),
+                        ),
                     if (data!.data!.popularYogaPlaylists != null)
                       if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                         HeaderTitle(
