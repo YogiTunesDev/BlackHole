@@ -3,12 +3,16 @@ import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
+import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/genres_response.dart';
+import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,8 +30,9 @@ enum AlbumListType {
   popularAlbum,
   genresMoods,
   popularSong,
+  recentlyPlayedSong,
 }
-enum MainType { album, playlist, genres, genresAlbum, song }
+enum MainType { album, playlist, genres, genresAlbum, song, track }
 
 class AlbumList extends StatefulWidget {
   final AlbumListType albumListType;
@@ -53,6 +58,7 @@ class _AlbumListState extends State<AlbumList> {
   bool isFinish = false;
   List<GenresData> lstGenresData = [];
   List<singlePlaylistResponse.Track> lstSongTrending = [];
+  List<MyRecentlyPlayedSong> lstRecentPlayedSong = [];
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
@@ -174,6 +180,16 @@ class _AlbumListState extends State<AlbumList> {
         } else {
           isFinish = true;
         }
+      } else if (mainType == MainType.track) {
+        final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
+            await YogitunesAPI()
+                .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
+        pageNo++;
+        if (myRecentlyPlayedSongResponse != null) {
+          if (myRecentlyPlayedSongResponse.data != null) {
+            lstRecentPlayedSong.addAll(myRecentlyPlayedSongResponse.data!);
+          }
+        }
       }
     } on Exception catch (e, stack) {
       debugPrint(e.toString());
@@ -257,7 +273,9 @@ class _AlbumListState extends State<AlbumList> {
                               (lstAlbumData.isEmpty &&
                                   mainType == MainType.genresAlbum) ||
                               (lstSongTrending.isEmpty &&
-                                  mainType == MainType.song)) &&
+                                  mainType == MainType.song) ||
+                              (lstRecentPlayedSong.isEmpty &&
+                                  mainType == MainType.track)) &&
                           !apiLoading)
                         emptyScreen(
                           context,
@@ -429,7 +447,89 @@ class _AlbumListState extends State<AlbumList> {
                                                 );
                                               },
                                             )
-                                          : Container(),
+                                          : mainType == MainType.track
+                                              ? GridView.builder(
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 2,
+                                                  ),
+                                                  itemCount: lstRecentPlayedSong
+                                                      .length,
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final MyRecentlyPlayedSong
+                                                        item =
+                                                        lstRecentPlayedSong[
+                                                            index];
+                                                    String itemImage = item
+                                                                .album !=
+                                                            null
+                                                        ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
+                                                        : '';
+                                                    return SongItem(
+                                                      itemImage: itemImage,
+                                                      itemName:
+                                                          item.track!.name!,
+                                                      onTap: () async {
+                                                        popupLoader(
+                                                            context,
+                                                            AppLocalizations.of(
+                                                              context,
+                                                            )!
+                                                                .fetchingStream);
+
+                                                        final RadioStationsStreamResponse?
+                                                            radioStationsStreamResponse =
+                                                            await YogitunesAPI()
+                                                                .fetchSingleSongData(
+                                                                    item.track!
+                                                                        .id!);
+                                                        Navigator.pop(context);
+                                                        if (radioStationsStreamResponse !=
+                                                            null) {
+                                                          if (radioStationsStreamResponse
+                                                                  .songItemModel !=
+                                                              null) {
+                                                            if (radioStationsStreamResponse
+                                                                .songItemModel!
+                                                                .isNotEmpty) {
+                                                              List<SongItemModel>
+                                                                  lstSong = [];
+
+                                                              Navigator.push(
+                                                                context,
+                                                                PageRouteBuilder(
+                                                                  opaque: false,
+                                                                  pageBuilder: (_,
+                                                                          __,
+                                                                          ___) =>
+                                                                      PlayScreen(
+                                                                    songsList:
+                                                                        radioStationsStreamResponse
+                                                                            .songItemModel!,
+                                                                    index: 0,
+                                                                    offline:
+                                                                        false,
+                                                                    fromDownloads:
+                                                                        false,
+                                                                    fromMiniplayer:
+                                                                        false,
+                                                                    recommend:
+                                                                        false,
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                    );
+                                                  },
+                                                )
+                                              : Container(),
                         ),
                       if (apiLoading)
                         SizedBox(
@@ -503,6 +603,9 @@ class _AlbumListState extends State<AlbumList> {
     } else if (albumListType == AlbumListType.popularSong) {
       mainType = MainType.song;
       return 'browse/trending_songs';
+    } else if (albumListType == AlbumListType.recentlyPlayedSong) {
+      mainType = MainType.track;
+      return 'browse/main/my-recently-played-songs';
     }
   }
 

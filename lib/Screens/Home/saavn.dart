@@ -132,24 +132,13 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               context,
                               PageRouteBuilder(
                                 opaque: false,
-                                pageBuilder: (_, __, ___) => SearchViewAll(
-                                  // isMyLibrary: isMyLibrary,
-                                  // keyword: controller.text,
-                                  title: 'My Recently Played Songs',
-                                  searchAllType: SearchAllType.recent,
+                                pageBuilder: (_, __, ___) => const AlbumList(
+                                  albumListType:
+                                      AlbumListType.recentlyPlayedSong,
+                                  albumName: 'Recent Played Songs',
                                 ),
                               ),
                             );
-                            // Navigator.push(
-                            //   context,
-                            //   PageRouteBuilder(
-                            //     opaque: false,
-                            //     pageBuilder: (_, __, ___) => const AlbumList(
-                            //       albumListType: AlbumListType.yogaPlaylist,
-                            //       albumName: 'Recent Played',
-                            //     ),
-                            //   ),
-                            // );
                           },
                         ),
                     if (data!.data!.myRecentlyPlayedSongs != null)

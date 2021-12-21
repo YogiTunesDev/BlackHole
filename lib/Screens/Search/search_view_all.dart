@@ -44,7 +44,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
   SearchAllTracksResponse? searchAllTracksResponse;
   SearchAllPlaylistsResponse? searchAllPlaylistsResponse;
   SearchAllArtistsResponse? searchAllArtistsResponse;
-  MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse;
+  // MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse;
   bool apiLoading = false;
 
   @override
@@ -71,9 +71,10 @@ class _SearchViewAllState extends State<SearchViewAll> {
     } else if (searchAllType == SearchAllType.artists) {
       searchAllArtistsResponse = await YogitunesAPI()
           .searchAllArtists(widget.keyword!, widget.isMyLibrary!);
-    } else if (searchAllType == SearchAllType.recent) {
-      myRecentlyPlayedSongResponse = await YogitunesAPI().viewAllRecentTrack();
     }
+    // else if (searchAllType == SearchAllType.recent) {
+    //   myRecentlyPlayedSongResponse = await YogitunesAPI().viewAllRecentTrack();
+    // }
 
     setState(() {
       apiLoading = false;
@@ -160,9 +161,9 @@ class _SearchViewAllState extends State<SearchViewAll> {
                             ),
                           ),
                         )
-                      else if (((myRecentlyPlayedSongResponse == null &&
-                                  searchAllType == SearchAllType.recent) ||
-                              (searchAllTracksResponse == null &&
+                      //(myRecentlyPlayedSongResponse == null &&
+                      // searchAllType == SearchAllType.recent) ||
+                      else if (((searchAllTracksResponse == null &&
                                   searchAllType == SearchAllType.tracks) ||
                               (searchAllAlbumResponse == null &&
                                   searchAllType == SearchAllType.albums) ||
@@ -181,70 +182,70 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           AppLocalizations.of(context)!.resultsNotFound,
                           20,
                         )
-                      else if (searchAllType == SearchAllType.recent &&
-                          myRecentlyPlayedSongResponse != null)
-                        GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                          ),
-                          itemCount: myRecentlyPlayedSongResponse!.data!.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final MyRecentlyPlayedSong item =
-                                myRecentlyPlayedSongResponse!.data![index];
-                            String itemImage = item.album != null
-                                ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
-                                : '';
-                            return SongItem(
-                              itemImage: itemImage,
-                              itemName: item.track!.name!,
-                              onTap: () async {
-                                popupLoader(
-                                    context,
-                                    AppLocalizations.of(
-                                      context,
-                                    )!
-                                        .fetchingStream);
+                      // else if (searchAllType == SearchAllType.recent &&
+                      //     myRecentlyPlayedSongResponse != null)
+                      //   GridView.builder(
+                      //     gridDelegate:
+                      //         const SliverGridDelegateWithFixedCrossAxisCount(
+                      //       crossAxisCount: 2,
+                      //     ),
+                      //     itemCount: myRecentlyPlayedSongResponse!.data!.length,
+                      //     shrinkWrap: true,
+                      //     physics: const NeverScrollableScrollPhysics(),
+                      //     itemBuilder: (context, index) {
+                      //       final MyRecentlyPlayedSong item =
+                      //           myRecentlyPlayedSongResponse!.data![index];
+                      //       String itemImage = item.album != null
+                      //           ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
+                      //           : '';
+                      //       return SongItem(
+                      //         itemImage: itemImage,
+                      //         itemName: item.track!.name!,
+                      //         onTap: () async {
+                      //           popupLoader(
+                      //               context,
+                      //               AppLocalizations.of(
+                      //                 context,
+                      //               )!
+                      //                   .fetchingStream);
 
-                                final RadioStationsStreamResponse?
-                                    radioStationsStreamResponse =
-                                    await YogitunesAPI()
-                                        .fetchSingleSongData(item.track!.id!);
-                                Navigator.pop(context);
-                                if (radioStationsStreamResponse != null) {
-                                  if (radioStationsStreamResponse
-                                          .songItemModel !=
-                                      null) {
-                                    if (radioStationsStreamResponse
-                                        .songItemModel!.isNotEmpty) {
-                                      List<SongItemModel> lstSong = [];
+                      //           final RadioStationsStreamResponse?
+                      //               radioStationsStreamResponse =
+                      //               await YogitunesAPI()
+                      //                   .fetchSingleSongData(item.track!.id!);
+                      //           Navigator.pop(context);
+                      //           if (radioStationsStreamResponse != null) {
+                      //             if (radioStationsStreamResponse
+                      //                     .songItemModel !=
+                      //                 null) {
+                      //               if (radioStationsStreamResponse
+                      //                   .songItemModel!.isNotEmpty) {
+                      //                 List<SongItemModel> lstSong = [];
 
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          opaque: false,
-                                          pageBuilder: (_, __, ___) =>
-                                              PlayScreen(
-                                            songsList:
-                                                radioStationsStreamResponse
-                                                    .songItemModel!,
-                                            index: 0,
-                                            offline: false,
-                                            fromDownloads: false,
-                                            fromMiniplayer: false,
-                                            recommend: false,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                              },
-                            );
-                          },
-                        )
+                      //                 Navigator.push(
+                      //                   context,
+                      //                   PageRouteBuilder(
+                      //                     opaque: false,
+                      //                     pageBuilder: (_, __, ___) =>
+                      //                         PlayScreen(
+                      //                       songsList:
+                      //                           radioStationsStreamResponse
+                      //                               .songItemModel!,
+                      //                       index: 0,
+                      //                       offline: false,
+                      //                       fromDownloads: false,
+                      //                       fromMiniplayer: false,
+                      //                       recommend: false,
+                      //                     ),
+                      //                   ),
+                      //                 );
+                      //               }
+                      //             }
+                      //           }
+                      //         },
+                      //       );
+                      //     },
+                      //   )
                       else if (searchAllType == SearchAllType.tracks &&
                           searchAllTracksResponse != null)
                         GridView.builder(

@@ -600,10 +600,11 @@ class YogitunesAPI {
     return result;
   }
 
-  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack() async {
+  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(String url,
+      {int pageNo = 1,}) async {
     MyRecentlyPlayedSongResponse? result;
     try {
-      final res = await getResponse(endpoints['recentSongsViewAll']!);
+      final res = await getResponse('$url?page=$pageNo');
       print('Playlist ::::: ${res.statusCode}');
       print('Playlist ::::: ${res.body}');
       if (res.statusCode == 200) {
