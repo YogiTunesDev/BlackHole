@@ -379,12 +379,13 @@ class YogitunesAPI {
   }
 
   Future<PlaylistResponse?> fetchYogiPlaylistData(
-    String url,
-    int pageNo,
-  ) async {
+      String url, int pageNo, String sort, String durationFilter) async {
     PlaylistResponse? result;
     try {
-      final res = await getResponse('$url?page=$pageNo');
+      final res = await getResponse('$url?page=$pageNo$sort' +
+          (durationFilter == null || durationFilter == ''
+              ? ''
+              : '&duration=$durationFilter'));
       print("res :: $res");
       print("res :: ${res.body}");
       if (res.statusCode == 200) {
@@ -600,8 +601,10 @@ class YogitunesAPI {
     return result;
   }
 
-  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(String url,
-      {int pageNo = 1,}) async {
+  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(
+    String url, {
+    int pageNo = 1,
+  }) async {
     MyRecentlyPlayedSongResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo');

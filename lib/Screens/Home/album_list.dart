@@ -60,6 +60,9 @@ class _AlbumListState extends State<AlbumList> {
   List<singlePlaylistResponse.Track> lstSongTrending = [];
   List<MyRecentlyPlayedSong> lstRecentPlayedSong = [];
   final ScrollController _scrollController = ScrollController();
+
+  String selectedSort = '';
+  String selectedDuration = '';
   @override
   void initState() {
     super.initState();
@@ -78,8 +81,9 @@ class _AlbumListState extends State<AlbumList> {
       apiLoading = true;
       setState(() {});
       if (mainType == MainType.playlist) {
-        final PlaylistResponse? playlistRes =
-            await YogitunesAPI().fetchYogiPlaylistData(getListUrl()!, pageNo);
+        final PlaylistResponse? playlistRes = await YogitunesAPI()
+            .fetchYogiPlaylistData(
+                getListUrl()!, pageNo, selectedSort, selectedDuration);
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -200,6 +204,15 @@ class _AlbumListState extends State<AlbumList> {
     }
   }
 
+  void clearAllData() {
+    lstPlaylistData = [];
+    lstGenresData = [];
+    lstAlbumData = [];
+    lstSongTrending = [];
+    lstRecentPlayedSong = [];
+    pageNo = 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GradientContainer(
@@ -218,7 +231,312 @@ class _AlbumListState extends State<AlbumList> {
                     // floating: true,
                     pinned: true,
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
-                    actions: const [
+                    actions: [
+                      if (mainType == MainType.playlist)
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              builder: (BuildContext contex) {
+                                return SizedBox(
+                                  // height:
+                                  //     MediaQuery.of(context).size.height * 0.3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 20),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Filter',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Playlist Duration',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            FilterButton(
+                                              name: '30m',
+                                              onTap: () {
+                                                setState(() {
+                                                  if (selectedDuration ==
+                                                      '30') {
+                                                    selectedDuration = '';
+                                                  } else {
+                                                    selectedDuration = '30';
+                                                  }
+                                                  clearAllData();
+                                                  getApiData();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              isSelected:
+                                                  selectedDuration == '30',
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: '45m',
+                                              onTap: () {
+                                                setState(() {
+                                                  if (selectedDuration ==
+                                                      '45') {
+                                                    selectedDuration = '';
+                                                  } else {
+                                                    selectedDuration = '45';
+                                                  }
+                                                  clearAllData();
+                                                  getApiData();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              isSelected:
+                                                  selectedDuration == '45',
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: '60m',
+                                              onTap: () {
+                                                setState(() {
+                                                  if (selectedDuration ==
+                                                      '60') {
+                                                    selectedDuration = '';
+                                                  } else {
+                                                    selectedDuration = '60';
+                                                  }
+                                                  clearAllData();
+                                                  getApiData();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              isSelected:
+                                                  selectedDuration == '60',
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: '75m',
+                                              onTap: () {
+                                                setState(() {
+                                                  if (selectedDuration ==
+                                                      '75') {
+                                                    selectedDuration = '';
+                                                  } else {
+                                                    selectedDuration = '75';
+                                                  }
+                                                  clearAllData();
+                                                  getApiData();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              isSelected:
+                                                  selectedDuration == '75',
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: '90m',
+                                              onTap: () {
+                                                setState(() {
+                                                  if (selectedDuration ==
+                                                      '90') {
+                                                    selectedDuration = '';
+                                                  } else {
+                                                    selectedDuration = '90';
+                                                  }
+                                                  clearAllData();
+                                                  getApiData();
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              isSelected:
+                                                  selectedDuration == '90',
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Yoga Type',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            FilterButton(
+                                              name: 'Vinyasa Gentle',
+                                              onTap: () {},
+                                              isSelected: false,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: 'Vinyasa Strong',
+                                              onTap: () {},
+                                              isSelected: false,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            FilterButton(
+                                              name: 'Yin/Restorative',
+                                              onTap: () {},
+                                              isSelected: false,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            FilterButton(
+                                              name: 'Power Flow',
+                                              onTap: () {},
+                                              isSelected: false,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(Icons.filter_alt_rounded),
+                        ),
+                      IconButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            builder: (BuildContext contex) {
+                              return SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 20),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ListTile(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedSort = '&orderBy=name';
+                                            clearAllData();
+                                            getApiData();
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        title: Text(
+                                          'Title',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                      ),
+                                      const Divider(),
+                                      ListTile(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedSort =
+                                                '&orderBy=created_at';
+                                            clearAllData();
+
+                                            getApiData();
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        title: Text(
+                                          'Created At',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                      ),
+                                      ListTile(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        title: Text(
+                                          'Cancel',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(Icons.sort_by_alpha),
+                      )
+
                       // MultiDownloadButton(
                       //   data: songList,
                       //   playlistName:
@@ -618,5 +936,47 @@ class _AlbumListState extends State<AlbumList> {
       }
     }
     // }
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  const FilterButton({
+    Key? key,
+    required this.name,
+    required this.isSelected,
+    required this.onTap,
+  }) : super(key: key);
+  final String name;
+  final bool isSelected;
+  final Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: isSelected
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.primary),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Text(
+                name,
+                // vocals[index]['val'].toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.primaryVariant,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
