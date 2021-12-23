@@ -63,6 +63,7 @@ class _AlbumListState extends State<AlbumList> {
 
   String selectedSort = '';
   String selectedDuration = '';
+  String selectedType = '';
   @override
   void initState() {
     super.initState();
@@ -82,8 +83,9 @@ class _AlbumListState extends State<AlbumList> {
       setState(() {});
       if (mainType == MainType.playlist) {
         final PlaylistResponse? playlistRes = await YogitunesAPI()
-            .fetchYogiPlaylistData(
-                getListUrl()!, pageNo, selectedSort, selectedDuration);
+            .fetchYogiPlaylistData(getListUrl()!, pageNo, selectedSort,
+                selectedDuration, selectedType);
+        print("PLAYLIST ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -103,8 +105,9 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.album) {
-        final AlbumResponse? playlistRes =
-            await YogitunesAPI().fetchYogiAlbumData(getListUrl()!, pageNo);
+        final AlbumResponse? playlistRes = await YogitunesAPI()
+            .fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
+        print("ALBUM ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -126,6 +129,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.genres) {
         final GenresResponse? playlistRes =
             await YogitunesAPI().fetchYogiGenresData(getListUrl()!);
+        print("GENRES ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -144,6 +148,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.genresAlbum) {
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiGenresAlbumData(getListUrl()!, widget.id!, pageNo);
+        print("GENRES ALBUM ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -164,8 +169,8 @@ class _AlbumListState extends State<AlbumList> {
         }
       } else if (mainType == MainType.song) {
         final TrendingSongResponse? playlistRes = await YogitunesAPI()
-            .fetchYogiTrendingSongData(getListUrl()!, pageNo);
-
+            .fetchYogiTrendingSongData(getListUrl()!, pageNo, selectedSort);
+        print("SONG ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -188,6 +193,7 @@ class _AlbumListState extends State<AlbumList> {
         final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
             await YogitunesAPI()
                 .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
+        print("TRACK ::::::::::::::::");
         pageNo++;
         if (myRecentlyPlayedSongResponse != null) {
           if (myRecentlyPlayedSongResponse.data != null) {
@@ -232,7 +238,8 @@ class _AlbumListState extends State<AlbumList> {
                     pinned: true,
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     actions: [
-                      if (mainType == MainType.playlist)
+                      if (widget.albumListType == AlbumListType.yogaPlaylist ||
+                          widget.albumListType == AlbumListType.popularPlaylist)
                         IconButton(
                           onPressed: () {
                             showModalBottomSheet(
@@ -252,6 +259,7 @@ class _AlbumListState extends State<AlbumList> {
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         const SizedBox(
                                           height: 20,
@@ -388,59 +396,122 @@ class _AlbumListState extends State<AlbumList> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          'Yoga Type',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                        if (widget.albumListType ==
+                                            AlbumListType.yogaPlaylist)
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              Text(
+                                                'Yoga Type',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  FilterButton(
+                                                    name: 'Vinyasa Gentle',
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (selectedType ==
+                                                            'Vinyasa Gentle') {
+                                                          selectedType = '';
+                                                        } else {
+                                                          selectedType =
+                                                              'Vinyasa Gentle';
+                                                        }
+                                                        clearAllData();
+                                                        getApiData();
+                                                        Navigator.pop(context);
+                                                      });
+                                                    },
+                                                    isSelected: selectedType ==
+                                                        'Vinyasa Gentle',
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  FilterButton(
+                                                    name: 'Vinyasa Strong',
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (selectedType ==
+                                                            'Vinyasa Strong') {
+                                                          selectedType = '';
+                                                        } else {
+                                                          selectedType =
+                                                              'Vinyasa Strong';
+                                                        }
+                                                        clearAllData();
+                                                        getApiData();
+                                                        Navigator.pop(context);
+                                                      });
+                                                    },
+                                                    isSelected: selectedType ==
+                                                        'Vinyasa Strong',
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  FilterButton(
+                                                    name: 'Yin/Restorative',
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (selectedType ==
+                                                            'Yin/Restorative') {
+                                                          selectedType = '';
+                                                        } else {
+                                                          selectedType =
+                                                              'Yin/Restorative';
+                                                        }
+                                                        clearAllData();
+                                                        getApiData();
+                                                        Navigator.pop(context);
+                                                      });
+                                                    },
+                                                    isSelected: selectedType ==
+                                                        'Yin/Restorative',
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  FilterButton(
+                                                    name: 'Power Flow',
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (selectedType ==
+                                                            'Power Flow') {
+                                                          selectedType = '';
+                                                        } else {
+                                                          selectedType =
+                                                              'Power Flow';
+                                                        }
+                                                        clearAllData();
+                                                        getApiData();
+                                                        Navigator.pop(context);
+                                                      });
+                                                    },
+                                                    isSelected: selectedType ==
+                                                        'Power Flow',
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          children: [
-                                            FilterButton(
-                                              name: 'Vinyasa Gentle',
-                                              onTap: () {},
-                                              isSelected: false,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            FilterButton(
-                                              name: 'Vinyasa Strong',
-                                              onTap: () {},
-                                              isSelected: false,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          children: [
-                                            FilterButton(
-                                              name: 'Yin/Restorative',
-                                              onTap: () {},
-                                              isSelected: false,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            FilterButton(
-                                              name: 'Power Flow',
-                                              onTap: () {},
-                                              isSelected: false,
-                                            ),
-                                          ],
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -448,25 +519,29 @@ class _AlbumListState extends State<AlbumList> {
                               },
                             );
                           },
-                          icon: Icon(Icons.filter_alt_rounded),
+                          icon: const Icon(Icons.filter_alt_rounded),
                         ),
-                      IconButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            builder: (BuildContext contex) {
-                              return SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                child: Padding(
+                      if (widget.albumListType == AlbumListType.yogaPlaylist ||
+                          widget.albumListType ==
+                              AlbumListType.featuredAlbums ||
+                          widget.albumListType ==
+                              AlbumListType.popularPlaylist ||
+                          widget.albumListType == AlbumListType.newRelease ||
+                          widget.albumListType == AlbumListType.popularSong ||
+                          widget.albumListType == AlbumListType.popularAlbum)
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              builder: (BuildContext contex) {
+                                return Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 20),
                                   child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       ListTile(
                                         onTap: () {
@@ -493,7 +568,14 @@ class _AlbumListState extends State<AlbumList> {
                                         onTap: () {
                                           setState(() {
                                             selectedSort =
-                                                '&orderBy=created_at';
+                                                widget.albumListType ==
+                                                            AlbumListType
+                                                                .yogaPlaylist ||
+                                                        widget.albumListType ==
+                                                            AlbumListType
+                                                                .popularPlaylist
+                                                    ? '&orderBy=created_at'
+                                                    : '&orderBy=artist';
                                             clearAllData();
 
                                             getApiData();
@@ -501,7 +583,14 @@ class _AlbumListState extends State<AlbumList> {
                                           });
                                         },
                                         title: Text(
-                                          'Created At',
+                                          widget.albumListType ==
+                                                      AlbumListType
+                                                          .yogaPlaylist ||
+                                                  widget.albumListType ==
+                                                      AlbumListType
+                                                          .popularPlaylist
+                                              ? 'Created At'
+                                              : 'Artist',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
@@ -529,13 +618,12 @@ class _AlbumListState extends State<AlbumList> {
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(Icons.sort_by_alpha),
-                      )
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.sort_by_alpha),
+                        )
 
                       // MultiDownloadButton(
                       //   data: songList,
@@ -622,7 +710,9 @@ class _AlbumListState extends State<AlbumList> {
                                         lstPlaylistData[index];
                                     String itemImage = item
                                             .quadImages!.isNotEmpty
-                                        ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                        ? item.quadImages![0] != null
+                                            ? ('${item.quadImages![0]!.imageUrl!}/${item.quadImages![0]!.image!}')
+                                            : ''
                                         : '';
                                     return SongItem(
                                       itemImage: itemImage,
