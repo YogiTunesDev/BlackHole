@@ -108,19 +108,19 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
               ],
             ),
           ),
-        PopupMenuItem(
-          value: 4,
-          child: Row(
-            children: [
-              Icon(
-                Icons.album_rounded,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              const SizedBox(width: 10.0),
-              Text(AppLocalizations.of(context)!.viewAlbum),
-            ],
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: 4,
+        //   child: Row(
+        //     children: [
+        //       Icon(
+        //         Icons.album_rounded,
+        //         color: Theme.of(context).iconTheme.color,
+        //       ),
+        //       const SizedBox(width: 10.0),
+        //       Text(AppLocalizations.of(context)!.viewAlbum),
+        //     ],
+        //   ),
+        // ),
         PopupMenuItem(
           value: 3,
           child: Row(

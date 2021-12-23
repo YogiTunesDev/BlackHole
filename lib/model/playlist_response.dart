@@ -232,7 +232,7 @@ class PlayListData {
   final String? name;
   final String? description;
   final int? userId;
-  final List<QuadImage>? quadImages;
+  final List<QuadImage?>? quadImages;
   final String? playlistDuration;
   final List<TracksOnly>? tracksOnly;
   final List<Tag>? tags;
@@ -243,7 +243,7 @@ class PlayListData {
     String? name,
     String? description,
     int? userId,
-    List<QuadImage>? quadImages,
+    List<QuadImage?>? quadImages,
     String? playlistDuration,
     List<TracksOnly>? tracksOnly,
     List<Tag>? tags,
@@ -268,7 +268,7 @@ class PlayListData {
       'name': name,
       'description': description,
       'userId': userId,
-      'quadImages': quadImages?.map((x) => x.toMap()).toList(),
+      'quadImages': quadImages?.map((x) => x!.toMap()).toList(),
       'playlistDuration': playlistDuration,
       'tracksOnly': tracksOnly?.map((x) => x.toMap()).toList(),
       'tags': tags?.map((x) => x.toMap()).toList(),
@@ -285,9 +285,11 @@ class PlayListData {
           map['description'] != null ? map['description'] as String : null,
       userId: map['user_id'] != null ? map['user_id'] as int : null,
       quadImages: map['quadImages'] != null
-          ? List<QuadImage>.from(map['quadImages']
-                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
-              as Iterable<dynamic>)
+          ? map['quadImages'].toString() != 'null'
+              ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null
+                  ? QuadImage.fromMap(x as Map<String, dynamic>)
+                  : null) as Iterable<dynamic>)
+              : null
           : null,
       playlistDuration: map['playlist_duration'] != null
           ? map['playlist_duration'] as String

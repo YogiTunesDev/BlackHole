@@ -378,13 +378,17 @@ class YogitunesAPI {
     return result;
   }
 
-  Future<PlaylistResponse?> fetchYogiPlaylistData(
-    String url,
-    int pageNo,
-  ) async {
+  Future<PlaylistResponse?> fetchYogiPlaylistData(String url, int pageNo,
+      String sort, String durationFilter, String selectedType) async {
     PlaylistResponse? result;
     try {
-      final res = await getResponse('$url?page=$pageNo');
+      final res = await getResponse('$url?page=$pageNo$sort' +
+          (durationFilter == null || durationFilter == ''
+              ? ''
+              : '&duration=$durationFilter') +
+          (selectedType == null || selectedType == ''
+              ? ''
+              : '&yoga_type=$selectedType'));
       print("res :: $res");
       print("res :: ${res.body}");
       if (res.statusCode == 200) {
@@ -401,10 +405,11 @@ class YogitunesAPI {
   Future<AlbumResponse?> fetchYogiAlbumData(
     String url,
     int pageNo,
+    String sort,
   ) async {
     AlbumResponse? result;
     try {
-      final res = await getResponse('$url?page=$pageNo');
+      final res = await getResponse('$url?page=$pageNo$sort');
       print(res);
       print(res.body);
       if (res.statusCode == 200) {
@@ -496,12 +501,10 @@ class YogitunesAPI {
   }
 
   Future<TrendingSongResponse?> fetchYogiTrendingSongData(
-    String url,
-    int pageNo,
-  ) async {
+      String url, int pageNo, String sort) async {
     TrendingSongResponse? result;
     try {
-      final res = await getResponse('$url?page=$pageNo');
+      final res = await getResponse('$url?page=$pageNo$sort');
       print(res);
       print(res.body);
       if (res.statusCode == 200) {
@@ -600,8 +603,10 @@ class YogitunesAPI {
     return result;
   }
 
-  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(String url,
-      {int pageNo = 1,}) async {
+  Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(
+    String url, {
+    int pageNo = 1,
+  }) async {
     MyRecentlyPlayedSongResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo');
