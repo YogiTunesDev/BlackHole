@@ -37,6 +37,7 @@ import 'package:blackhole/Screens/Login/reset_password.dart';
 import 'package:blackhole/Screens/Login/signup.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
+import 'package:blackhole/Screens/Settings/subscription.dart';
 import 'package:blackhole/Services/audio_service.dart';
 import 'package:blackhole/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -232,6 +233,7 @@ class _MyAppState extends State<MyApp> {
         '/nowplaying': (context) => NowPlaying(),
         '/recent': (context) => RecentlyPlayed(),
         '/downloads': (context) => const Downloads(),
+        '/subscribe': (context) => const SubscriptionScreen(),
         // '/featured':
       },
       onGenerateRoute: (RouteSettings settings) {

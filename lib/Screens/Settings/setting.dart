@@ -19,7 +19,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -197,23 +196,8 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () async {
-                          const Set<String> _kIds = <String>{
-                            'teachermth',
-                          };
-                          final ProductDetailsResponse response =
-                              await InAppPurchase.instance
-                                  .queryProductDetails(_kIds);
-                          if (response.notFoundIDs.isNotEmpty) {
-                            // Handle the error.
-                            print("Error ");
-                          }
-                          List<ProductDetails> products =
-                              response.productDetails;
-                          if (products.isNotEmpty) {
-                            print(products[0].price);
-                          }
-                          print("products :: " + products.length.toString());
+                        onTap: () {
+                          Navigator.pushNamed(context, '/subscribe');
                         },
                         child: Container(
                           padding: const EdgeInsets.all(12),
