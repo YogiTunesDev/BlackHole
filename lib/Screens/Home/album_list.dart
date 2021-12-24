@@ -107,7 +107,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.album) {
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
-        print("ALBUM ::::::::::::::::");
+        
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {

@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -178,6 +179,63 @@ class _SettingPageState extends State<SettingPage> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Keep the music playing with the YogiTunes subscription.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          const Set<String> _kIds = <String>{
+                            'teachermth',
+                          };
+                          final ProductDetailsResponse response =
+                              await InAppPurchase.instance
+                                  .queryProductDetails(_kIds);
+                          if (response.notFoundIDs.isNotEmpty) {
+                            // Handle the error.
+                            print("Error ");
+                          }
+                          List<ProductDetails> products =
+                              response.productDetails;
+                          if (products.isNotEmpty) {
+                            print(products[0].price);
+                          }
+                          print("products :: " + products.length.toString());
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Manage Subscription',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     10.0,
