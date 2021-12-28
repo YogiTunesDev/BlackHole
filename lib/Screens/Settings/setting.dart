@@ -26,6 +26,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:package_info/package_info.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class SettingPage extends StatefulWidget {
   final Function? callback;
@@ -127,6 +128,7 @@ class _SettingPageState extends State<SettingPage> {
     return update;
   }
 
+  double _value = 20.0;
   @override
   Widget build(BuildContext context) {
     final List<String> userThemesList = <String>[
@@ -178,48 +180,6 @@ class _SettingPageState extends State<SettingPage> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 10,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Keep the music playing with the YogiTunes subscription.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/subscribe');
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          margin: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Manage Subscription',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     10.0,
@@ -1256,1042 +1216,51 @@ class _SettingPageState extends State<SettingPage> {
                     10.0,
                   ),
                   child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .ui,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 15,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Keep the music playing with the YogiTunes subscription.',
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDominant,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDominantSub,
-                          ),
-                          keyName: 'useImageColor',
-                          defaultValue: true,
-                          isThreeLine: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDominantFullScreen,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDominantFullScreenSub,
-                          ),
-                          keyName: 'useFullScreenGradient',
-                          defaultValue: false,
-                          isThreeLine: false,
-                        ),
-
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDenseMini,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDenseMiniSub,
-                          ),
-                          keyName: 'useDenseMini',
-                          defaultValue: false,
-                          isThreeLine: false,
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .miniButtons,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .miniButtonsSub,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                final List checked =
-                                    List.from(preferredMiniButtons);
-                                final List<String> order =
-                                    List.from(miniButtonsOrder);
-                                return StatefulBuilder(
-                                  builder: (
-                                    BuildContext context,
-                                    StateSetter setStt,
-                                  ) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                          15.0,
-                                        ),
-                                      ),
-                                      content: SizedBox(
-                                        width: 500,
-                                        child: ReorderableListView(
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          shrinkWrap: true,
-                                          padding: const EdgeInsets.fromLTRB(
-                                            0,
-                                            10,
-                                            0,
-                                            10,
-                                          ),
-                                          onReorder:
-                                              (int oldIndex, int newIndex) {
-                                            if (oldIndex < newIndex) {
-                                              newIndex--;
-                                            }
-                                            final temp = order.removeAt(
-                                              oldIndex,
-                                            );
-                                            order.insert(newIndex, temp);
-                                            setStt(
-                                              () {},
-                                            );
-                                          },
-                                          header: Center(
-                                            child: Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .changeOrder,
-                                            ),
-                                          ),
-                                          children: order.map((e) {
-                                            return CheckboxListTile(
-                                              key: Key(e),
-                                              dense: true,
-                                              activeColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              checkColor: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary ==
-                                                      Colors.white
-                                                  ? Colors.black
-                                                  : null,
-                                              value: checked.contains(e),
-                                              title: Text(e),
-                                              onChanged: (bool? value) {
-                                                setStt(
-                                                  () {
-                                                    value!
-                                                        ? checked.add(e)
-                                                        : checked.remove(e);
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            primary:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.grey[700],
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!
-                                                .cancel,
-                                          ),
-                                        ),
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            primary: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary ==
-                                                    Colors.white
-                                                ? Colors.black
-                                                : null,
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                          ),
-                                          onPressed: () {
-                                            setState(
-                                              () {
-                                                final List temp = [];
-                                                for (int i = 0;
-                                                    i < order.length;
-                                                    i++) {
-                                                  if (checked
-                                                      .contains(order[i])) {
-                                                    temp.add(order[i]);
-                                                  }
-                                                }
-                                                preferredMiniButtons = temp;
-                                                miniButtonsOrder = order;
-                                                Navigator.pop(context);
-                                                Hive.box('settings').put(
-                                                  'preferredMiniButtons',
-                                                  preferredMiniButtons,
-                                                );
-                                                Hive.box('settings').put(
-                                                  'miniButtonsOrder',
-                                                  order,
-                                                );
-                                              },
-                                            );
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!
-                                                .ok,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, '/subscribe');
                               },
-                            );
-                          },
-                        ),
-
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .blacklistedHomeSections,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .blacklistedHomeSectionsSub,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            final GlobalKey<AnimatedListState> _listKey =
-                                GlobalKey<AnimatedListState>();
-                            showModalBottomSheet(
-                              isDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return BottomGradientContainer(
-                                  borderRadius: BorderRadius.circular(
-                                    20.0,
-                                  ),
-                                  child: AnimatedList(
-                                    physics: const BouncingScrollPhysics(),
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.fromLTRB(
-                                      0,
-                                      10,
-                                      0,
-                                      10,
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Manage Subscription',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
-                                    key: _listKey,
-                                    initialItemCount:
-                                        blacklistedHomeSections.length + 1,
-                                    itemBuilder: (cntxt, idx, animation) {
-                                      return (idx == 0)
-                                          ? ListTile(
-                                              title: Text(
-                                                AppLocalizations.of(context)!
-                                                    .addNew,
-                                              ),
-                                              leading: const Icon(
-                                                CupertinoIcons.add,
-                                              ),
-                                              onTap: () async {
-                                                showTextInputDialog(
-                                                  context: context,
-                                                  title: AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .enterText,
-                                                  keyboardType:
-                                                      TextInputType.text,
-                                                  onSubmitted: (String value) {
-                                                    Navigator.pop(context);
-                                                    blacklistedHomeSections.add(
-                                                      value
-                                                          .trim()
-                                                          .toLowerCase(),
-                                                    );
-                                                    Hive.box('settings').put(
-                                                      'blacklistedHomeSections',
-                                                      blacklistedHomeSections,
-                                                    );
-                                                    _listKey.currentState!
-                                                        .insertItem(
-                                                      blacklistedHomeSections
-                                                          .length,
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            )
-                                          : SizeTransition(
-                                              sizeFactor: animation,
-                                              child: ListTile(
-                                                leading: const Icon(
-                                                  CupertinoIcons.folder,
-                                                ),
-                                                title: Text(
-                                                  blacklistedHomeSections[
-                                                          idx - 1]
-                                                      .toString(),
-                                                ),
-                                                trailing: IconButton(
-                                                  icon: const Icon(
-                                                    CupertinoIcons.clear,
-                                                    size: 15.0,
-                                                  ),
-                                                  tooltip: 'Remove',
-                                                  onPressed: () {
-                                                    blacklistedHomeSections
-                                                        .removeAt(idx - 1);
-                                                    Hive.box('settings').put(
-                                                      'blacklistedHomeSections',
-                                                      blacklistedHomeSections,
-                                                    );
-                                                    _listKey.currentState!
-                                                        .removeItem(
-                                                      idx,
-                                                      (
-                                                        context,
-                                                        animation,
-                                                      ) =>
-                                                          Container(),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                    },
                                   ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .showLast,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .showLastSub,
-                          ),
-                          keyName: 'showRecent',
-                          defaultValue: true,
-                          onChanged: (val, box) {
-                            widget.callback!();
-                          },
-                        ),
-                        // BoxSwitchTile(
-                        //   title: Text(
-                        //     AppLocalizations.of(
-                        //       context,
-                        //     )!
-                        //         .showHistory,
-                        //   ),
-                        //   subtitle: Text(
-                        //     AppLocalizations.of(
-                        //       context,
-                        //     )!
-                        //         .showHistorySub,
-                        //   ),
-                        //   keyName: 'showHistory',
-                        //   defaultValue: true,
-                        // ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .enableGesture,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .enableGestureSub,
-                          ),
-                          keyName: 'enableGesture',
-                          defaultValue: true,
-                          isThreeLine: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                  ),
-                  child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .musicPlayback,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .musicLang,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .musicLangSub,
-                          ),
-                          trailing: SizedBox(
-                            width: 150,
-                            child: Text(
-                              preferredLanguage.isEmpty
-                                  ? 'None'
-                                  : preferredLanguage.join(', '),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          dense: true,
-                          onTap: () {
-                            showModalBottomSheet(
-                              isDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              context: context,
-                              builder: (BuildContext context) {
-                                final List checked =
-                                    List.from(preferredLanguage);
-                                return StatefulBuilder(
-                                  builder: (
-                                    BuildContext context,
-                                    StateSetter setStt,
-                                  ) {
-                                    return BottomGradientContainer(
-                                      borderRadius: BorderRadius.circular(
-                                        20.0,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: ListView.builder(
-                                              physics:
-                                                  const BouncingScrollPhysics(),
-                                              shrinkWrap: true,
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                0,
-                                                10,
-                                                0,
-                                                10,
-                                              ),
-                                              itemCount: languages.length,
-                                              itemBuilder: (context, idx) {
-                                                return CheckboxListTile(
-                                                  activeColor: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                  checkColor: Theme.of(context)
-                                                              .colorScheme
-                                                              .secondary ==
-                                                          Colors.white
-                                                      ? Colors.black
-                                                      : null,
-                                                  value: checked.contains(
-                                                    languages[idx],
-                                                  ),
-                                                  title: Text(
-                                                    languages[idx],
-                                                  ),
-                                                  onChanged: (bool? value) {
-                                                    value!
-                                                        ? checked
-                                                            .add(languages[idx])
-                                                        : checked.remove(
-                                                            languages[idx],
-                                                          );
-                                                    setStt(
-                                                      () {},
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                style: TextButton.styleFrom(
-                                                  primary: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .cancel,
-                                                ),
-                                              ),
-                                              TextButton(
-                                                style: TextButton.styleFrom(
-                                                  primary: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                onPressed: () {
-                                                  setState(
-                                                    () {
-                                                      preferredLanguage =
-                                                          checked;
-                                                      Navigator.pop(context);
-                                                      Hive.box('settings').put(
-                                                        'preferredLanguage',
-                                                        checked,
-                                                      );
-                                                      home_screen.fetched =
-                                                          false;
-                                                      home_screen
-                                                              .preferredLanguage =
-                                                          preferredLanguage;
-                                                      widget.callback!();
-                                                    },
-                                                  );
-                                                  if (preferredLanguage
-                                                      .isEmpty) {
-                                                    ShowSnackBar().showSnackBar(
-                                                      context,
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!
-                                                          .noLangSelected,
-                                                    );
-                                                  }
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .ok,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .chartLocation,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .chartLocationSub,
-                          ),
-                          trailing: SizedBox(
-                            width: 150,
-                            child: Text(
-                              region,
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          dense: true,
-                          onTap: () async {
-                            region = await SpotifyCountry()
-                                .changeCountry(context: context);
-                            setState(
-                              () {},
-                            );
-                          },
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .streamQuality,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .streamQualitySub,
-                          ),
-                          onTap: () {},
-                          trailing: DropdownButton(
-                            value: streamingQuality,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                            ),
-                            underline: const SizedBox(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(
-                                  () {
-                                    streamingQuality = newValue;
-                                    Hive.box('settings')
-                                        .put('streamingQuality', newValue);
-                                  },
-                                );
-                              }
-                            },
-                            items: <String>['96 kbps', '160 kbps', '320 kbps']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                          dense: true,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .loadLast,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .loadLastSub,
-                          ),
-                          keyName: 'loadStart',
-                          defaultValue: true,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .enforceRepeat,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .enforceRepeatSub,
-                          ),
-                          keyName: 'enforceRepeat',
-                          defaultValue: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .autoplay,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .autoplaySub,
-                          ),
-                          keyName: 'autoplay',
-                          defaultValue: true,
-                          isThreeLine: true,
-                        ),
-                        // BoxSwitchTile(
-                        //   title: Text(
-                        //     AppLocalizations.of(
-                        //       context,
-                        //     )!
-                        //         .cacheSong,
-                        //   ),
-                        //   subtitle: Text(
-                        //     AppLocalizations.of(
-                        //       context,
-                        //     )!
-                        //         .cacheSongSub,
-                        //   ),
-                        //   keyName: 'cacheSong',
-                        //   defaultValue: false,
-                        // ),
-                        //     ListTile(
-                        //         title: const Text('BlackList Location'),
-                        //         subtitle: const Text(
-                        //             'Locations blacklisted from "My Music" section'),
-                        //         dense: true,
-                        //         onTap: () {
-                        //           final GlobalKey<AnimatedListState> _listKey =
-                        //               GlobalKey<AnimatedListState>();
-                        //           showModalBottomSheet(
-                        //               isDismissible: true,
-                        //               backgroundColor: Colors.transparent,
-                        //               context: context,
-                        //               builder: (BuildContext context) {
-                        //                 return BottomGradientContainer(
-                        //                   borderRadius: BorderRadius.circular(20.0,),
-                        //                   child: AnimatedList(
-                        //                     physics: const BouncingScrollPhysics(),
-                        //                     shrinkWrap: true,
-                        //                     padding: const EdgeInsets.fromLTRB(
-                        //                         0, 10, 0, 10,),
-                        //                     key: _listKey,
-                        //                     initialItemCount: dirPaths.length + 1,
-                        //                     itemBuilder: (cntxt, idx, animation) {
-                        //                       return (idx == 0)
-                        //                           ? ListTile(
-                        //                               title:
-                        //                                   const Text('Add Location'),
-                        //                               leading: const Icon(
-                        //                                   CupertinoIcons.add,),
-                        //                               onTap: () async {
-                        //                                 final String temp =
-                        //                                     await Picker()
-                        //                                         .selectFolder(context,
-                        //                                             'Select Folder');
-                        //                                 if (temp.trim() != '' &&
-                        //                                     !dirPaths
-                        //                                         .contains(temp)) {
-                        //                                   dirPaths.add(temp);
-                        //                                   Hive.box('settings').put(
-                        //                                       'blacklistedPaths',
-                        //                                       dirPaths);
-                        //                                   _listKey.currentState!
-                        //                                       .insertItem(
-                        //                                           dirPaths.length);
-                        //                                 } else {
-                        //                                   if (temp.trim() == '') {
-                        //                                     Navigator.pop(context);
-                        //                                   }
-                        //                                   ShowSnackBar().showSnackBar(
-                        //                                     context,
-                        //                                     temp.trim() == ''
-                        //                                         ? 'No folder selected'
-                        //                                         : 'Already added',
-                        //                                   );
-                        //                                 }
-                        //                               },
-                        //                             )
-                        //                           : SizeTransition(
-                        //                               sizeFactor: animation,
-                        //                               child: ListTile(
-                        //                                 leading: const Icon(
-                        //                                     CupertinoIcons.folder,),
-                        //                                 title: Text(dirPaths[idx - 1]
-                        //                                     .toString(),),
-                        //                                 trailing: IconButton(
-                        //                                   icon: const Icon(
-                        //                                     CupertinoIcons.clear,
-                        //                                     size: 15.0,
-                        //                                   ),
-                        //                                   tooltip: 'Remove',
-                        //                                   onPressed: () {
-                        //                                     dirPaths
-                        //                                         .removeAt(idx - 1);
-                        //                                     Hive.box('settings').put(
-                        //                                         'blacklistedPaths',
-                        //                                         dirPaths);
-                        //                                     _listKey.currentState!
-                        //                                         .removeItem(
-                        //                                             idx,
-                        //                                             (context,
-                        //                                                     animation) =>
-                        //                                                 Container());
-                        //                                   },
-                        //                                 ),
-                        //                               ),
-                        //                             );
-                        //                     },
-                        //                   ),
-                        //                 );
-                        //               },);
-                        //         })
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                  ),
-                  child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .down,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .downQuality,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .downQualitySub,
-                          ),
-                          onTap: () {},
-                          trailing: DropdownButton(
-                            value: downloadQuality,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                            ),
-                            underline: const SizedBox(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(
-                                  () {
-                                    downloadQuality = newValue;
-                                    Hive.box('settings')
-                                        .put('downloadQuality', newValue);
-                                  },
-                                );
-                              }
-                            },
-                            items: <String>['96 kbps', '160 kbps', '320 kbps']
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
                                 ),
-                              );
-                            }).toList(),
-                          ),
-                          dense: true,
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .downLocation,
-                          ),
-                          subtitle: Text(downloadPath),
-                          trailing: TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.grey[700],
-                            ),
-                            onPressed: () async {
-                              downloadPath =
-                                  await ExtStorageProvider.getExtStorage(
-                                        dirName: 'Music',
-                                      ) ??
-                                      '/storage/emulated/0/Music';
-                              Hive.box('settings')
-                                  .put('downloadPath', downloadPath);
-                              setState(
-                                () {},
-                              );
-                            },
-                            child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .reset,
+                              ),
                             ),
                           ),
-                          onTap: () async {
-                            final String temp = await Picker.selectFolder(
-                              context,
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .selectDownLocation,
-                            );
-                            if (temp.trim() != '') {
-                              downloadPath = temp;
-                              Hive.box('settings').put('downloadPath', temp);
-                              setState(
-                                () {},
-                              );
-                            } else {
-                              ShowSnackBar().showSnackBar(
-                                context,
-                                AppLocalizations.of(
-                                  context,
-                                )!
-                                    .noFolderSelected,
-                              );
-                            }
-                          },
-                          dense: true,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createAlbumFold,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createAlbumFoldSub,
-                          ),
-                          keyName: 'createDownloadFolder',
-                          isThreeLine: true,
-                          defaultValue: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createYtFold,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createYtFoldSub,
-                          ),
-                          keyName: 'createYoutubeFolder',
-                          isThreeLine: true,
-                          defaultValue: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .downLyrics,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .downLyricsSub,
-                          ),
-                          keyName: 'downloadLyrics',
-                          defaultValue: false,
-                          isThreeLine: true,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -2303,434 +1272,194 @@ class _SettingPageState extends State<SettingPage> {
                     10.0,
                   ),
                   child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .others,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 15,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Crossfade',
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          SfSlider(
+                            max: 20.0,
+                            value: _value,
+                            interval: 20,
+                            showLabels: true,
+                            minorTicksPerInterval: 1,
+                            onChanged: (dynamic value) {
+                              setState(() {
+                                _value = double.parse(value.toString());
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child: BoxSwitchTile(
+                              title: Text(
+                                'Control From Lock Screen',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              keyName: 'controlFromLockScreen',
+                              defaultValue: true,
+                              onChanged: (bool val, Box box) {
+                                // box.put(
+                                //   'useSystemTheme',
+                                //   false,
+                                // );
+                                // currentTheme.switchTheme(
+                                //   isDark: val,
+                                //   useSystemTheme: false,
+                                // );
+                                switchToCustomTheme();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                  ),
+                  child: GradientCard(
+                      child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0,
+                          vertical: 5,
+                        ),
+                        child: BoxSwitchTile(
+                          title: Text(
+                            'High quality streming',
+                            style: TextStyle(
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .lang,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .langSub,
-                          ),
-                          onTap: () {},
-                          trailing: DropdownButton(
-                            value: lang,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                            ),
-                            underline: const SizedBox(),
-                            onChanged: (String? newValue) {
-                              final Map<String, String> codes = {
-                                'English': 'en',
-                                'Russian': 'ru',
-                                'Portuguese': 'pt',
-                                'Indonesia': 'id',
-                                'French': 'fr',
-                              };
-                              if (newValue != null) {
-                                setState(
-                                  () {
-                                    lang = newValue;
-                                    MyApp.of(context).setLocale(
-                                      Locale.fromSubtags(
-                                        languageCode: codes[newValue]!,
-                                      ),
-                                    );
-                                    Hive.box('settings').put('lang', newValue);
-                                  },
-                                );
-                              }
-                            },
-                            items: <String>[
-                              'English',
-                              'Russian',
-                              'Portuguese',
-                              'Indonesia',
-                              'French',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          dense: true,
-                        ),
-
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .minAudioLen,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .minAudioLenSub,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            showTextInputDialog(
-                              context: context,
-                              title: AppLocalizations.of(
-                                context,
-                              )!
-                                  .minAudioAlert,
-                              initialText: (Hive.box('settings')
-                                          .get('minDuration', defaultValue: 10)
-                                      as int)
-                                  .toString(),
-                              keyboardType: TextInputType.number,
-                              onSubmitted: (String value) {
-                                if (value.trim() == '') {
-                                  value = '0';
-                                }
-                                Hive.box('settings')
-                                    .put('minDuration', int.parse(value));
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .liveSearch,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .liveSearchSub,
-                          ),
-                          keyName: 'liveSearch',
-                          isThreeLine: false,
-                          defaultValue: true,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDown,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useDownSub,
-                          ),
-                          keyName: 'useDown',
-                          isThreeLine: true,
-                          defaultValue: true,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .supportEq,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .supportEqSub,
-                          ),
-                          keyName: 'supportEq',
-                          isThreeLine: true,
-                          defaultValue: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .stopOnClose,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .stopOnCloseSub,
-                          ),
-                          isThreeLine: true,
-                          keyName: 'stopForegroundService',
-                          defaultValue: true,
-                        ),
-                        // const BoxSwitchTile(
-                        //   title: Text('Remove Service from foreground when paused'),
-                        //   subtitle: Text(
-                        //       "If turned on, you can slide notification when paused to stop the service. But Service can also be stopped by android to release memory. If you don't want android to stop service while paused, turn it off\nDefault: On\n"),
-                        //   isThreeLine: true,
-                        //   keyName: 'stopServiceOnPause',
-                        //   defaultValue: true,
-                        // ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .checkUpdate,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .checkUpdateSub,
-                          ),
-                          keyName: 'checkUpdate',
-                          isThreeLine: true,
-                          defaultValue: false,
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useProxy,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .useProxySub,
-                          ),
-                          keyName: 'useProxy',
-                          defaultValue: false,
-                          isThreeLine: true,
+                          keyName: 'highQualityStreming',
+                          defaultValue: Hive.box('settings').get(
+                              'highQualityStreming',
+                              defaultValue: false) as bool,
                           onChanged: (bool val, Box box) {
-                            useProxy = val;
-                            setState(
-                              () {},
-                            );
+                            Hive.box('settings')
+                                .put('highQualityStreming', val);
+                            // box.put(
+                            //   'useSystemTheme',
+                            //   false,
+                            // );
+                            // currentTheme.switchTheme(
+                            //   isDark: val,
+                            //   useSystemTheme: false,
+                            // );
+                            switchToCustomTheme();
                           },
                         ),
-                        Visibility(
-                          visible: useProxy,
-                          child: ListTile(
-                            title: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .proxySet,
-                            ),
-                            subtitle: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .proxySetSub,
-                            ),
-                            dense: true,
-                            trailing: Text(
-                              '${Hive.box('settings').get("proxyIp")}:${Hive.box('settings').get("proxyPort")}',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  final _controller = TextEditingController(
-                                    text: settingsBox.get('proxyIp').toString(),
-                                  );
-                                  final _controller2 = TextEditingController(
-                                    text:
-                                        settingsBox.get('proxyPort').toString(),
-                                  );
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        10.0,
-                                      ),
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .ipAdd,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        TextField(
-                                          autofocus: true,
-                                          controller: _controller,
-                                        ),
-                                        const SizedBox(
-                                          height: 30,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .port,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .secondary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        TextField(
-                                          autofocus: true,
-                                          controller: _controller2,
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        style: TextButton.styleFrom(
-                                          primary:
-                                              Theme.of(context).brightness ==
-                                                      Brightness.dark
-                                                  ? Colors.white
-                                                  : Colors.grey[700],
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!
-                                              .cancel,
-                                        ),
-                                      ),
-                                      TextButton(
-                                        style: TextButton.styleFrom(
-                                          primary: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary ==
-                                                  Colors.white
-                                              ? Colors.black
-                                              : null,
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                        onPressed: () {
-                                          settingsBox.put(
-                                            'proxyIp',
-                                            _controller.text.trim(),
-                                          );
-                                          settingsBox.put(
-                                            'proxyPort',
-                                            int.parse(
-                                              _controller2.text.trim(),
-                                            ),
-                                          );
-                                          Navigator.pop(context);
-                                          setState(
-                                            () {},
-                                          );
-                                        },
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!
-                                              .ok,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                          bottom: 10,
+                        ),
+                        child: Text(
+                          'High quality streming is 320kbps, normal streming quality is 96kb.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .clearCache,
+                      ),
+                    ],
+                  )),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                  ),
+                  child: GradientCard(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Contact us',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .clearCacheSub,
+                          const SizedBox(
+                            height: 5,
                           ),
-                          trailing: SizedBox(
-                            height: 70.0,
-                            width: 70.0,
-                            child: Center(
-                              child: FutureBuilder(
-                                future: File(Hive.box('cache').path!).length(),
-                                builder: (
-                                  BuildContext context,
-                                  AsyncSnapshot<int> snapshot,
-                                ) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    return Text(
-                                      '${((snapshot.data ?? 0) / (1024 * 1024)).toStringAsFixed(2)} MB',
-                                    );
-                                  }
-                                  return const Text('');
-                                },
+                          Text(
+                            'Have a question, comment or concern? Get in touch through our website. We aim to respond to all message within 24 hours Monday to Saturnday.',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: InkWell(
+                              onTap: () {},
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Send a message',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          dense: true,
-                          isThreeLine: true,
-                          onTap: () async {
-                            Hive.box('cache').clear();
-                            setState(
-                              () {},
-                            );
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -2742,732 +1471,2297 @@ class _SettingPageState extends State<SettingPage> {
                     10.0,
                   ),
                   child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .backNRest,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'About',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createBack,
+                          const SizedBox(
+                            height: 5,
                           ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .createBackSub,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            showModalBottomSheet(
-                              isDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              context: context,
-                              builder: (BuildContext context) {
-                                final List playlistNames =
-                                    Hive.box('settings').get(
-                                  'playlistNames',
-                                  defaultValue: ['Favorite Songs'],
-                                ) as List;
-                                if (!playlistNames.contains('Favorite Songs')) {
-                                  playlistNames.insert(0, 'Favorite Songs');
-                                  settingsBox.put(
-                                    'playlistNames',
-                                    playlistNames,
-                                  );
-                                }
-
-                                final List<String> persist = [
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .settings,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .playlists,
-                                ];
-
-                                final List<String> checked = [
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .settings,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .downs,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .playlists,
-                                ];
-
-                                final List<String> items = [
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .settings,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .playlists,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .downs,
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .cache,
-                                ];
-
-                                final Map<String, List> boxNames = {
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .settings: ['settings'],
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .cache: ['cache'],
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .downs: ['downloads'],
-                                  AppLocalizations.of(
-                                    context,
-                                  )!
-                                      .playlists: playlistNames,
-                                };
-                                return StatefulBuilder(
-                                  builder: (
-                                    BuildContext context,
-                                    StateSetter setStt,
-                                  ) {
-                                    return BottomGradientContainer(
-                                      borderRadius: BorderRadius.circular(
-                                        20.0,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: ListView.builder(
-                                              physics:
-                                                  const BouncingScrollPhysics(),
-                                              shrinkWrap: true,
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                0,
-                                                10,
-                                                0,
-                                                10,
-                                              ),
-                                              itemCount: items.length,
-                                              itemBuilder: (context, idx) {
-                                                return CheckboxListTile(
-                                                  activeColor: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                  checkColor: Theme.of(context)
-                                                              .colorScheme
-                                                              .secondary ==
-                                                          Colors.white
-                                                      ? Colors.black
-                                                      : null,
-                                                  value: checked.contains(
-                                                    items[idx],
-                                                  ),
-                                                  title: Text(
-                                                    items[idx],
-                                                  ),
-                                                  onChanged: persist
-                                                          .contains(items[idx])
-                                                      ? null
-                                                      : (bool? value) {
-                                                          value!
-                                                              ? checked.add(
-                                                                  items[idx],
-                                                                )
-                                                              : checked.remove(
-                                                                  items[idx],
-                                                                );
-                                                          setStt(
-                                                            () {},
-                                                          );
-                                                        },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                style: TextButton.styleFrom(
-                                                  primary: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .cancel,
-                                                ),
-                                              ),
-                                              TextButton(
-                                                style: TextButton.styleFrom(
-                                                  primary: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
-                                                ),
-                                                onPressed: () {
-                                                  createBackup(
-                                                    context,
-                                                    checked,
-                                                    boxNames,
-                                                  );
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!
-                                                      .ok,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .restore,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .restoreSub,
-                          ),
-                          dense: true,
-                          onTap: () async {
-                            await restore(context);
-                            currentTheme.refresh();
-                          },
-                        ),
-                        BoxSwitchTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .autoBack,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .autoBackSub,
-                          ),
-                          keyName: 'autoBackup',
-                          defaultValue: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                  ),
-                  child: GradientCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            15,
-                            15,
-                            15,
-                            0,
-                          ),
-                          child: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .about,
+                          Text(
+                            'Version 2.0\nupdate',
                             style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .version,
+                          const SizedBox(
+                            height: 5,
                           ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .versionSub,
-                          ),
-                          onTap: () {
-                            ShowSnackBar().showSnackBar(
-                              context,
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .checkingUpdate,
-                              noAction: true,
-                            );
-
-                            SupaBase().getUpdate().then(
-                              (Map value) async {
-                                if (compareVersion(
-                                  value['LatestVersion'].toString(),
-                                  appVersion!,
-                                )) {
-                                  List? abis = await Hive.box('settings')
-                                      .get('supportedAbis') as List?;
-
-                                  if (abis == null) {
-                                    final DeviceInfoPlugin deviceInfo =
-                                        DeviceInfoPlugin();
-                                    final AndroidDeviceInfo androidDeviceInfo =
-                                        await deviceInfo.androidInfo;
-                                    abis = androidDeviceInfo.supportedAbis;
-                                    await Hive.box('settings')
-                                        .put('supportedAbis', abis);
-                                  }
-                                  ShowSnackBar().showSnackBar(
-                                    context,
-                                    AppLocalizations.of(context)!
-                                        .updateAvailable,
-                                    duration: const Duration(seconds: 15),
-                                    action: SnackBarAction(
-                                      textColor: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      label:
-                                          AppLocalizations.of(context)!.update,
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        if (abis!.contains('arm64-v8a')) {
-                                          launch(value['arm64-v8a'] as String);
-                                        } else {
-                                          if (abis.contains('armeabi-v7a')) {
-                                            launch(
-                                              value['armeabi-v7a'] as String,
-                                            );
-                                          } else {
-                                            launch(
-                                              value['universal'] as String,
-                                            );
-                                          }
-                                        }
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  ShowSnackBar().showSnackBar(
-                                    context,
-                                    AppLocalizations.of(
-                                      context,
-                                    )!
-                                        .latest,
-                                  );
-                                }
-                              },
-                            );
-                          },
-                          trailing: Text(
-                            'v$appVersion',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                          dense: true,
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .shareApp,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .shareAppSub,
-                          ),
-                          onTap: () {
-                            Share.share(
-                              '${AppLocalizations.of(
-                                context,
-                              )!.shareAppText}: https://github.com/Sangwan5688/BlackHole',
-                            );
-                          },
-                          dense: true,
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .likedWork,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .buyCoffee,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            launch('https://www.buymeacoffee.com/ankitsangwan');
-                          },
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .donateGpay,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .donateGpaySub,
-                          ),
-                          dense: true,
-                          isThreeLine: true,
-                          onTap: () {
-                            const String upiUrl =
-                                'upi://pay?pa=8570094149@okbizaxis&pn=BlackHole&mc=5732&aid=uGICAgIDn98OpSw&tr=BCR2DN6T37O6DB3Q';
-                            launch(upiUrl);
-                          },
-                          onLongPress: () {
-                            copyToClipboard(
-                              context: context,
-                              text: 'ankit.sangwan.5688@oksbi',
-                              displayText: AppLocalizations.of(
-                                context,
-                              )!
-                                  .upiCopied,
-                            );
-                          },
-                          trailing: TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.grey[700],
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const Dialog(
-                                    elevation: 10,
-                                    backgroundColor: Colors.transparent,
-                                    child: Image(
-                                      image: AssetImage('assets/gpayQR.png'),
-                                    ),
-                                  );
-                                },
-                              );
+                          InkWell(
+                            onTap: () async {
+                              await launch(
+                                  'https://www.yogi-tunes.com/terms-conditions');
                             },
                             child: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!
-                                  .showQr,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                              'Terms & Condition',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryVariant,
                               ),
                             ),
                           ),
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .contactUs,
+                          const SizedBox(
+                            height: 5,
                           ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .contactUsSub,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  height: 100,
-                                  child: GradientContainer(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                MdiIcons.gmail,
-                                              ),
-                                              iconSize: 40,
-                                              tooltip: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .gmail,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                launch(
-                                                  'https://mail.google.com/mail/?extsrc=mailto&url=mailto%3A%3Fto%3Dblackholeyoucantescape%40gmail.com%26subject%3DRegarding%2520Mobile%2520App',
-                                                );
-                                              },
-                                            ),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .gmail,
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                MdiIcons.facebookGaming,
-                                              ),
-                                              iconSize: 40,
-                                              tooltip: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tg,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                launch(
-                                                  'https://t.me/joinchat/fHDC1AWnOhw0ZmI9',
-                                                );
-                                              },
-                                            ),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tg,
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                MdiIcons.instagram,
-                                              ),
-                                              iconSize: 40,
-                                              tooltip: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .insta,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                launch(
-                                                  'https://instagram.com/sangwan5688',
-                                                );
-                                              },
-                                            ),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .insta,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .joinTg,
-                          ),
-                          subtitle: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .joinTgSub,
-                          ),
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  height: 100,
-                                  child: GradientContainer(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                MdiIcons.facebookGaming,
-                                              ),
-                                              iconSize: 40,
-                                              tooltip: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tgGp,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                launch(
-                                                  'https://t.me/joinchat/fHDC1AWnOhw0ZmI9',
-                                                );
-                                              },
-                                            ),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tgGp,
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                MdiIcons.facebookGaming,
-                                              ),
-                                              iconSize: 40,
-                                              tooltip: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tgCh,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                launch(
-                                                  'https://t.me/blackhole_official',
-                                                );
-                                              },
-                                            ),
-                                            Text(
-                                              AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .tgCh,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          dense: true,
-                        ),
-                        ListTile(
-                          title: Text(
-                            AppLocalizations.of(
-                              context,
-                            )!
-                                .moreInfo,
-                          ),
-                          dense: true,
-                          onTap: () {
-                            Navigator.pushNamed(context, '/about');
-                          },
-                        ),
-                      ],
+                          InkWell(
+                            onTap: () async {
+                              await launch(
+                                  'https://www.yogi-tunes.com/privacy-policy');
+                            },
+                            child: Text(
+                              'Privacy Policy',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryVariant,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    5,
-                    30,
-                    5,
-                    20,
-                  ),
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(
-                        context,
-                      )!
-                          .madeBy,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
+                const SizedBox(
+                  height: 30,
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .ui,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDominant,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDominantSub,
+                //           ),
+                //           keyName: 'useImageColor',
+                //           defaultValue: true,
+                //           isThreeLine: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDominantFullScreen,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDominantFullScreenSub,
+                //           ),
+                //           keyName: 'useFullScreenGradient',
+                //           defaultValue: false,
+                //           isThreeLine: false,
+                //         ),
+
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDenseMini,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDenseMiniSub,
+                //           ),
+                //           keyName: 'useDenseMini',
+                //           defaultValue: false,
+                //           isThreeLine: false,
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .miniButtons,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .miniButtonsSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             showDialog(
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 final List checked =
+                //                     List.from(preferredMiniButtons);
+                //                 final List<String> order =
+                //                     List.from(miniButtonsOrder);
+                //                 return StatefulBuilder(
+                //                   builder: (
+                //                     BuildContext context,
+                //                     StateSetter setStt,
+                //                   ) {
+                //                     return AlertDialog(
+                //                       shape: RoundedRectangleBorder(
+                //                         borderRadius: BorderRadius.circular(
+                //                           15.0,
+                //                         ),
+                //                       ),
+                //                       content: SizedBox(
+                //                         width: 500,
+                //                         child: ReorderableListView(
+                //                           physics:
+                //                               const BouncingScrollPhysics(),
+                //                           shrinkWrap: true,
+                //                           padding: const EdgeInsets.fromLTRB(
+                //                             0,
+                //                             10,
+                //                             0,
+                //                             10,
+                //                           ),
+                //                           onReorder:
+                //                               (int oldIndex, int newIndex) {
+                //                             if (oldIndex < newIndex) {
+                //                               newIndex--;
+                //                             }
+                //                             final temp = order.removeAt(
+                //                               oldIndex,
+                //                             );
+                //                             order.insert(newIndex, temp);
+                //                             setStt(
+                //                               () {},
+                //                             );
+                //                           },
+                //                           header: Center(
+                //                             child: Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .changeOrder,
+                //                             ),
+                //                           ),
+                //                           children: order.map((e) {
+                //                             return CheckboxListTile(
+                //                               key: Key(e),
+                //                               dense: true,
+                //                               activeColor: Theme.of(context)
+                //                                   .colorScheme
+                //                                   .secondary,
+                //                               checkColor: Theme.of(context)
+                //                                           .colorScheme
+                //                                           .secondary ==
+                //                                       Colors.white
+                //                                   ? Colors.black
+                //                                   : null,
+                //                               value: checked.contains(e),
+                //                               title: Text(e),
+                //                               onChanged: (bool? value) {
+                //                                 setStt(
+                //                                   () {
+                //                                     value!
+                //                                         ? checked.add(e)
+                //                                         : checked.remove(e);
+                //                                   },
+                //                                 );
+                //                               },
+                //                             );
+                //                           }).toList(),
+                //                         ),
+                //                       ),
+                //                       actions: [
+                //                         TextButton(
+                //                           style: TextButton.styleFrom(
+                //                             primary:
+                //                                 Theme.of(context).brightness ==
+                //                                         Brightness.dark
+                //                                     ? Colors.white
+                //                                     : Colors.grey[700],
+                //                           ),
+                //                           onPressed: () {
+                //                             Navigator.pop(context);
+                //                           },
+                //                           child: Text(
+                //                             AppLocalizations.of(
+                //                               context,
+                //                             )!
+                //                                 .cancel,
+                //                           ),
+                //                         ),
+                //                         TextButton(
+                //                           style: TextButton.styleFrom(
+                //                             primary: Theme.of(context)
+                //                                         .colorScheme
+                //                                         .secondary ==
+                //                                     Colors.white
+                //                                 ? Colors.black
+                //                                 : null,
+                //                             backgroundColor: Theme.of(context)
+                //                                 .colorScheme
+                //                                 .secondary,
+                //                           ),
+                //                           onPressed: () {
+                //                             setState(
+                //                               () {
+                //                                 final List temp = [];
+                //                                 for (int i = 0;
+                //                                     i < order.length;
+                //                                     i++) {
+                //                                   if (checked
+                //                                       .contains(order[i])) {
+                //                                     temp.add(order[i]);
+                //                                   }
+                //                                 }
+                //                                 preferredMiniButtons = temp;
+                //                                 miniButtonsOrder = order;
+                //                                 Navigator.pop(context);
+                //                                 Hive.box('settings').put(
+                //                                   'preferredMiniButtons',
+                //                                   preferredMiniButtons,
+                //                                 );
+                //                                 Hive.box('settings').put(
+                //                                   'miniButtonsOrder',
+                //                                   order,
+                //                                 );
+                //                               },
+                //                             );
+                //                           },
+                //                           child: Text(
+                //                             AppLocalizations.of(
+                //                               context,
+                //                             )!
+                //                                 .ok,
+                //                           ),
+                //                         ),
+                //                         const SizedBox(
+                //                           width: 5,
+                //                         ),
+                //                       ],
+                //                     );
+                //                   },
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .blacklistedHomeSections,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .blacklistedHomeSectionsSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             final GlobalKey<AnimatedListState> _listKey =
+                //                 GlobalKey<AnimatedListState>();
+                //             showModalBottomSheet(
+                //               isDismissible: true,
+                //               backgroundColor: Colors.transparent,
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 return BottomGradientContainer(
+                //                   borderRadius: BorderRadius.circular(
+                //                     20.0,
+                //                   ),
+                //                   child: AnimatedList(
+                //                     physics: const BouncingScrollPhysics(),
+                //                     shrinkWrap: true,
+                //                     padding: const EdgeInsets.fromLTRB(
+                //                       0,
+                //                       10,
+                //                       0,
+                //                       10,
+                //                     ),
+                //                     key: _listKey,
+                //                     initialItemCount:
+                //                         blacklistedHomeSections.length + 1,
+                //                     itemBuilder: (cntxt, idx, animation) {
+                //                       return (idx == 0)
+                //                           ? ListTile(
+                //                               title: Text(
+                //                                 AppLocalizations.of(context)!
+                //                                     .addNew,
+                //                               ),
+                //                               leading: const Icon(
+                //                                 CupertinoIcons.add,
+                //                               ),
+                //                               onTap: () async {
+                //                                 showTextInputDialog(
+                //                                   context: context,
+                //                                   title: AppLocalizations.of(
+                //                                     context,
+                //                                   )!
+                //                                       .enterText,
+                //                                   keyboardType:
+                //                                       TextInputType.text,
+                //                                   onSubmitted: (String value) {
+                //                                     Navigator.pop(context);
+                //                                     blacklistedHomeSections.add(
+                //                                       value
+                //                                           .trim()
+                //                                           .toLowerCase(),
+                //                                     );
+                //                                     Hive.box('settings').put(
+                //                                       'blacklistedHomeSections',
+                //                                       blacklistedHomeSections,
+                //                                     );
+                //                                     _listKey.currentState!
+                //                                         .insertItem(
+                //                                       blacklistedHomeSections
+                //                                           .length,
+                //                                     );
+                //                                   },
+                //                                 );
+                //                               },
+                //                             )
+                //                           : SizeTransition(
+                //                               sizeFactor: animation,
+                //                               child: ListTile(
+                //                                 leading: const Icon(
+                //                                   CupertinoIcons.folder,
+                //                                 ),
+                //                                 title: Text(
+                //                                   blacklistedHomeSections[
+                //                                           idx - 1]
+                //                                       .toString(),
+                //                                 ),
+                //                                 trailing: IconButton(
+                //                                   icon: const Icon(
+                //                                     CupertinoIcons.clear,
+                //                                     size: 15.0,
+                //                                   ),
+                //                                   tooltip: 'Remove',
+                //                                   onPressed: () {
+                //                                     blacklistedHomeSections
+                //                                         .removeAt(idx - 1);
+                //                                     Hive.box('settings').put(
+                //                                       'blacklistedHomeSections',
+                //                                       blacklistedHomeSections,
+                //                                     );
+                //                                     _listKey.currentState!
+                //                                         .removeItem(
+                //                                       idx,
+                //                                       (
+                //                                         context,
+                //                                         animation,
+                //                                       ) =>
+                //                                           Container(),
+                //                                     );
+                //                                   },
+                //                                 ),
+                //                               ),
+                //                             );
+                //                     },
+                //                   ),
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .showLast,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .showLastSub,
+                //           ),
+                //           keyName: 'showRecent',
+                //           defaultValue: true,
+                //           onChanged: (val, box) {
+                //             widget.callback!();
+                //           },
+                //         ),
+                //         // BoxSwitchTile(
+                //         //   title: Text(
+                //         //     AppLocalizations.of(
+                //         //       context,
+                //         //     )!
+                //         //         .showHistory,
+                //         //   ),
+                //         //   subtitle: Text(
+                //         //     AppLocalizations.of(
+                //         //       context,
+                //         //     )!
+                //         //         .showHistorySub,
+                //         //   ),
+                //         //   keyName: 'showHistory',
+                //         //   defaultValue: true,
+                //         // ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .enableGesture,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .enableGestureSub,
+                //           ),
+                //           keyName: 'enableGesture',
+                //           defaultValue: true,
+                //           isThreeLine: true,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .musicPlayback,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .musicLang,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .musicLangSub,
+                //           ),
+                //           trailing: SizedBox(
+                //             width: 150,
+                //             child: Text(
+                //               preferredLanguage.isEmpty
+                //                   ? 'None'
+                //                   : preferredLanguage.join(', '),
+                //               maxLines: 2,
+                //               overflow: TextOverflow.ellipsis,
+                //               textAlign: TextAlign.end,
+                //             ),
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             showModalBottomSheet(
+                //               isDismissible: true,
+                //               backgroundColor: Colors.transparent,
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 final List checked =
+                //                     List.from(preferredLanguage);
+                //                 return StatefulBuilder(
+                //                   builder: (
+                //                     BuildContext context,
+                //                     StateSetter setStt,
+                //                   ) {
+                //                     return BottomGradientContainer(
+                //                       borderRadius: BorderRadius.circular(
+                //                         20.0,
+                //                       ),
+                //                       child: Column(
+                //                         children: [
+                //                           Expanded(
+                //                             child: ListView.builder(
+                //                               physics:
+                //                                   const BouncingScrollPhysics(),
+                //                               shrinkWrap: true,
+                //                               padding:
+                //                                   const EdgeInsets.fromLTRB(
+                //                                 0,
+                //                                 10,
+                //                                 0,
+                //                                 10,
+                //                               ),
+                //                               itemCount: languages.length,
+                //                               itemBuilder: (context, idx) {
+                //                                 return CheckboxListTile(
+                //                                   activeColor: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                   checkColor: Theme.of(context)
+                //                                               .colorScheme
+                //                                               .secondary ==
+                //                                           Colors.white
+                //                                       ? Colors.black
+                //                                       : null,
+                //                                   value: checked.contains(
+                //                                     languages[idx],
+                //                                   ),
+                //                                   title: Text(
+                //                                     languages[idx],
+                //                                   ),
+                //                                   onChanged: (bool? value) {
+                //                                     value!
+                //                                         ? checked
+                //                                             .add(languages[idx])
+                //                                         : checked.remove(
+                //                                             languages[idx],
+                //                                           );
+                //                                     setStt(
+                //                                       () {},
+                //                                     );
+                //                                   },
+                //                                 );
+                //                               },
+                //                             ),
+                //                           ),
+                //                           Row(
+                //                             mainAxisAlignment:
+                //                                 MainAxisAlignment.end,
+                //                             children: [
+                //                               TextButton(
+                //                                 style: TextButton.styleFrom(
+                //                                   primary: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                 ),
+                //                                 onPressed: () {
+                //                                   Navigator.pop(context);
+                //                                 },
+                //                                 child: Text(
+                //                                   AppLocalizations.of(
+                //                                     context,
+                //                                   )!
+                //                                       .cancel,
+                //                                 ),
+                //                               ),
+                //                               TextButton(
+                //                                 style: TextButton.styleFrom(
+                //                                   primary: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                 ),
+                //                                 onPressed: () {
+                //                                   setState(
+                //                                     () {
+                //                                       preferredLanguage =
+                //                                           checked;
+                //                                       Navigator.pop(context);
+                //                                       Hive.box('settings').put(
+                //                                         'preferredLanguage',
+                //                                         checked,
+                //                                       );
+                //                                       home_screen.fetched =
+                //                                           false;
+                //                                       home_screen
+                //                                               .preferredLanguage =
+                //                                           preferredLanguage;
+                //                                       widget.callback!();
+                //                                     },
+                //                                   );
+                //                                   if (preferredLanguage
+                //                                       .isEmpty) {
+                //                                     ShowSnackBar().showSnackBar(
+                //                                       context,
+                //                                       AppLocalizations.of(
+                //                                         context,
+                //                                       )!
+                //                                           .noLangSelected,
+                //                                     );
+                //                                   }
+                //                                 },
+                //                                 child: Text(
+                //                                   AppLocalizations.of(
+                //                                     context,
+                //                                   )!
+                //                                       .ok,
+                //                                   style: const TextStyle(
+                //                                     fontWeight: FontWeight.w600,
+                //                                   ),
+                //                                 ),
+                //                               ),
+                //                             ],
+                //                           ),
+                //                         ],
+                //                       ),
+                //                     );
+                //                   },
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .chartLocation,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .chartLocationSub,
+                //           ),
+                //           trailing: SizedBox(
+                //             width: 150,
+                //             child: Text(
+                //               region,
+                //               textAlign: TextAlign.end,
+                //             ),
+                //           ),
+                //           dense: true,
+                //           onTap: () async {
+                //             region = await SpotifyCountry()
+                //                 .changeCountry(context: context);
+                //             setState(
+                //               () {},
+                //             );
+                //           },
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .streamQuality,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .streamQualitySub,
+                //           ),
+                //           onTap: () {},
+                //           trailing: DropdownButton(
+                //             value: streamingQuality,
+                //             style: TextStyle(
+                //               fontSize: 12,
+                //               color:
+                //                   Theme.of(context).textTheme.bodyText1!.color,
+                //             ),
+                //             underline: const SizedBox(),
+                //             onChanged: (String? newValue) {
+                //               if (newValue != null) {
+                //                 setState(
+                //                   () {
+                //                     streamingQuality = newValue;
+                //                     Hive.box('settings')
+                //                         .put('streamingQuality', newValue);
+                //                   },
+                //                 );
+                //               }
+                //             },
+                //             items: <String>['96 kbps', '160 kbps', '320 kbps']
+                //                 .map<DropdownMenuItem<String>>((String value) {
+                //               return DropdownMenuItem<String>(
+                //                 value: value,
+                //                 child: Text(value),
+                //               );
+                //             }).toList(),
+                //           ),
+                //           dense: true,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .loadLast,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .loadLastSub,
+                //           ),
+                //           keyName: 'loadStart',
+                //           defaultValue: true,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .enforceRepeat,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .enforceRepeatSub,
+                //           ),
+                //           keyName: 'enforceRepeat',
+                //           defaultValue: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .autoplay,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .autoplaySub,
+                //           ),
+                //           keyName: 'autoplay',
+                //           defaultValue: true,
+                //           isThreeLine: true,
+                //         ),
+                //         // BoxSwitchTile(
+                //         //   title: Text(
+                //         //     AppLocalizations.of(
+                //         //       context,
+                //         //     )!
+                //         //         .cacheSong,
+                //         //   ),
+                //         //   subtitle: Text(
+                //         //     AppLocalizations.of(
+                //         //       context,
+                //         //     )!
+                //         //         .cacheSongSub,
+                //         //   ),
+                //         //   keyName: 'cacheSong',
+                //         //   defaultValue: false,
+                //         // ),
+                //         //     ListTile(
+                //         //         title: const Text('BlackList Location'),
+                //         //         subtitle: const Text(
+                //         //             'Locations blacklisted from "My Music" section'),
+                //         //         dense: true,
+                //         //         onTap: () {
+                //         //           final GlobalKey<AnimatedListState> _listKey =
+                //         //               GlobalKey<AnimatedListState>();
+                //         //           showModalBottomSheet(
+                //         //               isDismissible: true,
+                //         //               backgroundColor: Colors.transparent,
+                //         //               context: context,
+                //         //               builder: (BuildContext context) {
+                //         //                 return BottomGradientContainer(
+                //         //                   borderRadius: BorderRadius.circular(20.0,),
+                //         //                   child: AnimatedList(
+                //         //                     physics: const BouncingScrollPhysics(),
+                //         //                     shrinkWrap: true,
+                //         //                     padding: const EdgeInsets.fromLTRB(
+                //         //                         0, 10, 0, 10,),
+                //         //                     key: _listKey,
+                //         //                     initialItemCount: dirPaths.length + 1,
+                //         //                     itemBuilder: (cntxt, idx, animation) {
+                //         //                       return (idx == 0)
+                //         //                           ? ListTile(
+                //         //                               title:
+                //         //                                   const Text('Add Location'),
+                //         //                               leading: const Icon(
+                //         //                                   CupertinoIcons.add,),
+                //         //                               onTap: () async {
+                //         //                                 final String temp =
+                //         //                                     await Picker()
+                //         //                                         .selectFolder(context,
+                //         //                                             'Select Folder');
+                //         //                                 if (temp.trim() != '' &&
+                //         //                                     !dirPaths
+                //         //                                         .contains(temp)) {
+                //         //                                   dirPaths.add(temp);
+                //         //                                   Hive.box('settings').put(
+                //         //                                       'blacklistedPaths',
+                //         //                                       dirPaths);
+                //         //                                   _listKey.currentState!
+                //         //                                       .insertItem(
+                //         //                                           dirPaths.length);
+                //         //                                 } else {
+                //         //                                   if (temp.trim() == '') {
+                //         //                                     Navigator.pop(context);
+                //         //                                   }
+                //         //                                   ShowSnackBar().showSnackBar(
+                //         //                                     context,
+                //         //                                     temp.trim() == ''
+                //         //                                         ? 'No folder selected'
+                //         //                                         : 'Already added',
+                //         //                                   );
+                //         //                                 }
+                //         //                               },
+                //         //                             )
+                //         //                           : SizeTransition(
+                //         //                               sizeFactor: animation,
+                //         //                               child: ListTile(
+                //         //                                 leading: const Icon(
+                //         //                                     CupertinoIcons.folder,),
+                //         //                                 title: Text(dirPaths[idx - 1]
+                //         //                                     .toString(),),
+                //         //                                 trailing: IconButton(
+                //         //                                   icon: const Icon(
+                //         //                                     CupertinoIcons.clear,
+                //         //                                     size: 15.0,
+                //         //                                   ),
+                //         //                                   tooltip: 'Remove',
+                //         //                                   onPressed: () {
+                //         //                                     dirPaths
+                //         //                                         .removeAt(idx - 1);
+                //         //                                     Hive.box('settings').put(
+                //         //                                         'blacklistedPaths',
+                //         //                                         dirPaths);
+                //         //                                     _listKey.currentState!
+                //         //                                         .removeItem(
+                //         //                                             idx,
+                //         //                                             (context,
+                //         //                                                     animation) =>
+                //         //                                                 Container());
+                //         //                                   },
+                //         //                                 ),
+                //         //                               ),
+                //         //                             );
+                //         //                     },
+                //         //                   ),
+                //         //                 );
+                //         //               },);
+                //         //         })
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .down,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .downQuality,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .downQualitySub,
+                //           ),
+                //           onTap: () {},
+                //           trailing: DropdownButton(
+                //             value: downloadQuality,
+                //             style: TextStyle(
+                //               fontSize: 12,
+                //               color:
+                //                   Theme.of(context).textTheme.bodyText1!.color,
+                //             ),
+                //             underline: const SizedBox(),
+                //             onChanged: (String? newValue) {
+                //               if (newValue != null) {
+                //                 setState(
+                //                   () {
+                //                     downloadQuality = newValue;
+                //                     Hive.box('settings')
+                //                         .put('downloadQuality', newValue);
+                //                   },
+                //                 );
+                //               }
+                //             },
+                //             items: <String>['96 kbps', '160 kbps', '320 kbps']
+                //                 .map<DropdownMenuItem<String>>((String value) {
+                //               return DropdownMenuItem<String>(
+                //                 value: value,
+                //                 child: Text(
+                //                   value,
+                //                 ),
+                //               );
+                //             }).toList(),
+                //           ),
+                //           dense: true,
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .downLocation,
+                //           ),
+                //           subtitle: Text(downloadPath),
+                //           trailing: TextButton(
+                //             style: TextButton.styleFrom(
+                //               primary: Theme.of(context).brightness ==
+                //                       Brightness.dark
+                //                   ? Colors.white
+                //                   : Colors.grey[700],
+                //             ),
+                //             onPressed: () async {
+                //               downloadPath =
+                //                   await ExtStorageProvider.getExtStorage(
+                //                         dirName: 'Music',
+                //                       ) ??
+                //                       '/storage/emulated/0/Music';
+                //               Hive.box('settings')
+                //                   .put('downloadPath', downloadPath);
+                //               setState(
+                //                 () {},
+                //               );
+                //             },
+                //             child: Text(
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .reset,
+                //             ),
+                //           ),
+                //           onTap: () async {
+                //             final String temp = await Picker.selectFolder(
+                //               context,
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .selectDownLocation,
+                //             );
+                //             if (temp.trim() != '') {
+                //               downloadPath = temp;
+                //               Hive.box('settings').put('downloadPath', temp);
+                //               setState(
+                //                 () {},
+                //               );
+                //             } else {
+                //               ShowSnackBar().showSnackBar(
+                //                 context,
+                //                 AppLocalizations.of(
+                //                   context,
+                //                 )!
+                //                     .noFolderSelected,
+                //               );
+                //             }
+                //           },
+                //           dense: true,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createAlbumFold,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createAlbumFoldSub,
+                //           ),
+                //           keyName: 'createDownloadFolder',
+                //           isThreeLine: true,
+                //           defaultValue: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createYtFold,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createYtFoldSub,
+                //           ),
+                //           keyName: 'createYoutubeFolder',
+                //           isThreeLine: true,
+                //           defaultValue: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .downLyrics,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .downLyricsSub,
+                //           ),
+                //           keyName: 'downloadLyrics',
+                //           defaultValue: false,
+                //           isThreeLine: true,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .others,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .lang,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .langSub,
+                //           ),
+                //           onTap: () {},
+                //           trailing: DropdownButton(
+                //             value: lang,
+                //             style: TextStyle(
+                //               fontSize: 12,
+                //               color:
+                //                   Theme.of(context).textTheme.bodyText1!.color,
+                //             ),
+                //             underline: const SizedBox(),
+                //             onChanged: (String? newValue) {
+                //               final Map<String, String> codes = {
+                //                 'English': 'en',
+                //                 'Russian': 'ru',
+                //                 'Portuguese': 'pt',
+                //                 'Indonesia': 'id',
+                //                 'French': 'fr',
+                //               };
+                //               if (newValue != null) {
+                //                 setState(
+                //                   () {
+                //                     lang = newValue;
+                //                     MyApp.of(context).setLocale(
+                //                       Locale.fromSubtags(
+                //                         languageCode: codes[newValue]!,
+                //                       ),
+                //                     );
+                //                     Hive.box('settings').put('lang', newValue);
+                //                   },
+                //                 );
+                //               }
+                //             },
+                //             items: <String>[
+                //               'English',
+                //               'Russian',
+                //               'Portuguese',
+                //               'Indonesia',
+                //               'French',
+                //             ].map<DropdownMenuItem<String>>((String value) {
+                //               return DropdownMenuItem<String>(
+                //                 value: value,
+                //                 child: Text(
+                //                   value,
+                //                 ),
+                //               );
+                //             }).toList(),
+                //           ),
+                //           dense: true,
+                //         ),
+
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .minAudioLen,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .minAudioLenSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             showTextInputDialog(
+                //               context: context,
+                //               title: AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .minAudioAlert,
+                //               initialText: (Hive.box('settings')
+                //                           .get('minDuration', defaultValue: 10)
+                //                       as int)
+                //                   .toString(),
+                //               keyboardType: TextInputType.number,
+                //               onSubmitted: (String value) {
+                //                 if (value.trim() == '') {
+                //                   value = '0';
+                //                 }
+                //                 Hive.box('settings')
+                //                     .put('minDuration', int.parse(value));
+                //                 Navigator.pop(context);
+                //               },
+                //             );
+                //           },
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .liveSearch,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .liveSearchSub,
+                //           ),
+                //           keyName: 'liveSearch',
+                //           isThreeLine: false,
+                //           defaultValue: true,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDown,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useDownSub,
+                //           ),
+                //           keyName: 'useDown',
+                //           isThreeLine: true,
+                //           defaultValue: true,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .supportEq,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .supportEqSub,
+                //           ),
+                //           keyName: 'supportEq',
+                //           isThreeLine: true,
+                //           defaultValue: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .stopOnClose,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .stopOnCloseSub,
+                //           ),
+                //           isThreeLine: true,
+                //           keyName: 'stopForegroundService',
+                //           defaultValue: true,
+                //         ),
+                //         // const BoxSwitchTile(
+                //         //   title: Text('Remove Service from foreground when paused'),
+                //         //   subtitle: Text(
+                //         //       "If turned on, you can slide notification when paused to stop the service. But Service can also be stopped by android to release memory. If you don't want android to stop service while paused, turn it off\nDefault: On\n"),
+                //         //   isThreeLine: true,
+                //         //   keyName: 'stopServiceOnPause',
+                //         //   defaultValue: true,
+                //         // ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .checkUpdate,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .checkUpdateSub,
+                //           ),
+                //           keyName: 'checkUpdate',
+                //           isThreeLine: true,
+                //           defaultValue: false,
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useProxy,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .useProxySub,
+                //           ),
+                //           keyName: 'useProxy',
+                //           defaultValue: false,
+                //           isThreeLine: true,
+                //           onChanged: (bool val, Box box) {
+                //             useProxy = val;
+                //             setState(
+                //               () {},
+                //             );
+                //           },
+                //         ),
+                //         Visibility(
+                //           visible: useProxy,
+                //           child: ListTile(
+                //             title: Text(
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .proxySet,
+                //             ),
+                //             subtitle: Text(
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .proxySetSub,
+                //             ),
+                //             dense: true,
+                //             trailing: Text(
+                //               '${Hive.box('settings').get("proxyIp")}:${Hive.box('settings').get("proxyPort")}',
+                //               style: const TextStyle(fontSize: 12),
+                //             ),
+                //             onTap: () {
+                //               showDialog(
+                //                 context: context,
+                //                 builder: (BuildContext context) {
+                //                   final _controller = TextEditingController(
+                //                     text: settingsBox.get('proxyIp').toString(),
+                //                   );
+                //                   final _controller2 = TextEditingController(
+                //                     text:
+                //                         settingsBox.get('proxyPort').toString(),
+                //                   );
+                //                   return AlertDialog(
+                //                     shape: RoundedRectangleBorder(
+                //                       borderRadius: BorderRadius.circular(
+                //                         10.0,
+                //                       ),
+                //                     ),
+                //                     content: Column(
+                //                       mainAxisSize: MainAxisSize.min,
+                //                       children: [
+                //                         Row(
+                //                           children: [
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .ipAdd,
+                //                               style: TextStyle(
+                //                                 color: Theme.of(context)
+                //                                     .colorScheme
+                //                                     .secondary,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         TextField(
+                //                           autofocus: true,
+                //                           controller: _controller,
+                //                         ),
+                //                         const SizedBox(
+                //                           height: 30,
+                //                         ),
+                //                         Row(
+                //                           children: [
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .port,
+                //                               style: TextStyle(
+                //                                 color: Theme.of(context)
+                //                                     .colorScheme
+                //                                     .secondary,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         TextField(
+                //                           autofocus: true,
+                //                           controller: _controller2,
+                //                         ),
+                //                       ],
+                //                     ),
+                //                     actions: [
+                //                       TextButton(
+                //                         style: TextButton.styleFrom(
+                //                           primary:
+                //                               Theme.of(context).brightness ==
+                //                                       Brightness.dark
+                //                                   ? Colors.white
+                //                                   : Colors.grey[700],
+                //                         ),
+                //                         onPressed: () {
+                //                           Navigator.pop(context);
+                //                         },
+                //                         child: Text(
+                //                           AppLocalizations.of(
+                //                             context,
+                //                           )!
+                //                               .cancel,
+                //                         ),
+                //                       ),
+                //                       TextButton(
+                //                         style: TextButton.styleFrom(
+                //                           primary: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary ==
+                //                                   Colors.white
+                //                               ? Colors.black
+                //                               : null,
+                //                           backgroundColor: Theme.of(context)
+                //                               .colorScheme
+                //                               .secondary,
+                //                         ),
+                //                         onPressed: () {
+                //                           settingsBox.put(
+                //                             'proxyIp',
+                //                             _controller.text.trim(),
+                //                           );
+                //                           settingsBox.put(
+                //                             'proxyPort',
+                //                             int.parse(
+                //                               _controller2.text.trim(),
+                //                             ),
+                //                           );
+                //                           Navigator.pop(context);
+                //                           setState(
+                //                             () {},
+                //                           );
+                //                         },
+                //                         child: Text(
+                //                           AppLocalizations.of(
+                //                             context,
+                //                           )!
+                //                               .ok,
+                //                         ),
+                //                       ),
+                //                       const SizedBox(
+                //                         width: 5,
+                //                       ),
+                //                     ],
+                //                   );
+                //                 },
+                //               );
+                //             },
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .clearCache,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .clearCacheSub,
+                //           ),
+                //           trailing: SizedBox(
+                //             height: 70.0,
+                //             width: 70.0,
+                //             child: Center(
+                //               child: FutureBuilder(
+                //                 future: File(Hive.box('cache').path!).length(),
+                //                 builder: (
+                //                   BuildContext context,
+                //                   AsyncSnapshot<int> snapshot,
+                //                 ) {
+                //                   if (snapshot.connectionState ==
+                //                       ConnectionState.done) {
+                //                     return Text(
+                //                       '${((snapshot.data ?? 0) / (1024 * 1024)).toStringAsFixed(2)} MB',
+                //                     );
+                //                   }
+                //                   return const Text('');
+                //                 },
+                //               ),
+                //             ),
+                //           ),
+                //           dense: true,
+                //           isThreeLine: true,
+                //           onTap: () async {
+                //             Hive.box('cache').clear();
+                //             setState(
+                //               () {},
+                //             );
+                //           },
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .backNRest,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createBack,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .createBackSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             showModalBottomSheet(
+                //               isDismissible: true,
+                //               backgroundColor: Colors.transparent,
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 final List playlistNames =
+                //                     Hive.box('settings').get(
+                //                   'playlistNames',
+                //                   defaultValue: ['Favorite Songs'],
+                //                 ) as List;
+                //                 if (!playlistNames.contains('Favorite Songs')) {
+                //                   playlistNames.insert(0, 'Favorite Songs');
+                //                   settingsBox.put(
+                //                     'playlistNames',
+                //                     playlistNames,
+                //                   );
+                //                 }
+
+                //                 final List<String> persist = [
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .settings,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .playlists,
+                //                 ];
+
+                //                 final List<String> checked = [
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .settings,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .downs,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .playlists,
+                //                 ];
+
+                //                 final List<String> items = [
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .settings,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .playlists,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .downs,
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .cache,
+                //                 ];
+
+                //                 final Map<String, List> boxNames = {
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .settings: ['settings'],
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .cache: ['cache'],
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .downs: ['downloads'],
+                //                   AppLocalizations.of(
+                //                     context,
+                //                   )!
+                //                       .playlists: playlistNames,
+                //                 };
+                //                 return StatefulBuilder(
+                //                   builder: (
+                //                     BuildContext context,
+                //                     StateSetter setStt,
+                //                   ) {
+                //                     return BottomGradientContainer(
+                //                       borderRadius: BorderRadius.circular(
+                //                         20.0,
+                //                       ),
+                //                       child: Column(
+                //                         children: [
+                //                           Expanded(
+                //                             child: ListView.builder(
+                //                               physics:
+                //                                   const BouncingScrollPhysics(),
+                //                               shrinkWrap: true,
+                //                               padding:
+                //                                   const EdgeInsets.fromLTRB(
+                //                                 0,
+                //                                 10,
+                //                                 0,
+                //                                 10,
+                //                               ),
+                //                               itemCount: items.length,
+                //                               itemBuilder: (context, idx) {
+                //                                 return CheckboxListTile(
+                //                                   activeColor: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                   checkColor: Theme.of(context)
+                //                                               .colorScheme
+                //                                               .secondary ==
+                //                                           Colors.white
+                //                                       ? Colors.black
+                //                                       : null,
+                //                                   value: checked.contains(
+                //                                     items[idx],
+                //                                   ),
+                //                                   title: Text(
+                //                                     items[idx],
+                //                                   ),
+                //                                   onChanged: persist
+                //                                           .contains(items[idx])
+                //                                       ? null
+                //                                       : (bool? value) {
+                //                                           value!
+                //                                               ? checked.add(
+                //                                                   items[idx],
+                //                                                 )
+                //                                               : checked.remove(
+                //                                                   items[idx],
+                //                                                 );
+                //                                           setStt(
+                //                                             () {},
+                //                                           );
+                //                                         },
+                //                                 );
+                //                               },
+                //                             ),
+                //                           ),
+                //                           Row(
+                //                             mainAxisAlignment:
+                //                                 MainAxisAlignment.end,
+                //                             children: [
+                //                               TextButton(
+                //                                 style: TextButton.styleFrom(
+                //                                   primary: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                 ),
+                //                                 onPressed: () {
+                //                                   Navigator.pop(context);
+                //                                 },
+                //                                 child: Text(
+                //                                   AppLocalizations.of(
+                //                                     context,
+                //                                   )!
+                //                                       .cancel,
+                //                                 ),
+                //                               ),
+                //                               TextButton(
+                //                                 style: TextButton.styleFrom(
+                //                                   primary: Theme.of(context)
+                //                                       .colorScheme
+                //                                       .secondary,
+                //                                 ),
+                //                                 onPressed: () {
+                //                                   createBackup(
+                //                                     context,
+                //                                     checked,
+                //                                     boxNames,
+                //                                   );
+                //                                   Navigator.pop(context);
+                //                                 },
+                //                                 child: Text(
+                //                                   AppLocalizations.of(
+                //                                     context,
+                //                                   )!
+                //                                       .ok,
+                //                                   style: const TextStyle(
+                //                                     fontWeight: FontWeight.w600,
+                //                                   ),
+                //                                 ),
+                //                               ),
+                //                             ],
+                //                           ),
+                //                         ],
+                //                       ),
+                //                     );
+                //                   },
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .restore,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .restoreSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () async {
+                //             await restore(context);
+                //             currentTheme.refresh();
+                //           },
+                //         ),
+                //         BoxSwitchTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .autoBack,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .autoBackSub,
+                //           ),
+                //           keyName: 'autoBackup',
+                //           defaultValue: false,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.fromLTRB(
+                //             15,
+                //             15,
+                //             15,
+                //             0,
+                //           ),
+                //           child: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .about,
+                //             style: TextStyle(
+                //               fontSize: 22,
+                //               fontWeight: FontWeight.bold,
+                //               color: Theme.of(context).colorScheme.secondary,
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .version,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .versionSub,
+                //           ),
+                //           onTap: () {
+                //             ShowSnackBar().showSnackBar(
+                //               context,
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .checkingUpdate,
+                //               noAction: true,
+                //             );
+
+                //             SupaBase().getUpdate().then(
+                //               (Map value) async {
+                //                 if (compareVersion(
+                //                   value['LatestVersion'].toString(),
+                //                   appVersion!,
+                //                 )) {
+                //                   List? abis = await Hive.box('settings')
+                //                       .get('supportedAbis') as List?;
+
+                //                   if (abis == null) {
+                //                     final DeviceInfoPlugin deviceInfo =
+                //                         DeviceInfoPlugin();
+                //                     final AndroidDeviceInfo androidDeviceInfo =
+                //                         await deviceInfo.androidInfo;
+                //                     abis = androidDeviceInfo.supportedAbis;
+                //                     await Hive.box('settings')
+                //                         .put('supportedAbis', abis);
+                //                   }
+                //                   ShowSnackBar().showSnackBar(
+                //                     context,
+                //                     AppLocalizations.of(context)!
+                //                         .updateAvailable,
+                //                     duration: const Duration(seconds: 15),
+                //                     action: SnackBarAction(
+                //                       textColor: Theme.of(context)
+                //                           .colorScheme
+                //                           .secondary,
+                //                       label:
+                //                           AppLocalizations.of(context)!.update,
+                //                       onPressed: () {
+                //                         Navigator.pop(context);
+                //                         if (abis!.contains('arm64-v8a')) {
+                //                           launch(value['arm64-v8a'] as String);
+                //                         } else {
+                //                           if (abis.contains('armeabi-v7a')) {
+                //                             launch(
+                //                               value['armeabi-v7a'] as String,
+                //                             );
+                //                           } else {
+                //                             launch(
+                //                               value['universal'] as String,
+                //                             );
+                //                           }
+                //                         }
+                //                       },
+                //                     ),
+                //                   );
+                //                 } else {
+                //                   ShowSnackBar().showSnackBar(
+                //                     context,
+                //                     AppLocalizations.of(
+                //                       context,
+                //                     )!
+                //                         .latest,
+                //                   );
+                //                 }
+                //               },
+                //             );
+                //           },
+                //           trailing: Text(
+                //             'v$appVersion',
+                //             style: const TextStyle(fontSize: 12),
+                //           ),
+                //           dense: true,
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .shareApp,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .shareAppSub,
+                //           ),
+                //           onTap: () {
+                //             Share.share(
+                //               '${AppLocalizations.of(
+                //                 context,
+                //               )!.shareAppText}: https://github.com/Sangwan5688/BlackHole',
+                //             );
+                //           },
+                //           dense: true,
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .likedWork,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .buyCoffee,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             launch('https://www.buymeacoffee.com/ankitsangwan');
+                //           },
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .donateGpay,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .donateGpaySub,
+                //           ),
+                //           dense: true,
+                //           isThreeLine: true,
+                //           onTap: () {
+                //             const String upiUrl =
+                //                 'upi://pay?pa=8570094149@okbizaxis&pn=BlackHole&mc=5732&aid=uGICAgIDn98OpSw&tr=BCR2DN6T37O6DB3Q';
+                //             launch(upiUrl);
+                //           },
+                //           onLongPress: () {
+                //             copyToClipboard(
+                //               context: context,
+                //               text: 'ankit.sangwan.5688@oksbi',
+                //               displayText: AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .upiCopied,
+                //             );
+                //           },
+                //           trailing: TextButton(
+                //             style: TextButton.styleFrom(
+                //               primary: Theme.of(context).brightness ==
+                //                       Brightness.dark
+                //                   ? Colors.white
+                //                   : Colors.grey[700],
+                //             ),
+                //             onPressed: () {
+                //               showDialog(
+                //                 context: context,
+                //                 builder: (BuildContext context) {
+                //                   return const Dialog(
+                //                     elevation: 10,
+                //                     backgroundColor: Colors.transparent,
+                //                     child: Image(
+                //                       image: AssetImage('assets/gpayQR.png'),
+                //                     ),
+                //                   );
+                //                 },
+                //               );
+                //             },
+                //             child: Text(
+                //               AppLocalizations.of(
+                //                 context,
+                //               )!
+                //                   .showQr,
+                //               style: const TextStyle(
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .contactUs,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .contactUsSub,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             showModalBottomSheet(
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 return SizedBox(
+                //                   height: 100,
+                //                   child: GradientContainer(
+                //                     child: Row(
+                //                       mainAxisAlignment:
+                //                           MainAxisAlignment.spaceEvenly,
+                //                       children: [
+                //                         Column(
+                //                           mainAxisSize: MainAxisSize.min,
+                //                           children: [
+                //                             IconButton(
+                //                               icon: const Icon(
+                //                                 MdiIcons.gmail,
+                //                               ),
+                //                               iconSize: 40,
+                //                               tooltip: AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .gmail,
+                //                               onPressed: () {
+                //                                 Navigator.pop(context);
+                //                                 launch(
+                //                                   'https://mail.google.com/mail/?extsrc=mailto&url=mailto%3A%3Fto%3Dblackholeyoucantescape%40gmail.com%26subject%3DRegarding%2520Mobile%2520App',
+                //                                 );
+                //                               },
+                //                             ),
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .gmail,
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         Column(
+                //                           mainAxisSize: MainAxisSize.min,
+                //                           children: [
+                //                             IconButton(
+                //                               icon: const Icon(
+                //                                 MdiIcons.facebookGaming,
+                //                               ),
+                //                               iconSize: 40,
+                //                               tooltip: AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tg,
+                //                               onPressed: () {
+                //                                 Navigator.pop(context);
+                //                                 launch(
+                //                                   'https://t.me/joinchat/fHDC1AWnOhw0ZmI9',
+                //                                 );
+                //                               },
+                //                             ),
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tg,
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         Column(
+                //                           mainAxisSize: MainAxisSize.min,
+                //                           children: [
+                //                             IconButton(
+                //                               icon: const Icon(
+                //                                 MdiIcons.instagram,
+                //                               ),
+                //                               iconSize: 40,
+                //                               tooltip: AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .insta,
+                //                               onPressed: () {
+                //                                 Navigator.pop(context);
+                //                                 launch(
+                //                                   'https://instagram.com/sangwan5688',
+                //                                 );
+                //                               },
+                //                             ),
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .insta,
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 );
+                //               },
+                //             );
+                //           },
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .joinTg,
+                //           ),
+                //           subtitle: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .joinTgSub,
+                //           ),
+                //           onTap: () {
+                //             showModalBottomSheet(
+                //               context: context,
+                //               builder: (BuildContext context) {
+                //                 return SizedBox(
+                //                   height: 100,
+                //                   child: GradientContainer(
+                //                     child: Row(
+                //                       mainAxisAlignment:
+                //                           MainAxisAlignment.spaceEvenly,
+                //                       children: [
+                //                         Column(
+                //                           mainAxisSize: MainAxisSize.min,
+                //                           children: [
+                //                             IconButton(
+                //                               icon: const Icon(
+                //                                 MdiIcons.facebookGaming,
+                //                               ),
+                //                               iconSize: 40,
+                //                               tooltip: AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tgGp,
+                //                               onPressed: () {
+                //                                 Navigator.pop(context);
+                //                                 launch(
+                //                                   'https://t.me/joinchat/fHDC1AWnOhw0ZmI9',
+                //                                 );
+                //                               },
+                //                             ),
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tgGp,
+                //                             ),
+                //                           ],
+                //                         ),
+                //                         Column(
+                //                           mainAxisSize: MainAxisSize.min,
+                //                           children: [
+                //                             IconButton(
+                //                               icon: const Icon(
+                //                                 MdiIcons.facebookGaming,
+                //                               ),
+                //                               iconSize: 40,
+                //                               tooltip: AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tgCh,
+                //                               onPressed: () {
+                //                                 Navigator.pop(context);
+                //                                 launch(
+                //                                   'https://t.me/blackhole_official',
+                //                                 );
+                //                               },
+                //                             ),
+                //                             Text(
+                //                               AppLocalizations.of(
+                //                                 context,
+                //                               )!
+                //                                   .tgCh,
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 );
+                //               },
+                //             );
+                //           },
+                //           dense: true,
+                //         ),
+                //         ListTile(
+                //           title: Text(
+                //             AppLocalizations.of(
+                //               context,
+                //             )!
+                //                 .moreInfo,
+                //           ),
+                //           dense: true,
+                //           onTap: () {
+                //             Navigator.pushNamed(context, '/about');
+                //           },
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     5,
+                //     30,
+                //     5,
+                //     20,
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       AppLocalizations.of(
+                //         context,
+                //       )!
+                //           .madeBy,
+                //       style: const TextStyle(fontSize: 12),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
