@@ -499,6 +499,8 @@ class FormatResponse {
 
   static Future<PlayListResponse.PlaylistResponse?> formatYogiPlaylistData(
       PlayListResponse.PlaylistResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     PlayListResponse.PlaylistResponse? mainRes;
     try {
       final PlayListResponse.PlaylistResponse? res = playlistRes;
@@ -558,8 +560,10 @@ class FormatResponse {
                       subtitle: trackonly.album!.profile!.name,
                       album: albumName,
                       image: imageUrl,
-                      url: trackonly
-                          .files![trackonly.files!.length - 1].trackUrl,
+                      url: isHighQualityStreming
+                          ? trackonly
+                              .files![trackonly.files!.length - 1].trackUrl
+                          : trackonly.files![0].trackUrl,
                       artist: artistName,
                       duration: mDur,
                     ),
@@ -587,6 +591,8 @@ class FormatResponse {
 
   static Future<SingleAlbumResponse?> formatYogiSingleALbumData(
       SingleAlbumResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     SingleAlbumResponse? mainRes;
     try {
       final SingleAlbumResponse? res = playlistRes;
@@ -642,7 +648,9 @@ class FormatResponse {
                     album: albumName,
                     albumId: res.data!.id.toString(),
                     image: imageUrl,
-                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                    url: isHighQualityStreming
+                        ? trackonly.files![trackonly.files!.length - 1].trackUrl
+                        : trackonly.files![0].trackUrl,
                     artist: artistName,
                     duration: mDur,
                   ),
@@ -671,6 +679,8 @@ class FormatResponse {
   static Future<SinglePlaylistResponse.SinglePlaylistResponse?>
       formatYogiSinglePlaylistData(
           SinglePlaylistResponse.SinglePlaylistResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     SinglePlaylistResponse.SinglePlaylistResponse? mainRes;
     try {
       final SinglePlaylistResponse.SinglePlaylistResponse? res = playlistRes;
@@ -737,7 +747,9 @@ class FormatResponse {
                     album: albumName,
                     albumId: albumId,
                     image: imageUrl,
-                    url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                    url: isHighQualityStreming
+                        ? trackonly.files![trackonly.files!.length - 1].trackUrl
+                        : trackonly.files![0].trackUrl,
                     artist: artistName,
                     duration: mDur,
                   ),
@@ -765,6 +777,8 @@ class FormatResponse {
 
   static Future<TrendingSongResponse?> formatYogiTrendingSongData(
       TrendingSongResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     TrendingSongResponse? mainRes;
     try {
       final TrendingSongResponse? res = playlistRes;
@@ -822,7 +836,9 @@ class FormatResponse {
                   album: albumName,
                   albumId: albumId,
                   image: imageUrl,
-                  url: trackonly.files![trackonly.files!.length - 1].trackUrl,
+                  url: isHighQualityStreming
+                      ? trackonly.files![trackonly.files!.length - 1].trackUrl
+                      : trackonly.files![0].trackUrl,
                   artist: artistName,
                   duration: mDur,
                 );
@@ -851,6 +867,8 @@ class FormatResponse {
 
   static Future<HomeResponse?> formatHomePageData(
       HomeResponse? homeResponse) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     try {
       final HomeResponse res = homeResponse!;
       List<SongItemModel> songList = [];
@@ -897,8 +915,10 @@ class FormatResponse {
                 title: item.name,
                 album: albumName,
                 image: imageUrl,
-                url: item.tracks![0].files![item.tracks![0].files!.length - 1]
-                    .trackUrl,
+                url: isHighQualityStreming
+                    ? item.tracks![0].files![item.tracks![0].files!.length - 1]
+                        .trackUrl
+                    : item.tracks![0].files![0].trackUrl,
                 artist: artistName,
                 duration: mDur,
               ),
@@ -917,6 +937,8 @@ class FormatResponse {
 
   static Future<RadioStationsStreamResponse?> formatYogiRadioStationStreamData(
       RadioStationsStreamResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
     RadioStationsStreamResponse? mainRes;
     try {
       final RadioStationsStreamResponse? res = playlistRes;
