@@ -45,7 +45,7 @@ dependencies:
   supabase: ^0.2.9
   url_launcher: ^6.0.15
   uuid: ^3.0.5
-  in_app_purchase: ^2.0.1
+  flutter_inapp_purchase: ^5.1.2
   youtube_explode_dart: ^1.10.8
 
 dev_dependencies:

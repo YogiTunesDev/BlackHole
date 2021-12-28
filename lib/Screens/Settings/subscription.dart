@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({Key? key}) : super(key: key);
@@ -13,14 +13,18 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   bool isLoading = false;
-  late List<ProductDetails> products;
+  late List<IAPItem> products;
   late StreamSubscription<dynamic> _subscription;
 
   @override
   void initState() {
     fetchDate();
-
+    asyncInitState();
     super.initState();
+  }
+
+  void asyncInitState() async {
+    await FlutterInappPurchase.instance.initialize();
   }
 
   Future<void> fetchDate() async {
@@ -28,41 +32,53 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       isLoading = true;
     });
 
-    final Stream purchaseUpdated = InAppPurchase.instance.purchaseStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(List<PurchaseDetails>.from(
-          List.from(purchaseDetailsList as Iterable<dynamic>)));
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
+    // final Stream purchaseUpdated = FlutterInappPurchase.instance.purchaseStream;
+    // _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+    //   _listenToPurchaseUpdated(List<PurchaseDetails>.from(
+    //       List.from(purchaseDetailsList as Iterable<dynamic>)));
+    // }, onDone: () {
+    //   _subscription.cancel();
+    // }, onError: (error) {
+    //   // handle error here.
+    // });
 
     ///=========
 
-    const Set<String> _kIds = <String>{
+    List<IAPItem> items = await FlutterInappPurchase.instance.getProducts([
       'teachermth',
-    };
-    final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(_kIds);
-    await Future.delayed(const Duration(seconds: 2));
-    if (response.notFoundIDs.isNotEmpty) {
-      // Handle the error.
-      print("Error ");
+    ]);
+    for (var item in items) {
+      products.add(item);
     }
-    products = response.productDetails;
-    if (products.isNotEmpty) {
-      print(products[0].price);
-    }
-    print("products :: " + products.length.toString());
+    // final ProductDetailsResponse response =
+    //     await InAppPurchase.instance.queryProductDetails(_kIds);
+    // await Future.delayed(const Duration(seconds: 2));
+    // if (response.notFoundIDs.isNotEmpty) {
+    //   // Handle the error.
+    //   print("Error ");
+    // }
+    // products = response.productDetails;
+    // if (products.isNotEmpty) {
+    //   print(products[0].price);
+    // }
+    // print("products :: " + products.length.toString());
+    StreamSubscription _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+    });
+
+    StreamSubscription _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+    });
     setState(() {
       isLoading = false;
     });
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
+  void dispose() async {
+    await FlutterInappPurchase.instance.finalize();
     super.dispose();
   }
 
@@ -87,7 +103,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       ),
                     ),
                     Text(
-                      products[0].price,
+                      products[0].originalPrice,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -96,11 +112,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     ),
                     InkWell(
                       onTap: () async {
-                        final PurchaseParam purchaseParam =
-                            PurchaseParam(productDetails: products[0]);
+                        FlutterInappPurchase.instance
+                            .requestPurchase(products[0].productId!);
+                        // final PurchaseParam purchaseParam =
+                        //     PurchaseParam(productDetails: products[0]);
 
-                        InAppPurchase.instance
-                            .buyNonConsumable(purchaseParam: purchaseParam);
+                        // InAppPurchase.instance
+                        //     .buyNonConsumable(purchaseParam: purchaseParam);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(12),
@@ -127,32 +145,32 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     );
   }
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        // _showPendingUI();
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          // _handleError(purchaseDetails.error!);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = await _verifyPurchase(purchaseDetails) as bool;
-          if (valid) {
-            // _deliverProduct(purchaseDetails);
-          } else {
-            // _handleInvalidPurchase(purchaseDetails);
-          }
-        }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
-        }
-      }
-    });
-  }
+  // void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+  //   purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+  //     if (purchaseDetails.status == PurchaseStatus.pending) {
+  //       // _showPendingUI();
+  //     } else {
+  //       if (purchaseDetails.status == PurchaseStatus.error) {
+  //         // _handleError(purchaseDetails.error!);
+  //       } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+  //           purchaseDetails.status == PurchaseStatus.restored) {
+  //         bool valid = await _verifyPurchase(purchaseDetails) as bool;
+  //         if (valid) {
+  //           // _deliverProduct(purchaseDetails);
+  //         } else {
+  //           // _handleInvalidPurchase(purchaseDetails);
+  //         }
+  //       }
+  //       if (purchaseDetails.pendingCompletePurchase) {
+  //         await InAppPurchase.instance.completePurchase(purchaseDetails);
+  //       }
+  //     }
+  //   });
+  // }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-    return Future<bool>.value(true);
-  }
+  // Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+  //   // IMPORTANT!! Always verify a purchase before delivering the product.
+  //   // For the purpose of an example, we directly return true.
+  //   return Future<bool>.value(true);
+  // }
 }
