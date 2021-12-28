@@ -3,6 +3,7 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/supabase.dart';
+import 'package:blackhole/Screens/splash_screen.dart';
 import 'package:blackhole/model/signup_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -362,8 +363,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                           );
                                           if (signupResponse != null) {
                                             if (signupResponse.status!) {
-                                              Navigator.popAndPushNamed(
-                                                  context, '/home');
+                                              redirectAfterAuthentication(
+                                                  context);
                                             } else {
                                               errorMessage = signupResponse.data
                                                   .toString();

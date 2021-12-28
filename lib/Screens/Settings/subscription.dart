@@ -36,9 +36,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     "· Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user's Account Settings after purchase.",
     '· Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.'
   ];
+  late Map<String, dynamic> argument;
+  bool isFirstTime = false;
   @override
   void initState() {
     asyncInitState();
+
     super.initState();
   }
 
@@ -63,9 +66,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
     ///=========
 
-    List<IAPItem> items = await FlutterInappPurchase.instance.getSubscriptions([
-      'teachermth',
-    ]);
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getSubscriptions(Platform.isIOS
+            ? ['com.yogitunes.subscription.monthly']
+            : [
+                'teachermth',
+              ]);
     print("items  ::  ${items}");
     for (final item in items) {
       products.add(item);
@@ -104,10 +110,21 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    argument =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    if (argument['isFirstTime'] is bool) {
+      final bool isFtime = argument['isFirstTime'] as bool;
+      if (isFtime) {
+        isFirstTime = isFtime;
+      }
+    }
     return SafeArea(
       child: GradientContainer(
         child: Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            leading: isFirstTime ? Container() : null,
+            title: Text("Subscription"),
+          ),
           body: isLoading
               ? const Center(
                   child: CircularProgressIndicator(),
