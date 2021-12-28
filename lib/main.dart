@@ -44,11 +44,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'Screens/splash_screen.dart';
+import 'Services/subscription_status.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +63,7 @@ Future<void> main() async {
   await openHiveBox('downloads');
   await openHiveBox('Favorite Songs');
   await openHiveBox('cache', limit: true);
+  FlutterInappPurchase.instance.initialize();
   if (Platform.isAndroid) {
     setOptimalDisplayMode();
   }
@@ -164,12 +169,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Widget initialFuntion() {
-    print(
-        " apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
-    return apiTokenBox.get('token') != null ? HomePage() : AuthScreen();
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -216,7 +215,7 @@ class _MyAppState extends State<MyApp> {
         Locale('fr', ''), // French
       ],
       routes: {
-        '/': (context) => initialFuntion(),
+        '/': (context) => SplashScreen(),
         '/login': (context) => const AuthScreen(),
         '/loginmain': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
@@ -225,6 +224,7 @@ class _MyAppState extends State<MyApp> {
             const ForgotPasswordVerificationScreen(),
         '/resetPassword': (context) => const ResetPasswordScreen(),
         '/home': (context) => HomePage(),
+        '/subscription': (context) => SubscriptionScreen(),
         '/pref': (context) => const PrefScreen(),
         '/setting': (context) => const SettingPage(),
         '/about': (context) => AboutScreen(),

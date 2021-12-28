@@ -11,6 +11,8 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
+import '../splash_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen();
   @override
@@ -288,8 +290,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                           if (loginResponse != null) {
                                             if (loginResponse.status!) {
-                                              Navigator.pushNamed(
-                                                  context, '/home');
+                                              redirectAfterAuthentication(
+                                                  context);
+                                              // Navigator.pushNamed(
+                                              //     context, '/home');
                                             } else {
                                               errorMessage =
                                                   loginResponse.data.toString();

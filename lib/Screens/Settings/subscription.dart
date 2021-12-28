@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   bool isLoading = false;
-  late List<ProductDetails> products;
+  List<IAPItem> products = [];
   late StreamSubscription<dynamic> _subscription;
   List<String> lstStr = [
     'A personal library for your favourite music Simple tools to create your own yoga playlist',
@@ -34,79 +36,106 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     "· Subscriptions may be managed by the user and auto-renewal may be turned off by going to the user's Account Settings after purchase.",
     '· Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.'
   ];
+  late Map<String, dynamic> argument;
+  bool isFirstTime = false;
   @override
   void initState() {
-    fetchDate();
+    asyncInitState();
 
     super.initState();
+  }
+
+  void asyncInitState() async {
+    await FlutterInappPurchase.instance.initialize();
+    fetchDate();
   }
 
   Future<void> fetchDate() async {
     setState(() {
       isLoading = true;
     });
-
-    final Stream purchaseUpdated = InAppPurchase.instance.purchaseStream;
-    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-      _listenToPurchaseUpdated(List<PurchaseDetails>.from(
-          List.from(purchaseDetailsList as Iterable<dynamic>)));
-    }, onDone: () {
-      _subscription.cancel();
-    }, onError: (error) {
-      // handle error here.
-    });
+    // final Stream purchaseUpdated = FlutterInappPurchase.instance.purchaseStream;
+    // _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+    //   _listenToPurchaseUpdated(List<PurchaseDetails>.from(
+    //       List.from(purchaseDetailsList as Iterable<dynamic>)));
+    // }, onDone: () {
+    //   _subscription.cancel();
+    // }, onError: (error) {
+    //   // handle error here.
+    // });
 
     ///=========
 
-    Set<String> _kIds;
-    if (Platform.isIOS) {
-      _kIds = <String>{
-        'com.yogitunes.subscription.monthly',
-      };
-    } else {
-      _kIds = <String>{
-        'teachermth',
-      };
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getSubscriptions(Platform.isIOS
+            ? ['com.yogitunes.subscription.monthly']
+            : [
+                'teachermth',
+              ]);
+    print("items  ::  ${items}");
+    for (final item in items) {
+      products.add(item);
     }
-    print('_kIds :: ${_kIds}');
-    final ProductDetailsResponse response =
-        await InAppPurchase.instance.queryProductDetails(_kIds);
-    await Future.delayed(const Duration(seconds: 2));
-    if (response.notFoundIDs.isNotEmpty) {
-      // Handle the error.
-      print('Error ');
-    }
-    products = response.productDetails;
-    if (products.isNotEmpty) {
-      print(products[0].price);
-    }
-    print('products :: ' + products.length.toString());
+    // final ProductDetailsResponse response =
+    //     await InAppPurchase.instance.queryProductDetails(_kIds);
+    // await Future.delayed(const Duration(seconds: 2));
+    // if (response.notFoundIDs.isNotEmpty) {
+    //   // Handle the error.
+    //   print("Error ");
+    // }
+    // products = response.productDetails;
+    // if (products.isNotEmpty) {
+    //   print(products[0].price);
+    // }
+    // print("products :: " + products.length.toString());
+    StreamSubscription _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+      print('purchase-updated: $productItem');
+    });
+
+    StreamSubscription _purchaseErrorSubscription =
+        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+      print('purchase-error: $purchaseError');
+    });
     setState(() {
       isLoading = false;
     });
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
+  void dispose() async {
+    await FlutterInappPurchase.instance.finalize();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final objargument = ModalRoute.of(context)!.settings.arguments;
+    if (objargument != null) {
+      argument = objargument as Map<String, dynamic>;
+      if (argument['isFirstTime'] is bool) {
+        final bool isFtime = argument['isFirstTime'] as bool;
+        if (isFtime) {
+          isFirstTime = isFtime;
+        }
+      }
+    }
     return SafeArea(
       child: GradientContainer(
         child: Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            leading: isFirstTime ? Container() : null,
+            title: Text("Subscription"),
+          ),
           body: isLoading
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
@@ -138,7 +167,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             );
                           },
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Divider(),
+                        SizedBox(
+                          height: 10,
+                        ),
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -150,29 +185,46 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                 lstDescription[index],
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  color: Colors.white,
                                 ),
                               ),
                             );
                           },
                         ),
+                        // if (products.isNotEmpty)
+                        //   Text(
+                        //     jsonDecode(products[0].originalJson!)['price']
+                        //         .toString(),
+                        //     style: TextStyle(
+                        //       fontSize: 22,
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Theme.of(context).colorScheme.secondary,
+                        //     ),
+                        //   ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         if (products.isNotEmpty)
                           Text(
-                            'You will be charges at ' + products[0].price,
+                            'You will be charges at ${jsonDecode(products[0].originalJson!)['price'].toString()}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         if (products.isNotEmpty)
                           InkWell(
                             onTap: () async {
-                              final PurchaseParam purchaseParam =
-                                  PurchaseParam(productDetails: products[0]);
+                              FlutterInappPurchase.instance
+                                  .requestPurchase(products[0].productId!);
+                              // final PurchaseParam purchaseParam =
+                              //     PurchaseParam(productDetails: products[0]);
 
-                              InAppPurchase.instance.buyNonConsumable(
-                                  purchaseParam: purchaseParam);
+                              // InAppPurchase.instance
+                              //     .buyNonConsumable(purchaseParam: purchaseParam);
                             },
                             child: Container(
                               padding: const EdgeInsets.all(12),
@@ -202,32 +254,32 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     );
   }
 
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        // _showPendingUI();
-      } else {
-        if (purchaseDetails.status == PurchaseStatus.error) {
-          // _handleError(purchaseDetails.error!);
-        } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-            purchaseDetails.status == PurchaseStatus.restored) {
-          bool valid = await _verifyPurchase(purchaseDetails) as bool;
-          if (valid) {
-            // _deliverProduct(purchaseDetails);
-          } else {
-            // _handleInvalidPurchase(purchaseDetails);
-          }
-        }
-        if (purchaseDetails.pendingCompletePurchase) {
-          await InAppPurchase.instance.completePurchase(purchaseDetails);
-        }
-      }
-    });
-  }
+  // void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+  //   purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+  //     if (purchaseDetails.status == PurchaseStatus.pending) {
+  //       // _showPendingUI();
+  //     } else {
+  //       if (purchaseDetails.status == PurchaseStatus.error) {
+  //         // _handleError(purchaseDetails.error!);
+  //       } else if (purchaseDetails.status == PurchaseStatus.purchased ||
+  //           purchaseDetails.status == PurchaseStatus.restored) {
+  //         bool valid = await _verifyPurchase(purchaseDetails) as bool;
+  //         if (valid) {
+  //           // _deliverProduct(purchaseDetails);
+  //         } else {
+  //           // _handleInvalidPurchase(purchaseDetails);
+  //         }
+  //       }
+  //       if (purchaseDetails.pendingCompletePurchase) {
+  //         await InAppPurchase.instance.completePurchase(purchaseDetails);
+  //       }
+  //     }
+  //   });
+  // }
 
-  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
-    // IMPORTANT!! Always verify a purchase before delivering the product.
-    // For the purpose of an example, we directly return true.
-    return Future<bool>.value(true);
-  }
+  // Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) {
+  //   // IMPORTANT!! Always verify a purchase before delivering the product.
+  //   // For the purpose of an example, we directly return true.
+  //   return Future<bool>.value(true);
+  // }
 }
