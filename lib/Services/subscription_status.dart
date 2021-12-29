@@ -12,20 +12,26 @@ class SubscriptionStatus {
       Duration grace = const Duration(days: 0)]) async {
     if (Platform.isIOS) {
       final history = await FlutterInappPurchase.instance.getPurchaseHistory();
-
-      for (var purchase in history!) {
-        Duration difference =
-            DateTime.now().difference(purchase.transactionDate!);
-        if (difference.inMinutes <= (duration + grace).inMinutes &&
-            purchase.productId == sku) return true;
+      print("history :: ${history}");
+      if (history != null) {
+        for (var purchase in history) {
+          print("history  --> :: ${purchase}");
+          print("purchase.transactionDate :: ${purchase.transactionDate}");
+          Duration difference =
+              DateTime.now().difference(purchase.transactionDate!);
+          if (difference.inMinutes <= (duration + grace).inMinutes &&
+              purchase.productId == sku) return true;
+        }
       }
       return false;
     } else if (Platform.isAndroid) {
-      var purchases =
+      List<PurchasedItem>? purchases =
           await FlutterInappPurchase.instance.getAvailablePurchases();
-
-      for (var purchase in purchases!) {
-        if (purchase.productId == sku) return true;
+      print("purchases :: ${purchases}");
+      if (purchases != null) {
+        for (var purchase in purchases) {
+          if (purchase.productId == sku) return true;
+        }
       }
       return false;
     }

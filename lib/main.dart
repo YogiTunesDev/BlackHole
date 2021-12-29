@@ -94,6 +94,7 @@ Future<void> startService() async {
   final AudioPlayerHandler audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandlerImpl(),
     config: AudioServiceConfig(
+      
       androidNotificationChannelId: 'com.shadow.blackhole.channel.audio',
       androidNotificationChannelName: 'BlackHole',
       androidNotificationOngoing: true,

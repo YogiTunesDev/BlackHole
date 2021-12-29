@@ -610,46 +610,46 @@ class _PlayScreenState extends State<PlayScreen> {
                                       ],
                                     ),
                                   ),
-                                PopupMenuItem(
-                                  value: 3,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        MdiIcons.youtube,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      Text(
-                                        mediaItem.genre == 'YouTube'
-                                            ? AppLocalizations.of(
-                                                context,
-                                              )!
-                                                .watchVideo
-                                            : AppLocalizations.of(
-                                                context,
-                                              )!
-                                                .searchVideo,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 10,
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.info_rounded,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      Text(
-                                        AppLocalizations.of(context)!.songInfo,
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                // PopupMenuItem(
+                                //   value: 3,
+                                //   child: Row(
+                                //     children: [
+                                //       Icon(
+                                //         MdiIcons.youtube,
+                                //         color:
+                                //             Theme.of(context).iconTheme.color,
+                                //       ),
+                                //       const SizedBox(width: 10.0),
+                                //       Text(
+                                //         mediaItem.genre == 'YouTube'
+                                //             ? AppLocalizations.of(
+                                //                 context,
+                                //               )!
+                                //                 .watchVideo
+                                //             : AppLocalizations.of(
+                                //                 context,
+                                //               )!
+                                //                 .searchVideo,
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                // PopupMenuItem(
+                                //   value: 10,
+                                //   child: Row(
+                                //     children: [
+                                //       Icon(
+                                //         Icons.info_rounded,
+                                //         color:
+                                //             Theme.of(context).iconTheme.color,
+                                //       ),
+                                //       const SizedBox(width: 10.0),
+                                //       Text(
+                                //         AppLocalizations.of(context)!.songInfo,
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                       )
                     ],
@@ -1157,9 +1157,9 @@ class NowPlayingStream extends StatelessWidget {
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                LikeButton(
-                                  mediaItem: queue[index],
-                                ),
+                                // LikeButton(
+                                //   mediaItem: queue[index],
+                                // ),
                                 DownloadButton(
                                   icon: 'download',
                                   size: 25.0,
@@ -1876,7 +1876,7 @@ class NameNControls extends StatelessWidget {
                           );
                         },
                       ),
-                      if (!offline) LikeButton(mediaItem: mediaItem, size: 25.0)
+                      // if (!offline) LikeButton(mediaItem: mediaItem, size: 25.0)
                     ],
                   ),
                   ControlButtons(audioHandler),

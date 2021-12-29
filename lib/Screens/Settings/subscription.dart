@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+
+import '../splash_screen.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({Key? key}) : super(key: key);
@@ -68,9 +71,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
     List<IAPItem> items =
         await FlutterInappPurchase.instance.getSubscriptions(Platform.isIOS
-            ? ['com.yogitunes.subscription.monthly']
+            ? [iosInAppPackage,]
             : [
-                'teachermth',
+                androidInAppPackage,
               ]);
     print("items  ::  ${items}");
     for (final item in items) {
@@ -91,6 +94,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     StreamSubscription _purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) {
       print('purchase-updated: $productItem');
+      redirectAfterAuthentication(context);
     });
 
     StreamSubscription _purchaseErrorSubscription =
@@ -205,7 +209,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         ),
                         if (products.isNotEmpty)
                           Text(
-                            'You will be charges at ${jsonDecode(products[0].originalJson!)['price'].toString()}',
+                            'You will be charges at ${products[0].localizedPrice.toString()}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

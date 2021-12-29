@@ -45,19 +45,19 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
             ],
           ),
         ),
-        PopupMenuItem(
-          value: 1,
-          child: Row(
-            children: [
-              Icon(
-                Icons.favorite_border_rounded,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              const SizedBox(width: 10.0),
-              Text(AppLocalizations.of(context)!.savePlaylist),
-            ],
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: 1,
+        //   child: Row(
+        //     children: [
+        //       Icon(
+        //         Icons.favorite_border_rounded,
+        //         color: Theme.of(context).iconTheme.color,
+        //       ),
+        //       const SizedBox(width: 10.0),
+        //       Text(AppLocalizations.of(context)!.savePlaylist),
+        //     ],
+        //   ),
+        // ),
       ],
       onSelected: (int? value) {
         if (value == 1) {

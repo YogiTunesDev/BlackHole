@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:blackhole/Services/subscription_status.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -30,20 +31,24 @@ class _SplashScreenState extends State<SplashScreen> {
 void redirectAfterAuthentication(BuildContext context) async {
   print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
   if (apiTokenBox.get('token') != null) {
-    // bool val = await SubscriptionStatus.subscriptionStatus(
-    //     Platform.isIOS ? 'com.yogitunes.subscription.monthly' : 'teachermth',
-    //     const Duration(days: 30),
-    //     const Duration(days: 0));
-    // if (val) {
-    Navigator.pushNamed(context, '/home');
-    // } else {
-    //   Navigator.pushNamed(context, '/subscription', arguments: {
-    //     'isFirstTime': true,
-    //   });
-    // }
+    bool val = await SubscriptionStatus.subscriptionStatus(
+        Platform.isIOS ? iosInAppPackage : androidInAppPackage,
+        const Duration(days: 30),
+        const Duration(days: 0));
+    if (val) {
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/subscription', (route) => false,
+          arguments: {
+            'isFirstTime': true,
+          });
+      // Navigator.pushNamed(context, '/subscription');
+    }
     // return HomePage();
   } else {
-    Navigator.pushNamed(context, '/login');
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    // Navigator.pushNamed(context, '/login');
     // return AuthScreen();
   }
 }

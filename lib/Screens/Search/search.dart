@@ -393,13 +393,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                   icon:
                                                                       'download',
                                                                 ),
-                                                                LikeButton(
-                                                                  mediaItem:
-                                                                      null,
-                                                                  data: value[
-                                                                          index]
-                                                                      as Map,
-                                                                ),
+                                                                // LikeButton(
+                                                                //   mediaItem:
+                                                                //       null,
+                                                                //   data: value[
+                                                                //           index]
+                                                                //       as Map,
+                                                                // ),
                                                                 // SongTileTrailingMenu(
                                                                 //   data: value[
                                                                 //           index]
