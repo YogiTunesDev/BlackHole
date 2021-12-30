@@ -12,6 +12,7 @@ import 'package:blackhole/model/forgot_password_verification_response.dart';
 import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/login_response.dart';
+import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/reset_password_response.dart';
@@ -20,6 +21,7 @@ import 'package:blackhole/model/search_all_artists_response.dart';
 import 'package:blackhole/model/search_all_playlists_response.dart';
 import 'package:blackhole/model/search_all_track_response.dart';
 import 'package:blackhole/model/search_response.dart';
+import 'package:blackhole/model/see_all_library_albums_response.dart';
 import 'package:blackhole/model/signup_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
@@ -59,6 +61,13 @@ class YogitunesAPI {
     'getSingleSong': 'browse/tracks',
     'getArtist': 'browse/artists',
     'recentSongsViewAll': 'browse/main/my-recently-played-songs',
+    'playlistAddToLibrary': 'my-library/playlists/add',
+    'albumAddToLibrary': 'my-library/albums/add',
+    'tracksAddToLibrary': 'my-library/tracks/add',
+    'seeAllTracksLibrary': 'my-library/tracks',
+    'seeAllPlaylistsLibrary': 'my-library/playlists',
+    'seeAllAlbumsLibrary': 'my-library/albums',
+    'seeAllArtistLibrary': 'my-library/artists'
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -802,6 +811,151 @@ class YogitunesAPI {
       }
     } catch (e) {
       log('Error in fetchPlaylistData: $e');
+    }
+    return result;
+  }
+
+  Future<String?> playlistAddToLibrary(int id, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['playlistAddToLibrary']}/$id";
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(context, 'Plylist added to library');
+          return data['data'].toString();
+        } else {
+          ShowSnackBar().showSnackBar(context, data['data'].toString());
+          return null;
+        }
+      }
+    } catch (e) {
+      ShowSnackBar().showSnackBar(context, e.toString());
+      log('Error in playlistAddToLibrary: $e');
+    }
+  }
+
+  Future<String?> albumAddToLibrary(int id, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['albumAddToLibrary']}/$id";
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(context, 'Album added to library');
+          return data['data'].toString();
+        } else {
+          ShowSnackBar().showSnackBar(context, data['data'].toString());
+          return null;
+        }
+      }
+    } catch (e) {
+      ShowSnackBar().showSnackBar(context, e.toString());
+      log('Error in albumAddToLibrary: $e');
+    }
+  }
+
+  Future<String?> trackAddToLibrary(int id, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['tracksAddToLibrary']}/$id";
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(context, 'Track added to library');
+          return data['data'].toString();
+        } else {
+          ShowSnackBar().showSnackBar(context, data['data'].toString());
+          return null;
+        }
+      }
+    } catch (e) {
+      ShowSnackBar().showSnackBar(context, e.toString());
+      log('Error in trackAddToLibrary: $e');
+    }
+  }
+
+  Future<SeeAllLibraryAlbumsResponse?> seeAllLibraryAlbum() async {
+    SeeAllLibraryAlbumsResponse? result;
+    try {
+      final res = await getResponse(endpoints['seeAllAlbumsLibrary']!);
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SeeAllLibraryAlbumsResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in seeAllLibraryAlbum: $e');
+    }
+    return result;
+  }
+
+  Future<SearchAllArtistsResponse?> seeAllLibraryArtist() async {
+    SearchAllArtistsResponse? result;
+    try {
+      final res = await getResponse(endpoints['seeAllArtistLibrary']!);
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = SearchAllArtistsResponse?.fromMap(
+          data as Map<String, dynamic>,
+        );
+      }
+    } catch (e) {
+      log('Error in seeAllLibraryArtist: $e');
+    }
+    return result;
+  }
+
+  Future<MyLibraryTrackResponse?> seeAllLibraryTracks(int pageNo) async {
+    MyLibraryTrackResponse? result;
+    try {
+      final res = await getResponse(
+          '${endpoints['seeAllTracksLibrary']!}?page=$pageNo');
+      print('Playlist ::::: ${res.statusCode}');
+      print('Playlist ::::: ${res.body}');
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = await FormatResponse.formatMyLibraryTrackSong(
+          MyLibraryTrackResponse?.fromMap(data as Map<String, dynamic>),
+        );
+      }
+    } catch (e) {
+      log('Error in seeAllLibraryArtist: $e');
     }
     return result;
   }

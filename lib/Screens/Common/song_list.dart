@@ -83,12 +83,9 @@ class _SongsListPageState extends State<SongsListPage> {
   }
 
   callback() {
-    print("FUNCTION CALLBACKa");
-
     setState(() {
       _fetchSongs();
     });
-    print("FUNCTION CALLBACK");
   }
 
   void _fetchSongs() async {
@@ -184,6 +181,8 @@ class _SongsListPageState extends State<SongsListPage> {
                         PlaylistPopupMenu(
                           data: songList,
                           title: widget.playlistName,
+                          songListType: widget.songListType,
+                          id:  widget.id!,
                           // widget.listItem['title']?.toString() ??
                           //     'Songs',
                         ),

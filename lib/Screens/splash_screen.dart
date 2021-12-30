@@ -31,20 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
 void redirectAfterAuthentication(BuildContext context) async {
   print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
   if (apiTokenBox.get('token') != null) {
-    bool val = await SubscriptionStatus.subscriptionStatus(
-        Platform.isIOS ? iosInAppPackage : androidInAppPackage,
-        const Duration(days: 30),
-        const Duration(days: 0));
-    if (val) {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-    } else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/subscription', (route) => false,
-          arguments: {
-            'isFirstTime': true,
-          });
-      // Navigator.pushNamed(context, '/subscription');
-    }
+    // bool val = await SubscriptionStatus.subscriptionStatus(
+    //     Platform.isIOS ? iosInAppPackage : androidInAppPackage,
+    //     const Duration(days: 30),
+    //     const Duration(days: 0));
+    // if (val) {
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    // } else {
+    //   Navigator.pushNamedAndRemoveUntil(
+    //       context, '/subscription', (route) => false,
+    //       arguments: {
+    //         'isFirstTime': true,
+    //       });
+    //   // Navigator.pushNamed(context, '/subscription');
+    // }
     // return HomePage();
   } else {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
