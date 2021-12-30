@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Library/liked.dart';
 import 'package:blackhole/Screens/LocalMusic/downed_songs.dart';
+import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -48,48 +50,103 @@ class _LibraryPageState extends State<LibraryPage> {
             },
           ),
         ),
+        // LibraryTile(
+        //   title: AppLocalizations.of(context)!.nowPlaying,
+        //   icon: Icons.queue_music_rounded,
+        //   onTap: () {
+        //     Navigator.pushNamed(context, '/nowplaying');
+        //   },
+        // ),
+        // LibraryTile(
+        //   title: AppLocalizations.of(context)!.lastSession,
+        //   icon: Icons.history_rounded,
+        //   onTap: () {
+        //     Navigator.pushNamed(context, '/recent');
+        //   },
+        // ),
+        // LibraryTile(
+        //   title: AppLocalizations.of(context)!.favorites,
+        //   icon: Icons.favorite_rounded,
+        //   onTap: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) =>
+        //             const LikedSongs(playlistName: 'Favorite Songs'),
+        //       ),
+        //     );
+        //   },
+        // ),
+        // if (Platform.isAndroid)
+        //   LibraryTile(
+        //     title: AppLocalizations.of(context)!.myMusic,
+        //     icon: MdiIcons.folderMusic,
+        //     onTap: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => const DownloadedSongs(
+        //             showPlaylists: true,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+
         LibraryTile(
-          title: AppLocalizations.of(context)!.nowPlaying,
-          icon: Icons.queue_music_rounded,
-          onTap: () {
-            Navigator.pushNamed(context, '/nowplaying');
-          },
-        ),
-        LibraryTile(
-          title: AppLocalizations.of(context)!.lastSession,
-          icon: Icons.history_rounded,
-          onTap: () {
-            Navigator.pushNamed(context, '/recent');
-          },
-        ),
-        LibraryTile(
-          title: AppLocalizations.of(context)!.favorites,
-          icon: Icons.favorite_rounded,
+          title: 'Album',
+          icon: Icons.album_rounded,
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    const LikedSongs(playlistName: 'Favorite Songs'),
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (_, __, ___) => const SearchViewAll(
+                  title: 'Albums',
+                  isFromLibrary: true,
+                  searchAllType: SearchAllType.albums,
+                ),
               ),
             );
+            // Navigator.pushNamed(context, '/nowplaying');
           },
         ),
-        if (Platform.isAndroid)
-          LibraryTile(
-            title: AppLocalizations.of(context)!.myMusic,
-            icon: MdiIcons.folderMusic,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DownloadedSongs(
-                    showPlaylists: true,
-                  ),
+        LibraryTile(
+          title: 'Track',
+          icon: Icons.music_note_rounded,
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (_, __, ___) => AlbumList(
+                  // albumListType: AlbumListType.popularSong,
+                  albumName: 'Tracks',
+                  isFromLibrary: true,
                 ),
-              );
-            },
-          ),
+              ),
+            );
+            // Navigator.pushNamed(context, '/nowplaying');
+          },
+        ),
+        LibraryTile(
+          title: 'Artist',
+          icon: Icons.person_rounded,
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (_, __, ___) => const SearchViewAll(
+                  title: 'Artists',
+                  isFromLibrary: true,
+                  searchAllType: SearchAllType.artists,
+                ),
+              ),
+            );
+            // Navigator.pushNamed(context, '/nowplaying');
+          },
+        ),
         LibraryTile(
           title: AppLocalizations.of(context)!.downs,
           icon: Icons.download_done_rounded,

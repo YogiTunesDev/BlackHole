@@ -122,6 +122,19 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         //   ),
         // ),
         PopupMenuItem(
+          value: 5,
+          child: Row(
+            children: [
+              Icon(
+                Icons.library_add_rounded,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              const SizedBox(width: 10.0),
+              Text('Add to library'),
+            ],
+          ),
+        ),
+        PopupMenuItem(
           value: 3,
           child: Row(
             children: [
@@ -157,6 +170,10 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         //     ),
         //   );
         // }
+        if (value == 5) {
+          await YogitunesAPI()
+              .trackAddToLibrary(int.parse(widget.data.id.toString()), context);
+        }
         if (value == 0) {
           if (widget.isMyPlaylist) {
             print(widget.selectedPlaylist);

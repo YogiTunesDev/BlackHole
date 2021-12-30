@@ -321,7 +321,7 @@ class _PlayScreenState extends State<PlayScreen> {
                             Radius.circular(15.0),
                           ),
                         ),
-                        onSelected: (int? value) {
+                        onSelected: (int? value) async {
                           if (value == 10) {
                             final Map details =
                                 MediaItemConverter.mediaItemtoMap(mediaItem);
@@ -397,11 +397,16 @@ class _PlayScreenState extends State<PlayScreen> {
                             );
                           }
                           if (value == 3) {
-                            launch(
-                              mediaItem.genre == 'YouTube'
-                                  ? 'https://youtube.com/watch?v=${mediaItem.id}'
-                                  : 'https://www.youtube.com/results?search_query=${mediaItem.title} by ${mediaItem.artist}',
-                            );
+                            await YogitunesAPI().trackAddToLibrary(
+                                int.parse(widget.songsList[widget.index].id
+                                    .toString()),
+                                context);
+
+                            // launch(
+                            //   mediaItem.genre == 'YouTube'
+                            //       ? 'https://youtube.com/watch?v=${mediaItem.id}'
+                            //       : 'https://www.youtube.com/results?search_query=${mediaItem.title} by ${mediaItem.artist}',
+                            // );
                           }
                           if (value == 1) {
                             showDialog(
@@ -589,6 +594,22 @@ class _PlayScreenState extends State<PlayScreen> {
                                     ],
                                   ),
                                 ),
+                                PopupMenuItem(
+                                  value: 3,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.library_add_rounded,
+                                        color:
+                                            Theme.of(context).iconTheme.color,
+                                      ),
+                                      const SizedBox(width: 10.0),
+                                     const Text(
+                                        'Add to library',
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 if (Hive.box('settings').get(
                                   'supportEq',
                                   defaultValue: false,
@@ -751,7 +772,7 @@ class _PlayScreenState extends State<PlayScreen> {
             );
             // );
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       ),

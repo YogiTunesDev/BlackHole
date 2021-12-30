@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/playlist_response.dart' as PlayListResponse;
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
@@ -14,6 +15,7 @@ import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/track_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:dart_des/dart_des.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -775,26 +777,23 @@ class FormatResponse {
     }
   }
 
-  static Future<TrendingSongResponse?> formatYogiTrendingSongData(
-      TrendingSongResponse? playlistRes) async {
+  static Future<MyLibraryTrackResponse?> formatMyLibraryTrackSong(
+      MyLibraryTrackResponse? myLibraryTrackres) async {
     bool isHighQualityStreming = Hive.box('settings')
         .get('highQualityStreming', defaultValue: false) as bool;
-    TrendingSongResponse? mainRes;
+    MyLibraryTrackResponse? mainRes;
     try {
-      final TrendingSongResponse? res = playlistRes;
+      final MyLibraryTrackResponse? res = myLibraryTrackres;
       if (res != null) {
         if (res.status!) {
           if (res.data != null) {
             // List<SongItemModel> songList = [];
             if (res.data!.data != null) {
-              List<SinglePlaylistResponse.Track> playListDataTemp =
-                  res.data!.data!;
+              List<MyLibraryTrack> playListDataTemp = res.data!.data!;
               for (var i = 0; i < playListDataTemp.length; i++) {
                 final SinglePlaylistResponse.Track trackonly =
-                    playListDataTemp[i];
-                final String imageUrl = trackonly.album!.cover != null
-                    ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
-                    : '';
+                    playListDataTemp[i].track!;
+                String imageUrl = '';
                 String? albumName;
                 String? albumId;
                 String? artistName;
@@ -809,6 +808,11 @@ class FormatResponse {
                       artistName = trackonly.album!.profile!.name;
                       artistId = trackonly.album!.profile!.id.toString();
                     }
+                  }
+                  if (trackonly.album!.cover != null) {
+                    imageUrl = trackonly.album!.cover != null
+                        ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
+                        : '';
                   }
                 }
                 int? mDur;
@@ -829,6 +833,14 @@ class FormatResponse {
                     ).inSeconds;
                   }
                 }
+                String fileUrl = '';
+                if (trackonly.files != null) {
+                  fileUrl = isHighQualityStreming
+                      ? trackonly.files![trackonly.files!.length - 1].trackUrl!
+                      : trackonly.files![0].trackUrl!;
+                }
+                String titlename = '';
+
                 final songItem = SongItemModel(
                   id: trackonly.id!.toString(),
                   title: trackonly.name,
@@ -836,9 +848,107 @@ class FormatResponse {
                   album: albumName,
                   albumId: albumId,
                   image: imageUrl,
-                  url: isHighQualityStreming
-                      ? trackonly.files![trackonly.files!.length - 1].trackUrl
-                      : trackonly.files![0].trackUrl,
+                  url: fileUrl,
+                  artist: artistName,
+                  duration: mDur,
+                );
+                playListDataTemp[i] =
+                    playListDataTemp[i].copyWith(songItemModel: songItem);
+              }
+              final MyLibraryTrackResponseData singleAlbumData =
+                  res.data!.copyWith(data: playListDataTemp);
+              final MyLibraryTrackResponse finalSingleAlbum =
+                  res.copyWith(data: singleAlbumData);
+              mainRes = finalSingleAlbum;
+            }
+          }
+        }
+      }
+    } catch (e, stack) {
+      log('Error in formatYogiPlaylistData: $e');
+      debugPrint(stack.toString());
+    }
+
+    if (mainRes == null) {
+      return myLibraryTrackres;
+    } else {
+      return mainRes;
+    }
+  }
+
+  static Future<TrendingSongResponse?> formatYogiTrendingSongData(
+      TrendingSongResponse? playlistRes) async {
+    bool isHighQualityStreming = Hive.box('settings')
+        .get('highQualityStreming', defaultValue: false) as bool;
+    TrendingSongResponse? mainRes;
+    try {
+      final TrendingSongResponse? res = playlistRes;
+      if (res != null) {
+        if (res.status!) {
+          if (res.data != null) {
+            // List<SongItemModel> songList = [];
+            if (res.data!.data != null) {
+              List<SinglePlaylistResponse.Track> playListDataTemp =
+                  res.data!.data!;
+              for (var i = 0; i < playListDataTemp.length; i++) {
+                final SinglePlaylistResponse.Track trackonly =
+                    playListDataTemp[i];
+                String imageUrl = '';
+                String? albumName;
+                String? albumId;
+                String? artistName;
+                String? artistId;
+                if (trackonly.album != null) {
+                  if (trackonly.album!.name != null) {
+                    albumName = trackonly.album!.name;
+                    albumId = trackonly.album!.id.toString();
+                  }
+                  if (trackonly.album!.profile != null) {
+                    if (trackonly.album!.profile!.name != null) {
+                      artistName = trackonly.album!.profile!.name;
+                      artistId = trackonly.album!.profile!.id.toString();
+                    }
+                  }
+                  if (trackonly.album!.cover != null) {
+                    imageUrl = trackonly.album!.cover != null
+                        ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
+                        : '';
+                  }
+                }
+                int? mDur;
+                if (trackonly.duration != null) {
+                  final String mDuration = trackonly.duration!;
+                  final List<String> lstTime = mDuration.split(':');
+                  if (lstTime.length == 3) {
+                    mDur = Duration(
+                      hours: int.parse(
+                        lstTime[0],
+                      ),
+                      minutes: int.parse(
+                        lstTime[1],
+                      ),
+                      seconds: int.parse(
+                        lstTime[2],
+                      ),
+                    ).inSeconds;
+                  }
+                }
+                String fileUrl = '';
+                if (trackonly.files != null) {
+                  fileUrl = isHighQualityStreming
+                      ? trackonly.files![trackonly.files!.length - 1].trackUrl!
+                      : trackonly.files![0].trackUrl!;
+                }
+                String titlename = '';
+
+                final songItem = SongItemModel(
+                  id: trackonly.id!.toString(),
+                  title: trackonly.name,
+                  subtitle: '', //subtitle,
+                  album: albumName,
+                  albumId: albumId,
+                  image: imageUrl,
+                  url: fileUrl,
                   artist: artistName,
                   duration: mDur,
                 );
@@ -854,8 +964,9 @@ class FormatResponse {
           }
         }
       }
-    } catch (e) {
+    } catch (e, stack) {
       log('Error in formatYogiPlaylistData: $e');
+      debugPrint(stack.toString());
     }
 
     if (mainRes == null) {

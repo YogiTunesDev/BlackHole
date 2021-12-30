@@ -10,6 +10,7 @@ import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/genres_response.dart';
 import 'package:blackhole/model/home_model.dart';
+import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
@@ -35,14 +36,18 @@ enum AlbumListType {
 enum MainType { album, playlist, genres, genresAlbum, song, track }
 
 class AlbumList extends StatefulWidget {
-  final AlbumListType albumListType;
+  final AlbumListType? albumListType;
   final String? albumName;
   final int? id;
+  final bool isLibrary;
+  final bool isFromLibrary;
   const AlbumList({
     Key? key,
-    required this.albumListType,
+    this.albumListType,
     required this.albumName,
     this.id,
+    this.isLibrary = false,
+    this.isFromLibrary = false,
   }) : super(key: key);
 
   @override
@@ -58,6 +63,8 @@ class _AlbumListState extends State<AlbumList> {
   bool isFinish = false;
   List<GenresData> lstGenresData = [];
   List<singlePlaylistResponse.Track> lstSongTrending = [];
+  List<MyLibraryTrack> seeAllTrackLibrary = [];
+
   List<MyRecentlyPlayedSong> lstRecentPlayedSong = [];
   final ScrollController _scrollController = ScrollController();
 
@@ -68,13 +75,52 @@ class _AlbumListState extends State<AlbumList> {
   void initState() {
     super.initState();
     pageNo = 1;
-    final String? finalUrl = getListUrl();
-    if (finalUrl == null) {
-      Navigator.pop(context);
+
+    if (widget.isFromLibrary) {
+      fatchData();
     } else {
-      getApiData();
+      final String? finalUrl = getListUrl();
+      if (finalUrl == null) {
+        Navigator.pop(context);
+      } else {
+        getApiData();
+      }
     }
     _scrollController.addListener(_listScrollListener);
+  }
+
+  void fatchData() async {
+    try {
+      apiLoading = true;
+      setState(() {});
+      final MyLibraryTrackResponse? playlistRes =
+          await YogitunesAPI().seeAllLibraryTracks(pageNo);
+      print("SONG ::::::::::::::::");
+      pageNo++;
+      if (playlistRes != null) {
+        if (playlistRes.status!) {
+          if (playlistRes.data != null) {
+            if (playlistRes.data!.data!.isNotEmpty) {
+              seeAllTrackLibrary.addAll(playlistRes.data!.data!);
+            } else {
+              isFinish = true;
+            }
+          } else {
+            isFinish = true;
+          }
+        } else {
+          isFinish = true;
+        }
+      } else {
+        isFinish = true;
+      }
+    } on Exception catch (e, stack) {
+      debugPrint(e.toString());
+      debugPrint(stack.toString());
+    } finally {
+      apiLoading = false;
+      setState(() {});
+    }
   }
 
   void getApiData() async {
@@ -107,7 +153,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.album) {
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
-        
+
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -668,21 +714,10 @@ class _AlbumListState extends State<AlbumList> {
                       ),
                     ),
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      if (((lstPlaylistData.isEmpty &&
-                                  mainType == MainType.playlist) ||
-                              (lstAlbumData.isEmpty &&
-                                  mainType == MainType.album) ||
-                              (lstGenresData.isEmpty &&
-                                  mainType == MainType.genres) ||
-                              (lstAlbumData.isEmpty &&
-                                  mainType == MainType.genresAlbum) ||
-                              (lstSongTrending.isEmpty &&
-                                  mainType == MainType.song) ||
-                              (lstRecentPlayedSong.isEmpty &&
-                                  mainType == MainType.track)) &&
-                          !apiLoading)
+                  if (widget.isFromLibrary)
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                      if ((seeAllTrackLibrary.isEmpty) && !apiLoading)
                         emptyScreen(
                           context,
                           0,
@@ -696,248 +731,42 @@ class _AlbumListState extends State<AlbumList> {
                       else
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: mainType == MainType.playlist
-                              ? GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                  ),
-                                  itemCount: lstPlaylistData.length,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final PlayListData item =
-                                        lstPlaylistData[index];
-                                    String itemImage = item
-                                            .quadImages!.isNotEmpty
-                                        ? item.quadImages![0] != null
-                                            ? ('${item.quadImages![0]!.imageUrl!}/${item.quadImages![0]!.image!}')
-                                            : ''
-                                        : '';
-                                    return SongItem(
-                                      itemImage: itemImage,
-                                      itemName: item.name!,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                SongsListPage(
-                                              songList: item.songlist,
-                                              playlistName: item.name!,
-                                              playlistImage: itemImage,
-                                              id: item.id,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                )
-                              : mainType == MainType.album ||
-                                      mainType == MainType.genresAlbum
-                                  ? GridView.builder(
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                            ),
+                            itemCount: seeAllTrackLibrary.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final SongItemModel item =
+                                  seeAllTrackLibrary[index].songItemModel!;
+
+                              return SongItem(
+                                itemImage: item.image ?? '',
+                                itemName: item.title ?? '',
+                                onTap: () {
+                                  List<SongItemModel> lstMainSongs = [];
+                                  lstMainSongs.add(item);
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) => PlayScreen(
+                                        songsList: lstMainSongs,
+                                        index: 0,
+                                        offline: false,
+                                        fromDownloads: false,
+                                        fromMiniplayer: false,
+                                        recommend: true,
                                       ),
-                                      itemCount: lstAlbumData.length,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        final AlbumData item =
-                                            lstAlbumData[index];
-                                        final String itemImage = item
-                                                    .cover!.image !=
-                                                null
-                                            ? ('${item.cover!.imgUrl}/${item.cover!.image}')
-                                            : '';
-                                        return SongItem(
-                                          itemImage: itemImage,
-                                          itemName: item.name!,
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                opaque: false,
-                                                pageBuilder: (_, __, ___) =>
-                                                    SongsListPage(
-                                                  songListType:
-                                                      SongListType.album,
-                                                  playlistName: item.name!,
-                                                  playlistImage: itemImage,
-                                                  id: item.id,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    )
-                                  : mainType == MainType.genres
-                                      ? GridView.builder(
-                                          gridDelegate:
-                                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                          ),
-                                          itemCount: lstGenresData.length,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context, index) {
-                                            final GenresData item =
-                                                lstGenresData[index];
-
-                                            return SongItem(
-                                              itemImage: '',
-                                              itemName: item.name!,
-                                              isRound: true,
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    opaque: false,
-                                                    pageBuilder: (_, __, ___) =>
-                                                        AlbumList(
-                                                      albumListType:
-                                                          widget.albumListType,
-                                                      albumName: item.name,
-                                                      id: item.id,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        )
-                                      : mainType == MainType.song
-                                          ? GridView.builder(
-                                              gridDelegate:
-                                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2,
-                                              ),
-                                              itemCount: lstSongTrending.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemBuilder: (context, index) {
-                                                final SongItemModel item =
-                                                    lstSongTrending[index]
-                                                        .songItemModel!;
-
-                                                return SongItem(
-                                                  itemImage: item.image ?? '',
-                                                  itemName: item.title ?? '',
-                                                  onTap: () {
-                                                    List<SongItemModel>
-                                                        lstMainSongs = [];
-                                                    lstMainSongs.add(item);
-                                                    Navigator.push(
-                                                      context,
-                                                      PageRouteBuilder(
-                                                        opaque: false,
-                                                        pageBuilder:
-                                                            (_, __, ___) =>
-                                                                PlayScreen(
-                                                          songsList:
-                                                              lstMainSongs,
-                                                          index: 0,
-                                                          offline: false,
-                                                          fromDownloads: false,
-                                                          fromMiniplayer: false,
-                                                          recommend: true,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            )
-                                          : mainType == MainType.track
-                                              ? GridView.builder(
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 2,
-                                                  ),
-                                                  itemCount: lstRecentPlayedSong
-                                                      .length,
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final MyRecentlyPlayedSong
-                                                        item =
-                                                        lstRecentPlayedSong[
-                                                            index];
-                                                    String itemImage = item
-                                                                .album !=
-                                                            null
-                                                        ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
-                                                        : '';
-                                                    return SongItem(
-                                                      itemImage: itemImage,
-                                                      itemName:
-                                                          item.track!.name!,
-                                                      onTap: () async {
-                                                        popupLoader(
-                                                            context,
-                                                            AppLocalizations.of(
-                                                              context,
-                                                            )!
-                                                                .fetchingStream);
-
-                                                        final RadioStationsStreamResponse?
-                                                            radioStationsStreamResponse =
-                                                            await YogitunesAPI()
-                                                                .fetchSingleSongData(
-                                                                    item.track!
-                                                                        .id!);
-                                                        Navigator.pop(context);
-                                                        if (radioStationsStreamResponse !=
-                                                            null) {
-                                                          if (radioStationsStreamResponse
-                                                                  .songItemModel !=
-                                                              null) {
-                                                            if (radioStationsStreamResponse
-                                                                .songItemModel!
-                                                                .isNotEmpty) {
-                                                              List<SongItemModel>
-                                                                  lstSong = [];
-
-                                                              Navigator.push(
-                                                                context,
-                                                                PageRouteBuilder(
-                                                                  opaque: false,
-                                                                  pageBuilder: (_,
-                                                                          __,
-                                                                          ___) =>
-                                                                      PlayScreen(
-                                                                    songsList:
-                                                                        radioStationsStreamResponse
-                                                                            .songItemModel!,
-                                                                    index: 0,
-                                                                    offline:
-                                                                        false,
-                                                                    fromDownloads:
-                                                                        false,
-                                                                    fromMiniplayer:
-                                                                        false,
-                                                                    recommend:
-                                                                        false,
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
-                                                          }
-                                                        }
-                                                      },
-                                                    );
-                                                  },
-                                                )
-                                              : Container(),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
                       if (apiLoading)
                         SizedBox(
@@ -955,17 +784,316 @@ class _AlbumListState extends State<AlbumList> {
                             ),
                           ),
                         )
-                      // ...lstPlaylistData.map((entry) {
-                      //   final PlayListData item = entry;
-                      //   return SongItem(
-                      //     itemImage: item.quadImages!.isNotEmpty
-                      //         ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                      //         : '',
-                      //     itemName: item.name!,
-                      //   );
-                      // }).toList()
-                    ]),
-                  )
+                    ]))
+                  else
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        if (((lstPlaylistData.isEmpty &&
+                                    mainType == MainType.playlist) ||
+                                (lstAlbumData.isEmpty &&
+                                    mainType == MainType.album) ||
+                                (lstGenresData.isEmpty &&
+                                    mainType == MainType.genres) ||
+                                (lstAlbumData.isEmpty &&
+                                    mainType == MainType.genresAlbum) ||
+                                (lstSongTrending.isEmpty &&
+                                    mainType == MainType.song) ||
+                                (lstRecentPlayedSong.isEmpty &&
+                                    mainType == MainType.track)) &&
+                            !apiLoading)
+                          emptyScreen(
+                            context,
+                            0,
+                            ':( ',
+                            100,
+                            AppLocalizations.of(context)!.sorry,
+                            60,
+                            AppLocalizations.of(context)!.resultsNotFound,
+                            20,
+                          )
+                        else
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: mainType == MainType.playlist
+                                ? GridView.builder(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                    ),
+                                    itemCount: lstPlaylistData.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      final PlayListData item =
+                                          lstPlaylistData[index];
+                                      String itemImage = item
+                                              .quadImages!.isNotEmpty
+                                          ? item.quadImages![0] != null
+                                              ? ('${item.quadImages![0]!.imageUrl!}/${item.quadImages![0]!.image!}')
+                                              : ''
+                                          : '';
+                                      return SongItem(
+                                        itemImage: itemImage,
+                                        itemName: item.name!,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              opaque: false,
+                                              pageBuilder: (_, __, ___) =>
+                                                  SongsListPage(
+                                                songList: item.songlist,
+                                                playlistName: item.name!,
+                                                playlistImage: itemImage,
+                                                id: item.id,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  )
+                                : mainType == MainType.album ||
+                                        mainType == MainType.genresAlbum
+                                    ? GridView.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                        ),
+                                        itemCount: lstAlbumData.length,
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          final AlbumData item =
+                                              lstAlbumData[index];
+                                          final String itemImage = item
+                                                      .cover!.image !=
+                                                  null
+                                              ? ('${item.cover!.imgUrl}/${item.cover!.image}')
+                                              : '';
+                                          return SongItem(
+                                            itemImage: itemImage,
+                                            itemName: item.name!,
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  opaque: false,
+                                                  pageBuilder: (_, __, ___) =>
+                                                      SongsListPage(
+                                                    songListType:
+                                                        SongListType.album,
+                                                    playlistName: item.name!,
+                                                    playlistImage: itemImage,
+                                                    id: item.id,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      )
+                                    : mainType == MainType.genres
+                                        ? GridView.builder(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                            ),
+                                            itemCount: lstGenresData.length,
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              final GenresData item =
+                                                  lstGenresData[index];
+
+                                              return SongItem(
+                                                itemImage: '',
+                                                itemName: item.name!,
+                                                isRound: true,
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    PageRouteBuilder(
+                                                      opaque: false,
+                                                      pageBuilder:
+                                                          (_, __, ___) =>
+                                                              AlbumList(
+                                                        albumListType: widget
+                                                            .albumListType,
+                                                        albumName: item.name,
+                                                        id: item.id,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          )
+                                        : mainType == MainType.song
+                                            ? GridView.builder(
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                ),
+                                                itemCount:
+                                                    lstSongTrending.length,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  final SongItemModel item =
+                                                      lstSongTrending[index]
+                                                          .songItemModel!;
+
+                                                  return SongItem(
+                                                    itemImage: item.image ?? '',
+                                                    itemName: item.title ?? '',
+                                                    onTap: () {
+                                                      List<SongItemModel>
+                                                          lstMainSongs = [];
+                                                      lstMainSongs.add(item);
+                                                      Navigator.push(
+                                                        context,
+                                                        PageRouteBuilder(
+                                                          opaque: false,
+                                                          pageBuilder:
+                                                              (_, __, ___) =>
+                                                                  PlayScreen(
+                                                            songsList:
+                                                                lstMainSongs,
+                                                            index: 0,
+                                                            offline: false,
+                                                            fromDownloads:
+                                                                false,
+                                                            fromMiniplayer:
+                                                                false,
+                                                            recommend: true,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              )
+                                            : mainType == MainType.track
+                                                ? GridView.builder(
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                    ),
+                                                    itemCount:
+                                                        lstRecentPlayedSong
+                                                            .length,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final MyRecentlyPlayedSong
+                                                          item =
+                                                          lstRecentPlayedSong[
+                                                              index];
+                                                      String itemImage = item
+                                                                  .album !=
+                                                              null
+                                                          ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
+                                                          : '';
+                                                      return SongItem(
+                                                        itemImage: itemImage,
+                                                        itemName:
+                                                            item.track!.name!,
+                                                        onTap: () async {
+                                                          popupLoader(
+                                                              context,
+                                                              AppLocalizations
+                                                                      .of(
+                                                                context,
+                                                              )!
+                                                                  .fetchingStream);
+
+                                                          final RadioStationsStreamResponse?
+                                                              radioStationsStreamResponse =
+                                                              await YogitunesAPI()
+                                                                  .fetchSingleSongData(
+                                                                      item.track!
+                                                                          .id!);
+                                                          Navigator.pop(
+                                                              context);
+                                                          if (radioStationsStreamResponse !=
+                                                              null) {
+                                                            if (radioStationsStreamResponse
+                                                                    .songItemModel !=
+                                                                null) {
+                                                              if (radioStationsStreamResponse
+                                                                  .songItemModel!
+                                                                  .isNotEmpty) {
+                                                                List<SongItemModel>
+                                                                    lstSong =
+                                                                    [];
+
+                                                                Navigator.push(
+                                                                  context,
+                                                                  PageRouteBuilder(
+                                                                    opaque:
+                                                                        false,
+                                                                    pageBuilder: (_,
+                                                                            __,
+                                                                            ___) =>
+                                                                        PlayScreen(
+                                                                      songsList:
+                                                                          radioStationsStreamResponse
+                                                                              .songItemModel!,
+                                                                      index: 0,
+                                                                      offline:
+                                                                          false,
+                                                                      fromDownloads:
+                                                                          false,
+                                                                      fromMiniplayer:
+                                                                          false,
+                                                                      recommend:
+                                                                          false,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                      );
+                                                    },
+                                                  )
+                                                : Container(),
+                          ),
+                        if (apiLoading)
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                                bottom: 20,
+                              ),
+                              child: Center(
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.width / 7,
+                                  width: MediaQuery.of(context).size.width / 7,
+                                  child: const CircularProgressIndicator(),
+                                ),
+                              ),
+                            ),
+                          )
+                        // ...lstPlaylistData.map((entry) {
+                        //   final PlayListData item = entry;
+                        //   return SongItem(
+                        //     itemImage: item.quadImages!.isNotEmpty
+                        //         ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                        //         : '',
+                        //     itemName: item.name!,
+                        //   );
+                        // }).toList()
+                      ]),
+                    )
                 ],
               ),
             ),
@@ -977,7 +1105,7 @@ class _AlbumListState extends State<AlbumList> {
   }
 
   String? getListUrl() {
-    final AlbumListType albumListType = widget.albumListType;
+    final AlbumListType albumListType = widget.albumListType!;
     if (albumListType == AlbumListType.yogaPlaylist) {
       mainType = MainType.playlist;
       return 'browse/popular_yoga_playlists';
@@ -1022,7 +1150,11 @@ class _AlbumListState extends State<AlbumList> {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
       if (!isFinish & !apiLoading) {
-        getApiData();
+        if (widget.isFromLibrary) {
+          fatchData();
+        } else {
+          getApiData();
+        }
       }
     }
     // }

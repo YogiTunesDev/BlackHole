@@ -36,7 +36,7 @@ void redirectAfterAuthentication(BuildContext context) async {
         const Duration(days: 30),
         const Duration(days: 0));
     if (val) {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } else {
       Navigator.pushNamedAndRemoveUntil(
           context, '/subscription', (route) => false,

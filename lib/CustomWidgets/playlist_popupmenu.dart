@@ -1,7 +1,9 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Helpers/playlist.dart';
+import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +13,14 @@ import 'package:get_it/get_it.dart';
 class PlaylistPopupMenu extends StatefulWidget {
   final List<SongItemModel> data;
   final String title;
+  final SongListType? songListType;
+  final int id;
   const PlaylistPopupMenu({
     Key? key,
     required this.data,
     required this.title,
+    this.songListType,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -45,6 +51,21 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
             ],
           ),
         ),
+        if (widget.songListType == SongListType.album ||
+            widget.songListType == SongListType.playlist)
+          PopupMenuItem(
+            value: 2,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.my_library_add_rounded,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                const SizedBox(width: 10.0),
+                const Text('Add to Library'),
+              ],
+            ),
+          ),
         // PopupMenuItem(
         //   value: 1,
         //   child: Row(
@@ -59,7 +80,7 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
         //   ),
         // ),
       ],
-      onSelected: (int? value) {
+      onSelected: (int? value) async {
         if (value == 1) {
           addPlaylist(widget.title, widget.data).then(
             (value) => ShowSnackBar().showSnackBar(
@@ -67,6 +88,13 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
               '"${widget.title}" ${AppLocalizations.of(context)!.addedToPlaylists}',
             ),
           );
+        }
+        if (value == 2) {
+          if (widget.songListType == SongListType.playlist) {
+            await YogitunesAPI().playlistAddToLibrary(widget.id, context);
+          } else {
+            await YogitunesAPI().albumAddToLibrary(widget.id, context);
+          }
         }
         if (value == 0) {
           final AudioPlayerHandler audioHandler = GetIt.I<AudioPlayerHandler>();
