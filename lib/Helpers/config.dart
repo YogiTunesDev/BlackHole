@@ -259,7 +259,7 @@ class MyTheme with ChangeNotifier {
       case 'Red':
         return Colors.redAccent[currentHue()]!;
       case 'Teal':
-        return Colors.tealAccent[currentHue()]!;
+        return Color(0xFF336C90);
       case 'Light Blue':
         return Colors.lightBlueAccent[currentHue()]!;
       case 'Yellow':
@@ -292,7 +292,9 @@ class MyTheme with ChangeNotifier {
         return Colors.white;
 
       default:
-        return _isDark ? Colors.tealAccent[400]! : Colors.lightBlueAccent[400]!;
+        return _isDark 
+        ? Color(0xFF336C90) 
+        : Colors.lightBlueAccent[400]!;
     }
   }
 

@@ -406,19 +406,19 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
-                          ListTile(
-                            title: Text(AppLocalizations.of(context)!.about),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            leading: Icon(
-                              Icons.info_outline_rounded,
-                              color: Theme.of(context).iconTheme.color,
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pushNamed(context, '/about');
-                            },
-                          ),
+                          // ListTile(
+                          //   title: Text(AppLocalizations.of(context)!.about),
+                          //   contentPadding:
+                          //       const EdgeInsets.symmetric(horizontal: 20.0),
+                          //   leading: Icon(
+                          //     Icons.info_outline_rounded,
+                          //     color: Theme.of(context).iconTheme.color,
+                          //   ),
+                          //   onTap: () {
+                          //     Navigator.pop(context);
+                          //     Navigator.pushNamed(context, '/about');
+                          //   },
+                          // ),
                           ListTile(
                             title: Text('Logout'),
                             contentPadding:

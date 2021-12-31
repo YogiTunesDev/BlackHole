@@ -45,6 +45,7 @@ class PlayScreen extends StatefulWidget {
   final int index;
   final bool recommend;
   final bool fromDownloads;
+  final bool isFromLibrary;
   const PlayScreen({
     Key? key,
     required this.index,
@@ -53,6 +54,7 @@ class PlayScreen extends StatefulWidget {
     required this.offline,
     required this.recommend,
     required this.fromDownloads,
+    this.isFromLibrary = false,
   }) : super(key: key);
   @override
   _PlayScreenState createState() => _PlayScreenState();
@@ -401,12 +403,6 @@ class _PlayScreenState extends State<PlayScreen> {
                                 int.parse(widget.songsList[widget.index].id
                                     .toString()),
                                 context);
-
-                            // launch(
-                            //   mediaItem.genre == 'YouTube'
-                            //       ? 'https://youtube.com/watch?v=${mediaItem.id}'
-                            //       : 'https://www.youtube.com/results?search_query=${mediaItem.title} by ${mediaItem.artist}',
-                            // );
                           }
                           if (value == 1) {
                             showDialog(
@@ -604,7 +600,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                             Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
-                                     const Text(
+                                      Text(
                                         'Add to library',
                                       ),
                                     ],

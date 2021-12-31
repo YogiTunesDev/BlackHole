@@ -22,17 +22,19 @@ class SongTileTrailingMenu extends StatefulWidget {
   final bool isMyPlaylist;
   final List<String> selectedPlaylist;
   final String playlistName;
-  final int playlistId;
+  final int? playlistId;
+  final bool isFromLibrary;
 
   final VoidCallback callback;
 
   const SongTileTrailingMenu({
+    this.isFromLibrary = false,
     Key? key,
     required this.data,
     required this.isMyPlaylist,
     required this.selectedPlaylist,
     required this.playlistName,
-    required this.playlistId,
+    this.playlistId,
     required this.callback,
   }) : super(key: key);
 
@@ -126,11 +128,15 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
           child: Row(
             children: [
               Icon(
-                Icons.library_add_rounded,
+                widget.isFromLibrary
+                    ? Icons.remove_rounded
+                    : Icons.library_add_rounded,
                 color: Theme.of(context).iconTheme.color,
               ),
               const SizedBox(width: 10.0),
-              Text('Add to library'),
+              Text(widget.isFromLibrary
+                  ? 'Remove from library'
+                  : 'Add to library'),
             ],
           ),
         ),
@@ -171,8 +177,15 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         //   );
         // }
         if (value == 5) {
-          await YogitunesAPI()
-              .trackAddToLibrary(int.parse(widget.data.id.toString()), context);
+          if (widget.isFromLibrary) {
+            await YogitunesAPI().trackRemoveFromLibrary(
+                int.parse(widget.data.id.toString()),
+                int.parse(widget.data.libraryId.toString()),
+                context);
+          } else {
+            await YogitunesAPI().trackAddToLibrary(
+                int.parse(widget.data.id.toString()), context);
+          }
         }
         if (value == 0) {
           if (widget.isMyPlaylist) {

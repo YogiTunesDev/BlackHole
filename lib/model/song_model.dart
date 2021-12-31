@@ -17,6 +17,7 @@ class SongItemModel {
   final String? albumId;
   final String? subtitle;
   final String? permaUrl;
+  final String? libraryId;
   SongItemModel({
     this.id,
     this.artist,
@@ -34,6 +35,7 @@ class SongItemModel {
     this.albumId,
     this.subtitle,
     this.permaUrl,
+    this.libraryId,
   });
 
   SongItemModel copyWith({
@@ -53,6 +55,7 @@ class SongItemModel {
     String? albumId,
     String? subtitle,
     String? permaUrl,
+    String? libraryId,
   }) {
     return SongItemModel(
       id: id ?? this.id,
@@ -71,6 +74,7 @@ class SongItemModel {
       albumId: albumId ?? this.albumId,
       subtitle: subtitle ?? this.subtitle,
       permaUrl: permaUrl ?? this.permaUrl,
+      libraryId: libraryId ?? this.libraryId,
     );
   }
 
@@ -93,6 +97,7 @@ class SongItemModel {
       'albumId': albumId,
       'subtitle': subtitle,
       'permaUrl': permaUrl,
+      'libraryId':libraryId,
     };
   }
 
@@ -121,6 +126,7 @@ class SongItemModel {
       albumId: map['albumId'] != null ? map['albumId'] as String : null,
       subtitle: map['subtitle'] != null ? map['subtitle'] as String : null,
       permaUrl: map['permaUrl'] != null ? map['permaUrl'] as String : null,
+      libraryId: map['libraryId'] != null ? map['libraryId'] as String : null,
     );
   }
 
@@ -154,7 +160,8 @@ class SongItemModel {
         other.releaseDate == releaseDate &&
         other.albumId == albumId &&
         other.subtitle == subtitle &&
-        other.permaUrl == permaUrl;
+        other.permaUrl == permaUrl &&
+        other.libraryId == libraryId;
   }
 
   @override
@@ -174,7 +181,8 @@ class SongItemModel {
         releaseDate.hashCode ^
         albumId.hashCode ^
         subtitle.hashCode ^
-        permaUrl.hashCode;
+        permaUrl.hashCode ^
+        libraryId.hashCode;
   }
 }
 

@@ -53,6 +53,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'Screens/splash_screen.dart';
 import 'Services/subscription_status.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,6 +69,8 @@ Future<void> main() async {
     setOptimalDisplayMode();
   }
   await startService();
+    // initialize the Intercom.
+    await Intercom.initialize('ebyep3ia', iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304', androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
   runApp(MyApp());
 }
 

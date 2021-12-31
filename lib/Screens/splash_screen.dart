@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/Services/subscription_status.dart';
+import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:blackhole/util/const.dart';
 import 'package:flutter/material.dart';
 
@@ -14,36 +16,82 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isLoading = false;
+
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      redirectAfterAuthentication(context);
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        await Future.delayed(Duration(seconds: 5));
+        redirectAfterAuthentication(context);
+      } catch (e, stack) {
+        print(e.toString());
+        debugPrint(stack.toString());
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return isLoading
+        ? Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset('assets/splash.png'),
+            const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        )
+        : Container();
   }
 }
 
-void redirectAfterAuthentication(BuildContext context) async {
+Future<void> redirectAfterAuthentication(BuildContext context) async {
   print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
+  SubscriptionStatusResponse? subscriptionStatusResponse =
+      await YogitunesAPI().subscriptionStatus();
   if (apiTokenBox.get('token') != null) {
-    bool val = await SubscriptionStatus.subscriptionStatus(
-        Platform.isIOS ? iosInAppPackage : androidInAppPackage,
-        const Duration(days: 30),
-        const Duration(days: 0));
-    if (val) {
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    // bool val = await SubscriptionStatus.subscriptionStatus(
+    //     Platform.isIOS ? iosInAppPackage : androidInAppPackage,
+    //     const Duration(days: 30),
+    //     const Duration(days: 0));
+    if (subscriptionStatusResponse != null) {
+      if (subscriptionStatusResponse.status!) {
+        
+        if (subscriptionStatusResponse.validMobileSubscription!) {
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/subscription', (route) => false,
+              arguments: {
+                'isFirstTime': true,
+              });
+          // Navigator.pushNamed(context, '/subscription');
+        }
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/subscription', (route) => false,
+            arguments: {
+              'isFirstTime': true,
+            });
+        // Navigator.pushNamed(context, '/subscription');
+      }
     } else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/subscription', (route) => false,
-          arguments: {
-            'isFirstTime': true,
-          });
-      // Navigator.pushNamed(context, '/subscription');
+      // Navigator.pushNamedAndRemoveUntil(
+      //     context, '/subscription', (route) => false,
+      //     arguments: {
+      //       'isFirstTime': true,
+      //     });
     }
     // return HomePage();
   } else {

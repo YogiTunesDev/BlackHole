@@ -113,7 +113,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                     // floating: true,
                     pinned: true,
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
-                    actions: const [
+                    actions: [
                       // MultiDownloadButton(
                       //   data: songList,
                       //   playlistName:
@@ -225,13 +225,18 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                       opaque: false,
                                       pageBuilder: (_, __, ___) =>
                                           SongsListPage(
+                                        isFromLibrary: widget.isFromLibrary,
                                         songListType: SongListType.album,
                                         playlistName: item.album!.name!,
                                         playlistImage: itemImage,
                                         id: item.album!.id,
                                       ),
                                     ),
-                                  );
+                                  ).then((value) {
+                                    setState(() {
+                                      fetchData();
+                                    });
+                                  });
                                 },
                               );
                             },

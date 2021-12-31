@@ -15,12 +15,14 @@ class PlaylistPopupMenu extends StatefulWidget {
   final String title;
   final SongListType? songListType;
   final int id;
+  final bool isFromMyLibrary;
   const PlaylistPopupMenu({
     Key? key,
     required this.data,
     required this.title,
     this.songListType,
     required this.id,
+    this.isFromMyLibrary = false,
   }) : super(key: key);
 
   @override
@@ -58,11 +60,15 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
             child: Row(
               children: [
                 Icon(
-                  Icons.my_library_add_rounded,
+                  widget.isFromMyLibrary
+                      ? Icons.remove_rounded
+                      : Icons.my_library_add_rounded,
                   color: Theme.of(context).iconTheme.color,
                 ),
                 const SizedBox(width: 10.0),
-                const Text('Add to Library'),
+                Text(widget.isFromMyLibrary
+                    ? 'Remove from library'
+                    : 'Add to Library'),
               ],
             ),
           ),
@@ -93,7 +99,11 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
           if (widget.songListType == SongListType.playlist) {
             await YogitunesAPI().playlistAddToLibrary(widget.id, context);
           } else {
-            await YogitunesAPI().albumAddToLibrary(widget.id, context);
+            if (widget.isFromMyLibrary) {
+              await YogitunesAPI().albumRemoveFromLibrary(widget.id, context);
+            } else {
+              await YogitunesAPI().albumAddToLibrary(widget.id, context);
+            }
           }
         }
         if (value == 0) {

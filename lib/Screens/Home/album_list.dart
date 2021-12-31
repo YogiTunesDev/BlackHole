@@ -1,8 +1,10 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
+import 'package:blackhole/CustomWidgets/download_button.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
+import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
@@ -63,10 +65,12 @@ class _AlbumListState extends State<AlbumList> {
   bool isFinish = false;
   List<GenresData> lstGenresData = [];
   List<singlePlaylistResponse.Track> lstSongTrending = [];
-  List<MyLibraryTrack> seeAllTrackLibrary = [];
+  // List<MyLibraryTrack> seeAllTrackLibrary = [];
 
   List<MyRecentlyPlayedSong> lstRecentPlayedSong = [];
   final ScrollController _scrollController = ScrollController();
+  List<SongItemModel> tempList = [];
+  List<String> selectedPlaylist = [];
 
   String selectedSort = '';
   String selectedDuration = '';
@@ -101,7 +105,12 @@ class _AlbumListState extends State<AlbumList> {
         if (playlistRes.status!) {
           if (playlistRes.data != null) {
             if (playlistRes.data!.data!.isNotEmpty) {
-              seeAllTrackLibrary.addAll(playlistRes.data!.data!);
+              // seeAllTrackLibrary.addAll(playlistRes.data!.data!);
+              for (int i = 0; i <= playlistRes.data!.data!.length; i++) {
+                tempList.add(playlistRes.data!.data![i].songItemModel!);
+                selectedPlaylist.insert(
+                    i, playlistRes.data!.data![i].id.toString());
+              }
             } else {
               isFinish = true;
             }
@@ -114,6 +123,8 @@ class _AlbumListState extends State<AlbumList> {
       } else {
         isFinish = true;
       }
+
+      // tempList = List.from(seeAllTrackLibrary);
     } on Exception catch (e, stack) {
       debugPrint(e.toString());
       debugPrint(stack.toString());
@@ -121,6 +132,12 @@ class _AlbumListState extends State<AlbumList> {
       apiLoading = false;
       setState(() {});
     }
+  }
+
+  callback() {
+    setState(() {
+      fatchData();
+    });
   }
 
   void getApiData() async {
@@ -717,7 +734,7 @@ class _AlbumListState extends State<AlbumList> {
                   if (widget.isFromLibrary)
                     SliverList(
                         delegate: SliverChildListDelegate([
-                      if ((seeAllTrackLibrary.isEmpty) && !apiLoading)
+                      if ((tempList.isEmpty) && !apiLoading)
                         emptyScreen(
                           context,
                           0,
@@ -729,33 +746,220 @@ class _AlbumListState extends State<AlbumList> {
                           20,
                         )
                       else
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => PlayScreen(
+                                          songsList: tempList,
+                                          index: 0,
+                                          offline: false,
+                                          fromDownloads: false,
+                                          fromMiniplayer: false,
+                                          recommend: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 20,
+                                      bottom: 5,
+                                    ),
+                                    height: 45.0,
+                                    width: 120,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 5.0,
+                                          offset: Offset(0.0, 3.0),
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.play_arrow_rounded,
+                                          color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary ==
+                                                  Colors.white
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                        const SizedBox(width: 5.0),
+                                        Text(
+                                          AppLocalizations.of(context)!.play,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                            color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary ==
+                                                    Colors.white
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    tempList.shuffle();
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => PlayScreen(
+                                          songsList: tempList,
+                                          index: 0,
+                                          offline: false,
+                                          fromDownloads: false,
+                                          fromMiniplayer: false,
+                                          recommend: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 20,
+                                      bottom: 5,
+                                    ),
+                                    height: 45.0,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(100.0),
+                                      color: Colors.white,
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 5.0,
+                                          offset: Offset(0.0, 3.0),
+                                        )
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.shuffle_rounded,
+                                          color: Colors.black,
+                                        ),
+                                        const SizedBox(width: 5.0),
+                                        Text(
+                                          AppLocalizations.of(context)!.shuffle,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                            color: Colors.black,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            itemCount: seeAllTrackLibrary.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SongItemModel item =
-                                  seeAllTrackLibrary[index].songItemModel!;
-
-                              return SongItem(
-                                itemImage: item.image ?? '',
-                                itemName: item.title ?? '',
+                            ...tempList.map((entry) {
+                              return ListTile(
+                                contentPadding:
+                                    const EdgeInsets.only(left: 15.0),
+                                title: Text(
+                                  '${entry.title}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                onLongPress: () {
+                                  copyToClipboard(
+                                    context: context,
+                                    text: '${entry.title}',
+                                  );
+                                },
+                                subtitle: Text(
+                                  entry.artist ?? 'Unkown',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                leading: Card(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, _, __) =>
+                                        const Image(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/cover.jpg',
+                                      ),
+                                    ),
+                                    imageUrl: '${entry.image}',
+                                    placeholder: (context, url) => const Image(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/cover.jpg',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    DownloadButton(
+                                      data: entry.toMap(),
+                                      icon: 'download',
+                                    ),
+                                    // LikeButton(
+                                    //   mediaItem: null,
+                                    //   data: entry,
+                                    // ),
+                                    SongTileTrailingMenu(
+                                      data: entry,
+                                      isMyPlaylist: false,
+                                      selectedPlaylist: selectedPlaylist,
+                                      playlistName: '',
+                                      callback: () => callback(),
+                                      isFromLibrary: widget.isFromLibrary,
+                                    ),
+                                  ],
+                                ),
                                 onTap: () {
-                                  List<SongItemModel> lstMainSongs = [];
-                                  lstMainSongs.add(item);
+                                  List<SongItemModel> songItemModel = [];
+                                  songItemModel.add(entry);
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
                                       pageBuilder: (_, __, ___) => PlayScreen(
-                                        songsList: lstMainSongs,
-                                        index: 0,
+                                        songsList: tempList,
+                                        index: tempList.indexWhere(
+                                          (element) => element == entry,
+                                        ),
                                         offline: false,
                                         fromDownloads: false,
                                         fromMiniplayer: false,
@@ -765,8 +969,8 @@ class _AlbumListState extends State<AlbumList> {
                                   );
                                 },
                               );
-                            },
-                          ),
+                            }).toList()
+                          ],
                         ),
                       if (apiLoading)
                         SizedBox(

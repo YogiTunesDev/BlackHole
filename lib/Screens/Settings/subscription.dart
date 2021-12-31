@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/CustomWidgets/snackbar.dart';
+import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +44,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   ];
   late Map<String, dynamic> argument;
   bool isFirstTime = false;
+  StreamSubscription? _purchaseUpdatedSubscription;
+  bool buttonLoading = false;
   @override
   void initState() {
     asyncInitState();
@@ -71,7 +76,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
     List<IAPItem> items =
         await FlutterInappPurchase.instance.getSubscriptions(Platform.isIOS
-            ? [iosInAppPackage,]
+            ? [
+                iosInAppPackage,
+              ]
             : [
                 androidInAppPackage,
               ]);
@@ -91,15 +98,40 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     //   print(products[0].price);
     // }
     // print("products :: " + products.length.toString());
-    StreamSubscription _purchaseUpdatedSubscription =
-        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((productItem) async {
       print('purchase-updated: $productItem');
-      redirectAfterAuthentication(context);
+      if (productItem != null) {
+        String dateStr =
+            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}";
+        SubscriptionStatusResponse? paymentSuccessResponse =
+            await YogitunesAPI().paymentSuccess(
+          subscriptionId:
+              Platform.isIOS ? iosInAppPackage : androidInAppPackage,
+          paymentDate: productItem.transactionDate!.toIso8601String(),
+          paymentId: productItem.transactionId!,
+        );
+
+        if (paymentSuccessResponse != null) {
+          if (paymentSuccessResponse.status!) {
+            redirectAfterAuthentication(context);
+          } else {
+            ShowSnackBar()
+                .showSnackBar(context, paymentSuccessResponse.message!);
+          }
+        }
+      }
+      setState(() {
+        buttonLoading = false;
+      });
     });
 
     StreamSubscription _purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
       print('purchase-error: $purchaseError');
+      setState(() {
+        buttonLoading = false;
+      });
     });
     setState(() {
       isLoading = false;
@@ -109,6 +141,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void dispose() async {
     await FlutterInappPurchase.instance.finalize();
+    if (_purchaseUpdatedSubscription != null) {
+      _purchaseUpdatedSubscription!.cancel();
+    }
     super.dispose();
   }
 
@@ -220,35 +255,43 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                           height: 20,
                         ),
                         if (products.isNotEmpty)
-                          InkWell(
-                            onTap: () async {
-                              FlutterInappPurchase.instance
-                                  .requestPurchase(products[0].productId!);
-                              // final PurchaseParam purchaseParam =
-                              //     PurchaseParam(productDetails: products[0]);
+                          if (buttonLoading)
+                            CircularProgressIndicator()
+                          else
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  buttonLoading = true;
+                                });
+                                FlutterInappPurchase.instance
+                                    .requestPurchase(products[0].productId!);
+                                // final PurchaseParam purchaseParam =
+                                //     PurchaseParam(productDetails: products[0]);
 
-                              // InAppPurchase.instance
-                              //     .buyNonConsumable(purchaseParam: purchaseParam);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              margin: const EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Subscribe',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                // InAppPurchase.instance
+                                //     .buyNonConsumable(purchaseParam: purchaseParam);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Subscribe',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
                       ],
                     ),
                   ),

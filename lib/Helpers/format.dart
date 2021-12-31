@@ -840,6 +840,11 @@ class FormatResponse {
                       : trackonly.files![0].trackUrl!;
                 }
                 String titlename = '';
+                String libraryId = '';
+
+                if (playListDataTemp[i].libraryId != null) {
+                  libraryId = playListDataTemp[i].libraryId!.toString();
+                }
 
                 final songItem = SongItemModel(
                   id: trackonly.id!.toString(),
@@ -851,6 +856,7 @@ class FormatResponse {
                   url: fileUrl,
                   artist: artistName,
                   duration: mDur,
+                  libraryId: libraryId,
                 );
                 playListDataTemp[i] =
                     playListDataTemp[i].copyWith(songItemModel: songItem);

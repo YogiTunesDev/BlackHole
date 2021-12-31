@@ -29,6 +29,7 @@ class SongsListPage extends StatefulWidget {
   final int? id;
   final SongListType? songListType;
   final bool? isMyPlaylist;
+  final bool isFromLibrary;
   SongsListPage({
     Key? key,
     this.songList,
@@ -37,6 +38,7 @@ class SongsListPage extends StatefulWidget {
     this.id,
     this.songListType,
     this.isMyPlaylist,
+    this.isFromLibrary = false,
   }) : super(key: key);
 
   @override
@@ -182,7 +184,8 @@ class _SongsListPageState extends State<SongsListPage> {
                           data: songList,
                           title: widget.playlistName,
                           songListType: widget.songListType,
-                          id:  widget.id!,
+                          id: widget.id!,
+                          isFromMyLibrary: widget.isFromLibrary,
                           // widget.listItem['title']?.toString() ??
                           //     'Songs',
                         ),

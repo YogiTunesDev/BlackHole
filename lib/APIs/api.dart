@@ -27,6 +27,7 @@ import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
+import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:blackhole/model/tracks_by_bpm_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,11 @@ class YogitunesAPI {
     'seeAllTracksLibrary': 'my-library/tracks',
     'seeAllPlaylistsLibrary': 'my-library/playlists',
     'seeAllAlbumsLibrary': 'my-library/albums',
-    'seeAllArtistLibrary': 'my-library/artists'
+    'seeAllArtistLibrary': 'my-library/artists',
+    'albumRemoveFromLibrary': 'my-library/albums/delete',
+    'trackRemoveFromLibrary': 'my-library/tracks/delete',
+    'subscriptionStatus': 'users/subscription-status',
+    'paymentSuccess': 'users/payment-success/google',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -348,6 +353,69 @@ class YogitunesAPI {
       log('Error in fetchHomePageData: $e');
     }
     return result;
+  }
+
+  Future<SubscriptionStatusResponse?> subscriptionStatus() async {
+    SubscriptionStatusResponse? result;
+    try {
+      final res = await getResponse(endpoints['subscriptionStatus']!);
+
+      if (res.statusCode == 200) {
+        print("RESPONSE ::: ${res.body}");
+        final Map data = json.decode(res.body) as Map;
+        result =
+            SubscriptionStatusResponse?.fromMap(data as Map<String, dynamic>);
+      }
+    } catch (e, stack) {
+      log('Error in subscriptionStatus: $e');
+      log('Error in subscriptionStatus: $stack');
+    }
+    return result;
+  }
+
+  
+
+  Future<SubscriptionStatusResponse?> paymentSuccess(
+      {required String paymentId,
+      required String subscriptionId,
+      required String paymentDate}) async {
+    SubscriptionStatusResponse? paymentSuccessResponse;
+    try {
+      final box = await Hive.openBox('api-token');
+      // print(dataList);
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['paymentSuccess']}";
+      final Map<String, String> headers = {
+        'Authorization': 'Bearer $apiToken',
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      };
+      final mapData = {
+        'payment_id': paymentId,
+        'subscription_id': subscriptionId,
+        'payment_date': paymentDate,
+        'payment_token': '',
+      };
+
+      final res = await http.post(
+        Uri.parse(url),
+        body: json.encode(mapData),
+        headers: headers,
+      );
+      print("RESPONSE PAYMENT SUCCESS ${res.body}");
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        paymentSuccessResponse = await SubscriptionStatusResponse?.fromMap(
+            data as Map<String, dynamic>);
+
+        return paymentSuccessResponse;
+      }
+    } catch (e) {
+      log('Error in paymentSuccess: $e');
+    }
   }
 
   Future<RadioStationsStreamResponse?> fetchYogiRadioStationStreamData(
@@ -845,6 +913,36 @@ class YogitunesAPI {
     }
   }
 
+  Future<String?> albumRemoveFromLibrary(int id, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url = "$baseUrl$apiStr${endpoints['albumRemoveFromLibrary']}/$id";
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(context, 'Album remove from library');
+          return data['data'].toString();
+        } else {
+          ShowSnackBar().showSnackBar(context, data['data'].toString());
+          return null;
+        }
+      }
+    } catch (e) {
+      ShowSnackBar().showSnackBar(context, e.toString());
+      log('Error in albumRemoveFromLibrary: $e');
+    }
+  }
+
   Future<String?> albumAddToLibrary(int id, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -872,6 +970,41 @@ class YogitunesAPI {
     } catch (e) {
       ShowSnackBar().showSnackBar(context, e.toString());
       log('Error in albumAddToLibrary: $e');
+    }
+  }
+
+  Future<String?> trackRemoveFromLibrary(
+      int id, int libraryId, BuildContext context) async {
+    try {
+      final box = await Hive.openBox('api-token');
+
+      final String apiToken = box.get('token').toString();
+
+      final url =
+          "$baseUrl$apiStr${endpoints['trackRemoveFromLibrary']}/$id/$libraryId";
+
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+        },
+      );
+      print("00000000000000 ${url}");
+      print("00000000000000 ${res.statusCode}");
+      if (res.statusCode == 200) {
+        print("1111111111111111");
+        final Map data = json.decode(res.body) as Map<String, dynamic>;
+        if (data['status'] as bool) {
+          ShowSnackBar().showSnackBar(context, 'Track removed from library');
+          return data['data'].toString();
+        } else {
+          ShowSnackBar().showSnackBar(context, data['data'].toString());
+          return null;
+        }
+      }
+    } catch (e) {
+      ShowSnackBar().showSnackBar(context, e.toString());
+      log('Error in trackRemoveFromLibrary: $e');
     }
   }
 
