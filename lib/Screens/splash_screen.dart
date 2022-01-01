@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/Services/subscription_status.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
-import 'package:blackhole/util/const.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -44,14 +40,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return isLoading
         ? Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset('assets/splash.png'),
-            const Center(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset('assets/splash.png'),
+              const Center(
                 child: CircularProgressIndicator(),
               ),
-          ],
-        )
+            ],
+          )
         : Container();
   }
 }
@@ -65,10 +61,11 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     //     Platform.isIOS ? iosInAppPackage : androidInAppPackage,
     //     const Duration(days: 30),
     //     const Duration(days: 0));
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    return;
     if (subscriptionStatusResponse != null) {
       if (subscriptionStatusResponse.status!) {
-        
-        if (subscriptionStatusResponse.validMobileSubscription!) {
+        if (subscriptionStatusResponse.validMobileSubscription ?? false) {
           Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
         } else {
           Navigator.pushNamedAndRemoveUntil(

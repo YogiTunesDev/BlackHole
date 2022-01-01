@@ -15,10 +15,10 @@ Awesome Music Player made with Flutter!
 
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
      alt="Get it on IzzyDroid"
-     height="100">](https://android.izzysoft.de/repo/apk/com.shadow.blackhole)
+     height="100">](https://android.izzysoft.de/repo/apk/com.app.yogitunes)
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
-     height="100">](https://f-droid.org/packages/com.shadow.blackhole/)
+     height="100">](https://f-droid.org/packages/com.app.yogitunes/)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"

@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.shadow.blackhole</string>
+	<string>com.app.yogitunes</string>
 	<key>PROJECT_ID</key>
 	<string>blackhole-6e784</string>
 	<key>STORAGE_BUCKET</key>

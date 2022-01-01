@@ -139,8 +139,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   @override
-  void dispose() async {
-    await FlutterInappPurchase.instance.finalize();
+  void dispose() {
+    FlutterInappPurchase.instance.finalize();
     if (_purchaseUpdatedSubscription != null) {
       _purchaseUpdatedSubscription!.cancel();
     }

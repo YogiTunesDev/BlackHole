@@ -29,7 +29,6 @@ import 'package:blackhole/Screens/Library/nowplaying.dart';
 import 'package:blackhole/Screens/Library/playlists.dart';
 import 'package:blackhole/Screens/Library/recent.dart';
 import 'package:blackhole/Screens/Login/auth.dart';
-import 'package:blackhole/Screens/Login/forgot_password.dart';
 import 'package:blackhole/Screens/Login/forgot_password_verification.dart';
 import 'package:blackhole/Screens/Login/login.dart';
 import 'package:blackhole/Screens/Login/pref.dart';
@@ -49,11 +48,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'Screens/splash_screen.dart';
-import 'Services/subscription_status.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,8 +67,10 @@ Future<void> main() async {
     setOptimalDisplayMode();
   }
   await startService();
-    // initialize the Intercom.
-    await Intercom.initialize('ebyep3ia', iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304', androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
+  // initialize the Intercom.
+  await Intercom.initialize('ebyep3ia',
+      iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
+      androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
   runApp(MyApp());
 }
 
@@ -97,8 +97,7 @@ Future<void> startService() async {
   final AudioPlayerHandler audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandlerImpl(),
     config: AudioServiceConfig(
-      
-      androidNotificationChannelId: 'com.shadow.blackhole.channel.audio',
+      androidNotificationChannelId: 'com.app.yogitunes.channel.audio',
       androidNotificationChannelName: 'BlackHole',
       androidNotificationOngoing: true,
       androidNotificationIcon: 'drawable/ic_stat_music_note',
