@@ -46,8 +46,8 @@ class _ArtistDataState extends State<ArtistData> {
 
     artistDataResponse = await YogitunesAPI().artistData(widget.id);
 
-    print('Artist Id ::: ${widget.id}');
-    print('Artist Top Hits ::: ${artistDataResponse!.data!.topHits}');
+    debugPrint('Artist Id ::: ${widget.id}');
+    debugPrint('Artist Top Hits ::: ${artistDataResponse!.data!.topHits}');
 
     setState(() {
       apiLoading = false;

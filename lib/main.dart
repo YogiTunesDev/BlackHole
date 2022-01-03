@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -45,7 +44,7 @@ Future<void> main() async {
   await openHiveBox('downloads');
   await openHiveBox('Favorite Songs');
   await openHiveBox('cache', limit: true);
-  FlutterInappPurchase.instance.initialize();
+
   if (Platform.isAndroid) {
     setOptimalDisplayMode();
   }
@@ -225,6 +224,9 @@ class _MyAppState extends State<MyApp> {
       onGenerateRoute: (RouteSettings settings) {
         return HandleRoute().handleRoute(settings.name);
       },
+      // home: Center(
+      //   child: CircularProgressIndicator(),
+      // ),
     );
   }
 }

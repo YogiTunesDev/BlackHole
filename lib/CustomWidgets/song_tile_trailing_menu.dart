@@ -5,14 +5,11 @@ import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/add_mediitem_to_queue.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
-import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Search/search.dart';
-import 'package:blackhole/Services/youtube_services.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -136,7 +133,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
               const SizedBox(width: 10.0),
               Text(widget.isFromLibrary
                   ? 'Remove from library'
-                  : 'Add to library'),
+                  : 'Add to library',),
             ],
           ),
         ),
@@ -181,20 +178,20 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
             await YogitunesAPI().trackRemoveFromLibrary(
                 int.parse(widget.data.id.toString()),
                 int.parse(widget.data.libraryId.toString()),
-                context);
+                context,);
           } else {
             await YogitunesAPI().trackAddToLibrary(
-                int.parse(widget.data.id.toString()), context);
+                int.parse(widget.data.id.toString()), context,);
           }
         }
         if (value == 0) {
           if (widget.isMyPlaylist) {
-            print(widget.selectedPlaylist);
+            debugPrint(widget.selectedPlaylist.toString());
 
             widget.selectedPlaylist
                 .removeWhere((element) => element == widget.data.id.toString());
             popupLoader(context, 'Loading');
-            var res = await YogitunesAPI().editPlaylist(
+            final res = await YogitunesAPI().editPlaylist(
               widget.playlistId.toString(),
               widget.playlistName,
               widget.selectedPlaylist,
@@ -202,7 +199,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
 
             Navigator.pop(context);
             if (res['status'] as bool) {
-              print('FUNCTION');
+              debugPrint('FUNCTION');
               widget.callback();
             } else {
               ShowSnackBar().showSnackBar(context, res['data'].toString());

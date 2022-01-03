@@ -1,13 +1,10 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
 import 'package:blackhole/Helpers/audio_query.dart';
-import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
-import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -233,8 +230,8 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                 itemCount: customPlaylistResponse!
                     .data!.length, //playlistNames.length,
                 itemBuilder: (context, index) {
-                  var playlist = customPlaylistResponse!.data![index].playlist!;
-                  var playlistTracks =
+                  final playlist = customPlaylistResponse!.data![index].playlist!;
+                  final playlistTracks =
                       customPlaylistResponse!.data![index].playlistTracks!;
                   return ListTile(
                     leading:
@@ -274,13 +271,13 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
 
                       for (int i = 0; i < playlistTracks.length; i++) {
                         selectedPlaylist.insert(
-                            i, playlistTracks[i].playlistId.toString());
-                        print(selectedPlaylist);
+                            i, playlistTracks[i].playlistId.toString(),);
+                        debugPrint(selectedPlaylist.toString());
                       }
 
                       if (selectedPlaylist.contains(widget.trackId)) {
                         ShowSnackBar().showSnackBar(
-                            context, 'song already exist in playlist');
+                            context, 'song already exist in playlist',);
                         Navigator.pop(context);
                       } else {
                         selectedPlaylist.add(widget.trackId.toString());
@@ -293,7 +290,7 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
 
                         if (res['status'] as bool) {
                           ShowSnackBar().showSnackBar(
-                              context, 'song successfully added!');
+                              context, 'song successfully added!',);
                           Navigator.pop(context);
                           Navigator.pop(context);
                         } else {

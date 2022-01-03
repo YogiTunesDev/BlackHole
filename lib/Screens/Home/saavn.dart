@@ -44,7 +44,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     apiLoading = true;
     setState(() {});
     final HomeResponse? recievedData = await YogitunesAPI().fetchHomePageData();
-    // print("RESPONSE DATA ::::: $recievedData");
+    // debugPrint("RESPONSE DATA ::::: $recievedData");
     if (recievedData != null) {
       if (recievedData.data != null) {
         // Hive.box('cache').put('homepage', recievedData);

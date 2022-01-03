@@ -47,7 +47,7 @@ class SearchAddPlaylist {
             await YogitunesAPI().fetchTopSearchResult(trackName!.split('|')[0]);
         addMapToPlaylist(playName, result[0] as Map);
       } catch (e) {
-        // print('Error in $_done: $e');
+        // debugPrint('Error in $_done: $e');
       }
     }
   }

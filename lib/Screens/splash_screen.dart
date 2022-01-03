@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await Future.delayed(Duration(seconds: 5));
         redirectAfterAuthentication(context);
       } catch (e, stack) {
-        print(e.toString());
+        debugPrint(e.toString());
         debugPrint(stack.toString());
       } finally {
         setState(() {
@@ -53,43 +53,52 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 Future<void> redirectAfterAuthentication(BuildContext context) async {
-  print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
-  SubscriptionStatusResponse? subscriptionStatusResponse =
-      await YogitunesAPI().subscriptionStatus();
+  debugPrint(
+      " apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
+
   if (apiTokenBox.get('token') != null) {
     // bool val = await SubscriptionStatus.subscriptionStatus(
     //     Platform.isIOS ? iosInAppPackage : androidInAppPackage,
     //     const Duration(days: 30),
     //     const Duration(days: 0));
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-    return;
+    SubscriptionStatusResponse? subscriptionStatusResponse =
+        await YogitunesAPI().subscriptionStatus();
     if (subscriptionStatusResponse != null) {
       if (subscriptionStatusResponse.status!) {
-        if (subscriptionStatusResponse.validMobileSubscription ?? false) {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        } else {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/subscription', (route) => false,
-              arguments: {
-                'isFirstTime': true,
-              });
-          // Navigator.pushNamed(context, '/subscription');
-        }
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       } else {
         Navigator.pushNamedAndRemoveUntil(
             context, '/subscription', (route) => false,
             arguments: {
               'isFirstTime': true,
             });
-        // Navigator.pushNamed(context, '/subscription');
       }
     } else {
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, '/subscription', (route) => false,
-      //     arguments: {
-      //       'isFirstTime': true,
-      //     });
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     }
+    // return;
+    // if (subscriptionStatusResponse != null) {
+    //   if (subscriptionStatusResponse.status!) {
+    //     if (subscriptionStatusResponse.validMobileSubscription ?? false) {
+    //       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    //     } else {
+    //       Navigator.pushNamedAndRemoveUntil(
+    //           context, '/subscription', (route) => false,
+    //           arguments: {
+    //             'isFirstTime': true,
+    //           });
+    //       // Navigator.pushNamed(context, '/subscription');
+    //     }
+    //   } else {
+    //     Navigator.pushNamedAndRemoveUntil(
+    //         context, '/subscription', (route) => false,
+    //         arguments: {
+    //           'isFirstTime': true,
+    //         });
+    //     // Navigator.pushNamed(context, '/subscription');
+    //   }
+    // } else {
+    // }
     // return HomePage();
   } else {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);

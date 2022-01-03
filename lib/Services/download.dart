@@ -6,7 +6,6 @@ import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/image_downs.dart';
 import 'package:blackhole/Helpers/lyrics.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_downloader/flutter_downloader.dart';
@@ -267,7 +266,7 @@ class Download with ChangeNotifier {
       await File('$dlPath/$fileName')
           .create(recursive: true)
           .then((value) => filepath = value.path);
-      // print('created audio file');
+      // debugPrint('created audio file');
 
       await File('$appPath/$artname')
           .create(recursive: true)
@@ -279,7 +278,7 @@ class Download with ChangeNotifier {
       await File('$dlPath/$fileName')
           .create(recursive: true)
           .then((value) => filepath = value.path);
-      // print('created audio file');
+      // debugPrint('created audio file');
       await File('$appPath/$artname')
           .create(recursive: true)
           .then((value) => filepath2 = value.path);
@@ -306,7 +305,7 @@ class Download with ChangeNotifier {
           client.close();
         }
       } catch (e) {
-        // print('Error: $e');
+        // debugPrint('Error: $e');
       }
     }).onDone(() async {
       if (download) {
@@ -331,7 +330,7 @@ class Download with ChangeNotifier {
                 )
               : '';
         } catch (e) {
-          // print('Error fetching lyrics: $e');
+          // debugPrint('Error fetching lyrics: $e');
           lyrics = '';
         }
 
@@ -395,7 +394,7 @@ class Download with ChangeNotifier {
           //   }
           // });
         } catch (e) {
-          // print('Failed to edit tags');
+          // debugPrint('Failed to edit tags');
         }
         client.close();
         // debugPrint('Done');

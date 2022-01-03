@@ -7,6 +7,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio/just_audio.dart';
@@ -136,7 +137,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
         addRecentlyPlayed(item);
         final String str = item.id;
         final String endOffset = item.duration!.inSeconds.toString();
-        print("Send Request");
+        debugPrint("Send Request");
         YogitunesAPI().updatePlaySong(str, endOffset);
         _recentSubject.add([item]);
 

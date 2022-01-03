@@ -44,7 +44,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   ];
   late Map<String, dynamic> argument;
   bool isFirstTime = false;
-  StreamSubscription? _purchaseUpdatedSubscription;
+  StreamSubscription? purchaseUpdatedSubscription;
+  StreamSubscription? purchaseErrorSubscription;
   bool buttonLoading = false;
   @override
   void initState() {
@@ -82,7 +83,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             : [
                 androidInAppPackage,
               ]);
-    print("items  ::  ${items}");
+    debugPrint("items  ::  ${items}");
     for (final item in items) {
       products.add(item);
     }
@@ -91,25 +92,26 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     // await Future.delayed(const Duration(seconds: 2));
     // if (response.notFoundIDs.isNotEmpty) {
     //   // Handle the error.
-    //   print("Error ");
+    //   debugPrint("Error ");
     // }
     // products = response.productDetails;
     // if (products.isNotEmpty) {
-    //   print(products[0].price);
+    //   debugPrint(products[0].price);
     // }
-    // print("products :: " + products.length.toString());
-    _purchaseUpdatedSubscription =
+    // debugPrint("products :: " + products.length.toString());
+    purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) async {
-      print('purchase-updated: $productItem');
+      debugPrint('purchase-updated: $productItem');
       if (productItem != null) {
         String dateStr =
-            "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}";
-        SubscriptionStatusResponse? paymentSuccessResponse =
+            '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
+        final SubscriptionStatusResponse? paymentSuccessResponse =
             await YogitunesAPI().paymentSuccess(
           subscriptionId:
               Platform.isIOS ? iosInAppPackage : androidInAppPackage,
           paymentDate: productItem.transactionDate!.toIso8601String(),
-          paymentId: productItem.transactionId!,
+          paymentId: '0${productItem.transactionId}',
+          paymentToken: productItem.transactionReceipt.toString(),
         );
 
         if (paymentSuccessResponse != null) {
@@ -126,9 +128,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       });
     });
 
-    StreamSubscription _purchaseErrorSubscription =
+    purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
-      print('purchase-error: $purchaseError');
+      debugPrint('purchase-error: $purchaseError');
       setState(() {
         buttonLoading = false;
       });
@@ -141,8 +143,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   void dispose() {
     FlutterInappPurchase.instance.finalize();
-    if (_purchaseUpdatedSubscription != null) {
-      _purchaseUpdatedSubscription!.cancel();
+    if (purchaseUpdatedSubscription != null) {
+      purchaseUpdatedSubscription!.cancel();
+    }
+    if (purchaseErrorSubscription != null) {
+      purchaseErrorSubscription!.cancel();
     }
     super.dispose();
   }

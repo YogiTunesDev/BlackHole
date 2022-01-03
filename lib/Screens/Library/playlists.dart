@@ -1109,7 +1109,7 @@ Future<void> fetchPlaylists(
                                 result[0] as Map,
                               );
                             } catch (e) {
-                              // print('Error in $_done: $e');
+                              // debugPrint('Error in $_done: $e');
                             }
                           }
                         }
@@ -1211,7 +1211,7 @@ Future<void> fetchPlaylists(
                 .fetchTopSearchResult('$trackName by $trackArtist');
             addMapToPlaylist(playName, result[0] as Map);
           } catch (e) {
-            // print('Error in $_done: $e');
+            // debugPrint('Error in $_done: $e');
           }
         }
       }
@@ -1219,7 +1219,7 @@ Future<void> fetchPlaylists(
       await SearchAddPlaylist.showProgress(_total, context, songsAdder());
     }
   } else {
-    // print('Failed');
+    // debugPrint('Failed');
   }
   return;
 }

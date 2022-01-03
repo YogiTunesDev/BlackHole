@@ -340,7 +340,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
                         final bool selected =
                             selectedPlaylist.contains(item.id.toString());
-                        // print(selected.toString() + "${item.id}");
+                        // debugPrint(selected.toString() + "${item.id}");
                         String? imgUrl;
                         String? albumName;
                         String? bpmType;
@@ -417,7 +417,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                       selectedPlaylist
                                           .remove(item.id.toString());
                                     });
-                                    // print(selectedPlaylist);
+                                    // debugPrint(selectedPlaylist);
                                   },
                                   icon: Icon(
                                     Icons.check,
@@ -432,7 +432,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                       mainDuration += mDur ?? 0;
                                       selectedPlaylist.add(item.id.toString());
                                     });
-                                    // print(selectedPlaylist.toString() +
+                                    // debugPrint(selectedPlaylist.toString() +
                                     //     selected.toString());
                                   },
                                   icon: const Icon(Icons.add),

@@ -99,7 +99,7 @@ class _AlbumListState extends State<AlbumList> {
       setState(() {});
       final MyLibraryTrackResponse? playlistRes =
           await YogitunesAPI().seeAllLibraryTracks(pageNo);
-      print("SONG ::::::::::::::::");
+      debugPrint("SONG ::::::::::::::::");
       pageNo++;
       if (playlistRes != null) {
         if (playlistRes.status!) {
@@ -148,7 +148,7 @@ class _AlbumListState extends State<AlbumList> {
         final PlaylistResponse? playlistRes = await YogitunesAPI()
             .fetchYogiPlaylistData(getListUrl()!, pageNo, selectedSort,
                 selectedDuration, selectedType);
-        print("PLAYLIST ::::::::::::::::");
+        debugPrint("PLAYLIST ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -192,7 +192,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.genres) {
         final GenresResponse? playlistRes =
             await YogitunesAPI().fetchYogiGenresData(getListUrl()!);
-        print("GENRES ::::::::::::::::");
+        debugPrint("GENRES ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -211,7 +211,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.genresAlbum) {
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiGenresAlbumData(getListUrl()!, widget.id!, pageNo);
-        print("GENRES ALBUM ::::::::::::::::");
+        debugPrint("GENRES ALBUM ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -233,7 +233,7 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.song) {
         final TrendingSongResponse? playlistRes = await YogitunesAPI()
             .fetchYogiTrendingSongData(getListUrl()!, pageNo, selectedSort);
-        print("SONG ::::::::::::::::");
+        debugPrint("SONG ::::::::::::::::");
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -256,7 +256,7 @@ class _AlbumListState extends State<AlbumList> {
         final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
             await YogitunesAPI()
                 .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
-        print("TRACK ::::::::::::::::");
+        debugPrint("TRACK ::::::::::::::::");
         pageNo++;
         if (myRecentlyPlayedSongResponse != null) {
           if (myRecentlyPlayedSongResponse.data != null) {

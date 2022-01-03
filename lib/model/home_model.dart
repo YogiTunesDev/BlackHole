@@ -42,7 +42,7 @@ class HomeResponse {
   }
 
   factory HomeResponse.fromMap(Map<String, dynamic> map) {
-    print(map);
+    debugPrint(map.toString());
     return HomeResponse(
       statusCode: map['statusCode'] != null
           ? int.parse(map['statusCode'] as String)

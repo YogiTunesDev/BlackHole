@@ -869,8 +869,8 @@ class _DownSongsTabState extends State<DownSongsTab>
                         ),
                       ),
                       onTap: () {
-                        print(widget.songs);
-                        // print(List<SongItemModel>.from(widget.songs.map(
+                        debugPrint(widget.songs.toString());
+                        // debugPrint(List<SongItemModel>.from(widget.songs.map(
                         //   (x) => SongItemModel.fromMap(json
                         //       .decode(json.encode(x)) as Map<String, dynamic>),
                         // )));

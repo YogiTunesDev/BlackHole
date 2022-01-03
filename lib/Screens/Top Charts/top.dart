@@ -137,7 +137,7 @@ class _TopChartsState extends State<TopCharts>
 }
 
 Future<List> scrapData(String region) async {
-  // print('starting expensive operation');
+  // debugPrint('starting expensive operation');
   final HtmlUnescape unescape = HtmlUnescape();
   const String authority = 'www.spotifycharts.com';
   final String unencodedPath = '/regional/$region/daily/latest/';
@@ -158,7 +158,7 @@ Future<List> scrapData(String region) async {
       'region': region,
     };
   }).toList();
-  // print('finished expensive operation');
+  // debugPrint('finished expensive operation');
   return result;
 }
 

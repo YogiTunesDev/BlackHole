@@ -124,7 +124,7 @@ class _SongsListPageState extends State<SongsListPage> {
                       i++) {
                     selectedPlaylist.insert(i,
                         playlistRes.data!.lstSongItemModel![i].id.toString());
-                    print(selectedPlaylist);
+                    debugPrint(selectedPlaylist.toString());
                   }
                 }
               }

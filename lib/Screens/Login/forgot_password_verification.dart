@@ -213,7 +213,7 @@ class _ForgotPasswordVerificationScreenState
                                           errorMessage = null;
                                           isLoading = true;
                                         });
-                                        print(args['email'].toString());
+                                        debugPrint(args['email'].toString());
                                         final bool valid =
                                             formKey.currentState!.validate();
                                         if (valid) {

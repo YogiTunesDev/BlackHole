@@ -14,9 +14,9 @@ class NativeMethod {
   static Future<void> handleIntent() async {
     // final _intent = await sharedTextChannel.invokeMethod('getSharedText');
     // if (_intent != null) {
-    //   print('IntentHandler: Result: $_intent');
+    //   debugPrint('IntentHandler: Result: $_intent');
     // } else {
-    //   print('intent is null');
+    //   debugPrint('intent is null');
     // }
   }
 

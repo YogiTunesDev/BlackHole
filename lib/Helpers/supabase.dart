@@ -28,7 +28,7 @@ class SupaBase {
   ) async {
     // final response = await client.from('Users').update({key: value},
     //     returning: ReturningOption.minimal).match({'id': userId}).execute();
-    // print(response.toJson());
+    // debugPrint(response.toJson());
   }
 
   Future<int> createUser(Map data) async {

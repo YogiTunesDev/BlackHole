@@ -32,11 +32,11 @@ class SpotifyApi {
   //   try {
   //     final result = await FlutterWebAuth.authenticate(
   //         url: url, callbackUrlScheme: callbackUrlScheme);
-  // print('got result....');
-  // print(result);
+  // debugPrint('got result....');
+  // debugPrint(result);
   //     return result;
   //   } catch (e) {
-  // print('Got error: $e');
+  // debugPrint('Got error: $e');
   //     return 'ERROR';
   //   }
   // }
@@ -56,7 +56,7 @@ class SpotifyApi {
     try {
       final Uri path = Uri.parse(requestToken);
       final response = await post(path, headers: headers, body: body);
-      // print(response.statusCode);
+      // debugPrint(response.statusCode);
       if (response.statusCode == 200) {
         final Map result = jsonDecode(response.body) as Map;
         return <String>[
@@ -65,7 +65,7 @@ class SpotifyApi {
         ];
       }
     } catch (e) {
-      // print('Error: $e');
+      // debugPrint('Error: $e');
     }
     return [];
   }
@@ -87,7 +87,7 @@ class SpotifyApi {
         return playlists;
       }
     } catch (e) {
-      // print('Error: $e');
+      // debugPrint('Error: $e');
     }
     return [];
   }
@@ -116,7 +116,7 @@ class SpotifyApi {
         return {'tracks': tracks, 'total': total};
       }
     } catch (e) {
-      // print('Error: $e');
+      // debugPrint('Error: $e');
     }
     return {};
   }

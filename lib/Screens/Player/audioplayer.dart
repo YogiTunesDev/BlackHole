@@ -126,7 +126,7 @@ class _PlayScreenState extends State<PlayScreen> {
       fromMiniplayer = widget.fromMiniplayer;
       if (!fromMiniplayer) {
         if (offline) {
-          print(" TESTING 1:$response");
+          debugPrint(" TESTING 1:$response");
           fromDownloads ? setDownValues(response) : setOffValues(response);
         } else {
           setValues(response);
@@ -134,7 +134,7 @@ class _PlayScreenState extends State<PlayScreen> {
         }
       }
     } catch (e) {
-      print(" ERROR In audio $e");
+      debugPrint(" ERROR In audio $e");
     }
   }
 
@@ -212,7 +212,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<void> updateNplay() async {
-    print(globalQueue);
+    debugPrint(globalQueue.toString());
     await audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
     await audioHandler.updateQueue(globalQueue);
     await audioHandler.skipToQueueItem(globalIndex);
@@ -239,7 +239,7 @@ class _PlayScreenState extends State<PlayScreen> {
       final MediaItem mediaItemTemp = globalQueue[globalIndex];
       final String str = mediaItemTemp.id;
       final String endOffset = mediaItemTemp.duration!.inSeconds.toString();
-      print("Send Request");
+      debugPrint("Send Request");
       await YogitunesAPI().updatePlaySong(str, endOffset);
     }
   }
@@ -252,7 +252,7 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget build(BuildContext context) {
     BuildContext? scaffoldContext;
 
-    print(" Audio Test 1234567890");
+    debugPrint(" Audio Test 1234567890");
 
     return Dismissible(
       direction: DismissDirection.down,
