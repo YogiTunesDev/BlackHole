@@ -113,6 +113,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: apiLoading
           ? const Center(
               child: Padding(

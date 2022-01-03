@@ -109,7 +109,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           subscriptionId:
               Platform.isIOS ? iosInAppPackage : androidInAppPackage,
           paymentDate: productItem.transactionDate!.toIso8601String(),
-          paymentId: productItem.transactionId!,
+          paymentId: "0" + productItem.transactionId!,
         );
 
         if (paymentSuccessResponse != null) {

@@ -114,7 +114,7 @@ class YogitunesAPI {
     final box = await Hive.openBox('api-token');
     final String apiToken = box.get('token').toString();
     print('API TOKEN :::: $apiToken');
-    headers = {'Authorization': 'Bearer $apiToken', 'Accept': '*/*'};
+    headers = {'Authorization': 'Bearer $apiToken', 'Accept': 'application/json'};
 
     print('URL ::: $url');
 
@@ -198,7 +198,7 @@ class YogitunesAPI {
         'newsletter': isNewsLetterChecked.toString(),
         'initial_platform': Platform.isIOS ? 'ios' : 'Android',
       }, headers: {
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'User-Agent': Platform.isIOS ? 'test/iOS' : 'test/Android',
       });
       if (res.statusCode == 200) {
@@ -318,7 +318,7 @@ class YogitunesAPI {
 
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {
@@ -389,7 +389,7 @@ class YogitunesAPI {
       final url = "$baseUrl$apiStr${endpoints['paymentSuccess']}";
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {
@@ -816,7 +816,7 @@ class YogitunesAPI {
       final url = "$baseUrl$apiStr${endpoints['editPlaylist']}/$playlistId";
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept':'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {

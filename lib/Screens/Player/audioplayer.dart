@@ -1362,7 +1362,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
   Map lyrics = {'id': '', 'lyrics': ''};
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return SizedBox(
       height: widget.width * 0.8,
       child: Align(
