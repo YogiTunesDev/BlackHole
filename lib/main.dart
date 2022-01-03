@@ -79,7 +79,7 @@ Future<void> startService() async {
     builder: () => AudioPlayerHandlerImpl(),
     config: AudioServiceConfig(
       androidNotificationChannelId: 'com.app.yogitunes.channel.audio',
-      androidNotificationChannelName: 'BlackHole',
+      androidNotificationChannelName: 'Yogitunes',
       androidNotificationOngoing: true,
       androidNotificationIcon: 'drawable/ic_stat_music_note',
       androidShowNotificationBadge: true,
@@ -174,8 +174,8 @@ class _MyAppState extends State<MyApp> {
     ]);
 
     return MaterialApp(
-      title: 'BlackHole',
-      restorationScopeId: 'blackhole',
+      title: 'Yogitunes',
+      restorationScopeId: 'Yogitunes',
       debugShowCheckedModeBanner: false,
       themeMode: AppTheme.themeMode,
       theme: AppTheme.lightTheme(
