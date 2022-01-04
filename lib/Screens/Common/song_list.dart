@@ -14,6 +14,7 @@ import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -48,7 +49,8 @@ class SongsListPage extends StatefulWidget {
 class _SongsListPageState extends State<SongsListPage> {
   int page = 1;
   bool apiloading = false;
-
+  String? mainPlayListName;
+  String? mainPlayListImage;
   List<SongItemModel> songList = [];
   bool fetched = true;
   HtmlUnescape unescape = HtmlUnescape();
@@ -65,6 +67,16 @@ class _SongsListPageState extends State<SongsListPage> {
         Navigator.pop(context);
       } else {
         _fetchSongs();
+      }
+    }
+    if (widget.playlistImage != null) {
+      if (widget.playlistImage!.isNotEmpty) {
+        mainPlayListImage = widget.playlistImage;
+      }
+    }
+    if (widget.playlistName != null) {
+      if (widget.playlistName.isNotEmpty) {
+        mainPlayListName = widget.playlistName;
       }
     }
     _scrollController.addListener(() {
@@ -106,6 +118,10 @@ class _SongsListPageState extends State<SongsListPage> {
                   songList = playlistRes.data!.lstSongItemModel!;
                 }
               }
+              mainPlayListImage ??= (playlistRes.data?.cover?.imgUrl ?? '') +
+                  (playlistRes.data?.cover?.imgUrl != null ? '/' : '') +
+                  (playlistRes.data?.cover?.image ?? '');
+              mainPlayListName ??= playlistRes.data?.name ?? '';
             }
           }
         }
@@ -128,6 +144,14 @@ class _SongsListPageState extends State<SongsListPage> {
                   }
                 }
               }
+              mainPlayListImage ??=
+                  (playlistRes.data?.quadImages?[0]?.imageUrl ?? '') +
+                      (playlistRes.data?.quadImages?[0]?.imageUrl != null
+                          ? "/"
+                          : '') +
+                      (playlistRes.data?.quadImages?[0]?.image ?? '');
+
+              mainPlayListName ??= playlistRes.data?.name ?? '';
             }
           }
         }
@@ -144,6 +168,7 @@ class _SongsListPageState extends State<SongsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("mainPlayListImage :: $mainPlayListImage");
     return GradientContainer(
       child: Column(
         children: [
@@ -166,23 +191,29 @@ class _SongsListPageState extends State<SongsListPage> {
                           data: List<dynamic>.from(
                             songList.map((x) => x.toMap()),
                           ),
-                          playlistName: widget.playlistName,
+                          playlistName: mainPlayListName ?? '',
                         ),
                       if (!apiloading && songList.isNotEmpty)
                         IconButton(
                           icon: const Icon(Icons.share_rounded),
                           tooltip: AppLocalizations.of(context)!.share,
                           onPressed: () {
+                            String strURL = strSHAREURL;
+                            if (widget.songListType == SongListType.album) {
+                              strURL += 'albums/';
+                            } else {
+                              strURL += 'playlists/';
+                            }
+                            strURL += widget.id.toString();
                             Share.share(
-                              widget
-                                  .playlistName, //widget.listItem['perma_url'].toString(),
+                              strURL, //widget.listItem['perma_url'].toString(),
                             );
                           },
                         ),
                       if (!apiloading && songList.isNotEmpty)
                         PlaylistPopupMenu(
                           data: songList,
-                          title: widget.playlistName,
+                          title: mainPlayListName ?? '',
                           songListType: widget.songListType,
                           id: widget.id!,
                           isFromMyLibrary: widget.isFromLibrary,
@@ -192,7 +223,7 @@ class _SongsListPageState extends State<SongsListPage> {
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
-                        widget.playlistName,
+                        mainPlayListName ?? '',
                         textAlign: TextAlign.center,
                       ),
                       centerTitle: true,
@@ -212,7 +243,7 @@ class _SongsListPageState extends State<SongsListPage> {
                           );
                         },
                         blendMode: BlendMode.dstIn,
-                        child: widget.playlistImage == null
+                        child: mainPlayListImage == null
                             ? const Image(
                                 fit: BoxFit.cover,
                                 image: AssetImage(
@@ -227,17 +258,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                     'assets/album.png',
                                   ),
                                 ),
-                                imageUrl: widget.playlistImage
-                                    .toString()
-                                    .replaceAll('http:', 'https:')
-                                    .replaceAll(
-                                      '50x50',
-                                      '500x500',
-                                    )
-                                    .replaceAll(
-                                      '150x150',
-                                      '500x500',
-                                    ),
+                                imageUrl: mainPlayListImage.toString(),
                                 placeholder: (context, url) => const Image(
                                   fit: BoxFit.cover,
                                   image: AssetImage(
@@ -474,7 +495,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                       isMyPlaylist:
                                           widget.isMyPlaylist ?? false,
                                       selectedPlaylist: selectedPlaylist,
-                                      playlistName: widget.playlistName,
+                                      playlistName: mainPlayListName ?? '',
                                       playlistId:
                                           int.parse(widget.id.toString()),
                                       callback: () => callback(),

@@ -18,6 +18,7 @@ import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
+import 'package:blackhole/util/app_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:blackhole/model/single_playlist_response.dart'
@@ -1210,61 +1211,9 @@ class _AlbumListState extends State<AlbumList> {
                                                         itemName:
                                                             item.track!.name!,
                                                         onTap: () async {
-                                                          popupLoader(
+                                                          openSingleSongData(
                                                               context,
-                                                              AppLocalizations
-                                                                      .of(
-                                                                context,
-                                                              )!
-                                                                  .fetchingStream);
-
-                                                          final RadioStationsStreamResponse?
-                                                              radioStationsStreamResponse =
-                                                              await YogitunesAPI()
-                                                                  .fetchSingleSongData(
-                                                                      item.track!
-                                                                          .id!);
-                                                          Navigator.pop(
-                                                              context);
-                                                          if (radioStationsStreamResponse !=
-                                                              null) {
-                                                            if (radioStationsStreamResponse
-                                                                    .songItemModel !=
-                                                                null) {
-                                                              if (radioStationsStreamResponse
-                                                                  .songItemModel!
-                                                                  .isNotEmpty) {
-                                                                List<SongItemModel>
-                                                                    lstSong =
-                                                                    [];
-
-                                                                Navigator.push(
-                                                                  context,
-                                                                  PageRouteBuilder(
-                                                                    opaque:
-                                                                        false,
-                                                                    pageBuilder: (_,
-                                                                            __,
-                                                                            ___) =>
-                                                                        PlayScreen(
-                                                                      songsList:
-                                                                          radioStationsStreamResponse
-                                                                              .songItemModel!,
-                                                                      index: 0,
-                                                                      offline:
-                                                                          false,
-                                                                      fromDownloads:
-                                                                          false,
-                                                                      fromMiniplayer:
-                                                                          false,
-                                                                      recommend:
-                                                                          false,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            }
-                                                          }
+                                                              item.track!.id!);
                                                         },
                                                       );
                                                     },

@@ -2,6 +2,7 @@ import 'package:app_links/app_links.dart';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/APIs/spotify_api.dart';
 import 'package:blackhole/CustomWidgets/collage.dart';
+import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
@@ -202,7 +203,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           //     launch(
                           //       SpotifyApi().requestAuthorization(),
                           //     );
-
                           //     AppLinks(
                           //       onAppLink: (Uri uri, String link) async {
                           //         closeWebView();
@@ -257,7 +257,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           //             'playlistNames',
                           //             playlistNames,
                           //           );
-
                           //           await SearchAddPlaylist.showProgress(
                           //             data['count'] as int,
                           //             context,
@@ -449,7 +448,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           //                                     'name':
                           //                                         value.trim()
                           //                                   });
-
                           //                             await settingsBox.put(
                           //                               'playlistDetails',
                           //                               playlistDetails,
@@ -502,7 +500,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           //                                       .text
                           //                                       .trim()
                           //                                 });
-
                           //                           await settingsBox.put(
                           //                             'playlistDetails',
                           //                             playlistDetails,
@@ -612,6 +609,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           if (dataLoader)
                             const Center(
                               child: CircularProgressIndicator(),
+                            )
+                          else if (customPlaylistResponse?.data == null)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
                             )
                           else
                             ListView.builder(
@@ -932,19 +940,19 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           ],
                                         ),
                                       ),
-                                      PopupMenuItem(
-                                        value: 1,
-                                        child: Row(
-                                          children: [
-                                            const Icon(MdiIcons.export),
-                                            const SizedBox(width: 10.0),
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .export,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      // PopupMenuItem(
+                                      //   value: 1,
+                                      //   child: Row(
+                                      //     children: [
+                                      //       const Icon(MdiIcons.export),
+                                      //       const SizedBox(width: 10.0),
+                                      //       Text(
+                                      //         AppLocalizations.of(context)!
+                                      //             .export,
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
                                       PopupMenuItem(
                                         value: 2,
                                         child: Row(

@@ -39,20 +39,24 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset('assets/splash.png'),
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            ),
-          )
-        : Container();
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset('assets/splash.png'),
+              // const Center(
+              //   child: CircularProgressIndicator(),
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -80,6 +84,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
         // Navigator.pushNamed(context, '/subscription');
       }
     } else {
+       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       // Navigator.pushNamedAndRemoveUntil(
       //     context, '/subscription', (route) => false,
       //     arguments: {

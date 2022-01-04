@@ -17,6 +17,7 @@ import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Top Charts/top.dart';
 import 'package:blackhole/Screens/YouTube/youtube_home.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
+import 'package:blackhole/Services/uni_link_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -238,6 +239,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initFunction();
+  }
+
+  void initFunction() async {
+    UniLinkService.instance.initUniLinks(context);
   }
 
   @override
@@ -317,7 +323,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SliverList(
-                    
                       delegate: SliverChildListDelegate(
                         [
                           ListTile(

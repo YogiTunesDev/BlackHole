@@ -1252,8 +1252,7 @@ class _SettingPageState extends State<SettingPage> {
                                     'Manage Subscription',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1453,8 +1452,7 @@ class _SettingPageState extends State<SettingPage> {
                                     'Send a message',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),

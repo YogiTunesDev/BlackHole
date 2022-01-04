@@ -13,6 +13,7 @@ import 'package:blackhole/CustomWidgets/playlist_popupmenu.dart';
 import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -100,9 +101,12 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                   icon: const Icon(Icons.share_rounded),
                                   tooltip: AppLocalizations.of(context)!.share,
                                   onPressed: () {
+                                    String strURL = strSHAREURL;
+                                    strURL += 'profiles/';
+                                    strURL += widget.data['id'].toString();
                                     Share.share(
-                                      widget.data['perma_url'].toString(),
-                                    );
+                                        strURL //widget.data['perma_url'].toString(),
+                                        );
                                   },
                                 ),
                                 // if (data['Top Songs'] != null)

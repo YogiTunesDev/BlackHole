@@ -1,4 +1,5 @@
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
@@ -706,7 +707,18 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                       ),
                   ],
                 )
-              : Container(),
+              : Center(
+                  child: emptyScreen(
+                    context,
+                    0,
+                    ':( ',
+                    100,
+                    AppLocalizations.of(context)!.sorry,
+                    60,
+                    AppLocalizations.of(context)!.resultsNotFound,
+                    20,
+                  ),
+                ),
     );
   }
 

@@ -61,12 +61,11 @@ class _SearchScreenState extends State<SearchScreen> {
       isLoading = true;
       libraryVisibility = false;
     });
-    
 
     if (lstKeywordSearch.contains(search)) {
       lstKeywordSearch.remove(search);
     }
-lstKeywordSearch.insert(0, search);
+    lstKeywordSearch.insert(0, search);
     searchCacheData!.put("searchKeywordList", lstKeywordSearch);
     searchResponse = await YogitunesAPI().search(search, isMyLibrary);
     setState(() {
@@ -265,7 +264,8 @@ lstKeywordSearch.insert(0, search);
                                               .secondary
                                           : Theme.of(context)
                                               .colorScheme
-                                              .primary,
+                                              .primary
+                                              .withOpacity(0.1),
                                       borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(100),
                                         bottomLeft: Radius.circular(100),
@@ -281,9 +281,7 @@ lstKeywordSearch.insert(0, search);
                                               ? Theme.of(context)
                                                   .colorScheme
                                                   .primaryVariant
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
+                                              : Colors.white,
                                         ),
                                       ),
                                     ),
@@ -306,7 +304,8 @@ lstKeywordSearch.insert(0, search);
                                                 .secondary
                                             : Theme.of(context)
                                                 .colorScheme
-                                                .primary,
+                                                .primary
+                                                .withOpacity(0.1),
                                         borderRadius: const BorderRadius.only(
                                           topRight: Radius.circular(100),
                                           bottomRight: Radius.circular(100),
@@ -318,9 +317,7 @@ lstKeywordSearch.insert(0, search);
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12,
                                           color: isMyLibrary
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .primary
+                                              ? Colors.white
                                               : Theme.of(context)
                                                   .colorScheme
                                                   .primaryVariant,
