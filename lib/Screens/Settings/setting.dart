@@ -66,6 +66,8 @@ class _SettingPageState extends State<SettingPage> {
       Hive.box('settings').get('useProxy', defaultValue: false) as bool;
   String themeColor =
       Hive.box('settings').get('themeColor', defaultValue: 'Teal') as String;
+  int crossFadeValue =
+      Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
   int colorHue = Hive.box('settings').get('colorHue', defaultValue: 400) as int;
   List<String> languages = [
     'Hindi',
@@ -129,7 +131,7 @@ class _SettingPageState extends State<SettingPage> {
     return update;
   }
 
-  double _value = 20.0;
+  // double _value = 20.0;
   @override
   Widget build(BuildContext context) {
     final List<String> userThemesList = <String>[
@@ -1281,57 +1283,76 @@ class _SettingPageState extends State<SettingPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Crossfade',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Crossfade',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '$crossFadeValue',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           SfSlider(
                             max: 20.0,
-                            value: _value,
+                            value: double.parse(crossFadeValue.toString()),
                             interval: 20,
                             showLabels: true,
                             minorTicksPerInterval: 1,
                             onChanged: (dynamic value) {
                               setState(() {
-                                _value = double.parse(value.toString());
+                                crossFadeValue =
+                                    double.parse(value.toString()).toInt();
                               });
+                              print(crossFadeValue);
+                              Hive.box('settings')
+                                  .put('crossFadeValue', crossFadeValue);
                             },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                            ),
-                            child: BoxSwitchTile(
-                              title: Text(
-                                'Control From Lock Screen',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                              keyName: 'controlFromLockScreen',
-                              defaultValue: true,
-                              onChanged: (bool val, Box box) {
-                                // box.put(
-                                //   'useSystemTheme',
-                                //   false,
-                                // );
-                                // currentTheme.switchTheme(
-                                //   isDark: val,
-                                //   useSystemTheme: false,
-                                // );
-                                switchToCustomTheme();
-                              },
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(
+                          //     top: 10,
+                          //   ),
+                          //   child: BoxSwitchTile(
+                          //     title: Text(
+                          //       'Control From Lock Screen',
+                          //       style: TextStyle(
+                          //         fontSize: 14,
+                          //         color:
+                          //             Theme.of(context).colorScheme.secondary,
+                          //       ),
+                          //     ),
+                          //     keyName: 'controlFromLockScreen',
+                          //     defaultValue: true,
+                          //     onChanged: (bool val, Box box) {
+                          //       // box.put(
+                          //       //   'useSystemTheme',
+                          //       //   false,
+                          //       // );
+                          //       // currentTheme.switchTheme(
+                          //       //   isDark: val,
+                          //       //   useSystemTheme: false,
+                          //       // );
+                          //       switchToCustomTheme();
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

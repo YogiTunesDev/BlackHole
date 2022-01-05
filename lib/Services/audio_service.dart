@@ -92,6 +92,60 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   AudioPlayerHandlerImpl() {
     _init();
   }
+  double volumeData = 0.0;
+  double counterValue = 0.0;
+  void _listenForDurationChanges() {
+   
+    volumeData = _player!.volume;
+    _positionDataStream.listen((event) {
+       int crossFadeValue =
+          Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
+      // print("crossFadeValue :: ${crossFadeValue}");
+      double volumeDataTemp = (volumeData * 100 / crossFadeValue) /5;
+
+      if (crossFadeValue != 0) {
+        if (event.position.inSeconds == 0) {
+          counterValue = 0;
+          _player!.setVolume(0.0);
+        } else if (event.position.inSeconds == event.duration.inSeconds) {
+          counterValue = 0;
+          _player!.setVolume(0.0);
+        } else if (event.position.inSeconds < crossFadeValue) {
+          //Increment Volume
+          if (counterValue < volumeData) {
+            counterValue = counterValue + ((volumeData * volumeDataTemp) / 100);
+            _player!.setVolume(counterValue);
+          }
+        } else if ((event.duration.inSeconds - crossFadeValue) <
+            event.position.inSeconds) {
+          counterValue = counterValue - ((volumeData * volumeDataTemp) / 100);
+          if (counterValue > 0) {
+            _player!.setVolume(counterValue);
+          }
+          //Decrement Volume
+        }
+        print(
+            "Counter value :: ${counterValue} || player Volume :: ${_player!.volume} || volumeData ::$volumeData || volumeDataTemp :: $volumeDataTemp || ((volumeData*volumeDataTemp)/100) :: ${((volumeData * volumeDataTemp) / 100)}");
+
+        // print("event Duration Decond :: ${event.position.inSeconds}");
+        // print("event Duration  :: ${event.duration.inSeconds}");
+        // print("Position Duration :: ${event.position}");
+      }
+    });
+  }
+
+  Stream<Duration> get _bufferedPositionStream =>
+      playbackState.map((state) => state.bufferedPosition).distinct();
+  Stream<Duration?> get _durationStream =>
+      mediaItem.map((item) => item?.duration).distinct();
+  Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+        AudioService.position,
+        _bufferedPositionStream,
+        _durationStream,
+        (position, bufferedPosition, duration) =>
+            PositionData(position, bufferedPosition, duration ?? Duration.zero),
+      );
 
   Future<void> _init() async {
     final session = await AudioSession.instance;
@@ -297,6 +351,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
     } else {
       _player = AudioPlayer();
     }
+    _listenForDurationChanges();
   }
 
   Future<void> addRecentlyPlayed(MediaItem mediaitem) async {
