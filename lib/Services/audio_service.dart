@@ -95,13 +95,12 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   double volumeData = 0.0;
   double counterValue = 0.0;
   void _listenForDurationChanges() {
-   
     volumeData = _player!.volume;
     _positionDataStream.listen((event) {
-       int crossFadeValue =
+      int crossFadeValue =
           Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
       // print("crossFadeValue :: ${crossFadeValue}");
-      double volumeDataTemp = (volumeData * 100 / crossFadeValue) /5;
+      double volumeDataTemp = (volumeData * 100 / crossFadeValue) / 5;
 
       if (crossFadeValue != 0) {
         if (event.position.inSeconds == 0) {
@@ -124,9 +123,8 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
           }
           //Decrement Volume
         }
-        print(
-            "Counter value :: ${counterValue} || player Volume :: ${_player!.volume} || volumeData ::$volumeData || volumeDataTemp :: $volumeDataTemp || ((volumeData*volumeDataTemp)/100) :: ${((volumeData * volumeDataTemp) / 100)}");
-
+        // print(
+        // "Counter value :: ${counterValue} || player Volume :: ${_player!.volume} || volumeData ::$volumeData || volumeDataTemp :: $volumeDataTemp || ((volumeData*volumeDataTemp)/100) :: ${((volumeData * volumeDataTemp) / 100)}");
         // print("event Duration Decond :: ${event.position.inSeconds}");
         // print("event Duration  :: ${event.duration.inSeconds}");
         // print("Position Duration :: ${event.position}");

@@ -499,25 +499,7 @@ class _HomePageState extends State<HomePage> {
                                         // collapseMode: CollapseMode.parallax,
                                         background: GestureDetector(
                                           onTap: () async {
-                                            await showTextInputDialog(
-                                              context: context,
-                                              title: 'Name',
-                                              initialText: name,
-                                              keyboardType: TextInputType.name,
-                                              onSubmitted: (value) {
-                                                Hive.box('settings').put(
-                                                  'name',
-                                                  value.trim(),
-                                                );
-                                                name = value.trim();
-                                                Navigator.pop(context);
-                                                updateUserDetails(
-                                                  'name',
-                                                  value.trim(),
-                                                );
-                                              },
-                                            );
-                                            setState(() {});
+                                            
                                           },
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,

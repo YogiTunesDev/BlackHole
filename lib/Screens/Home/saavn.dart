@@ -9,6 +9,7 @@ import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/model/user_info_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,15 +45,29 @@ class _SaavnHomePageState extends State<SaavnHomePage>
   Future<void> getHomePageData() async {
     apiLoading = true;
     setState(() {});
+
+    Map userInfoData =
+        Hive.box('settings').get('userInfoData', defaultValue: {}) as Map;
+    if (userInfoData.isEmpty) {
+      final UserInfoResponse? userinfodatares =
+          await YogitunesAPI().fetchUserData();
+      // print("RESPONSE DATA ::::: $recievedData");
+      if (userinfodatares != null) {
+        if (userinfodatares.data != null) {
+          // Hive.box('cache').put('homepage', recievedData);
+          Hive.box('settings').put('name', userinfodatares.data?.name);
+          Hive.box('settings').put('userInfoData', userinfodatares.toMap());
+          // lists = data.length;
+          // lists = [...?data['collections']];
+          // lists.insert((lists.length / 2).round(), 'likedArtists');
+        }
+      }
+    }
+
     final HomeResponse? recievedData = await YogitunesAPI().fetchHomePageData();
-    // print("RESPONSE DATA ::::: $recievedData");
     if (recievedData != null) {
       if (recievedData.data != null) {
-        // Hive.box('cache').put('homepage', recievedData);
         data = recievedData;
-        // lists = data.length;
-        // lists = [...?data['collections']];
-        // lists.insert((lists.length / 2).round(), 'likedArtists');
       }
     }
 
