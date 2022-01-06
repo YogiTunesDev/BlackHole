@@ -1,4 +1,5 @@
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:flutter/material.dart';
 
@@ -39,20 +40,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/splash.png'),
-              // const Center(
-              //   child: CircularProgressIndicator(),
-              // ),
-            ],
+    return GradientContainer(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          // color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset('assets/splash.png'),
+                // const Center(
+                //   child: CircularProgressIndicator(),
+                // ),
+              ],
+            ),
           ),
         ),
       ),

@@ -39,8 +39,8 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
   bool checked = false;
   String? appVersion;
-  String name =
-      Hive.box('settings').get('name', defaultValue: 'Guest') as String;
+  String? name =
+      Hive.box('settings').get('name', defaultValue: 'Guest') as String?;
   bool checkUpdate =
       Hive.box('settings').get('checkUpdate', defaultValue: false) as bool;
   bool autoBackup =
@@ -437,6 +437,8 @@ class _HomePageState extends State<HomePage> {
                               Navigator.pop(context);
                               var box = await Hive.openBox('api-token');
                               box.put('token', null);
+                              Hive.box('settings').put('name', null);
+                              Hive.box('settings').put('userInfoData', {});
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/login', (route) => false);
                             },
@@ -498,9 +500,7 @@ class _HomePageState extends State<HomePage> {
                                       return FlexibleSpaceBar(
                                         // collapseMode: CollapseMode.parallax,
                                         background: GestureDetector(
-                                          onTap: () async {
-                                            
-                                          },
+                                          onTap: () async {},
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
@@ -560,9 +560,6 @@ class _HomePageState extends State<HomePage> {
                                                                       .get(
                                                                         'name',
                                                                       )
-                                                                      .split(
-                                                                        ' ',
-                                                                      )[0]
                                                                       .toString(),
                                                                 ),
                                                           style:
