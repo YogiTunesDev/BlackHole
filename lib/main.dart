@@ -182,6 +182,7 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lightTheme(
         context: context,
       ),
+      
       darkTheme: AppTheme.darkTheme(
         context: context,
       ),

@@ -4,7 +4,7 @@ description: A Flutter Music Player.
 # Prevent accidental publishing to pub.dev.
 publish_to: "none"
 
-version: 1.12.2+22
+version: 2.0.1+32
 
 environment:
   sdk: ">=2.13.0 <3.0.0"
@@ -71,3 +71,11 @@ flutter:
   assets:
     # Add assets to the application.
     - assets/
+
+  fonts:
+    - family: SharpSans
+      fonts:
+        - asset: assets/font/SharpSansBold.otf
+        # - asset: assets/fonts/OpenSans-Bold.ttf
+        # - asset: assets/fonts/OpenSans-Semibold.ttf
+          weight: 700

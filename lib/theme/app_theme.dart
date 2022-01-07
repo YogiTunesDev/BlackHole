@@ -11,6 +11,7 @@ class AppTheme {
     required BuildContext context,
   }) {
     return ThemeData(
+      fontFamily: 'SharpSans',
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor: currentTheme.currentColor(),
         cursorColor: currentTheme.currentColor(),
@@ -55,6 +56,7 @@ class AppTheme {
     required BuildContext context,
   }) {
     return ThemeData(
+      fontFamily: 'SharpSans',
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           primary: Colors.white,
@@ -63,9 +65,9 @@ class AppTheme {
         ),
       ),
       textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: currentTheme.currentColor(),
-        cursorColor: currentTheme.currentColor(),
-        selectionColor: currentTheme.currentColor(),
+        selectionHandleColor: Color(0xFFFFFFFF), //currentTheme.currentColor(),
+        cursorColor: Color(0xFFFFFFFF), //currentTheme.currentColor(),
+        selectionColor: Color(0xFFFFFFFF), // currentTheme.currentColor(),
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
@@ -88,18 +90,18 @@ class AppTheme {
           borderRadius: BorderRadius.circular(7.0),
         ),
       ),
-      dialogBackgroundColor: currentTheme.getCardColor(),
+      dialogBackgroundColor: Color(0xFF414042),//currentTheme.getCardColor(),
       progressIndicatorTheme: const ProgressIndicatorThemeData()
-          .copyWith(color: currentTheme.currentColor()),
+          .copyWith(color: Color(0xFFFFFFFF)),
       iconTheme: const IconThemeData(
         color: Colors.white,
         opacity: 1.0,
         size: 24.0,
       ),
-      indicatorColor: currentTheme.currentColor(),
+      indicatorColor: Color(0xFFFFFFFF),
       colorScheme: Theme.of(context).colorScheme.copyWith(
             primary: Colors.white,
-            secondary: currentTheme.currentColor(),
+            secondary: Color(0xFFFFFFFF),
             brightness: Brightness.dark,
           ),
     );

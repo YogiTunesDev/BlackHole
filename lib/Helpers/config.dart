@@ -38,8 +38,9 @@ class MyTheme with ChangeNotifier {
       Colors.black,
     ],
     [
-      Colors.grey[900]!,
-      Colors.black,
+      // Colors.grey[900]!,
+      // Colors.black,
+      Color(0xFF414042),Color(0xFF414042),
     ],
     [
       Colors.grey[900]!,
@@ -292,9 +293,7 @@ class MyTheme with ChangeNotifier {
         return Colors.white;
 
       default:
-        return _isDark 
-        ? Color(0xFF336C90) 
-        : Colors.lightBlueAccent[400]!;
+        return _isDark ? Color(0xFF336C90) : Colors.lightBlueAccent[400]!;
     }
   }
 
