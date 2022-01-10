@@ -1345,7 +1345,9 @@ class FilterButton extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 12,
-                  color: Theme.of(context).colorScheme.primaryVariant,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Colors.white,
                 ),
               ),
             ),

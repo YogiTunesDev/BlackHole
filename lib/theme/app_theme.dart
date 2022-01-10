@@ -65,9 +65,9 @@ class AppTheme {
         ),
       ),
       textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: Color(0xFFFFFFFF), //currentTheme.currentColor(),
+        selectionHandleColor: Colors.white.withOpacity(0.2), //currentTheme.currentColor(),
         cursorColor: Color(0xFFFFFFFF), //currentTheme.currentColor(),
-        selectionColor: Color(0xFFFFFFFF), // currentTheme.currentColor(),
+        selectionColor:  Colors.white.withOpacity(0.2), // currentTheme.currentColor(),
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(

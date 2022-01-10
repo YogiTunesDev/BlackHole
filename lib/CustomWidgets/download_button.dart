@@ -188,7 +188,7 @@ class _MultiDownloadButtonState extends State<MultiDownloadButton> {
                         Icons.download_rounded,
                       ),
                       iconSize: 25.0,
-                      color: Theme.of(context).iconTheme.color,
+                      // color: Theme.of(context).iconTheme.color,
                       tooltip: AppLocalizations.of(context)!.down,
                       onPressed: () async {
                         for (final items in widget.data) {

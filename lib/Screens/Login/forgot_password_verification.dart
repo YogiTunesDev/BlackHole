@@ -46,7 +46,7 @@ class _ForgotPasswordVerificationScreenState
                   height: MediaQuery.of(context).size.width,
                   child: const Image(
                     image: AssetImage(
-                      'assets/icon-white-trans.png',
+                      'assets/icon_white_trans_new.png',
                     ),
                   ),
                 ),
@@ -138,7 +138,10 @@ class _ForgotPasswordVerificationScreenState
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color:  Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -171,8 +174,10 @@ class _ForgotPasswordVerificationScreenState
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Enter Verification Code',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintStyle:  TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       validator: (value) {
@@ -266,10 +271,14 @@ class _ForgotPasswordVerificationScreenState
                                           ],
                                         ),
                                         child: Center(
-                                          child: const Text(
+                                          child:  Text(
                                             'Verify Code',
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color:Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.black
+                                                  : Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20.0,
                                             ),

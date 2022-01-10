@@ -4,6 +4,7 @@ import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/supabase.dart';
 import 'package:blackhole/model/login_response.dart';
+import 'package:blackhole/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
@@ -81,7 +82,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   height: MediaQuery.of(context).size.width,
                   child: const Image(
                     image: AssetImage(
-                      'assets/icon-white-trans.png',
+                      'assets/icon_white_trans_new.png',
                     ),
                   ),
                 ),
@@ -149,7 +150,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -175,12 +179,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                           Icons.mail,
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .secondary,
+                                              .primary,
                                         ),
                                         border: InputBorder.none,
                                         hintText: "Enter Your Email",
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       // onSubmitted: (String value) async {
@@ -293,10 +299,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                           ],
                                         ),
                                         child: Center(
-                                          child: const Text(
+                                          child: Text(
                                             'Signin / Register',
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.black
+                                                  : Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20.0,
                                             ),

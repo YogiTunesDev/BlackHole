@@ -221,7 +221,7 @@ class _SettingPageState extends State<SettingPage> {
                                 .darkMode,
                           ),
                           keyName: 'darkMode',
-                          defaultValue: true,
+                          defaultValue: false,
                           onChanged: (bool val, Box box) {
                             box.put(
                               'useSystemTheme',
@@ -896,20 +896,16 @@ class _SettingPageState extends State<SettingPage> {
                         //       isDark: true,
                         //     );
                         //     Hive.box('settings').put('darkMode', true);
-
                         //     settingsBox.put('backGrad', 4);
                         //     currentTheme.backGrad = 4;
                         //     settingsBox.put('cardGrad', 6);
                         //     currentTheme.cardGrad = 6;
                         //     settingsBox.put('bottomGrad', 4);
                         //     currentTheme.bottomGrad = 4;
-
                         //     currentTheme.switchCanvasColor('Black');
                         //     canvasColor = 'Black';
-
                         //     currentTheme.switchCardColor('Grey900');
                         //     cardColor = 'Grey900';
-
                         //     themeColor = 'White';
                         //     colorHue = 400;
                         //     currentTheme.switchColor(
@@ -937,16 +933,13 @@ class _SettingPageState extends State<SettingPage> {
                         //     onChanged: (String? themeChoice) {
                         //       if (themeChoice != null) {
                         //         const deflt = 'Default';
-
                         //         currentTheme.setInitialTheme(themeChoice);
-
                         //         setState(
                         //           () {
                         //             theme = themeChoice;
                         //             if (themeChoice == 'Custom') return;
                         //             final selectedTheme =
                         //                 userThemes[themeChoice];
-
                         //             settingsBox.put(
                         //               'backGrad',
                         //               themeChoice == deflt
@@ -956,7 +949,6 @@ class _SettingPageState extends State<SettingPage> {
                         //             currentTheme.backGrad = themeChoice == deflt
                         //                 ? 2
                         //                 : selectedTheme['backGrad'] as int;
-
                         //             settingsBox.put(
                         //               'cardGrad',
                         //               themeChoice == deflt
@@ -966,7 +958,6 @@ class _SettingPageState extends State<SettingPage> {
                         //             currentTheme.cardGrad = themeChoice == deflt
                         //                 ? 4
                         //                 : selectedTheme['cardGrad'] as int;
-
                         //             settingsBox.put(
                         //               'bottomGrad',
                         //               themeChoice == deflt
@@ -977,7 +968,6 @@ class _SettingPageState extends State<SettingPage> {
                         //                     deflt
                         //                 ? 3
                         //                 : selectedTheme['bottomGrad'] as int;
-
                         //             currentTheme.switchCanvasColor(
                         //               themeChoice == deflt
                         //                   ? 'Grey'
@@ -989,7 +979,6 @@ class _SettingPageState extends State<SettingPage> {
                         //                 ? 'Grey'
                         //                 : selectedTheme['canvasColor']
                         //                     as String;
-
                         //             currentTheme.switchCardColor(
                         //               themeChoice == deflt
                         //                   ? 'Grey900'
@@ -1000,7 +989,6 @@ class _SettingPageState extends State<SettingPage> {
                         //             cardColor = themeChoice == deflt
                         //                 ? 'Grey900'
                         //                 : selectedTheme['cardColor'] as String;
-
                         //             themeColor = themeChoice == deflt
                         //                 ? 'Teal'
                         //                 : selectedTheme['accentColor']
@@ -1008,13 +996,11 @@ class _SettingPageState extends State<SettingPage> {
                         //             colorHue = themeChoice == deflt
                         //                 ? 400
                         //                 : selectedTheme['colorHue'] as int;
-
                         //             currentTheme.switchColor(
                         //               themeColor,
                         //               colorHue,
                         //               notify: false,
                         //             );
-
                         //             currentTheme.switchTheme(
                         //               useSystemTheme: !(themeChoice == deflt) &&
                         //                   selectedTheme['useSystemTheme']
@@ -1254,7 +1240,10 @@ class _SettingPageState extends State<SettingPage> {
                                     'Manage Subscription',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.white,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1473,7 +1462,10 @@ class _SettingPageState extends State<SettingPage> {
                                     'Send a message',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.white,
+                                      color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.black
+                                      : Colors.white,
                                     ),
                                   ),
                                 ),

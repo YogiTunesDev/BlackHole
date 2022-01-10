@@ -40,7 +40,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   height: MediaQuery.of(context).size.width,
                   child: const Image(
                     image: AssetImage(
-                      'assets/icon-white-trans.png',
+                      'assets/icon_white_trans_new.png',
                     ),
                   ),
                 ),
@@ -59,40 +59,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Row(
-                              children: [
-                                RichText(
-                                  text: const TextSpan(
-                                    text: 'Reset Password',
-                                    style: TextStyle(
-                                      height: 0.97,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                    // children: <TextSpan>[
-                                    //   const TextSpan(
-                                    //     text: 'Music',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Colors.white,
-                                    //     ),
-                                    //   ),
-                                    //   TextSpan(
-                                    //     text: '.',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Theme.of(context)
-                                    //           .colorScheme
-                                    //           .secondary,
-                                    //     ),
-                                    //   ),
-                                    // ],
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'Reset Password',
+                              style: TextStyle(
+                                height: 0.97,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.1,
@@ -113,7 +87,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -162,8 +139,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Enter New Password',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       validator: (value) {
@@ -186,7 +165,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -235,8 +217,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Enter Confirm Password',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       validator: (value) {
@@ -338,10 +322,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                           ],
                                         ),
                                         child: Center(
-                                          child: const Text(
+                                          child: Text(
                                             'Reset Password',
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.black
+                                                  : Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20.0,
                                             ),

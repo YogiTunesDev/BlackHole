@@ -37,7 +37,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   height: MediaQuery.of(context).size.width,
                   child: const Image(
                     image: AssetImage(
-                      'assets/icon-white-trans.png',
+                      'assets/icon_white_trans_new.png',
                     ),
                   ),
                 ),
@@ -235,10 +235,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           ],
                                         ),
                                         child: Center(
-                                          child: const Text(
+                                          child:  Text(
                                             'Send Verification Code',
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.black
+                                                  : Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20.0,
                                             ),

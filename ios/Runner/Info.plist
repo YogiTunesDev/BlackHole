@@ -42,6 +42,10 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to play music</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>YogiTunes needs to access your microphone for search songs.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>YogiTunes needs to access the gallery.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

@@ -285,8 +285,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     'Subscribe',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                   ),
                                 ),

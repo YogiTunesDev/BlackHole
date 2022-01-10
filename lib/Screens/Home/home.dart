@@ -18,6 +18,7 @@ import 'package:blackhole/Screens/Top Charts/top.dart';
 import 'package:blackhole/Screens/YouTube/youtube_home.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
 import 'package:blackhole/Services/uni_link_service.dart';
+import 'package:blackhole/theme/app_theme.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -278,9 +279,10 @@ class _HomePageState extends State<HomePage> {
                         title: RichText(
                           text: TextSpan(
                             text: AppLocalizations.of(context)!.appTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 30.0,
                               fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             children: <TextSpan>[
                               TextSpan(

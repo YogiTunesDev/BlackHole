@@ -23,10 +23,15 @@ class _GradientContainerState extends State<GradientContainer> {
               ? ((widget.opacity == true)
                   ? currentTheme.getTransBackGradient()
                   : currentTheme.getBackGradient())
-              : [
-                  const Color(0xfff5f9ff),
-                  Colors.white,
-                ],
+              : (widget.opacity == true)
+                  ? [
+                      const Color(0x3BF5F9FF),
+                      const Color(0x3BF5F9FF),
+                    ]
+                  : [
+                      const Color(0xfff5f9ff),
+                      Colors.white,
+                    ],
         ),
       ),
       child: widget.child,
