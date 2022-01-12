@@ -195,9 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       controller: passwordController,
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
+                                      keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
                                         focusedBorder:
                                             const UnderlineInputBorder(
@@ -352,49 +350,49 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      forgotLoader
-                                          ? Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            )
-                                          : TextButton(
-                                              onPressed: () async {
-                                                setState(() {
-                                                  forgotLoader = true;
-                                                });
-                                                final ForgotPasswordResponse?
-                                                    forgotPasswordResponse =
-                                                    await YogitunesAPI()
-                                                        .forgotPassword(
-                                                  args['email'].toString(),
-                                                );
+                                      if (forgotLoader)
+                                        const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      else
+                                        TextButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              forgotLoader = true;
+                                            });
+                                            final ForgotPasswordResponse?
+                                                forgotPasswordResponse =
+                                                await YogitunesAPI()
+                                                    .forgotPassword(
+                                              args['email'].toString(),
+                                            );
 
-                                                if (forgotPasswordResponse !=
-                                                    null) {
-                                                  if (forgotPasswordResponse
-                                                      .status!) {
-                                                    Navigator.pushNamed(context,
-                                                        '/forgotPasswordVerification',
-                                                        arguments: {
-                                                          'email': args['email']
-                                                              .toString(),
-                                                        });
-                                                  } else {
-                                                    // errorMessage =
-                                                    //     forgotPasswordResponse.data
-                                                    //         .toString();
-                                                  }
-                                                } else {
-                                                  // errorMessage = 'Server Down!!!';
-                                                }
-                                                setState(() {
-                                                  forgotLoader = false;
-                                                });
-                                              },
-                                              child: const Text(
-                                                'Forgot Password',
-                                              ),
-                                            ),
+                                            if (forgotPasswordResponse !=
+                                                null) {
+                                              if (forgotPasswordResponse
+                                                  .status!) {
+                                                Navigator.pushNamed(context,
+                                                    '/forgotPasswordVerification',
+                                                    arguments: {
+                                                      'email': args['email']
+                                                          .toString(),
+                                                    });
+                                              } else {
+                                                // errorMessage =
+                                                //     forgotPasswordResponse.data
+                                                //         .toString();
+                                              }
+                                            } else {
+                                              // errorMessage = 'Server Down!!!';
+                                            }
+                                            setState(() {
+                                              forgotLoader = false;
+                                            });
+                                          },
+                                          child: const Text(
+                                            'Forgot Password',
+                                          ),
+                                        ),
                                     ],
                                   ),
                                   Padding(

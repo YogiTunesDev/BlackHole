@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:blackhole/Helpers/audio_query.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -251,19 +253,22 @@ class DownloadsSearch extends SearchDelegate {
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
-          // Navigator.of(context).push(
-          //   PageRouteBuilder(
-          //     opaque: false,
-          //     pageBuilder: (_, __, ___) => PlayScreen(
-          //       songsList: suggestionList,
-          //       index: index,
-          //       offline: isDowns,
-          //       fromMiniplayer: false,
-          //       fromDownloads: isDowns,
-          //       recommend: false,
-          //     ),
-          //   ),
-          // );
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              opaque: false,
+              pageBuilder: (_, __, ___) => PlayScreen(
+                songsList: List<SongItemModel>.from(suggestionList.map(
+                  (x) => SongItemModel.fromMap(
+                      json.decode(json.encode(x)) as Map<String, dynamic>),
+                )),
+                index: index,
+                offline: isDowns,
+                fromMiniplayer: false,
+                fromDownloads: isDowns,
+                recommend: false,
+              ),
+            ),
+          );
         },
       ),
     );
@@ -271,7 +276,8 @@ class DownloadsSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    throw UnimplementedError();
+    return Container();
+    // throw UnimplementedError();
   }
 
   @override

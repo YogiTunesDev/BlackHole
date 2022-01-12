@@ -35,6 +35,45 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
     },
   ];
 
+  List<Map<String, dynamic>> legendGraph = [
+    // {
+    //   'duration': 10,
+    //   'color': Colors.blue,
+    // },
+    // {
+    //   'duration': 5,
+    //   'color': Colors.yellow,
+    // },
+    // {
+    //   'duration': 4,
+    //   'color': Colors.orange,
+    // },
+    // {
+    //   'duration': 1,
+    //   'color': Colors.red,
+    // },
+  ];
+
+  List<Map<String, dynamic>> legendGraphTemp = [
+    // {
+    //   'duration': 10,
+    //   'color': Colors.blue,
+    // },
+    // {
+    //   'duration': 5,
+    //   'color': Colors.yellow,
+    // },
+    // {
+    //   'duration': 4,
+    //   'color': Colors.orange,
+    // },
+    // {
+    //   'duration': 1,
+    //   'color': Colors.red,
+    // },
+  ];
+
+  int totalMinutes = 20;
   List<String> selectedPlaylist = [];
   int pageNo = 1;
   bool isFinish = false;
@@ -62,6 +101,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
           if (playlistRes.data != null) {
             if (playlistRes.data!.data!.isNotEmpty) {
               lstSongBpm.addAll(playlistRes.data!.data!);
+              // print(
+              //     "lstSongBpm.reversed.toList() :: ${lstSongBpm.reversed.toList()}");
+              // lstSongBpm.reversed;
             } else {
               isFinish = true;
             }
@@ -95,6 +137,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Playlist'),
@@ -129,7 +172,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 // fontSize: 18,
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -153,8 +198,8 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       child: const Text(
                         'Select songs for each phase of your practice.\nUse the filter to narrow down your songs to a specific yoga type of phase.',
                         style: TextStyle(
-                          color: Colors.white,
-                        ),
+                            // color: Colors.white,
+                            ),
                       ),
                     ),
                     Container(
@@ -223,7 +268,43 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       ),
                     ),
                     const SizedBox(
-                      height: 70,
+                      height: 20,
+                    ),
+                    if (mainDuration != 0)
+                      SizedBox(
+                        height: 50,
+                        width: width,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: legendGraphTemp.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            final double w = (width / mainDuration) *
+                                int.parse(legendGraphTemp[index]['duration']
+                                    .toString());
+                            return Container(
+                              height: 50,
+                              width: w,
+                              color: legendGraphTemp[index]['color'] as Color,
+                              child: Center(
+                                child: w > 20
+                                    ? Text(
+                                        '${Duration(seconds: int.parse(legendGraphTemp[index]['duration'].toString())).inMinutes}M',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.fade,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 8,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -244,12 +325,14 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Total time: ${Duration(seconds: mainDuration).inHours}:${(Duration(seconds: mainDuration).inMinutes < 60) ? Duration(seconds: mainDuration).inMinutes : (Duration(seconds: mainDuration).inMinutes - (Duration(seconds: mainDuration).inHours * 60))}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: Theme.of(context).colorScheme.secondary,
+                          Expanded(
+                            child: Text(
+                              'Total time: ${Duration(seconds: mainDuration).inHours}:${(Duration(seconds: mainDuration).inMinutes < 60) ? Duration(seconds: mainDuration).inMinutes : (Duration(seconds: mainDuration).inMinutes - (Duration(seconds: mainDuration).inHours * 60))}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                           TextButton(
@@ -306,8 +389,13 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                 }
                               });
                             },
-                            child: const Text(
-                              'Filter',
+                            child: Row(
+                              children: const [
+                                Icon(Icons.filter_alt_rounded),
+                                Text(
+                                  'Filter',
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -416,6 +504,44 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                       mainDuration -= mDur ?? 0;
                                       selectedPlaylist
                                           .remove(item.id.toString());
+                                      legendGraph.removeWhere((element) =>
+                                          element['id'] == item.id);
+
+                                      legendGraphTemp = [];
+
+                                      if (legendGraph.isNotEmpty) {
+                                        for (int i = 0;
+                                            i < legendGraph.length;
+                                            i++) {
+                                          if (legendGraphTemp.isNotEmpty) {
+                                            if (legendGraphTemp.last['color'] ==
+                                                legendGraph[i]['color']) {
+                                              print(1);
+                                              var duration = legendGraphTemp
+                                                  .last['duration'];
+                                              print(2);
+                                              legendGraphTemp.removeLast();
+                                              print(3);
+                                              legendGraphTemp.add({
+                                                'duration': int.parse(
+                                                        legendGraph[i]
+                                                                ['duration']
+                                                            .toString()) +
+                                                    int.parse(
+                                                        duration.toString()),
+                                                'color': legendGraph[i]
+                                                    ['color'],
+                                              });
+                                              print(5);
+                                            } else {
+                                              legendGraphTemp
+                                                  .add(legendGraph[i]);
+                                            }
+                                          } else {
+                                            legendGraphTemp.add(legendGraph[i]);
+                                          }
+                                        }
+                                      }
                                     });
                                     // print(selectedPlaylist);
                                   },
@@ -431,7 +557,49 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                     setState(() {
                                       mainDuration += mDur ?? 0;
                                       selectedPlaylist.add(item.id.toString());
+                                      legendGraph.add({
+                                        'id': item.id,
+                                        'duration': mDur ?? 0,
+                                        'color': getBpmColor(bpmType),
+                                      });
+
+                                      legendGraphTemp = [];
+
+                                      if (legendGraph.isNotEmpty) {
+                                        for (int i = 0;
+                                            i < legendGraph.length;
+                                            i++) {
+                                          if (legendGraphTemp.isNotEmpty) {
+                                            if (legendGraphTemp.last['color'] ==
+                                                legendGraph[i]['color']) {
+                                              print(1);
+                                              var duration = legendGraphTemp
+                                                  .last['duration'];
+                                              print(2);
+                                              legendGraphTemp.removeLast();
+                                              print(3);
+                                              legendGraphTemp.add({
+                                                'duration': int.parse(
+                                                        legendGraph[i]
+                                                                ['duration']
+                                                            .toString()) +
+                                                    int.parse(
+                                                        duration.toString()),
+                                                'color': legendGraph[i]
+                                                    ['color'],
+                                              });
+                                              print(5);
+                                            } else {
+                                              legendGraphTemp
+                                                  .add(legendGraph[i]);
+                                            }
+                                          } else {
+                                            legendGraphTemp.add(legendGraph[i]);
+                                          }
+                                        }
+                                      }
                                     });
+
                                     // print(selectedPlaylist.toString() +
                                     //     selected.toString());
                                   },
@@ -632,7 +800,10 @@ class _FiltersState extends State<Filters> {
                       decoration: BoxDecoration(
                           color: selectedCategory == 0
                               ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context).colorScheme.primary,
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.6),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(100),
                             bottomLeft: Radius.circular(100),
@@ -643,7 +814,11 @@ class _FiltersState extends State<Filters> {
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: Theme.of(context).colorScheme.primaryVariant,
+                            color: Theme.of(context).brightness ==
+                                        Brightness.light ||
+                                    selectedCategory != 0
+                                ? Colors.white
+                                : Theme.of(context).colorScheme.primaryVariant,
                           ),
                         ),
                       ),
@@ -662,7 +837,10 @@ class _FiltersState extends State<Filters> {
                       decoration: BoxDecoration(
                           color: selectedCategory == 1
                               ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context).colorScheme.primary,
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.6),
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(100),
                             bottomRight: Radius.circular(100),
@@ -673,7 +851,11 @@ class _FiltersState extends State<Filters> {
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: Theme.of(context).colorScheme.primaryVariant,
+                            color: Theme.of(context).brightness ==
+                                        Brightness.light ||
+                                    selectedCategory != 1
+                                ? Colors.white
+                                : Theme.of(context).colorScheme.primaryVariant,
                           ),
                         ),
                       ),
@@ -718,14 +900,24 @@ class _FiltersState extends State<Filters> {
                         borderRadius: BorderRadius.circular(100),
                         color: selectedVocal == vocals[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.primary),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.6)),
                     child: Center(
                       child: Text(
                         vocals[index]['val'].toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
-                          color: Theme.of(context).colorScheme.primaryVariant,
+                          color: Theme.of(context).brightness ==
+                                      Brightness.light ||
+                                  selectedVocal !=
+                                      vocals[index]['val'].toString()
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.primaryVariant,
                         ),
                       ),
                     ),
@@ -769,14 +961,24 @@ class _FiltersState extends State<Filters> {
                         borderRadius: BorderRadius.circular(100),
                         color: selectedTempo == tempo[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.primary),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.6)),
                     child: Center(
                       child: Text(
                         tempo[index]['val'].toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
-                          color: Theme.of(context).colorScheme.primaryVariant,
+                          color: Theme.of(context).brightness ==
+                                      Brightness.light ||
+                                  selectedTempo !=
+                                      tempo[index]['val'].toString()
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.primaryVariant,
                         ),
                       ),
                     ),
@@ -820,14 +1022,24 @@ class _FiltersState extends State<Filters> {
                         borderRadius: BorderRadius.circular(100),
                         color: selectedStyle == style[index]['val'].toString()
                             ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.primary),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.6)),
                     child: Center(
                       child: Text(
                         style[index]['val'].toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12,
-                          color: Theme.of(context).colorScheme.primaryVariant,
+                          color: Theme.of(context).brightness ==
+                                      Brightness.light ||
+                                  selectedStyle !=
+                                      style[index]['val'].toString()
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.primaryVariant,
                         ),
                       ),
                     ),

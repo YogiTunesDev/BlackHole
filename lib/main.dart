@@ -22,13 +22,14 @@ import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Settings/subscription.dart';
 import 'package:blackhole/Services/audio_service.dart';
 import 'package:blackhole/theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,6 +53,9 @@ Future<void> main() async {
   await Intercom.initialize('ebyep3ia',
       iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
       androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
+  // await Firebase.initializeApp();
+  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(MyApp());
 }
 
@@ -86,7 +90,6 @@ Future<void> startService() async {
       // androidStopForegroundOnPause: Hive.box('settings')
       // .get('stopServiceOnPause', defaultValue: true) as bool,
       notificationColor: Colors.grey[900],
-      
     ),
   );
   GetIt.I.registerSingleton<AudioPlayerHandler>(audioHandler);
@@ -157,15 +160,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.black38,
-        // systemNavigationBarContrastEnforced: false,
-        // systemNavigationBarIconBrightness:
-        //     Theme.of(context).brightness == Brightness.dark
-        //         ? Brightness.light
-        //         : Brightness.dark,
-      ),
+      SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.black38,
+          systemNavigationBarContrastEnforced: false,
+          systemNavigationBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : Brightness.dark),
     );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -182,7 +184,6 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lightTheme(
         context: context,
       ),
-      
       darkTheme: AppTheme.darkTheme(
         context: context,
       ),

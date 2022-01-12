@@ -159,146 +159,144 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         }
       }
     }
-    return SafeArea(
-      child: GradientContainer(
-        child: Scaffold(
-          appBar: AppBar(
-            leading: isFirstTime ? Container() : null,
-            title: Text("Subscription"),
-          ),
-          body: isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: lstStr.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.check, color: Colors.green),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      lstStr[index],
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
+    return GradientContainer(
+      child: Scaffold(
+        appBar: AppBar(
+          leading: isFirstTime ? Container() : null,
+          title: Text("Subscription"),
+        ),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: lstStr.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.check, color: Colors.green),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    lstStr[index],
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: lstDescription.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              lstDescription[index],
+                              style: const TextStyle(
+                                fontSize: 12,
                               ),
-                            );
-                          },
+                            ),
+                          );
+                        },
+                      ),
+                      // if (products.isNotEmpty)
+                      //   Text(
+                      //     jsonDecode(products[0].originalJson!)['price']
+                      //         .toString(),
+                      //     style: TextStyle(
+                      //       fontSize: 22,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Theme.of(context).colorScheme.secondary,
+                      //     ),
+                      //   ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      if (products.isNotEmpty)
+                        Text(
+                          'You will be charges at ${products[0].localizedPrice.toString()}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Divider(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: lstDescription.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                lstDescription[index],
-                                style: const TextStyle(
-                                  fontSize: 12,
+                      SizedBox(
+                        height: 20,
+                      ),
+                      if (products.isNotEmpty)
+                        if (buttonLoading)
+                          CircularProgressIndicator()
+                        else
+                          InkWell(
+                            onTap: () async {
+                              setState(() {
+                                buttonLoading = true;
+                              });
+                              FlutterInappPurchase.instance
+                                  .requestPurchase(products[0].productId!);
+                              // final PurchaseParam purchaseParam =
+                              //     PurchaseParam(productDetails: products[0]);
+
+                              // InAppPurchase.instance
+                              //     .buyNonConsumable(purchaseParam: purchaseParam);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              margin:
+                                  const EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color:
+                                    Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Subscribe',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        // if (products.isNotEmpty)
-                        //   Text(
-                        //     jsonDecode(products[0].originalJson!)['price']
-                        //         .toString(),
-                        //     style: TextStyle(
-                        //       fontSize: 22,
-                        //       fontWeight: FontWeight.bold,
-                        //       color: Theme.of(context).colorScheme.secondary,
-                        //     ),
-                        //   ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        if (products.isNotEmpty)
-                          Text(
-                            'You will be charges at ${products[0].localizedPrice.toString()}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        if (products.isNotEmpty)
-                          if (buttonLoading)
-                            CircularProgressIndicator()
-                          else
-                            InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  buttonLoading = true;
-                                });
-                                FlutterInappPurchase.instance
-                                    .requestPurchase(products[0].productId!);
-                                // final PurchaseParam purchaseParam =
-                                //     PurchaseParam(productDetails: products[0]);
-
-                                // InAppPurchase.instance
-                                //     .buyNonConsumable(purchaseParam: purchaseParam);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Subscribe',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-        ),
+              ),
       ),
     );
   }

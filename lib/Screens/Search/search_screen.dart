@@ -67,6 +67,9 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     lstKeywordSearch.insert(0, search);
     searchCacheData!.put("searchKeywordList", lstKeywordSearch);
+    controller.text = search;
+    controller.selection =
+        TextSelection(baseOffset: search.length, extentOffset: search.length);
     searchResponse = await YogitunesAPI().search(search, isMyLibrary);
     setState(() {
       isLoading = false;
@@ -277,11 +280,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12,
-                                          color: isMyLibrary
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .primaryVariant
-                                              : Colors.white,
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? !isMyLibrary
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .primaryVariant
+                                                  : Colors.white
+                                              : isMyLibrary
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .primaryVariant
+                                                  : Colors.white,
                                         ),
                                       ),
                                     ),
@@ -316,11 +326,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12,
-                                          color: isMyLibrary
-                                              ? Colors.white
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .primaryVariant,
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? !isMyLibrary
+                                                  ? Colors.white
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primaryVariant
+                                              : isMyLibrary
+                                                  ? Colors.white
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primaryVariant,
                                         ),
                                       ),
                                     ),

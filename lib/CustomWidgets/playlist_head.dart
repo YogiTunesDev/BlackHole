@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -35,19 +38,22 @@ class PlaylistHead extends StatelessWidget {
             onPressed: () {
               final tempList = songsList.toList();
               tempList.shuffle();
-              // Navigator.of(context).push(
-              //   PageRouteBuilder(
-              //     opaque: false,
-              //     pageBuilder: (_, __, ___) => PlayScreen(
-              //       songsList: tempList,
-              //       index: 0,
-              //       offline: offline,
-              //       fromMiniplayer: false,
-              //       fromDownloads: fromDownloads,
-              //       recommend: recommend,
-              //     ),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (_, __, ___) => PlayScreen(
+                    songsList: List<SongItemModel>.from(tempList.map(
+                      (x) => SongItemModel.fromMap(
+                          json.decode(json.encode(x)) as Map<String, dynamic>),
+                    )),
+                    index: 0,
+                    offline: offline,
+                    fromMiniplayer: false,
+                    fromDownloads: fromDownloads,
+                    recommend: recommend,
+                  ),
+                ),
+              );
             },
             icon: const Icon(Icons.shuffle_rounded),
             label: Text(
@@ -57,19 +63,22 @@ class PlaylistHead extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              // Navigator.of(context).push(
-              //   PageRouteBuilder(
-              //     opaque: false,
-              //     pageBuilder: (_, __, ___) => PlayScreen(
-              //       songsList: songsList,
-              //       index: 0,
-              //       offline: offline,
-              //       fromMiniplayer: false,
-              //       fromDownloads: fromDownloads,
-              //       recommend: recommend,
-              //     ),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (_, __, ___) => PlayScreen(
+                    songsList: List<SongItemModel>.from(songsList.map(
+                      (x) => SongItemModel.fromMap(
+                          json.decode(json.encode(x)) as Map<String, dynamic>),
+                    )),
+                    index: 0,
+                    offline: offline,
+                    fromMiniplayer: false,
+                    fromDownloads: fromDownloads,
+                    recommend: recommend,
+                  ),
+                ),
+              );
             },
             tooltip: AppLocalizations.of(context)!.shuffle,
             icon: const Icon(Icons.play_arrow_rounded),

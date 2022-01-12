@@ -131,7 +131,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -162,9 +165,11 @@ class _SignupScreenState extends State<SignupScreen> {
                                               .secondary,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: 'Enter Your Name',
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintText: 'Enter your name',
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       validator: (value) {
@@ -243,7 +248,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[900],
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -256,9 +264,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       controller: passwordController,
                                       textAlignVertical:
                                           TextAlignVertical.center,
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      keyboardType: TextInputType.name,
+                                      keyboardType: TextInputType.text,
                                       obscureText: isObscure,
                                       decoration: InputDecoration(
                                         focusedBorder:
@@ -291,8 +297,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                         ),
                                         border: InputBorder.none,
                                         hintText: "Enter Your Password",
-                                        hintStyle: const TextStyle(
-                                          color: Colors.white60,
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                       validator: (value) {
@@ -399,10 +407,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                         child: Center(
                                           child: isLoading
                                               ? CircularProgressIndicator()
-                                              : const Text(
+                                              : Text(
                                                   'Signup',
                                                   style: TextStyle(
-                                                    color: Colors.black,
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.black
+                                                        : Colors.white,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20.0,
                                                   ),

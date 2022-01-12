@@ -1332,10 +1332,13 @@ class FilterButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: isSelected
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.primary),
+            borderRadius: BorderRadius.circular(100),
+            color: isSelected
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.primary.withOpacity(0.6)
+                    : Theme.of(context).colorScheme.primary,
+          ),
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -1346,7 +1349,9 @@ class FilterButton extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   fontSize: 12,
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
+                      ? !isSelected
+                          ? Colors.white
+                          : Colors.black
                       : Colors.white,
                 ),
               ),

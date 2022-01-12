@@ -1334,7 +1334,11 @@ class YogitunesAPI {
     final res = await getResponse(params!);
     if (res.statusCode == 200) {
       final getMain = json.decode(res.body);
-      final List responseList = getMain['results'] as List;
+      List responseList = [];
+      if (getMain['results'] != null) {
+        responseList = getMain['results'] as List;
+      }
+
       return FormatResponse.formatAlbumResponse(responseList, type);
     }
     return List.empty();

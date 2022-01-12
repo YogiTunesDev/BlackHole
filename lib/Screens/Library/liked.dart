@@ -876,7 +876,7 @@ class _AlbumsTabState extends State<AlbumsTab>
                                                 .sortedAlbumKeysList[index]]![0]
                                             ['artist']
                                         .toString()
-                                    : null,
+                                    : "Unkown",
                                 tempDirPath: widget.tempPath,
                                 placeholderImage: widget.type == 'artist'
                                     ? 'assets/artist.png'
@@ -891,7 +891,7 @@ class _AlbumsTabState extends State<AlbumsTab>
                                                 .sortedAlbumKeysList[index]]![0]
                                             ['artist']
                                         .toString()
-                                    : null,
+                                    : "Unkown",
                                 tempDirPath: widget.tempPath,
                                 placeholderImage: widget.type == 'artist'
                                     ? 'assets/artist.png'
@@ -903,7 +903,7 @@ class _AlbumsTabState extends State<AlbumsTab>
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 10.0),
                       title: Text(
-                        '${widget.sortedAlbumKeysList[index]}',
+                        '${widget.sortedAlbumKeysList[index] != "null" ? widget.sortedAlbumKeysList[index] : "Unkown"}',
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(

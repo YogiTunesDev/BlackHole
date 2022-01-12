@@ -50,7 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset('assets/splash.png'),
+                Image.asset(Theme.of(context).brightness == Brightness.dark
+                    ? 'assets/splash_white.png'
+                    : 'assets/splash.png'),
                 // const Center(
                 //   child: CircularProgressIndicator(),
                 // ),
@@ -87,7 +89,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
         // Navigator.pushNamed(context, '/subscription');
       }
     } else {
-       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       // Navigator.pushNamedAndRemoveUntil(
       //     context, '/subscription', (route) => false,
       //     arguments: {

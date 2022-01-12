@@ -9,6 +9,7 @@ import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
@@ -49,17 +50,18 @@ class AddToOffPlaylist {
                     ),
                   ),
                   onTap: () {
-                    showTextInputDialog(
-                      context: context,
-                      keyboardType: TextInputType.text,
-                      title: AppLocalizations.of(context)!.createNewPlaylist,
-                      onSubmitted: (String value) async {
-                        await offlineAudioQuery.createPlaylist(name: value);
-                        playlistDetails =
-                            await offlineAudioQuery.getPlaylists();
-                        Navigator.pop(context);
-                      },
-                    );
+                    print("hg g vghj");
+                    // showTextInputDialog(
+                    //   context: context,
+                    //   keyboardType: TextInputType.text,
+                    //   title: AppLocalizations.of(context)!.createNewPlaylist,
+                    //   onSubmitted: (String value) async {
+                    //     await offlineAudioQuery.createPlaylist(name: value);
+                    //     playlistDetails =
+                    //         await offlineAudioQuery.getPlaylists();
+                    //     Navigator.pop(context);
+                    //   },
+                    // );
                   },
                 ),
                 if (playlistDetails.isEmpty)
@@ -174,7 +176,7 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
   }
 
   List<String> selectedPlaylist = [];
-
+  OfflineAudioQuery offlineAudioQuery = OfflineAudioQuery();
   @override
   Widget build(BuildContext context) {
     return BottomGradientContainer(
@@ -201,25 +203,18 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                 ),
               ),
               onTap: () {
-                // showTextInputDialog(
-                //   context: context,
-                //   keyboardType: TextInputType.name,
-                //   title: AppLocalizations.of(context)!.createNewPlaylist,
-                //   onSubmitted: (String value) async {
-                //     final RegExp avoid = RegExp(r'[\.\\\*\:\"\?#/;\|]');
-                //     value.replaceAll(avoid, '').replaceAll('  ', ' ');
-                //     if (value.trim() == '') {
-                //       value = 'Playlist ${playlistNames.length}';
-                //     }
-                //     if (playlistNames.contains(value) ||
-                //         await Hive.boxExists(value)) {
-                //       value = '$value (1)';
-                //     }
-                //     playlistNames.add(value);
-                //     settingsBox.put('playlistNames', playlistNames);
-                //     Navigator.pop(context);
-                //   },
-                // );
+                print("Hello");
+                showTextInputDialog(
+                  context: context,
+                  keyboardType: TextInputType.text,
+                  title: AppLocalizations.of(context)!.createNewPlaylist,
+                  onSubmitted: (String value) async {
+                    String? playlistId =
+                        await YogitunesAPI().createPlaylist(value, context);
+                    fetchPlaylistData();
+                    Navigator.pop(context);
+                  },
+                );
               },
             ),
             if (dataLoader)
@@ -230,12 +225,27 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                reverse: true,
                 itemCount: customPlaylistResponse!
                     .data!.length, //playlistNames.length,
                 itemBuilder: (context, index) {
                   var playlist = customPlaylistResponse!.data![index].playlist!;
                   var playlistTracks =
                       customPlaylistResponse!.data![index].playlistTracks!;
+                  String? imageUrl;
+                  PlaylistResponseData itemData =
+                      customPlaylistResponse!.data![index];
+                  if (itemData.quadImages != null) {
+                    if (itemData.quadImages!.isNotEmpty) {
+                      if (itemData.quadImages![0] != null) {
+                        if (itemData.quadImages![0]!.imageUrl != null) {
+                          imageUrl =
+                              '${itemData.quadImages![0]!.imageUrl}/${itemData.quadImages![0]!.image}';
+                          ;
+                        }
+                      }
+                    }
+                  }
                   return ListTile(
                     leading:
                         // playlistDetails[playlistNames[index]] ==
@@ -250,12 +260,23 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                         borderRadius: BorderRadius.circular(7.0),
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child: const SizedBox(
+                      child: SizedBox(
                         height: 50,
                         width: 50,
-                        child: Image(
-                          image: AssetImage(
-                            'assets/album.png',
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          errorWidget: (context, _, __) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/cover.jpg',
+                            ),
+                          ),
+                          imageUrl: '${imageUrl}',
+                          placeholder: (context, url) => const Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/cover.jpg',
+                            ),
                           ),
                         ),
                       ),

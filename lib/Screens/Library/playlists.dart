@@ -625,6 +625,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
+                              reverse: true,
                               itemCount: customPlaylistResponse!.data!.length,
                               itemBuilder: (context, index) {
                                 String? imageUrl;

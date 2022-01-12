@@ -15,6 +15,7 @@ import 'package:blackhole/Screens/Top Charts/top.dart' as top_screen;
 import 'package:blackhole/Services/ext_storage_provider.dart';
 import 'package:blackhole/main.dart';
 import 'package:device_info/device_info.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,6 +101,7 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   void initState() {
+    // FirebaseCrashlytics.instance.crash();
     main();
     super.initState();
   }
@@ -1386,7 +1388,7 @@ class _SettingPageState extends State<SettingPage> {
                             //   isDark: val,
                             //   useSystemTheme: false,
                             // );
-                            switchToCustomTheme();
+                            // switchToCustomTheme();
                           },
                         ),
                       ),
@@ -1463,9 +1465,9 @@ class _SettingPageState extends State<SettingPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.black
-                                      : Colors.white,
+                                              Brightness.dark
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                   ),
                                 ),
