@@ -1399,7 +1399,7 @@ class _SettingPageState extends State<SettingPage> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'High quality streming is 320kbps, normal streming quality is 96kb.',
+                          'High quality streming is 320kbps, normal streaming quality is 96kb.',
                           style: TextStyle(
                             fontSize: 13,
                             color: Theme.of(context).colorScheme.primary,
@@ -1439,7 +1439,7 @@ class _SettingPageState extends State<SettingPage> {
                             height: 5,
                           ),
                           Text(
-                            'Have a question, comment or concern? Get in touch through our website. We aim to respond to all message within 24 hours Monday to Saturnday.',
+                            'Have a question, comment or concern? Get in touch through our website. We aim to respond to all message within 24 hours Monday to Saturday.',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,

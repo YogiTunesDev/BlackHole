@@ -73,7 +73,7 @@ class AppTheme {
       textSelectionTheme: TextSelectionThemeData(
         selectionHandleColor:
             Colors.white.withOpacity(0.2), //currentTheme.currentColor(),
-        cursorColor: Color(0xFFFFFFFF), //currentTheme.currentColor(),
+        cursorColor: const Color(0xFFFFFFFF), //currentTheme.currentColor(),
         selectionColor:
             Colors.white.withOpacity(0.2), // currentTheme.currentColor(),
       ),
@@ -88,6 +88,11 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         color: currentTheme.getCanvasColor(),
         foregroundColor: Colors.white,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+          statusBarBrightness: Brightness.dark, // For iOS (dark icons)
+        ),
       ),
       canvasColor: currentTheme.getCanvasColor(),
       cardColor: currentTheme.getCardColor(),

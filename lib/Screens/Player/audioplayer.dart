@@ -162,6 +162,7 @@ class _PlayScreenState extends State<PlayScreen> {
       title: playTitle.split('(')[0],
       artist: playArtist,
       genre: response.genre,
+      
       artUri: Uri.file(imagePath),
       extras: {
         'url': response.url,
