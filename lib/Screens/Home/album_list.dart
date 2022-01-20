@@ -261,7 +261,17 @@ class _AlbumListState extends State<AlbumList> {
         pageNo++;
         if (myRecentlyPlayedSongResponse != null) {
           if (myRecentlyPlayedSongResponse.data != null) {
-            lstRecentPlayedSong.addAll(myRecentlyPlayedSongResponse.data!);
+            for (int i = 0;
+                i < myRecentlyPlayedSongResponse.data!.length;
+                i++) {
+              if (myRecentlyPlayedSongResponse.data![i].type != null) {
+                if (myRecentlyPlayedSongResponse.data![i].type!.toString() ==
+                    'Album') {
+                  lstRecentPlayedSong
+                      .add(myRecentlyPlayedSongResponse.data![i]);
+                }
+              }
+            }
           }
         }
       }
@@ -1211,9 +1221,28 @@ class _AlbumListState extends State<AlbumList> {
                                                         itemName:
                                                             item.track!.name!,
                                                         onTap: () async {
-                                                          openSingleSongData(
-                                                              context,
-                                                              item.track!.id!);
+                                                          Navigator.push(
+                                                            context,
+                                                            PageRouteBuilder(
+                                                              opaque: false,
+                                                              pageBuilder: (_, __, ___) => SongsListPage(
+                                                                  songListType:
+                                                                      SongListType
+                                                                          .album,
+                                                                  playlistName: item
+                                                                      .album!
+                                                                      .name!,
+                                                                  playlistImage:
+                                                                      itemImage,
+                                                                  id: item
+                                                                      .album!
+                                                                      .id),
+                                                            ),
+                                                          );
+
+                                                          // openSingleSongData(
+                                                          //     context,
+                                                          //     item.track!.id!);
                                                         },
                                                       );
                                                     },
@@ -1306,7 +1335,9 @@ class _AlbumListState extends State<AlbumList> {
         if (widget.isFromLibrary) {
           fatchData();
         } else {
-          getApiData();
+          if (widget.albumListType != AlbumListType.recentlyPlayedSong) {
+            getApiData();
+          }
         }
       }
     }

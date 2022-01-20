@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:blackhole/APIs/api.dart';
@@ -56,6 +57,7 @@ class _SongsListPageState extends State<SongsListPage> {
   HtmlUnescape unescape = HtmlUnescape();
   final ScrollController _scrollController = ScrollController();
   List<String> selectedPlaylist = [];
+  SinglePlaylistResponse? playlistRes;
 
   @override
   void initState() {
@@ -80,6 +82,13 @@ class _SongsListPageState extends State<SongsListPage> {
       }
     }
     _scrollController.addListener(() {
+      if (_scrollController.hasClients) {
+        if (_scrollController.position.pixels <= 210) {
+          print("LENGTH ::: ${_scrollController.position.pixels}");
+          setState(() {});
+        }
+      }
+
       // if (_scrollController.position.pixels >=
       //         _scrollController.position.maxScrollExtent &&
       //     widget.listItem['type'].toString() == 'songs' &&
@@ -108,50 +117,50 @@ class _SongsListPageState extends State<SongsListPage> {
         apiloading = true;
       });
       if (widget.songListType == SongListType.album) {
-        final SingleAlbumResponse? playlistRes =
+        final SingleAlbumResponse? albumRes =
             await YogitunesAPI().fetchYogiSingleAlbumData(widget.id!);
-        if (playlistRes != null) {
-          if (playlistRes.status!) {
-            if (playlistRes.data != null) {
-              if (playlistRes.data!.lstSongItemModel != null) {
-                if (playlistRes.data!.lstSongItemModel!.isNotEmpty) {
-                  songList = playlistRes.data!.lstSongItemModel!;
+        if (albumRes != null) {
+          if (albumRes.status!) {
+            if (albumRes.data != null) {
+              if (albumRes.data!.lstSongItemModel != null) {
+                if (albumRes.data!.lstSongItemModel!.isNotEmpty) {
+                  songList = albumRes.data!.lstSongItemModel!;
                 }
               }
-              mainPlayListImage ??= (playlistRes.data?.cover?.imgUrl ?? '') +
-                  (playlistRes.data?.cover?.imgUrl != null ? '/' : '') +
-                  (playlistRes.data?.cover?.image ?? '');
-              mainPlayListName ??= playlistRes.data?.name ?? '';
+              mainPlayListImage ??= (albumRes.data?.cover?.imgUrl ?? '') +
+                  (albumRes.data?.cover?.imgUrl != null ? '/' : '') +
+                  (albumRes.data?.cover?.image ?? '');
+              mainPlayListName ??= albumRes.data?.name ?? '';
             }
           }
         }
       } else if (widget.songListType == SongListType.playlist) {
-        final SinglePlaylistResponse? playlistRes =
+        playlistRes =
             await YogitunesAPI().fetchYogiSinglePlaylistData(widget.id!);
 
         if (playlistRes != null) {
-          if (playlistRes.status!) {
-            if (playlistRes.data != null) {
-              if (playlistRes.data!.lstSongItemModel != null) {
-                if (playlistRes.data!.lstSongItemModel!.isNotEmpty) {
-                  songList = playlistRes.data!.lstSongItemModel!;
+          if (playlistRes!.status!) {
+            if (playlistRes!.data != null) {
+              if (playlistRes!.data!.lstSongItemModel != null) {
+                if (playlistRes!.data!.lstSongItemModel!.isNotEmpty) {
+                  songList = playlistRes!.data!.lstSongItemModel!;
                   for (int i = 0;
-                      i < playlistRes.data!.lstSongItemModel!.length;
+                      i < playlistRes!.data!.lstSongItemModel!.length;
                       i++) {
                     selectedPlaylist.insert(i,
-                        playlistRes.data!.lstSongItemModel![i].id.toString());
+                        playlistRes!.data!.lstSongItemModel![i].id.toString());
                     print(selectedPlaylist);
                   }
                 }
               }
               mainPlayListImage ??=
-                  (playlistRes.data?.quadImages?[0]?.imageUrl ?? '') +
-                      (playlistRes.data?.quadImages?[0]?.imageUrl != null
+                  (playlistRes!.data?.quadImages?[0]?.imageUrl ?? '') +
+                      (playlistRes!.data?.quadImages?[0]?.imageUrl != null
                           ? "/"
                           : '') +
-                      (playlistRes.data?.quadImages?[0]?.image ?? '');
+                      (playlistRes!.data?.quadImages?[0]?.image ?? '');
 
-              mainPlayListName ??= playlistRes.data?.name ?? '';
+              mainPlayListName ??= playlistRes!.data?.name ?? '';
             }
           }
         }
@@ -169,6 +178,7 @@ class _SongsListPageState extends State<SongsListPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint("mainPlayListImage :: $mainPlayListImage");
+    // print("LENGTH ::: ${_scrollController.position.pixels}");
     return GradientContainer(
       child: Column(
         children: [
@@ -222,9 +232,35 @@ class _SongsListPageState extends State<SongsListPage> {
                         ),
                     ],
                     flexibleSpace: FlexibleSpaceBar(
-                      title: Text(
-                        mainPlayListName ?? '',
-                        textAlign: TextAlign.center,
+                      title: Container(
+                        // width:
+                        // (!_scrollController.hasClients ||
+                        // _scrollController.positions.length > 1)
+                        // ?
+                        // MediaQuery.of(context).size.width,
+                        // : MediaQuery.of(context).size.width - 75,
+                        margin: (!_scrollController.hasClients ||
+                                _scrollController.position.pixels <=
+                                    MediaQuery.of(context).size.height * 0.2)
+                            ? const EdgeInsets.all(0)
+                            : const EdgeInsets.only(
+                                left: 50,
+                                right: 150,
+                              ),
+                        child: Text(
+                          mainPlayListName ?? '',
+                          maxLines: (!_scrollController.hasClients ||
+                                  _scrollController.position.pixels <=
+                                      MediaQuery.of(context).size.height * 0.2)
+                              ? 3
+                              : 1,
+                          textAlign: (!_scrollController.hasClients ||
+                                  _scrollController.position.pixels <=
+                                      MediaQuery.of(context).size.height * 0.2)
+                              ? TextAlign.center
+                              : TextAlign.left,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       centerTitle: true,
                       background: ShaderMask(
@@ -297,6 +333,7 @@ class _SongsListPageState extends State<SongsListPage> {
                         )
                       else
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -433,6 +470,17 @@ class _SongsListPageState extends State<SongsListPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                            if (widget.songListType == SongListType.playlist)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, right: 20, left: 20),
+                              child: Text(
+                                playlistRes?.data?.playlistDuration != null
+                                    ? 'Duration: ${playlistRes!.data!.playlistDuration.toString()}'
+                                    : '',
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                             ...songList.map((entry) {
                               return ListTile(

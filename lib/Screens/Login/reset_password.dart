@@ -59,13 +59,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
-                              'Reset Password',
-                              style: TextStyle(
-                                height: 0.97,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.secondary,
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    '\nChoose a new password with a minimum of 8 characters.',
+                                style: TextStyle(
+                                  // height: 0.97,
+                                  fontSize: 18,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                //
                               ),
                             ),
                             SizedBox(
@@ -337,30 +341,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                         ),
                                       ),
                                     ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .disclaimer,
-                                            ),
-                                          ],
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.black
+                                              : Colors.white,
                                         ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .disclaimerText,
-                                          style: TextStyle(
-                                            color: Colors.grey.withOpacity(0.7),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      )),
                                 ],
                               ),
                             ),

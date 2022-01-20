@@ -111,35 +111,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Login',
+                                    text: 'Welcome back!',
                                     style: TextStyle(
                                       height: 0.97,
-                                      fontSize: 40,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
                                     ),
-                                    // children: <TextSpan>[
-                                    //   const TextSpan(
-                                    //     text: 'Music',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Colors.white,
-                                    //     ),
-                                    //   ),
-                                    //   TextSpan(
-                                    //     text: '.',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Theme.of(context)
-                                    //           .colorScheme
-                                    //           .secondary,
-                                    //     ),
-                                    //   ),
-                                    // ],
+                                   
                                   ),
                                 ),
                               ],
@@ -150,8 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     '\nPlease take a moment to confirm it\'s you, and we will get you on your way.',
                                 style: TextStyle(
                                   // height: 0.97,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
@@ -269,6 +249,54 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      if (forgotLoader)
+                                        const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      else
+                                        TextButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              forgotLoader = true;
+                                            });
+                                            final ForgotPasswordResponse?
+                                                forgotPasswordResponse =
+                                                await YogitunesAPI()
+                                                    .forgotPassword(
+                                              args['email'].toString(),
+                                            );
+
+                                            if (forgotPasswordResponse !=
+                                                null) {
+                                              if (forgotPasswordResponse
+                                                  .status!) {
+                                                Navigator.pushNamed(context,
+                                                    '/forgotPasswordVerification',
+                                                    arguments: {
+                                                      'email': args['email']
+                                                          .toString(),
+                                                    });
+                                              } else {
+                                                // errorMessage =
+                                                //     forgotPasswordResponse.data
+                                                //         .toString();
+                                              }
+                                            } else {
+                                              // errorMessage = 'Server Down!!!';
+                                            }
+                                            setState(() {
+                                              forgotLoader = false;
+                                            });
+                                          },
+                                          child: const Text(
+                                            'Forgot Password',
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                   if (isLoading)
                                     const Padding(
                                       padding: EdgeInsets.all(8.0),
@@ -347,78 +375,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      if (forgotLoader)
-                                        const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      else
-                                        TextButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              forgotLoader = true;
-                                            });
-                                            final ForgotPasswordResponse?
-                                                forgotPasswordResponse =
-                                                await YogitunesAPI()
-                                                    .forgotPassword(
-                                              args['email'].toString(),
-                                            );
-
-                                            if (forgotPasswordResponse !=
-                                                null) {
-                                              if (forgotPasswordResponse
-                                                  .status!) {
-                                                Navigator.pushNamed(context,
-                                                    '/forgotPasswordVerification',
-                                                    arguments: {
-                                                      'email': args['email']
-                                                          .toString(),
-                                                    });
-                                              } else {
-                                                // errorMessage =
-                                                //     forgotPasswordResponse.data
-                                                //         .toString();
-                                              }
-                                            } else {
-                                              // errorMessage = 'Server Down!!!';
-                                            }
-                                            setState(() {
-                                              forgotLoader = false;
-                                            });
-                                          },
-                                          child: const Text(
-                                            'Forgot Password',
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .disclaimer,
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .disclaimerText,
-                                          style: TextStyle(
-                                            color: Colors.grey.withOpacity(0.7),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

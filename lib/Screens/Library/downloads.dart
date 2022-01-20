@@ -914,25 +914,25 @@ class _DownSongsTabState extends State<DownSongsTab>
                               ),
                             ),
                             itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 0,
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.edit_rounded,
-                                    ),
-                                    const SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!
-                                          .edit,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // PopupMenuItem(
+                              //   value: 0,
+                              //   child: Row(
+                              //     children: [
+                              //       const Icon(
+                              //         Icons.edit_rounded,
+                              //       ),
+                              //       const SizedBox(
+                              //         width: 10.0,
+                              //       ),
+                              //       Text(
+                              //         AppLocalizations.of(
+                              //           context,
+                              //         )!
+                              //             .edit,
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               PopupMenuItem(
                                 value: 1,
                                 child: Row(
@@ -954,17 +954,17 @@ class _DownSongsTabState extends State<DownSongsTab>
                               ),
                             ],
                             onSelected: (int? value) async {
-                              if (value == 0) {
-                                widget.songs[index] = await editTags(
-                                  widget.songs[index] as Map,
-                                  context,
-                                );
-                                Hive.box('downloads').put(
-                                  widget.songs[index]['id'],
-                                  widget.songs[index],
-                                );
-                                setState(() {});
-                              }
+                              // if (value == 0) {
+                              //   widget.songs[index] = await editTags(
+                              //     widget.songs[index] as Map,
+                              //     context,
+                              //   );
+                              //   Hive.box('downloads').put(
+                              //     widget.songs[index]['id'],
+                              //     widget.songs[index],
+                              //   );
+                              //   setState(() {});
+                              // }
                               if (value == 1) {
                                 setState(() {
                                   widget.onDelete(widget.songs[index] as Map);

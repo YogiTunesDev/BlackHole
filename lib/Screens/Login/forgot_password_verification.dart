@@ -65,56 +65,13 @@ class _ForgotPasswordVerificationScreenState
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            // Row(
-                            //   children: [
-                            //     SizedBox(
-                            //       width: MediaQuery.of(context).size.width - 60,
-                            //       child: RichText(
-                            //         text: TextSpan(
-                            //           text: 'otp verification',
-                            //           style: TextStyle(
-                            //             height: 0.97,
-                            //             fontSize: 40,
-                            //             fontWeight: FontWeight.bold,
-                            //             color: Theme.of(context)
-                            //                 .colorScheme
-                            //                 .secondary,
-                            //           ),
-                            //           children: const <TextSpan>[
-                            //             TextSpan(
-                            //               text:
-                            //                   '\n\nWe send verification code to your email.',
-                            //               style: TextStyle(
-                            //                 overflow: TextOverflow.ellipsis,
-                            //                 fontWeight: FontWeight.bold,
-                            //                 fontSize: 20,
-                            //                 color: Colors.white,
-                            //               ),
-                            //             ),
-                            //             // TextSpan(
-                            //             //   text: '.',
-                            //             //   style: TextStyle(
-                            //             //     fontWeight: FontWeight.bold,
-                            //             //     fontSize: 80,
-                            //             //     color: Theme.of(context)
-                            //             //         .colorScheme
-                            //             //         .secondary,
-                            //             //   ),
-                            //             // ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                             RichText(
                               text: TextSpan(
                                 text:
-                                    'An email is on it\'s way with instruction to access your accont. Enter the verification code from that email below.',
+                                    'An email is on it\'s way with instruction to access your account. Enter the verification code from that email below.',
                                 style: TextStyle(
                                   // height: 0.97,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
@@ -138,7 +95,7 @@ class _ForgotPasswordVerificationScreenState
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color:  Theme.of(context).brightness ==
+                                      color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? Colors.black
                                           : Colors.grey[100],
@@ -174,7 +131,7 @@ class _ForgotPasswordVerificationScreenState
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Enter Verification Code',
-                                        hintStyle:  TextStyle(
+                                        hintStyle: TextStyle(
                                           color: Theme.of(context)
                                               .colorScheme
                                               .primary,
@@ -271,10 +228,10 @@ class _ForgotPasswordVerificationScreenState
                                           ],
                                         ),
                                         child: Center(
-                                          child:  Text(
+                                          child: Text(
                                             'Verify Code',
                                             style: TextStyle(
-                                              color:Theme.of(context)
+                                              color: Theme.of(context)
                                                           .brightness ==
                                                       Brightness.dark
                                                   ? Colors.black
@@ -286,28 +243,28 @@ class _ForgotPasswordVerificationScreenState
                                         ),
                                       ),
                                     ),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      )),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .disclaimer,
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .disclaimerText,
-                                          style: TextStyle(
-                                            color: Colors.grey.withOpacity(0.7),
-                                          ),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      'Have you been patiently waiting for more than two minutes?',
+                                      style: TextStyle(
+                                        color: Colors.grey.withOpacity(0.7),
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -243,7 +243,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       ),
                       if (products.isNotEmpty)
                         Text(
-                          'You will be charges at ${products[0].localizedPrice.toString()}',
+                          'You will be charged at ${products[0].localizedPrice.toString()} per month',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -272,12 +272,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             },
                             child: Container(
                               padding: const EdgeInsets.all(12),
-                              margin:
-                                  const EdgeInsets.symmetric(vertical: 15),
+                              margin: const EdgeInsets.symmetric(vertical: 15),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color:
-                                    Theme.of(context).colorScheme.secondary,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                               child: Center(
                                 child: Text(

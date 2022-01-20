@@ -693,27 +693,28 @@ class _HomePageState extends State<HomePage> {
                                   const EdgeInsets.only(top: 8.0, left: 4.0),
                               child: Transform.rotate(
                                 angle: 22 / 7 * 2,
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.horizontal_split_rounded,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: GradientContainer(
+                                    child: InkWell(
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.horizontal_split_rounded,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
+                                    ),
                                   ),
-                                  // color: Theme.of(context).iconTheme.color,
-                                  onPressed: () {
-                                    Scaffold.of(context).openDrawer();
-                                  },
-                                  tooltip: MaterialLocalizations.of(context)
-                                      .openAppDrawerTooltip,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SearchScreen(), //Container(),
-                      // TopCharts(
-                      //   pageController: _pageController,
-                      // ),
-                      // const YouTube(),
+                      SearchScreen(),
                       const LibraryPage(),
                     ],
                   ),

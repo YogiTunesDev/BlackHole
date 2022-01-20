@@ -71,10 +71,8 @@ Future<void> setOptimalDisplayMode() async {
     ..sort(
       (DisplayMode a, DisplayMode b) => b.refreshRate.compareTo(a.refreshRate),
     );
-
   final DisplayMode mostOptimalMode =
       sameResolution.isNotEmpty ? sameResolution.first : active;
-
   await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
 }
 

@@ -888,9 +888,6 @@ class YogitunesAPI {
     CustomPlaylistResponse? result;
     try {
       final res = await getResponse(endpoints['playlists']!);
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.bodyBytes}');
-      print('Playlist ::::: ${res.body}');
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         result = CustomPlaylistResponse.fromMap(data as Map<String, dynamic>);

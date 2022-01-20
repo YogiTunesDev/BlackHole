@@ -1257,98 +1257,98 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                  ),
-                  child: GradientCard(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 15,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Crossfade',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                '$crossFadeValue',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          SfSlider(
-                            max: 20.0,
-                            value: double.parse(crossFadeValue.toString()),
-                            interval: 20,
-                            showLabels: true,
-                            minorTicksPerInterval: 1,
-                            onChanged: (dynamic value) {
-                              setState(() {
-                                crossFadeValue =
-                                    double.parse(value.toString()).toInt();
-                              });
-                              print(crossFadeValue);
-                              Hive.box('settings')
-                                  .put('crossFadeValue', crossFadeValue);
-                            },
-                          ),
-                          // Padding(
-                          //   padding: const EdgeInsets.only(
-                          //     top: 10,
-                          //   ),
-                          //   child: BoxSwitchTile(
-                          //     title: Text(
-                          //       'Control From Lock Screen',
-                          //       style: TextStyle(
-                          //         fontSize: 14,
-                          //         color:
-                          //             Theme.of(context).colorScheme.secondary,
-                          //       ),
-                          //     ),
-                          //     keyName: 'controlFromLockScreen',
-                          //     defaultValue: true,
-                          //     onChanged: (bool val, Box box) {
-                          //       // box.put(
-                          //       //   'useSystemTheme',
-                          //       //   false,
-                          //       // );
-                          //       // currentTheme.switchTheme(
-                          //       //   isDark: val,
-                          //       //   useSystemTheme: false,
-                          //       // );
-                          //       switchToCustomTheme();
-                          //     },
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //     10.0,
+                //   ),
+                //   child: GradientCard(
+                //     child: Padding(
+                //       padding: const EdgeInsets.symmetric(
+                //         horizontal: 10,
+                //         vertical: 15,
+                //       ),
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Row(
+                //             children: [
+                //               Expanded(
+                //                 child: Text(
+                //                   'Crossfade',
+                //                   style: TextStyle(
+                //                     fontSize: 14,
+                //                     fontWeight: FontWeight.w400,
+                //                     color:
+                //                         Theme.of(context).colorScheme.secondary,
+                //                   ),
+                //                 ),
+                //               ),
+                //               Text(
+                //                 '$crossFadeValue',
+                //                 style: TextStyle(
+                //                   fontSize: 14,
+                //                   fontWeight: FontWeight.w400,
+                //                   color: Theme.of(context).colorScheme.primary,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //           const SizedBox(
+                //             height: 5,
+                //           ),
+                //           SfSlider(
+                //             max: 20.0,
+                //             value: double.parse(crossFadeValue.toString()),
+                //             interval: 20,
+                //             showLabels: true,
+                //             minorTicksPerInterval: 1,
+                //             onChanged: (dynamic value) {
+                //               setState(() {
+                //                 crossFadeValue =
+                //                     double.parse(value.toString()).toInt();
+                //               });
+                //               print(crossFadeValue);
+                //               Hive.box('settings')
+                //                   .put('crossFadeValue', crossFadeValue);
+                //             },
+                //           ),
+                //           // Padding(
+                //           //   padding: const EdgeInsets.only(
+                //           //     top: 10,
+                //           //   ),
+                //           //   child: BoxSwitchTile(
+                //           //     title: Text(
+                //           //       'Control From Lock Screen',
+                //           //       style: TextStyle(
+                //           //         fontSize: 14,
+                //           //         color:
+                //           //             Theme.of(context).colorScheme.secondary,
+                //           //       ),
+                //           //     ),
+                //           //     keyName: 'controlFromLockScreen',
+                //           //     defaultValue: true,
+                //           //     onChanged: (bool val, Box box) {
+                //           //       // box.put(
+                //           //       //   'useSystemTheme',
+                //           //       //   false,
+                //           //       // );
+                //           //       // currentTheme.switchTheme(
+                //           //       //   isDark: val,
+                //           //       //   useSystemTheme: false,
+                //           //       // );
+                //           //       switchToCustomTheme();
+                //           //     },
+                //           //   ),
+                //           // ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     10.0,

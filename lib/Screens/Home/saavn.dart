@@ -143,7 +143,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                     if (data!.data!.myRecentlyPlayedSongs != null)
                       if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
                         HeaderTitle(
-                          title: 'My Recently Played Songs',
+                          title: 'My Recently Played Albums',
                           viewAllOnTap: () {
                             Navigator.push(
                               context,
@@ -152,7 +152,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 pageBuilder: (_, __, ___) => const AlbumList(
                                   albumListType:
                                       AlbumListType.recentlyPlayedSong,
-                                  albumName: 'Recent Played Songs',
+                                  albumName: 'Recent Played Albums',
                                 ),
                               ),
                             );
@@ -171,68 +171,40 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final MyRecentlyPlayedSong item =
                                   data!.data!.myRecentlyPlayedSongs![index];
-                              final String itemImage = item.quadImages != null
-                                  ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                              final String itemImage = item.album?.cover != null
+                                  ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image!}')
                                   : '';
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.track!.name!,
-                                onTap: () async {
-                                  popupLoader(
+
+                              String type = '';
+                              if (item.type != null) {
+                                if (item.type == 'Album') {
+                                  type = item.type.toString();
+                                }
+                              }
+
+                              if (type.isNotEmpty) {
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.track!.name!,
+                                  onTap: () async {
+                                    Navigator.push(
                                       context,
-                                      AppLocalizations.of(
-                                        context,
-                                      )!
-                                          .fetchingStream);
-
-                                  final RadioStationsStreamResponse?
-                                      radioStationsStreamResponse =
-                                      await YogitunesAPI()
-                                          .fetchSingleSongData(item.track!.id!);
-                                  Navigator.pop(context);
-                                  if (radioStationsStreamResponse != null) {
-                                    if (radioStationsStreamResponse
-                                            .songItemModel !=
-                                        null) {
-                                      if (radioStationsStreamResponse
-                                          .songItemModel!.isNotEmpty) {
-                                        List<SongItemModel> lstSong = [];
-
-                                        Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                PlayScreen(
-                                              songsList:
-                                                  radioStationsStreamResponse
-                                                      .songItemModel!,
-                                              index: 0,
-                                              offline: false,
-                                              fromDownloads: false,
-                                              fromMiniplayer: false,
-                                              recommend: false,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  }
-                                  // Navigator.push(
-                                  //   context,
-                                  //   PageRouteBuilder(
-                                  //     opaque: false,
-                                  //     pageBuilder: (_, __, ___) =>
-                                  //         SongsListPage(
-                                  //       songListType: SongListType.playlist,
-                                  //       playlistName: item.track!.name!,
-                                  //       playlistImage: itemImage,
-                                  //       id: item.track!.id,
-                                  //     ),
-                                  //   ),
-                                  // );
-                                },
-                              );
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                                songListType:
+                                                    SongListType.album,
+                                                playlistName: item.album!.name!,
+                                                playlistImage: itemImage,
+                                                id: item.album!.id),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
                             },
                           ),
                         ),
@@ -320,7 +292,98 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final BrowseBy item =
                                   data!.data!.browseByActivity![index];
-                              return SongItem(
+                              return
+                                  // InkWell(
+                                  //   onTap: () {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       PageRouteBuilder(
+                                  //         opaque: false,
+                                  //         pageBuilder: (_, __, ___) => AlbumList(
+                                  //           albumListType:
+                                  //               AlbumListType.otherActivity,
+                                  //           albumName: item.name,
+                                  //           id: item.id,
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  //   child: SizedBox(
+                                  //     width: boxSize / 2 - 30,
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.only(right: 5),
+                                  //       child: Column(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.center,
+                                  //         children: [
+                                  //           SizedBox.square(
+                                  //             dimension: boxSize / 2 - 40,
+                                  //             child: Card(
+                                  //               elevation: 5,
+                                  //               shape: RoundedRectangleBorder(
+                                  //                 borderRadius:
+                                  //                     BorderRadius.circular(
+                                  //                   1000.0,
+                                  //                 ),
+                                  //               ),
+                                  //               clipBehavior: Clip.antiAlias,
+                                  //               child: Stack(
+                                  //                 children: [
+                                  //                   Container(
+                                  //                     height: boxSize / 2 - 40,
+                                  //                     width: boxSize / 2 - 40,
+                                  //                     decoration: BoxDecoration(
+                                  //                       gradient: LinearGradient(
+                                  //                         colors: [
+                                  //                           Theme.of(context)
+                                  //                               .colorScheme
+                                  //                               .secondary,
+                                  //                           Theme.of(context)
+                                  //                               .colorScheme
+                                  //                               .secondary
+                                  //                               .withOpacity(0.8)
+                                  //                         ],
+                                  //                         begin: Alignment.topLeft,
+                                  //                         end:
+                                  //                             Alignment.bottomRight,
+                                  //                       ),
+                                  //                     ),
+                                  //                   ),
+                                  //                   Opacity(
+                                  //                     opacity: 0.2,
+                                  //                     child: SizedBox(
+                                  //                       height: boxSize / 2 - 40,
+                                  //                       width: boxSize / 2 - 40,
+                                  //                       child: const Image(
+                                  //                         fit: BoxFit.cover,
+                                  //                         image: AssetImage(
+                                  //                           'assets/album.png',
+                                  //                         ),
+                                  //                       ),
+                                  //                     ),
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //           const SizedBox(
+                                  //             height: 5,
+                                  //           ),
+                                  //           Text(
+                                  //             formatString(item.name),
+                                  //             textAlign: TextAlign.center,
+                                  //             softWrap: false,
+                                  //             overflow: TextOverflow.ellipsis,
+                                  //             style: const TextStyle(
+                                  //               fontWeight: FontWeight.w500,
+                                  //             ),
+                                  //           ),
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // );
+                                  SongItem(
                                 itemImage: '',
                                 itemName: item.name!,
                                 isRound: true,

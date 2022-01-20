@@ -43,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: MediaQuery.of(context).size.width,
                   child: const Image(
                     image: AssetImage(
-                      'assets/icon-white-trans.png',
+                      'assets/icon_white_trans_new.png',
                     ),
                   ),
                 ),
@@ -79,41 +79,32 @@ class _SignupScreenState extends State<SignupScreen> {
                               children: [
                                 RichText(
                                   text: TextSpan(
-                                    text: 'Signup',
+                                    text: 'Welcome!',
                                     style: TextStyle(
                                       height: 0.97,
-                                      fontSize: 40,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
                                     ),
-                                    // children: <TextSpan>[
-                                    //   const TextSpan(
-                                    //     text: 'Music',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Colors.white,
-                                    //     ),
-                                    //   ),
-                                    //   TextSpan(
-                                    //     text: '.',
-                                    //     style: TextStyle(
-                                    //       fontWeight: FontWeight.bold,
-                                    //       fontSize: 80,
-                                    //       color: Theme.of(context)
-                                    //           .colorScheme
-                                    //           .secondary,
-                                    //     ),
-                                    //   ),
-                                    // ],
+                                 
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.1,
+                            RichText(
+                              text: TextSpan(
+                                text:
+                                    "\nGet started with our free 30 days trial by entering your name and a password below.\n\n",
+                                style: TextStyle(
+                                  // height: 0.97,
+                                  fontSize: 18,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                //
+                              ),
                             ),
                             Form(
                               key: formKey,
@@ -324,12 +315,25 @@ class _SignupScreenState extends State<SignupScreen> {
                                           });
                                         },
                                       ),
-                                      const Expanded(
+                                      Expanded(
                                         child: Text(
-                                          'Subscribe our newsletter for our latest updates',
+                                          'Get monthly updates on the newest music and hottest playlists',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.light
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  Text(
+                                    '\n\nBy signing up, you are agreeing to our Terms of service\n',
+                                    style: TextStyle(
+                                      color: Colors.grey.withOpacity(0.7),
+                                    ),
                                   ),
                                   if (errorMessage != null)
                                     Align(
@@ -346,6 +350,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         ),
                                       ),
                                     ),
+
                                   if (isLoading)
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -408,7 +413,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           child: isLoading
                                               ? CircularProgressIndicator()
                                               : Text(
-                                                  'Signup',
+                                                  'Take me to the music!',
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                                 .brightness ==
@@ -426,24 +431,32 @@ class _SignupScreenState extends State<SignupScreen> {
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 20.0,
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .disclaimer,
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .disclaimerText,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text:
+                                              'If you are sure you have already created an account,',
                                           style: TextStyle(
                                             color: Colors.grey.withOpacity(0.7),
                                           ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text:
+                                                  ' try another email address.',
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.light
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ],

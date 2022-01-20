@@ -122,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             RichText(
                               text: TextSpan(
                                 text:
-                                    '\nLet\'s get you listerning to the best yoga music library around!',
+                                    "\nLet's get you listening to the best yoga music library around!",
                                 style: TextStyle(
                                   // height: 0.97,
                                   fontSize: 24,
@@ -300,7 +300,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            'Signin / Register',
+                                            'Sign In / Register',
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                           .brightness ==
@@ -328,30 +328,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                   //     ),
                                   //   ],
                                   // ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .disclaimer,
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .disclaimerText,
-                                          style: TextStyle(
-                                            color: Colors.grey.withOpacity(0.7),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

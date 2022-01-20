@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/album_list.dart';
@@ -182,15 +183,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                               searchResponse = null;
                                             });
                                           },
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Text(
-                                                'clear',
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                            ],
+                                          child: Icon(
+                                            Icons.clear,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                           ),
                                         ),
                                   border: InputBorder.none,
@@ -367,10 +364,15 @@ class _SearchScreenState extends State<SearchScreen> {
                                         splashColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () {
+                                          controller.text =
+                                              lstKeywordSearch[index];
+                                          controller.value = TextEditingValue(
+                                            text: controller.text,
+                                            selection: TextSelection.collapsed(
+                                                offset: controller.text.length),
+                                          );
                                           onSubmitSearch(
                                               lstKeywordSearch[index]);
-                                          controller.text =
-                                              lstKeywordSearch[index + 1];
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -430,6 +432,24 @@ class _SearchScreenState extends State<SearchScreen> {
                     if (searchResponse!.data != null)
                       Column(
                         children: [
+                          if (searchResponse?.data?.tracks != null &&
+                              searchResponse?.data?.albums != null &&
+                              searchResponse?.data?.playlists != null &&
+                              searchResponse?.data?.artists != null)
+                            if (searchResponse!.data!.tracks!.isEmpty &&
+                                searchResponse!.data!.albums!.isEmpty &&
+                                searchResponse!.data!.playlists!.isEmpty &&
+                                searchResponse!.data!.artists!.isEmpty)
+                              emptyScreen(
+                                context,
+                                0,
+                                ':( ',
+                                100,
+                                AppLocalizations.of(context)!.sorry,
+                                60,
+                                AppLocalizations.of(context)!.resultsNotFound,
+                                20,
+                              ),
                           if (searchResponse!.data!.tracks != null)
                             if (searchResponse!.data!.tracks!.isNotEmpty)
                               HeaderTitle(
@@ -699,7 +719,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ],
                       )
                     else if (!isLoading)
-                      Center(
+                      const Center(
                         child: Text('No data found!'),
                       ),
                 ],
