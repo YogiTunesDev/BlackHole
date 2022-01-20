@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
@@ -108,6 +110,16 @@ class _SaavnHomePageState extends State<SaavnHomePage>
       return formatString(artists?.join(', ')?.toString());
     }
   }
+
+  List<Color> colorList = [
+    Colors.red,
+    Colors.amber,
+    Colors.green,
+    Colors.yellow,
+    Colors.teal,
+    Colors.purple,
+    Colors.pink,
+  ];
 
   @override
   bool get wantKeepAlive => true;
@@ -292,101 +304,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             itemBuilder: (context, index) {
                               final BrowseBy item =
                                   data!.data!.browseByActivity![index];
-                              return
-                                  // InkWell(
-                                  //   onTap: () {
-                                  //     Navigator.push(
-                                  //       context,
-                                  //       PageRouteBuilder(
-                                  //         opaque: false,
-                                  //         pageBuilder: (_, __, ___) => AlbumList(
-                                  //           albumListType:
-                                  //               AlbumListType.otherActivity,
-                                  //           albumName: item.name,
-                                  //           id: item.id,
-                                  //         ),
-                                  //       ),
-                                  //     );
-                                  //   },
-                                  //   child: SizedBox(
-                                  //     width: boxSize / 2 - 30,
-                                  //     child: Padding(
-                                  //       padding: const EdgeInsets.only(right: 5),
-                                  //       child: Column(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.center,
-                                  //         children: [
-                                  //           SizedBox.square(
-                                  //             dimension: boxSize / 2 - 40,
-                                  //             child: Card(
-                                  //               elevation: 5,
-                                  //               shape: RoundedRectangleBorder(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(
-                                  //                   1000.0,
-                                  //                 ),
-                                  //               ),
-                                  //               clipBehavior: Clip.antiAlias,
-                                  //               child: Stack(
-                                  //                 children: [
-                                  //                   Container(
-                                  //                     height: boxSize / 2 - 40,
-                                  //                     width: boxSize / 2 - 40,
-                                  //                     decoration: BoxDecoration(
-                                  //                       gradient: LinearGradient(
-                                  //                         colors: [
-                                  //                           Theme.of(context)
-                                  //                               .colorScheme
-                                  //                               .secondary,
-                                  //                           Theme.of(context)
-                                  //                               .colorScheme
-                                  //                               .secondary
-                                  //                               .withOpacity(0.8)
-                                  //                         ],
-                                  //                         begin: Alignment.topLeft,
-                                  //                         end:
-                                  //                             Alignment.bottomRight,
-                                  //                       ),
-                                  //                     ),
-                                  //                   ),
-                                  //                   Opacity(
-                                  //                     opacity: 0.2,
-                                  //                     child: SizedBox(
-                                  //                       height: boxSize / 2 - 40,
-                                  //                       width: boxSize / 2 - 40,
-                                  //                       child: const Image(
-                                  //                         fit: BoxFit.cover,
-                                  //                         image: AssetImage(
-                                  //                           'assets/album.png',
-                                  //                         ),
-                                  //                       ),
-                                  //                     ),
-                                  //                   ),
-                                  //                 ],
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //           const SizedBox(
-                                  //             height: 5,
-                                  //           ),
-                                  //           Text(
-                                  //             formatString(item.name),
-                                  //             textAlign: TextAlign.center,
-                                  //             softWrap: false,
-                                  //             overflow: TextOverflow.ellipsis,
-                                  //             style: const TextStyle(
-                                  //               fontWeight: FontWeight.w500,
-                                  //             ),
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  SongItem(
-                                itemImage: '',
-                                itemName: item.name!,
-                                isRound: true,
+                              int randomNumber = Random().nextInt(7);
+                              return InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -401,7 +320,96 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     ),
                                   );
                                 },
+                                child: SizedBox(
+                                  width: boxSize / 2 - 30,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox.square(
+                                          dimension: boxSize / 2 - 40,
+                                          child: Card(
+                                            elevation: 5,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                1000.0,
+                                              ),
+                                            ),
+                                            clipBehavior: Clip.antiAlias,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: boxSize / 2 - 40,
+                                                  width: boxSize / 2 - 40,
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        colorList[randomNumber],
+                                                        colorList[randomNumber]
+                                                            .withOpacity(0.5),
+                                                      ],
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Opacity(
+                                                  opacity: 0.2,
+                                                  child: SizedBox(
+                                                    height: boxSize / 2 - 40,
+                                                    width: boxSize / 2 - 40,
+                                                    child: const Image(
+                                                      fit: BoxFit.cover,
+                                                      image: AssetImage(
+                                                        'assets/album.png',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          formatString(item.name),
+                                          textAlign: TextAlign.center,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               );
+                              //     SongItem(
+                              //   itemImage: '',
+                              //   itemName: item.name!,
+                              //   isRound: true,
+                              //   onTap: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       PageRouteBuilder(
+                              //         opaque: false,
+                              //         pageBuilder: (_, __, ___) => AlbumList(
+                              //           albumListType:
+                              //               AlbumListType.otherActivity,
+                              //           albumName: item.name,
+                              //           id: item.id,
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              // );
                             },
                           ),
                         ),
