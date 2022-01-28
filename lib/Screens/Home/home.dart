@@ -487,7 +487,7 @@ class _HomePageState extends State<HomePage> {
                                 (BuildContext context, bool innerBoxScrolled) {
                               return <Widget>[
                                 SliverAppBar(
-                                  expandedHeight: 135,
+                                  expandedHeight: 110,
                                   backgroundColor: Colors.transparent,
                                   elevation: 0,
                                   // pinned: true,
@@ -516,33 +516,8 @@ class _HomePageState extends State<HomePage> {
                                                         const EdgeInsets.only(
                                                       left: 15.0,
                                                     ),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!
-                                                          .homeGreet,
-                                                      style: TextStyle(
-                                                        letterSpacing: 2,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 15.0,
-                                                ),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    ValueListenableBuilder(
+                                                    child:
+                                                        ValueListenableBuilder(
                                                       valueListenable:
                                                           Hive.box('settings')
                                                               .listenable(),
@@ -552,31 +527,72 @@ class _HomePageState extends State<HomePage> {
                                                         Widget? child,
                                                       ) {
                                                         return Text(
-                                                          (box.get('name') ==
-                                                                      null ||
-                                                                  box.get('name') ==
-                                                                      '')
-                                                              ? 'Guest'
-                                                              : capitalize(
-                                                                  box
-                                                                      .get(
-                                                                        'name',
-                                                                      )
-                                                                      .toString(),
-                                                                ),
-                                                          style:
-                                                              const TextStyle(
+                                                          'Namaste, ${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
+                                                              box
+                                                                  .get(
+                                                                    'name',
+                                                                  )
+                                                                  .toString(),
+                                                            )}',
+                                                          style: TextStyle(
                                                             letterSpacing: 2,
-                                                            fontSize: 20,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .secondary,
+                                                            fontSize: 24,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                                FontWeight.bold,
                                                           ),
                                                         );
                                                       },
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
+                                              // Padding(
+                                              //   padding: const EdgeInsets.only(
+                                              //     left: 15.0,
+                                              //   ),
+                                              //   child: Row(
+                                              //     crossAxisAlignment:
+                                              //         CrossAxisAlignment.end,
+                                              //     children: [
+                                              //       ValueListenableBuilder(
+                                              //         valueListenable:
+                                              //             Hive.box('settings')
+                                              //                 .listenable(),
+                                              //         builder: (
+                                              //           BuildContext context,
+                                              //           Box box,
+                                              //           Widget? child,
+                                              //         ) {
+                                              //           return Text(
+                                              //             (box.get('name') ==
+                                              //                         null ||
+                                              //                     box.get('name') ==
+                                              //                         '')
+                                              //                 ? 'Guest'
+                                              //                 : capitalize(
+                                              //                     box
+                                              //                         .get(
+                                              //                           'name',
+                                              //                         )
+                                              //                         .toString(),
+                                              //                   ),
+                                              //             style:
+                                              //                 const TextStyle(
+                                              //               letterSpacing: 2,
+                                              //               fontSize: 20,
+                                              //               fontWeight:
+                                              //                   FontWeight.w500,
+                                              //             ),
+                                              //           );
+                                              //         },
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         ),

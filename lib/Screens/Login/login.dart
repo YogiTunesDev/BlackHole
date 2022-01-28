@@ -120,7 +120,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           .colorScheme
                                           .secondary,
                                     ),
-                                   
                                   ),
                                 ),
                               ],
