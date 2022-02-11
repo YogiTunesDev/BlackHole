@@ -526,7 +526,7 @@ class _HomePageState extends State<HomePage> {
                                                       Widget? child,
                                                     ) {
                                                       return Text(
-                                                        'Namaste, ${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
+                                                        'Namaste,\n${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
                                                             box
                                                                 .get(
                                                                   'name',
@@ -539,7 +539,7 @@ class _HomePageState extends State<HomePage> {
                                                               Theme.of(context)
                                                                   .colorScheme
                                                                   .secondary,
-                                                          fontSize: 24,
+                                                          fontSize: 18,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           overflow: TextOverflow
