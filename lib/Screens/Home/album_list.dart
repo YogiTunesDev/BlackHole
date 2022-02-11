@@ -1059,7 +1059,8 @@ class _AlbumListState extends State<AlbumList> {
                                               pageBuilder: (_, __, ___) =>
                                                   SongsListPage(
                                                 // songList: item.songlist,
-                                                songListType: SongListType.playlist,
+                                                songListType:
+                                                    SongListType.playlist,
                                                 playlistName: item.name!,
                                                 playlistImage: itemImage,
                                                 id: item.id,

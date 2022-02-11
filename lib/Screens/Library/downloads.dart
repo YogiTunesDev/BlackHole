@@ -50,7 +50,7 @@ class _DownloadsState extends State<Downloads>
 
   @override
   void initState() {
-    _tcontroller = TabController(length: 4, vsync: this);
+    _tcontroller = TabController(length: 3, vsync: this);
     // _tcontroller!.addListener(changeTitle);
     if (tempPath == null) {
       getTemporaryDirectory().then((value) {
@@ -295,9 +295,9 @@ class _DownloadsState extends State<Downloads>
                       Tab(
                         text: AppLocalizations.of(context)!.artists,
                       ),
-                      Tab(
-                        text: AppLocalizations.of(context)!.genres,
-                      ),
+                      // Tab(
+                      //   text: AppLocalizations.of(context)!.genres,
+                      // ),
                     ],
                   ),
                   actions: [
@@ -457,12 +457,12 @@ class _DownloadsState extends State<Downloads>
                             offline: true,
                             sortedAlbumKeysList: _sortedArtistKeysList,
                           ),
-                          AlbumsTab(
-                            albums: _genres,
-                            type: 'genre',
-                            offline: true,
-                            sortedAlbumKeysList: _sortedGenreKeysList,
-                          ),
+                          // AlbumsTab(
+                          //   albums: _genres,
+                          //   type: 'genre',
+                          //   offline: true,
+                          //   sortedAlbumKeysList: _sortedGenreKeysList,
+                          // ),
                         ],
                       ),
               ),

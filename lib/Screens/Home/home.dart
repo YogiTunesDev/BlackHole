@@ -509,46 +509,46 @@ class _HomePageState extends State<HomePage> {
                                               const SizedBox(
                                                 height: 60,
                                               ),
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      left: 15.0,
-                                                    ),
-                                                    child:
-                                                        ValueListenableBuilder(
-                                                      valueListenable:
-                                                          Hive.box('settings')
-                                                              .listenable(),
-                                                      builder: (
-                                                        BuildContext context,
-                                                        Box box,
-                                                        Widget? child,
-                                                      ) {
-                                                        return Text(
-                                                          'Namaste, ${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
-                                                              box
-                                                                  .get(
-                                                                    'name',
-                                                                  )
-                                                                  .toString(),
-                                                            )}',
-                                                          style: TextStyle(
-                                                            letterSpacing: 2,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .colorScheme
-                                                                .secondary,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                    left: 15.0,
                                                   ),
-                                                ],
+                                                  child: ValueListenableBuilder(
+                                                    valueListenable:
+                                                        Hive.box('settings')
+                                                            .listenable(),
+                                                    builder: (
+                                                      BuildContext context,
+                                                      Box box,
+                                                      Widget? child,
+                                                    ) {
+                                                      return Text(
+                                                        'Namaste, ${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
+                                                            box
+                                                                .get(
+                                                                  'name',
+                                                                )
+                                                                .toString(),
+                                                          )}',
+                                                        style: TextStyle(
+                                                          letterSpacing: 2,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .secondary,
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
                                               ),
                                               // Padding(
                                               //   padding: const EdgeInsets.only(

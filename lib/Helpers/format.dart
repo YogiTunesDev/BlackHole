@@ -989,8 +989,9 @@ class FormatResponse {
     try {
       final HomeResponse res = homeResponse!;
       List<SongItemModel> songList = [];
+      List<MyRecentlyPlayedSong> lstRecentlyPlayed = [];
       if (res.data != null) {
-        if (res.data!.trendingSongs != null) {
+        if (res.data?.trendingSongs != null) {
           for (var i = 0; i < res.data!.trendingSongs!.length; i++) {
             final TrendingAlbum item = res.data!.trendingSongs![i];
             final String imageUrl = item.cover != null
@@ -1042,8 +1043,28 @@ class FormatResponse {
             );
           }
         }
+        if (res.data?.myRecentlyPlayedSongs != null) {
+          if (res.data!.myRecentlyPlayedSongs!.isNotEmpty) {
+            for (var i = 0; i < res.data!.myRecentlyPlayedSongs!.length; i++) {
+              MyRecentlyPlayedSong item = res.data!.myRecentlyPlayedSongs![i];
+              String type = '';
+              if (item.type != null) {
+                if (item.type == 'Album') {
+                  type = item.type.toString();
+                }
+              }
+
+              if (type.isNotEmpty) {
+                lstRecentlyPlayed.add(item);
+              }
+            }
+          }
+        }
       }
-      final Data data = res.data!.copyWith(trendingSongsNew: songList);
+      final Data data = res.data!.copyWith(
+        trendingSongsNew: songList,
+        myRecentlyPlayedSongs: lstRecentlyPlayed,
+      );
       final tempres = res.copyWith(data: data);
       return tempres;
     } catch (e) {
