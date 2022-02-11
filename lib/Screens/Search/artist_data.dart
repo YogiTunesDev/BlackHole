@@ -31,11 +31,22 @@ class _ArtistDataState extends State<ArtistData> {
   final ScrollController _scrollController = ScrollController();
   bool apiLoading = false;
   ArtistDataResponse? artistDataResponse;
+  String? mainImage;
+  String? mainTitle;
 
   @override
   void initState() {
     // TODO: implement initState
     fetchData();
+    if (widget.image != null) {
+      if (widget.image!.isNotEmpty) {
+        mainImage = widget.image;
+      }
+    }
+
+    if (widget.title.isEmpty) {
+      mainTitle = widget.title;
+    }
     super.initState();
   }
 
@@ -45,7 +56,14 @@ class _ArtistDataState extends State<ArtistData> {
     });
 
     artistDataResponse = await YogitunesAPI().artistData(widget.id);
-
+    if (artistDataResponse != null) {
+      if (artistDataResponse!.data != null) {
+        mainImage ??= (artistDataResponse?.data?.cover?.imgUrl ?? '') +
+            (artistDataResponse?.data?.cover?.imgUrl != null ? '/' : '') +
+            (artistDataResponse?.data?.cover?.image ?? '');
+        mainTitle = artistDataResponse?.data?.name;
+      }
+    }
     print('Artist Id ::: ${widget.id}');
     print('Artist Top Hits ::: ${artistDataResponse!.data!.topHits}');
 
@@ -92,7 +110,7 @@ class _ArtistDataState extends State<ArtistData> {
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
-                        widget.title,
+                        mainTitle ?? '',
                         textAlign: TextAlign.center,
                       ),
                       centerTitle: true,
@@ -118,7 +136,7 @@ class _ArtistDataState extends State<ArtistData> {
                             fit: BoxFit.cover,
                             image: AssetImage('assets/cover.jpg'),
                           ),
-                          imageUrl: widget.image!,
+                          imageUrl: mainImage ?? '',
                           placeholder: (context, url) => const Image(
                             fit: BoxFit.cover,
                             image: AssetImage('assets/cover.jpg'),

@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 // ignore: avoid_classes_with_only_static_members
 class NativeMethod {
   static const MethodChannel sharedTextChannel =
-      MethodChannel('com.shadow.blackhole/sharedTextChannel');
+      MethodChannel('com.app.yogitunes/sharedTextChannel');
   static const MethodChannel registermediaChannel =
-      MethodChannel('com.shadow.blackhole/registerMedia');
+      MethodChannel('com.app.yogitunes/registerMedia');
   static const MethodChannel intentChannel =
-      MethodChannel('com.shadow.blackhole/intentChannel');
+      MethodChannel('com.app.yogitunes/intentChannel');
 
   static Future<void> handleIntent() async {
     // final _intent = await sharedTextChannel.invokeMethod('getSharedText');

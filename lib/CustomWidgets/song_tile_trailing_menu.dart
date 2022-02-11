@@ -9,6 +9,7 @@ import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Services/youtube_services.dart';
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -158,7 +159,10 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         final MediaItem mediaItem =
             MediaItemConverter.mapToMediaItem(widget.data.toMap());
         if (value == 3) {
-          Share.share(widget.data.url.toString());
+           String strURL = strSHAREURL;
+          strURL += 'tracks/';
+          strURL += widget.data.id.toString();
+          Share.share(strURL);
         }
         // if (value == 4) {
         //   Navigator.push(
@@ -372,6 +376,7 @@ class _YtSongTileTrailingMenuState extends State<YtSongTileTrailingMenu> {
           launch(widget.data.url);
         }
         if (value == 5) {
+         
           Share.share(widget.data.url);
         }
       },

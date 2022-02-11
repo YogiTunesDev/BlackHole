@@ -21,6 +21,7 @@ import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -309,9 +310,12 @@ class _PlayScreenState extends State<PlayScreen> {
                           icon: const Icon(Icons.share_rounded),
                           tooltip: AppLocalizations.of(context)!.share,
                           onPressed: () {
+                            String strURL = strSHAREURL;
+                            strURL += 'tracks/';
+                            strURL += mediaItem.id.toString();
                             Share.share(
-                              mediaItem.extras!['perma_url'].toString(),
-                            );
+                                strURL //mediaItem.extras!['perma_url'].toString(),
+                                );
                           },
                         ),
                       PopupMenuButton(

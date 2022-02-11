@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/Services/subscription_status.dart';
+import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
-import 'package:blackhole/util/const.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -25,8 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           isLoading = true;
         });
-        await Future.delayed(Duration(seconds: 5));
+
         redirectAfterAuthentication(context);
+        await Future.delayed(Duration(seconds: 5));
       } catch (e, stack) {
         print(e.toString());
         debugPrint(stack.toString());
@@ -42,42 +40,44 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset('assets/splash.png'),
-            const Center(
-                child: CircularProgressIndicator(),
-              ),
-          ],
-        )
-        : Container();
+    return GradientContainer(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          // color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset('assets/splash.png'),
+                // const Center(
+                //   child: CircularProgressIndicator(),
+                // ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
 Future<void> redirectAfterAuthentication(BuildContext context) async {
   print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
-  SubscriptionStatusResponse? subscriptionStatusResponse =
-      await YogitunesAPI().subscriptionStatus();
+
   if (apiTokenBox.get('token') != null) {
     // bool val = await SubscriptionStatus.subscriptionStatus(
     //     Platform.isIOS ? iosInAppPackage : androidInAppPackage,
     //     const Duration(days: 30),
     //     const Duration(days: 0));
+    // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    // return;
+    SubscriptionStatusResponse? subscriptionStatusResponse =
+        await YogitunesAPI().subscriptionStatus();
     if (subscriptionStatusResponse != null) {
-      if (subscriptionStatusResponse.status!) {
-        
-        if (subscriptionStatusResponse.validMobileSubscription!) {
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        } else {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/subscription', (route) => false,
-              arguments: {
-                'isFirstTime': true,
-              });
-          // Navigator.pushNamed(context, '/subscription');
-        }
+      if (subscriptionStatusResponse.status ?? false) {
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       } else {
         Navigator.pushNamedAndRemoveUntil(
             context, '/subscription', (route) => false,
@@ -87,6 +87,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
         // Navigator.pushNamed(context, '/subscription');
       }
     } else {
+       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       // Navigator.pushNamedAndRemoveUntil(
       //     context, '/subscription', (route) => false,
       //     arguments: {

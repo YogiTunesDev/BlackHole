@@ -178,9 +178,9 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           )
                         //(myRecentlyPlayedSongResponse == null &&
                         // searchAllType == SearchAllType.recent) ||
-                        else if (((seeAllLibraryAlbumsResponse == null &&
+                        else if (((seeAllLibraryAlbumsResponse?.data == null &&
                                     searchAllType == SearchAllType.albums) ||
-                                (searchAllArtistsResponse == null &&
+                                (searchAllArtistsResponse?.data == null &&
                                     searchAllType == SearchAllType.artists)) &&
                             !apiLoading)
                           emptyScreen(
@@ -195,93 +195,117 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           )
                         else if (searchAllType == SearchAllType.albums &&
                             seeAllLibraryAlbumsResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount:
-                                seeAllLibraryAlbumsResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SeeAllLibraryAlbumsResponseData item =
-                                  seeAllLibraryAlbumsResponse!.data![index];
+                          if (seeAllLibraryAlbumsResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount:
+                                  seeAllLibraryAlbumsResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SeeAllLibraryAlbumsResponseData item =
+                                    seeAllLibraryAlbumsResponse!.data![index];
 
-                              String itemImage = "";
-                              if (item.album != null) {
-                                if (item.album!.cover != null) {
-                                  itemImage =
-                                      '${item.album!.cover!.imgUrl!}/${item.album!.cover!.image!}';
-                                }
-                              }
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.album!.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        isFromLibrary: widget.isFromLibrary,
-                                        songListType: SongListType.album,
-                                        playlistName: item.album!.name!,
-                                        playlistImage: itemImage,
-                                        id: item.album!.id,
-                                      ),
-                                    ),
-                                  ).then((value) {
-                                    setState(() {
-                                      fetchData();
-                                    });
-                                  });
-                                },
-                              );
-                            },
-                          )
-                        else if (searchAllType == SearchAllType.artists &&
-                            searchAllArtistsResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: searchAllArtistsResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SearchAllArtistsResponseData item =
-                                  searchAllArtistsResponse!.data![index];
-                              String itemImage = '';
-                              if (item.cover != null) {
-                                if (item.cover!.imgUrl != null) {
-                                  if (item.cover!.image != null) {
+                                String itemImage = "";
+                                if (item.album != null) {
+                                  if (item.album!.cover != null) {
                                     itemImage =
-                                        '${item.cover!.imgUrl!}/${item.cover!.image!}';
+                                        '${item.album!.cover!.imgUrl!}/${item.album!.cover!.image!}';
                                   }
                                 }
-                              }
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => ArtistData(
-                                        id: item.id!,
-                                        title: item.name!,
-                                        image: itemImage,
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.album!.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          isFromLibrary: widget.isFromLibrary,
+                                          songListType: SongListType.album,
+                                          playlistName: item.album!.name!,
+                                          playlistImage: itemImage,
+                                          id: item.album!.id,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          )
+                                    ).then((value) {
+                                      setState(() {
+                                        fetchData();
+                                      });
+                                    });
+                                  },
+                                );
+                              },
+                            )
+                        else if (searchAllType == SearchAllType.artists &&
+                            searchAllArtistsResponse != null)
+                          if (searchAllArtistsResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: searchAllArtistsResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SearchAllArtistsResponseData item =
+                                    searchAllArtistsResponse!.data![index];
+                                String itemImage = '';
+                                if (item.cover != null) {
+                                  if (item.cover!.imgUrl != null) {
+                                    if (item.cover!.image != null) {
+                                      itemImage =
+                                          '${item.cover!.imgUrl!}/${item.cover!.image!}';
+                                    }
+                                  }
+                                }
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => ArtistData(
+                                          id: item.id!,
+                                          title: item.name!,
+                                          image: itemImage,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            )
                       ]),
                     )
                   else
@@ -305,15 +329,14 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           )
                         //(myRecentlyPlayedSongResponse == null &&
                         // searchAllType == SearchAllType.recent) ||
-                        else if ((
-                                // (searchAllTracksResponse == null &&
-                                //           searchAllType == SearchAllType.tracks) ||
-                                //       (searchAllAlbumResponse == null &&
-                                //           searchAllType == SearchAllType.albums) ||
-                                //       (searchAllPlaylistsResponse == null &&
-                                //           searchAllType == SearchAllType.playlists) ||
-                                //       (searchAllArtistsResponse == null &&
-                                //           searchAllType == SearchAllType.artists) ||
+                        else if (((searchAllTracksResponse?.data == null &&
+                                    searchAllType == SearchAllType.tracks) ||
+                                (searchAllAlbumResponse?.data == null &&
+                                    searchAllType == SearchAllType.albums) ||
+                                (searchAllPlaylistsResponse?.data == null &&
+                                    searchAllType == SearchAllType.playlists) ||
+                                (searchAllArtistsResponse?.data == null &&
+                                    searchAllType == SearchAllType.artists) ||
                                 (seeAllLibraryAlbumsResponse == null &&
                                     searchAllType == SearchAllType.albums)) &&
                             !apiLoading)
@@ -329,176 +352,225 @@ class _SearchViewAllState extends State<SearchViewAll> {
                           )
                         else if (searchAllType == SearchAllType.tracks &&
                             searchAllTracksResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: searchAllTracksResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SearchAllTracksResponseData item =
-                                  searchAllTracksResponse!.data![index];
-                              String itemImage = item.album != null
-                                  ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
-                                  : '';
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.name!,
-                                onTap: () async {
-                                  popupLoader(
-                                      context,
-                                      AppLocalizations.of(
+                          if (searchAllTracksResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: searchAllTracksResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SearchAllTracksResponseData item =
+                                    searchAllTracksResponse!.data![index];
+                                String itemImage = item.album != null
+                                    ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
+                                    : '';
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.name!,
+                                  onTap: () async {
+                                    popupLoader(
                                         context,
-                                      )!
-                                          .fetchingStream);
-
-                                  final RadioStationsStreamResponse?
-                                      radioStationsStreamResponse =
-                                      await YogitunesAPI()
-                                          .fetchSingleSongData(item.id!);
-                                  Navigator.pop(context);
-                                  if (radioStationsStreamResponse != null) {
-                                    if (radioStationsStreamResponse
-                                            .songItemModel !=
-                                        null) {
-                                      if (radioStationsStreamResponse
-                                          .songItemModel!.isNotEmpty) {
-                                        List<SongItemModel> lstSong = [];
-                                        Navigator.push(
+                                        AppLocalizations.of(
                                           context,
-                                          PageRouteBuilder(
-                                            opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                PlayScreen(
-                                              songsList:
-                                                  radioStationsStreamResponse
-                                                      .songItemModel!,
-                                              index: 0,
-                                              offline: false,
-                                              fromDownloads: false,
-                                              fromMiniplayer: false,
-                                              recommend: false,
+                                        )!
+                                            .fetchingStream);
+
+                                    final RadioStationsStreamResponse?
+                                        radioStationsStreamResponse =
+                                        await YogitunesAPI()
+                                            .fetchSingleSongData(item.id!);
+                                    Navigator.pop(context);
+                                    if (radioStationsStreamResponse != null) {
+                                      if (radioStationsStreamResponse
+                                              .songItemModel !=
+                                          null) {
+                                        if (radioStationsStreamResponse
+                                            .songItemModel!.isNotEmpty) {
+                                          List<SongItemModel> lstSong = [];
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              opaque: false,
+                                              pageBuilder: (_, __, ___) =>
+                                                  PlayScreen(
+                                                songsList:
+                                                    radioStationsStreamResponse
+                                                        .songItemModel!,
+                                                index: 0,
+                                                offline: false,
+                                                fromDownloads: false,
+                                                fromMiniplayer: false,
+                                                recommend: false,
+                                              ),
                                             ),
-                                          ),
-                                        );
+                                          );
+                                        }
                                       }
                                     }
-                                  }
-                                },
-                              );
-                            },
-                          )
+                                  },
+                                );
+                              },
+                            )
                         else if (searchAllType == SearchAllType.albums &&
-                            searchAllAlbumResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: searchAllAlbumResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SearchAllAlbumResponseData item =
-                                  searchAllAlbumResponse!.data![index];
-                              String itemImage = item.cover != null
-                                  ? ('${item.cover!.imgUrl}/${item.cover!.image}')
-                                  : '';
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.album,
-                                        playlistName: item.name!,
-                                        playlistImage: itemImage,
-                                        id: item.id,
+                            searchAllAlbumResponse?.data != null)
+                          if (searchAllAlbumResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: searchAllAlbumResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SearchAllAlbumResponseData item =
+                                    searchAllAlbumResponse!.data![index];
+                                String itemImage = item.cover != null
+                                    ? ('${item.cover!.imgUrl}/${item.cover!.image}')
+                                    : '';
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.album,
+                                          playlistName: item.name!,
+                                          playlistImage: itemImage,
+                                          id: item.id,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          )
+                                    );
+                                  },
+                                );
+                              },
+                            )
                         else if (searchAllType == SearchAllType.playlists &&
                             searchAllPlaylistsResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: searchAllPlaylistsResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SearchAllPlaylistsResponseData item =
-                                  searchAllPlaylistsResponse!.data![index];
-                              String itemImage = item.quadImages!.isNotEmpty
-                                  ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                                  : '';
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.playlist,
-                                        playlistName: item.name!,
-                                        playlistImage: itemImage,
-                                        id: item.id,
+                          if (searchAllPlaylistsResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount:
+                                  searchAllPlaylistsResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SearchAllPlaylistsResponseData item =
+                                    searchAllPlaylistsResponse!.data![index];
+                                String itemImage = item.quadImages!.isNotEmpty
+                                    ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                    : '';
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.playlist,
+                                          playlistName: item.name!,
+                                          playlistImage: itemImage,
+                                          id: item.id,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          )
+                                    );
+                                  },
+                                );
+                              },
+                            )
                         else if (searchAllType == SearchAllType.artists &&
                             searchAllArtistsResponse != null)
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: searchAllArtistsResponse!.data!.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final SearchAllArtistsResponseData item =
-                                  searchAllArtistsResponse!.data![index];
-                              String itemImage = item.cover != null
-                                  ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
-                                  : '';
-                              return SongItem(
-                                itemImage: itemImage,
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => ArtistData(
-                                        id: item.id!,
-                                        title: item.name!,
-                                        image: itemImage,
+                          if (searchAllArtistsResponse!.data!.isEmpty)
+                            emptyScreen(
+                              context,
+                              0,
+                              ':( ',
+                              100,
+                              AppLocalizations.of(context)!.sorry,
+                              60,
+                              AppLocalizations.of(context)!.resultsNotFound,
+                              20,
+                            )
+                          else
+                            GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: searchAllArtistsResponse!.data!.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final SearchAllArtistsResponseData item =
+                                    searchAllArtistsResponse!.data![index];
+                                String itemImage = item.cover != null
+                                    ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
+                                    : '';
+                                return SongItem(
+                                  itemImage: itemImage,
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => ArtistData(
+                                          id: item.id!,
+                                          title: item.name!,
+                                          image: itemImage,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          )
+                                    );
+                                  },
+                                );
+                              },
+                            )
                       ]),
                     )
                 ],

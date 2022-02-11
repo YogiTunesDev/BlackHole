@@ -30,6 +30,7 @@ import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:blackhole/model/tracks_by_bpm_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
+import 'package:blackhole/model/user_info_response.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
@@ -45,6 +46,7 @@ class YogitunesAPI {
   Box settingsBox = Hive.box('settings');
   Map<String, String> endpoints = {
     'login': 'users/login',
+    'userInfo': 'users/info',
     'logincheck': 'users/check-email',
     'signup': 'users/signup',
     'forgotPassword': 'users/request-verification-code',
@@ -114,7 +116,10 @@ class YogitunesAPI {
     final box = await Hive.openBox('api-token');
     final String apiToken = box.get('token').toString();
     print('API TOKEN :::: $apiToken');
-    headers = {'Authorization': 'Bearer $apiToken', 'Accept': '*/*'};
+    headers = {
+      'Authorization': 'Bearer $apiToken',
+      'Accept': 'application/json'
+    };
 
     print('URL ::: $url');
 
@@ -198,7 +203,7 @@ class YogitunesAPI {
         'newsletter': isNewsLetterChecked.toString(),
         'initial_platform': Platform.isIOS ? 'ios' : 'Android',
       }, headers: {
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'User-Agent': Platform.isIOS ? 'test/iOS' : 'test/Android',
       });
       if (res.statusCode == 200) {
@@ -318,7 +323,7 @@ class YogitunesAPI {
 
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {
@@ -373,8 +378,6 @@ class YogitunesAPI {
     return result;
   }
 
-  
-
   Future<SubscriptionStatusResponse?> paymentSuccess(
       {required String paymentId,
       required String subscriptionId,
@@ -389,7 +392,7 @@ class YogitunesAPI {
       final url = "$baseUrl$apiStr${endpoints['paymentSuccess']}";
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {
@@ -448,6 +451,22 @@ class YogitunesAPI {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiRadioStationStreamData(
             RadioStationsStreamResponse?.fromMap(data as Map<String, dynamic>));
+      }
+    } catch (e) {
+      log('Error in fetchHomePageData: $e');
+    }
+    return result;
+  }
+
+  Future<UserInfoResponse?> fetchUserData() async {
+    UserInfoResponse? result;
+    try {
+      final res = await getResponse('${endpoints['userInfo']}');
+      print(res);
+      print(res.body);
+      if (res.statusCode == 200) {
+        final Map data = json.decode(res.body) as Map;
+        result = UserInfoResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
@@ -816,7 +835,7 @@ class YogitunesAPI {
       final url = "$baseUrl$apiStr${endpoints['editPlaylist']}/$playlistId";
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
-        'Accept': '*/*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       };
       final mapData = {

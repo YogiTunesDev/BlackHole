@@ -1,4 +1,4 @@
-package com.shadow.blackhole
+package com.app.yogitunes
 
 import android.content.Intent
 import android.net.Uri
@@ -17,7 +17,7 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.shadow.blackhole/sharedTextChannel")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.app.yogitunes/sharedTextChannel")
                 .setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
                     if (call.method == "getSharedText") {
                         result.success(sharedText)
@@ -27,7 +27,7 @@ class MainActivity : FlutterActivity() {
                         result.success(0)
                     }
                 }
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.shadow.blackhole/registerMedia")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.app.yogitunes/registerMedia")
                 .setMethodCallHandler { call: MethodCall, _: MethodChannel.Result? ->
                     if (call.method == "registerFile") {
                         val argument = call.argument<String>("file")
@@ -35,7 +35,7 @@ class MainActivity : FlutterActivity() {
                         sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)))
                     }
                 }
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.shadow.blackhole/intentChannel")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.app.yogitunes/intentChannel")
                 .setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
                     if (call.method == "openAudio") {
                         val audioPath = call.argument<String>("audioPath")

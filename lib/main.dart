@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2021 Ankit Sangwan
- *
- * BlackHole is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * BlackHole is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with BlackHole.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
@@ -29,7 +12,6 @@ import 'package:blackhole/Screens/Library/nowplaying.dart';
 import 'package:blackhole/Screens/Library/playlists.dart';
 import 'package:blackhole/Screens/Library/recent.dart';
 import 'package:blackhole/Screens/Login/auth.dart';
-import 'package:blackhole/Screens/Login/forgot_password.dart';
 import 'package:blackhole/Screens/Login/forgot_password_verification.dart';
 import 'package:blackhole/Screens/Login/login.dart';
 import 'package:blackhole/Screens/Login/pref.dart';
@@ -44,16 +26,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'Screens/splash_screen.dart';
-import 'Services/subscription_status.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,13 +44,14 @@ Future<void> main() async {
   await openHiveBox('downloads');
   await openHiveBox('Favorite Songs');
   await openHiveBox('cache', limit: true);
-  FlutterInappPurchase.instance.initialize();
   if (Platform.isAndroid) {
     setOptimalDisplayMode();
   }
   await startService();
-    // initialize the Intercom.
-    await Intercom.initialize('ebyep3ia', iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304', androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
+  // initialize the Intercom.
+  await Intercom.initialize('ebyep3ia',
+      iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
+      androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
   runApp(MyApp());
 }
 
@@ -97,15 +78,15 @@ Future<void> startService() async {
   final AudioPlayerHandler audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandlerImpl(),
     config: AudioServiceConfig(
-      
-      androidNotificationChannelId: 'com.shadow.blackhole.channel.audio',
-      androidNotificationChannelName: 'BlackHole',
+      androidNotificationChannelId: 'com.app.yogitunes.channel.audio',
+      androidNotificationChannelName: 'Yogitunes',
       androidNotificationOngoing: true,
       androidNotificationIcon: 'drawable/ic_stat_music_note',
       androidShowNotificationBadge: true,
       // androidStopForegroundOnPause: Hive.box('settings')
       // .get('stopServiceOnPause', defaultValue: true) as bool,
       notificationColor: Colors.grey[900],
+      
     ),
   );
   GetIt.I.registerSingleton<AudioPlayerHandler>(audioHandler);
@@ -194,8 +175,8 @@ class _MyAppState extends State<MyApp> {
     ]);
 
     return MaterialApp(
-      title: 'BlackHole',
-      restorationScopeId: 'blackhole',
+      title: 'Yogitunes',
+      restorationScopeId: 'Yogitunes',
       debugShowCheckedModeBanner: false,
       themeMode: AppTheme.themeMode,
       theme: AppTheme.lightTheme(

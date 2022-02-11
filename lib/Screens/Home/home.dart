@@ -17,6 +17,7 @@ import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Top Charts/top.dart';
 import 'package:blackhole/Screens/YouTube/youtube_home.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
+import 'package:blackhole/Services/uni_link_service.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,8 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
   bool checked = false;
   String? appVersion;
-  String name =
-      Hive.box('settings').get('name', defaultValue: 'Guest') as String;
+  String? name =
+      Hive.box('settings').get('name', defaultValue: 'Guest') as String?;
   bool checkUpdate =
       Hive.box('settings').get('checkUpdate', defaultValue: false) as bool;
   bool autoBackup =
@@ -238,6 +239,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initFunction();
+  }
+
+  void initFunction() async {
+    UniLinkService.instance.initUniLinks(context);
   }
 
   @override
@@ -431,6 +437,8 @@ class _HomePageState extends State<HomePage> {
                               Navigator.pop(context);
                               var box = await Hive.openBox('api-token');
                               box.put('token', null);
+                              Hive.box('settings').put('name', null);
+                              Hive.box('settings').put('userInfoData', {});
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/login', (route) => false);
                             },
@@ -492,27 +500,7 @@ class _HomePageState extends State<HomePage> {
                                       return FlexibleSpaceBar(
                                         // collapseMode: CollapseMode.parallax,
                                         background: GestureDetector(
-                                          onTap: () async {
-                                            await showTextInputDialog(
-                                              context: context,
-                                              title: 'Name',
-                                              initialText: name,
-                                              keyboardType: TextInputType.name,
-                                              onSubmitted: (value) {
-                                                Hive.box('settings').put(
-                                                  'name',
-                                                  value.trim(),
-                                                );
-                                                name = value.trim();
-                                                Navigator.pop(context);
-                                                updateUserDetails(
-                                                  'name',
-                                                  value.trim(),
-                                                );
-                                              },
-                                            );
-                                            setState(() {});
-                                          },
+                                          onTap: () async {},
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
@@ -572,9 +560,6 @@ class _HomePageState extends State<HomePage> {
                                                                       .get(
                                                                         'name',
                                                                       )
-                                                                      .split(
-                                                                        ' ',
-                                                                      )[0]
                                                                       .toString(),
                                                                 ),
                                                           style:
