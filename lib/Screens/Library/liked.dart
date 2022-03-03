@@ -884,7 +884,7 @@ class _AlbumsTabState extends State<AlbumsTab>
                               )
                             : Collage(
                                 fixSize: false,
-                                imageList: imageList,
+                                imageList: [""], //imageList,
                                 showGrid: widget.type == 'genre',
                                 artistName: widget.type == 'artist'
                                     ? widget.albums[widget

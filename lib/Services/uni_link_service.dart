@@ -47,7 +47,7 @@ class UniLinkService {
                 pageBuilder: (_, __, ___) => SongsListPage(
                   songListType: SongListType.playlist,
                   playlistName: '',
-                  playlistImage: '',
+                  playlistImage: [''],
                   id: id,
                 ),
               ),
@@ -60,7 +60,7 @@ class UniLinkService {
                 pageBuilder: (_, __, ___) => SongsListPage(
                   songListType: SongListType.album,
                   playlistName: '',
-                  playlistImage: '',
+                  playlistImage: [''],
                   id: id,
                 ),
               ),

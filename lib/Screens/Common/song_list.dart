@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
 import 'package:blackhole/CustomWidgets/download_button.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
@@ -27,7 +28,7 @@ enum SongListType { playlist, album }
 class SongsListPage extends StatefulWidget {
   final List<SongItemModel>? songList;
   final String playlistName;
-  final String? playlistImage;
+  final List<String>? playlistImage;
   final int? id;
   final SongListType? songListType;
   final bool? isMyPlaylist;
@@ -51,7 +52,7 @@ class _SongsListPageState extends State<SongsListPage> {
   int page = 1;
   bool apiloading = false;
   String? mainPlayListName;
-  String? mainPlayListImage;
+  List<String> mainPlayListImage = [];
   List<SongItemModel> songList = [];
   bool fetched = true;
   HtmlUnescape unescape = HtmlUnescape();
@@ -73,7 +74,7 @@ class _SongsListPageState extends State<SongsListPage> {
     }
     if (widget.playlistImage != null) {
       if (widget.playlistImage!.isNotEmpty) {
-        mainPlayListImage = widget.playlistImage;
+        mainPlayListImage = widget.playlistImage ?? [];
       }
     }
     if (widget.playlistName != null) {
@@ -127,7 +128,7 @@ class _SongsListPageState extends State<SongsListPage> {
                   songList = albumRes.data!.lstSongItemModel!;
                 }
               }
-              mainPlayListImage ??= (albumRes.data?.cover?.imgUrl ?? '') +
+              mainPlayListImage[0] = (albumRes.data?.cover?.imgUrl ?? '') +
                   (albumRes.data?.cover?.imgUrl != null ? '/' : '') +
                   (albumRes.data?.cover?.image ?? '');
               mainPlayListName ??= albumRes.data?.name ?? '';
@@ -153,12 +154,15 @@ class _SongsListPageState extends State<SongsListPage> {
                   }
                 }
               }
-              mainPlayListImage ??=
-                  (playlistRes!.data?.quadImages?[0]?.imageUrl ?? '') +
-                      (playlistRes!.data?.quadImages?[0]?.imageUrl != null
-                          ? "/"
-                          : '') +
-                      (playlistRes!.data?.quadImages?[0]?.image ?? '');
+              if (playlistRes?.data != null) {
+                mainPlayListImage = playlistRes!.data!.getQuadImages();
+              }
+              // mainPlayListImage ??=
+              //     (playlistRes!.data?.quadImages?[0]?.imageUrl ?? '') +
+              //         (playlistRes!.data?.quadImages?[0]?.imageUrl != null
+              //             ? "/"
+              //             : '') +
+              //         (playlistRes!.data?.quadImages?[0]?.image ?? '');
 
               mainPlayListName ??= playlistRes!.data?.name ?? '';
             }
@@ -279,29 +283,36 @@ class _SongsListPageState extends State<SongsListPage> {
                           );
                         },
                         blendMode: BlendMode.dstIn,
-                        child: mainPlayListImage == null
+                        child: mainPlayListImage.isEmpty
                             ? const Image(
                                 fit: BoxFit.cover,
                                 image: AssetImage(
                                   'assets/cover.jpg',
                                 ),
                               )
-                            : CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                errorWidget: (context, _, __) => const Image(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'assets/album.png',
+                            : mainPlayListImage.length == 1
+                                ? CachedNetworkImage(
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, _, __) =>
+                                        const Image(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/album.png',
+                                      ),
+                                    ),
+                                    imageUrl: mainPlayListImage[0],
+                                    placeholder: (context, url) => const Image(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/album.png',
+                                      ),
+                                    ),
+                                  )
+                                : Collage(
+                                    showGrid: true,
+                                    imageList: mainPlayListImage,
+                                    placeholderImage: 'assets/album.png',
                                   ),
-                                ),
-                                imageUrl: mainPlayListImage.toString(),
-                                placeholder: (context, url) => const Image(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'assets/album.png',
-                                  ),
-                                ),
-                              ),
                       ),
                     ),
                   ),
@@ -472,16 +483,16 @@ class _SongsListPageState extends State<SongsListPage> {
                               ],
                             ),
                             if (widget.songListType == SongListType.playlist)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 10, right: 20, left: 20),
-                              child: Text(
-                                playlistRes?.data?.playlistDuration != null
-                                    ? 'Duration: ${playlistRes!.data!.playlistDuration.toString()}'
-                                    : '',
-                                textAlign: TextAlign.center,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10, right: 20, left: 20),
+                                child: Text(
+                                  playlistRes?.data?.playlistDuration != null
+                                      ? 'Duration: ${playlistRes!.data!.playlistDuration.toString()}'
+                                      : '',
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
                             ...songList.map((entry) {
                               return ListTile(
                                 contentPadding:

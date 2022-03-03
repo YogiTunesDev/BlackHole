@@ -263,22 +263,27 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                       child: SizedBox(
                         height: 50,
                         width: 50,
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          errorWidget: (context, _, __) => const Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/cover.jpg',
-                            ),
-                          ),
-                          imageUrl: '${imageUrl}',
-                          placeholder: (context, url) => const Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              'assets/cover.jpg',
-                            ),
-                          ),
+                        child: Collage(
+                          showGrid: true,
+                          imageList: itemData.getQuadImages(),
+                          placeholderImage: 'assets/cover.jpg',
                         ),
+                        // CachedNetworkImage(
+                        //   fit: BoxFit.cover,
+                        //   errorWidget: (context, _, __) => const Image(
+                        //     fit: BoxFit.cover,
+                        //     image: AssetImage(
+                        //       'assets/cover.jpg',
+                        //     ),
+                        //   ),
+                        //   imageUrl: '${imageUrl}',
+                        //   placeholder: (context, url) => const Image(
+                        //     fit: BoxFit.cover,
+                        //     image: AssetImage(
+                        //       'assets/cover.jpg',
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                       //   )
                       // : Collage(
@@ -293,11 +298,11 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                     onTap: () async {
                       popupLoader(context, 'Loading');
 
-                      for (int i = 0; i < playlistTracks.length; i++) {
-                        selectedPlaylist.insert(
-                            i, playlistTracks[i].playlistId.toString());
-                        print(selectedPlaylist);
-                      }
+                      // for (int i = 0; i < playlistTracks.length; i++) {
+                      //   selectedPlaylist.insert(
+                      //       i, playlistTracks[i].playlistId.toString());
+                      //   print(selectedPlaylist);
+                      // }
 
                       if (selectedPlaylist.contains(widget.trackId)) {
                         ShowSnackBar().showSnackBar(
@@ -310,6 +315,7 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                           playlist.id!.toString(),
                           playlist.name!,
                           selectedPlaylist,
+                          isAdd: true,
                         );
 
                         if (res['status'] as bool) {

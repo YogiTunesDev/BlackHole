@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class Collage extends StatelessWidget {
   final bool showGrid;
-  final List imageList;
+  final List<String> imageList;
   final bool fixSize;
   final String placeholderImage;
   final String? artistName;
@@ -23,85 +23,87 @@ class Collage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          (artistName != null && tempDirPath != null) ? 100.0 : 7.0,
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: SizedBox.square(
-        dimension: fixSize ? 50 : null,
-        child: (artistName != null && tempDirPath != null)
-            ? Image(
-                fit: BoxFit.cover,
-                image: FileImage(
-                  File(
-                    '$tempDirPath/images/artists/${artistName!.split(", ").first}.jpg',
-                  ),
+    return SizedBox.square(
+      dimension: fixSize ? 50 : null,
+      child: (artistName != null && tempDirPath != null)
+          ? Image(
+              fit: BoxFit.cover,
+              image: FileImage(
+                File(
+                  '$tempDirPath/images/artists/${artistName!.split(", ").first}.jpg',
                 ),
-                errorBuilder: (context, _, __) {
-                  getArtistImage(
-                    name: artistName!.split(', ').first,
-                    tempDirPath: tempDirPath!,
-                  );
-                  return CachedNetworkImage(
+              ),
+              errorBuilder: (context, _, __) {
+                getArtistImage(
+                  name: artistName!.split(', ').first,
+                  tempDirPath: tempDirPath!,
+                );
+                return CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  errorWidget: (context, _, __) => Image(
                     fit: BoxFit.cover,
-                    errorWidget: (context, _, __) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(placeholderImage),
-                    ),
-                    imageUrl: imageList[0]['image']
-                        .toString()
-                        .replaceAll('http:', 'https:'),
-                    placeholder: (context, _) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(placeholderImage),
-                    ),
-                  );
-                },
-              )
-            : showGrid
-                ? GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: imageList.length < 3 ? 1 : 2,
-                    children: imageList
-                        .map(
-                          (image) => CachedNetworkImage(
+                    image: AssetImage(placeholderImage),
+                  ),
+                  imageUrl:
+                      imageList[0].toString().replaceAll('http:', 'https:'),
+                  placeholder: (context, _) => Image(
+                    fit: BoxFit.cover,
+                    image: AssetImage(placeholderImage),
+                  ),
+                );
+              },
+            )
+          : showGrid
+              ? GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: imageList.length < 3 ? 1 : 2,
+                  children: imageList
+                      .map(
+                        (image) => CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          errorWidget: (context, _, __) => Image(
                             fit: BoxFit.cover,
-                            errorWidget: (context, _, __) => Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage(placeholderImage),
-                            ),
-                            imageUrl: image['image']
-                                .toString()
-                                .replaceAll('http:', 'https:'),
-                            placeholder: (context, _) => Image(
-                              fit: BoxFit.cover,
-                              image: AssetImage(placeholderImage),
+                            image: AssetImage(
+                              placeholderImage,
                             ),
                           ),
-                        )
-                        .toList(),
-                  )
-                : CachedNetworkImage(
+                          imageUrl: '${image}',
+                          placeholder: (context, url) => Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              placeholderImage,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                )
+              : CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  errorWidget: (context, _, __) => Image(
                     fit: BoxFit.cover,
-                    errorWidget: (context, _, __) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(placeholderImage),
-                    ),
-                    imageUrl: imageList[0]['image']
-                        .toString()
-                        .replaceAll('http:', 'https:'),
-                    placeholder: (context, _) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(placeholderImage),
-                    ),
+                    image: AssetImage(placeholderImage),
                   ),
-      ),
+                  imageUrl:
+                      imageList[0].toString().replaceAll('http:', 'https:'),
+                  placeholder: (context, _) => Image(
+                    fit: BoxFit.cover,
+                    image: AssetImage(placeholderImage),
+                  ),
+                ),
     );
+    // return Card(
+    //   elevation: 5,
+    //   margin: const EdgeInsets.symmetric(horizontal: 8.0),
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(
+    //       (artistName != null && tempDirPath != null) ? 100.0 : 7.0,
+    //     ),
+    //   ),
+    //   clipBehavior: Clip.antiAlias,
+    //   child:
+    // );
   }
 }
 

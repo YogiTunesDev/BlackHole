@@ -1049,7 +1049,7 @@ class _AlbumListState extends State<AlbumList> {
                                               : ''
                                           : '';
                                       return SongItem(
-                                        itemImage: itemImage,
+                                        itemImage: item.getQuadImages(),
                                         itemName: item.name!,
                                         onTap: () {
                                           Navigator.push(
@@ -1062,7 +1062,7 @@ class _AlbumListState extends State<AlbumList> {
                                                 songListType:
                                                     SongListType.playlist,
                                                 playlistName: item.name!,
-                                                playlistImage: itemImage,
+                                                playlistImage: item.getQuadImages(),
                                                 id: item.id,
                                               ),
                                             ),
@@ -1091,7 +1091,7 @@ class _AlbumListState extends State<AlbumList> {
                                               ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                               : '';
                                           return SongItem(
-                                            itemImage: itemImage,
+                                            itemImage: [itemImage],
                                             itemName: item.name!,
                                             onTap: () {
                                               Navigator.push(
@@ -1103,7 +1103,7 @@ class _AlbumListState extends State<AlbumList> {
                                                     songListType:
                                                         SongListType.album,
                                                     playlistName: item.name!,
-                                                    playlistImage: itemImage,
+                                                    playlistImage: [itemImage],
                                                     id: item.id,
                                                   ),
                                                 ),
@@ -1127,7 +1127,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   lstGenresData[index];
 
                                               return SongItem(
-                                                itemImage: '',
+                                                itemImage: [''],
                                                 itemName: item.name!,
                                                 isRound: true,
                                                 onTap: () {
@@ -1166,7 +1166,7 @@ class _AlbumListState extends State<AlbumList> {
                                                           .songItemModel!;
 
                                                   return SongItem(
-                                                    itemImage: item.image ?? '',
+                                                    itemImage:[ item.image ?? ''],
                                                     itemName: item.title ?? '',
                                                     onTap: () {
                                                       List<SongItemModel>
@@ -1219,7 +1219,7 @@ class _AlbumListState extends State<AlbumList> {
                                                           ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
                                                           : '';
                                                       return SongItem(
-                                                        itemImage: itemImage,
+                                                        itemImage: [itemImage],
                                                         itemName:
                                                             item.track!.name!,
                                                         onTap: () async {
@@ -1235,7 +1235,7 @@ class _AlbumListState extends State<AlbumList> {
                                                                       .album!
                                                                       .name!,
                                                                   playlistImage:
-                                                                      itemImage,
+                                                                      [itemImage],
                                                                   id: item
                                                                       .album!
                                                                       .id),

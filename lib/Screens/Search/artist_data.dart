@@ -224,7 +224,7 @@ class _ArtistDataState extends State<ArtistData> {
                                             : '';
 
                                         return SongItem(
-                                          itemImage: itemImage,
+                                          itemImage: [itemImage],
                                           itemName: item.name!,
                                           onTap: () async {
                                             popupLoader(
@@ -303,7 +303,7 @@ class _ArtistDataState extends State<ArtistData> {
                                             ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                             : '';
                                         return SongItem(
-                                          itemImage: itemImage,
+                                          itemImage: [itemImage],
                                           itemName: item.name!,
                                           onTap: () {
                                             Navigator.push(
@@ -315,7 +315,7 @@ class _ArtistDataState extends State<ArtistData> {
                                                   songListType:
                                                       SongListType.album,
                                                   playlistName: item.name!,
-                                                  playlistImage: itemImage,
+                                                  playlistImage: [itemImage],
                                                   id: item.id,
                                                 ),
                                               ),
@@ -352,7 +352,7 @@ class _ArtistDataState extends State<ArtistData> {
                                             ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                             : '';
                                         return SongItem(
-                                          itemImage: itemImage,
+                                          itemImage: item.getQuadImages(),
                                           itemName: item.name!,
                                           onTap: () {
                                             Navigator.push(
@@ -364,7 +364,7 @@ class _ArtistDataState extends State<ArtistData> {
                                                   songListType:
                                                       SongListType.playlist,
                                                   playlistName: item.name!,
-                                                  playlistImage: itemImage,
+                                                  playlistImage: item.getQuadImages(),
                                                   id: item.id,
                                                 ),
                                               ),

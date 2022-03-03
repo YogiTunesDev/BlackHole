@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:blackhole/APIs/api.dart';
+import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
@@ -200,7 +201,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
 
                               if (type.isNotEmpty) {
                                 return SongItem(
-                                  itemImage: itemImage,
+                                  itemImage: [itemImage],
                                   itemName: item.track!.name!,
                                   onTap: () async {
                                     Navigator.push(
@@ -212,7 +213,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                                 songListType:
                                                     SongListType.album,
                                                 playlistName: item.album!.name!,
-                                                playlistImage: itemImage,
+                                                playlistImage: [itemImage],
                                                 id: item.album!.id),
                                       ),
                                     );
@@ -258,7 +259,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                   ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                   : '';
                               return SongItem(
-                                itemImage: itemImage,
+                                itemImage: item.getQuadImages(),
                                 itemName: item.name!,
                                 onTap: () {
                                   Navigator.push(
@@ -269,7 +270,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                           SongsListPage(
                                         songListType: SongListType.playlist,
                                         playlistName: item.name!,
-                                        playlistImage: itemImage,
+                                        playlistImage: item.getQuadImages(),
                                         id: item.id,
                                       ),
                                     ),
@@ -450,7 +451,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                   ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                   : '';
                               return SongItem(
-                                itemImage: itemImage,
+                                itemImage: [itemImage],
                                 itemName: item.name!,
                                 onTap: () {
                                   Navigator.push(
@@ -461,7 +462,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                           SongsListPage(
                                         songListType: SongListType.album,
                                         playlistName: item.name!,
-                                        playlistImage: itemImage,
+                                        playlistImage: [itemImage],
                                         id: item.id,
                                       ),
                                     ),
@@ -652,7 +653,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
                                       : '';
                                   return SongItem(
-                                    itemImage: itemImage,
+                                    itemImage: [itemImage],
                                     itemName: item.name!,
                                     onTap: () {
                                       Navigator.push(
@@ -663,7 +664,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                               SongsListPage(
                                             songListType: SongListType.album,
                                             playlistName: item.name!,
-                                            playlistImage: itemImage,
+                                            playlistImage: [itemImage],
                                             id: item.id,
                                           ),
                                         ),
@@ -704,7 +705,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                 : '';
                             return SongItem(
-                              itemImage: itemImage,
+                              itemImage: [itemImage],
                               itemName: item.name!,
                               onTap: () {
                                 openDialogForGetRadioStationStreamData(
@@ -747,7 +748,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                   ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                   : '';
                               return SongItem(
-                                itemImage: itemImage,
+                                itemImage: [itemImage],
                                 itemName: item.name!,
                                 onTap: () {
                                   Navigator.push(
@@ -758,7 +759,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                           SongsListPage(
                                         songListType: SongListType.album,
                                         playlistName: item.name!,
-                                        playlistImage: itemImage,
+                                        playlistImage: [itemImage],
                                         id: item.id,
                                       ),
                                     ),
@@ -803,7 +804,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       : ''
                                   : '';
                               return SongItem(
-                                itemImage: itemImage,
+                                itemImage: item.getQuadImages(),
                                 itemName: item.name!,
                                 onTap: () {
                                   Navigator.push(
@@ -814,7 +815,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                           SongsListPage(
                                         songListType: SongListType.playlist,
                                         playlistName: item.name!,
-                                        playlistImage: itemImage,
+                                        playlistImage: item.getQuadImages(),
                                         id: item.id,
                                       ),
                                     ),
@@ -857,7 +858,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               //     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                               //     : '';
                               return SongItem(
-                                itemImage: item.image!,
+                                itemImage: [item.image!],
                                 itemName: item.title!,
                                 onTap: () {
                                   // List<SongItemModel> lstSongs = [];
@@ -1059,7 +1060,7 @@ class Header extends StatelessWidget {
 }
 
 class SongItem extends StatelessWidget {
-  final String itemImage;
+  final List<String> itemImage;
   final String itemName;
   final bool isRound;
   final Function()? onTap;
@@ -1096,26 +1097,34 @@ class SongItem extends StatelessWidget {
                     ),
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    errorWidget: (context, _, __) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                          isRound ? 'assets/album.png' : 'assets/cover.jpg'),
-                    ),
-                    imageUrl: itemImage,
-                    //  item['image']
-                    //     .toString()
-                    //     .replaceAll('http:', 'https:')
-                    //     .replaceAll('50x50', '500x500')
-                    //     .replaceAll('150x150', '500x500'),
-                    placeholder: (context, url) => Image(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        isRound ? 'assets/album.png' : 'assets/cover.jpg',
-                      ),
-                    ),
-                  ),
+                  child: itemImage.length == 1
+                      ? CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          errorWidget: (context, _, __) => Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(isRound
+                                ? 'assets/album.png'
+                                : 'assets/cover.jpg'),
+                          ),
+                          imageUrl: itemImage[0],
+                          //  item['image']
+                          //     .toString()
+                          //     .replaceAll('http:', 'https:')
+                          //     .replaceAll('50x50', '500x500')
+                          //     .replaceAll('150x150', '500x500'),
+                          placeholder: (context, url) => Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              isRound ? 'assets/album.png' : 'assets/cover.jpg',
+                            ),
+                          ),
+                        )
+                      : Collage(
+                          showGrid: true,
+                          imageList: itemImage,
+                          placeholderImage:
+                              isRound ? 'assets/album.png' : 'assets/cover.jpg',
+                        ),
                 ),
               ),
               const SizedBox(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/util/const.dart';
 import 'package:flutter/foundation.dart';
 
 import 'cover_model.dart';
@@ -243,6 +244,37 @@ class SinglePlaylistData {
         playlistTracks.hashCode ^
         tracks.hashCode ^
         lstSongItemModel.hashCode;
+  }
+  List<String> getQuadImages() {
+    List<String> lstStr = [];
+    if (quadImages != null) {
+      if (TOTALIMAGES == 0) {
+        for (var i = 0; i < quadImages!.length; i++) {
+          if (quadImages?[i]?.imageUrl != null &&
+              quadImages?[i]?.image != null) {
+            if (quadImages![i]!.imageUrl!.isNotEmpty) {
+              lstStr
+                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+            }
+          }
+        }
+      } else {
+        for (var i = 0; i < TOTALIMAGES; i++) {
+          if (quadImages?[i]?.imageUrl != null &&
+              quadImages?[i]?.image != null) {
+            if (quadImages![i]!.imageUrl!.isNotEmpty) {
+              lstStr
+                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+            } else {
+              lstStr.add('');
+            }
+          }else{
+            lstStr.add('');
+          }
+        }
+      }
+    }
+    return lstStr;
   }
 }
 

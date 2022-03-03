@@ -628,21 +628,21 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                               reverse: true,
                               itemCount: customPlaylistResponse!.data!.length,
                               itemBuilder: (context, index) {
-                                String? imageUrl;
+                                // String? imageUrl;
                                 PlaylistResponseData itemData =
                                     customPlaylistResponse!.data![index];
-                                if (itemData.quadImages != null) {
-                                  if (itemData.quadImages!.isNotEmpty) {
-                                    if (itemData.quadImages![0] != null) {
-                                      if (itemData.quadImages![0]!.imageUrl !=
-                                          null) {
-                                        imageUrl =
-                                            '${itemData.quadImages![0]!.imageUrl}/${itemData.quadImages![0]!.image}';
-                                        ;
-                                      }
-                                    }
-                                  }
-                                }
+                                // if (itemData.quadImages != null) {
+                                //   if (itemData.quadImages!.isNotEmpty) {
+                                //     if (itemData.quadImages![0] != null) {
+                                //       if (itemData.quadImages![0]!.imageUrl !=
+                                //           null) {
+                                //         imageUrl =
+                                //             '${itemData.quadImages![0]!.imageUrl}/${itemData.quadImages![0]!.image}';
+                                //         ;
+                                //       }
+                                //     }
+                                //   }
+                                // }
                                 return ListTile(
                                   leading:
                                       // (playlistDetails[name] == null ||
@@ -660,27 +660,32 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     child: SizedBox(
-                                      height: 50,
-                                      width: 50,
-                                      child: CachedNetworkImage(
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, _, __) =>
-                                            const Image(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'assets/cover.jpg',
-                                          ),
+                                        height: 50,
+                                        width: 50,
+                                        child: Collage(
+                                          showGrid: true,
+                                          imageList: itemData.getQuadImages(),
+                                          placeholderImage: "assets/cover.jpg",
+                                        )
+                                        //  CachedNetworkImage(
+                                        //   fit: BoxFit.cover,
+                                        //   errorWidget: (context, _, __) =>
+                                        //       const Image(
+                                        //     fit: BoxFit.cover,
+                                        //     image: AssetImage(
+                                        //       'assets/cover.jpg',
+                                        //     ),
+                                        //   ),
+                                        //   imageUrl: '${imageUrl}',
+                                        //   placeholder: (context, url) =>
+                                        //       const Image(
+                                        //     fit: BoxFit.cover,
+                                        //     image: AssetImage(
+                                        //       'assets/cover.jpg',
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         ),
-                                        imageUrl: '${imageUrl}',
-                                        placeholder: (context, url) =>
-                                            const Image(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'assets/cover.jpg',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                   ),
                                   // : Collage(
                                   //     imageList: playlistDetails[name]
@@ -980,7 +985,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                           playlistName: customPlaylistResponse!
                                               .data![index].playlist!.name
                                               .toString(),
-                                          playlistImage: imageUrl,
+                                          playlistImage:
+                                              itemData.getQuadImages(),
                                           id: customPlaylistResponse!
                                               .data![index].playlist!.id,
                                           isMyPlaylist: true,

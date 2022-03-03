@@ -526,7 +526,7 @@ class _HomePageState extends State<HomePage> {
                                                       Widget? child,
                                                     ) {
                                                       return Text(
-                                                        'Namaste,\n${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
+                                                        'Namaste, ${(box.get('name') == null || box.get('name') == '') ? 'Guest' : capitalize(
                                                             box
                                                                 .get(
                                                                   'name',

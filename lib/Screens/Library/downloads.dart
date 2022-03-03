@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:audiotagger/audiotagger.dart';
 import 'package:audiotagger/models/tag.dart';
+import 'package:blackhole/CustomWidgets/add_playlist.dart';
 import 'package:blackhole/CustomWidgets/custom_physics.dart';
 import 'package:blackhole/CustomWidgets/data_search.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
@@ -10,6 +11,7 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/playlist_head.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
+import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Helpers/picker.dart';
 import 'package:blackhole/Screens/Library/liked.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
@@ -934,6 +936,22 @@ class _DownSongsTabState extends State<DownSongsTab>
                               //   ),
                               // ),
                               PopupMenuItem(
+                                value: 2,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.playlist_add_rounded,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .addToPlaylist,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
                                 value: 1,
                                 child: Row(
                                   children: [
@@ -969,6 +987,13 @@ class _DownSongsTabState extends State<DownSongsTab>
                                 setState(() {
                                   widget.onDelete(widget.songs[index] as Map);
                                 });
+                              } else if (value == 2) {
+                                AddToPlaylist().addToPlaylist(
+                                  context,
+                                  MediaItemConverter.mapToMediaItem(
+                                    widget.songs[index] as Map,
+                                  ),
+                                );
                               }
                             },
                           ),

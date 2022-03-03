@@ -818,12 +818,12 @@ class YogitunesAPI {
     return result;
   }
 
-  Future<dynamic> editPlaylist(
-      String playlistId, String name, List<String> lst) async {
+  Future<dynamic> editPlaylist(String playlistId, String name, List<String> lst,
+      {bool isAdd = false}) async {
     List<Map> dataList = [];
 
     for (int i = 0; i < lst.length; i++) {
-      dataList.insert(i, {'id': lst[i], 'order': i + 1});
+      dataList.insert(i, {'id': lst[i], 'order': isAdd ? 0 : (i + 1)});
     }
 
     try {
@@ -842,7 +842,12 @@ class YogitunesAPI {
         'name': name,
         'tracks': dataList,
       };
-
+      if (isAdd) {
+        mapData['track_sync'] = "add";
+        mapData['byop'] = false;
+      }
+      print(url);
+      print(mapData);
       final res = await http.post(
         Uri.parse(url),
         body: json.encode(mapData),

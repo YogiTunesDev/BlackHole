@@ -489,7 +489,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         : '';
 
                                     return SongItem(
-                                      itemImage: itemImage,
+                                      itemImage: [itemImage],
                                       itemName: item.name!,
                                       onTap: () async {
                                         popupLoader(
@@ -575,8 +575,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     final String itemImage = item.cover != null
                                         ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                         : '';
+                                        
                                     return SongItem(
-                                      itemImage: itemImage,
+                                      itemImage: [itemImage],
                                       itemName: item.name!,
                                       onTap: () {
                                         Navigator.push(
@@ -587,7 +588,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 SongsListPage(
                                               songListType: SongListType.album,
                                               playlistName: item.name!,
-                                              playlistImage: itemImage,
+                                              playlistImage: [itemImage],
                                               id: item.id,
                                             ),
                                           ),
@@ -636,7 +637,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                         : '';
                                     return SongItem(
-                                      itemImage: itemImage,
+                                      itemImage: item.getQuadImages(),
                                       itemName: item.name!,
                                       onTap: () {
                                         Navigator.push(
@@ -648,7 +649,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               songListType:
                                                   SongListType.playlist,
                                               playlistName: item.name!,
-                                              playlistImage: itemImage,
+                                              playlistImage: item.getQuadImages(),
                                               id: item.id,
                                             ),
                                           ),
@@ -696,7 +697,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                         : '';
                                     return SongItem(
-                                      itemImage: itemImage,
+                                      itemImage: [itemImage],
                                       itemName: item.name!,
                                       onTap: () {
                                         Navigator.push(

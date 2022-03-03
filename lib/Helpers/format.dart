@@ -668,7 +668,7 @@ class FormatResponse {
         }
       }
     } catch (e) {
-      log('Error in formatYogiPlaylistData: $e');
+      log('Error in formatYogiSingleALbumData: $e');
     }
 
     if (mainRes == null) {
@@ -767,7 +767,7 @@ class FormatResponse {
         }
       }
     } catch (e) {
-      log('Error in formatYogiPlaylistData: $e');
+      log('Error in formatYogiSinglePlaylistData: $e');
     }
 
     if (mainRes == null) {
@@ -871,7 +871,7 @@ class FormatResponse {
         }
       }
     } catch (e, stack) {
-      log('Error in formatYogiPlaylistData: $e');
+      log('Error in formatMyLibraryTrackSong: $e');
       debugPrint(stack.toString());
     }
 
@@ -971,7 +971,7 @@ class FormatResponse {
         }
       }
     } catch (e, stack) {
-      log('Error in formatYogiPlaylistData: $e');
+      log('Error in formatYogiTrendingSongData: $e');
       debugPrint(stack.toString());
     }
 
@@ -1129,7 +1129,7 @@ class FormatResponse {
         }
       }
     } catch (e) {
-      log('Error in formatYogiPlaylistData: $e');
+      log('Error in formatYogiRadioStationStreamData: $e');
     }
 
     if (mainRes == null) {
