@@ -15,6 +15,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		AFC43308220D98E30E72427B /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCE117663383D3B4FDA55C /* Pods_Runner.framework */; };
 		E5A81656278D4128007A121A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A81655278D4128007A121A /* StoreKit.framework */; };
+		E5D40A6327D1F45200828BBD /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D40A6227D1F45200828BBD /* HealthKit.framework */; };
 		E5DFE640277C444B00C5D9BB /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = E5DFE63F277C444B00C5D9BB /* Configuration.storekit */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		AE8343777611E34BDDF96D29 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		D683E5E20F8F93886F7875FE /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		E5A81655278D4128007A121A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		E5D40A6227D1F45200828BBD /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		E5DFE63F277C444B00C5D9BB /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		E5FCF51327841F52006D1920 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5D40A6327D1F45200828BBD /* HealthKit.framework in Frameworks */,
 				AFC43308220D98E30E72427B /* Pods_Runner.framework in Frameworks */,
 				E5A81656278D4128007A121A /* StoreKit.framework in Frameworks */,
 			);
@@ -127,6 +130,7 @@
 		A7D108627A99ED21F94CED8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E5D40A6227D1F45200828BBD /* HealthKit.framework */,
 				E5A81655278D4128007A121A /* StoreKit.framework */,
 				27DCE117663383D3B4FDA55C /* Pods_Runner.framework */,
 			);
@@ -366,7 +370,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = RNBZ4S28N4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -499,7 +503,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = RNBZ4S28N4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -524,7 +528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = RNBZ4S28N4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;

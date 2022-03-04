@@ -534,7 +534,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .toString(),
                                                           )}',
                                                         style: TextStyle(
-                                                          letterSpacing: 2,
+                                                          // letterSpacing: 2,
                                                           color:
                                                               Theme.of(context)
                                                                   .colorScheme
