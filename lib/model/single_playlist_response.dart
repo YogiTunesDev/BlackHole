@@ -165,12 +165,18 @@ class SinglePlaylistData {
       playlistDuration: map['playlist_duration'] != null
           ? map['playlist_duration'] as String
           : null,
-      quadImages: map['quadImages'] != null ?map['quadImages'].toString() != 'null' ? List<QuadImage?>.from(map['quadImages']?.map((x) =>x!=null? QuadImage.fromMap(x as Map<String, dynamic>):null)as Iterable<dynamic>):null : null,
+      quadImages: map['quadImages'] != null
+          ? map['quadImages'].toString() != 'null'
+              ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null
+                  ? QuadImage.fromMap(x as Map<String, dynamic>)
+                  : null) as Iterable<dynamic>)
+              : null
+          : null,
       // map['quadImages'] != null
       //     ? map['quadImages'].toString() != 'null'
       //         ? List<QuadImage>.from(map['quadImages']?.map((x) => x != null
       //             ? QuadImage.fromMap(x as Map<String, dynamic>)
-      //             : null) as Iterable<dynamic>)
+      //             : QuadImage()) as Iterable<dynamic>)
       //         : null
       //     : null,
       profile: map['profile'] != null
@@ -245,6 +251,7 @@ class SinglePlaylistData {
         tracks.hashCode ^
         lstSongItemModel.hashCode;
   }
+
   List<String> getQuadImages() {
     List<String> lstStr = [];
     if (quadImages != null) {
@@ -268,7 +275,7 @@ class SinglePlaylistData {
             } else {
               lstStr.add('');
             }
-          }else{
+          } else {
             lstStr.add('');
           }
         }

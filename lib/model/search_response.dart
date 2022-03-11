@@ -294,9 +294,9 @@ class Playlist {
       name: map['name'] != null ? map['name'] as String : null,
       userId: map['user_id'] != null ? map['user_id'] as int : null,
       quadImages: map['quadImages'] != null
-          ? List<QuadImage>.from(map['quadImages']
-                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
-              as Iterable<dynamic>)
+          ? List<QuadImage>.from(map['quadImages']?.map((x) => x != null
+              ? QuadImage.fromMap(x as Map<String, dynamic>)
+              : QuadImage()) as Iterable<dynamic>)
           : null,
       playlistDuration: map['playlist_duration'] != null
           ? map['playlist_duration'] as String

@@ -333,9 +333,9 @@ class MyRecentlyPlayedSong {
       sourceId: map['source_id'] != null ? map['source_id'] as int : null,
       type: map['type'] != null ? map['type'] as String : null,
       quadImages: map['quadImages'] != null
-          ? List<QuadImage>.from(map['quadImages']
-                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
-              as Iterable<dynamic>)
+          ? List<QuadImage>.from(map['quadImages']?.map((x) => x != null
+              ? QuadImage.fromMap(x as Map<String, dynamic>)
+              : QuadImage()) as Iterable<dynamic>)
           : null,
       playlist: map['playlist'] != null
           ? TrendingAlbum.fromMap(map['playlist'] as Map<String, dynamic>)
@@ -384,30 +384,27 @@ class MyRecentlyPlayedSong {
         track.hashCode ^
         album.hashCode;
   }
+
   List<String> getQuadImages() {
     List<String> lstStr = [];
     if (quadImages != null) {
       if (TOTALIMAGES == 0) {
         for (var i = 0; i < quadImages!.length; i++) {
-          if (quadImages?[i].imageUrl != null &&
-              quadImages?[i].image != null) {
+          if (quadImages?[i].imageUrl != null && quadImages?[i].image != null) {
             if (quadImages![i].imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i].imageUrl}/${quadImages![i].image}');
+              lstStr.add('${quadImages![i].imageUrl}/${quadImages![i].image}');
             }
           }
         }
       } else {
         for (var i = 0; i < TOTALIMAGES; i++) {
-          if (quadImages?[i].imageUrl != null &&
-              quadImages?[i].image != null) {
+          if (quadImages?[i].imageUrl != null && quadImages?[i].image != null) {
             if (quadImages![i].imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i].imageUrl}/${quadImages![i].image}');
+              lstStr.add('${quadImages![i].imageUrl}/${quadImages![i].image}');
             } else {
               lstStr.add('');
             }
-          }else{
+          } else {
             lstStr.add('');
           }
         }
@@ -860,9 +857,9 @@ class PopularPlaylist {
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       quadImages: map['quadImages'] != null
-          ? List<QuadImage>.from(map['quadImages']
-                  ?.map((x) => QuadImage.fromMap(x as Map<String, dynamic>))
-              as Iterable<dynamic>)
+          ? List<QuadImage>.from(map['quadImages']?.map((x) => x != null
+              ? QuadImage.fromMap(x as Map<String, dynamic>)
+              : QuadImage()) as Iterable<dynamic>)
           : null,
     );
   }
@@ -893,25 +890,21 @@ class PopularPlaylist {
     if (quadImages != null) {
       if (TOTALIMAGES == 0) {
         for (var i = 0; i < quadImages!.length; i++) {
-          if (quadImages?[i].imageUrl != null &&
-              quadImages?[i].image != null) {
+          if (quadImages?[i].imageUrl != null && quadImages?[i].image != null) {
             if (quadImages![i].imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i].imageUrl}/${quadImages![i].image}');
+              lstStr.add('${quadImages![i].imageUrl}/${quadImages![i].image}');
             }
           }
         }
       } else {
         for (var i = 0; i < TOTALIMAGES; i++) {
-          if (quadImages?[i].imageUrl != null &&
-              quadImages?[i].image != null) {
+          if (quadImages?[i].imageUrl != null && quadImages?[i].image != null) {
             if (quadImages![i].imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i].imageUrl}/${quadImages![i].image}');
+              lstStr.add('${quadImages![i].imageUrl}/${quadImages![i].image}');
             } else {
               lstStr.add('');
             }
-          }else{
+          } else {
             lstStr.add('');
           }
         }
