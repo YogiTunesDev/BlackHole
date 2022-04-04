@@ -5,26 +5,18 @@ import 'package:blackhole/CustomWidgets/custom_physics.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
-import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
 import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/supabase.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Library/library.dart';
 import 'package:blackhole/Screens/LocalMusic/downed_songs.dart';
-import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Screens/Search/search_screen.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
-import 'package:blackhole/Screens/Top Charts/top.dart';
-import 'package:blackhole/Screens/YouTube/youtube_home.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
 import 'package:blackhole/Services/uni_link_service.dart';
-import 'package:blackhole/theme/app_theme.dart';
 import 'package:device_info/device_info.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info/package_info.dart';
@@ -479,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Stack(
                         children: [
-                          checkVersion(),
+                          // checkVersion(),
                           NestedScrollView(
                             physics: const BouncingScrollPhysics(),
                             controller: _scrollController,

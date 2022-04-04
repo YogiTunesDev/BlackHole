@@ -8,6 +8,7 @@ class AppTheme {
   static MyTheme get currentTheme => GetIt.I<MyTheme>();
   static ThemeMode get themeMode => GetIt.I<MyTheme>().currentTheme();
 
+  /// Used for app light theme
   static ThemeData lightTheme({
     required BuildContext context,
   }) {
@@ -57,7 +58,7 @@ class AppTheme {
           ),
     );
   }
-
+  /// used for app dark theme
   static ThemeData darkTheme({
     required BuildContext context,
   }) {

@@ -146,6 +146,8 @@ class _AlbumListState extends State<AlbumList> {
       apiLoading = true;
       setState(() {});
       if (mainType == MainType.playlist) {
+          /// check current screen is  playlist and call playlist api
+
         final PlaylistResponse? playlistRes = await YogitunesAPI()
             .fetchYogiPlaylistData(getListUrl()!, pageNo, selectedSort,
                 selectedDuration, selectedType);
@@ -169,6 +171,7 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.album) {
+        /// check current screen is album and album api
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
 
@@ -191,6 +194,7 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.genres) {
+        /// check current screen is genres and call genres api
         final GenresResponse? playlistRes =
             await YogitunesAPI().fetchYogiGenresData(getListUrl()!);
         print("GENRES ::::::::::::::::");
@@ -210,6 +214,7 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.genresAlbum) {
+        /// check current screen is genres album and call genres album api
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiGenresAlbumData(getListUrl()!, widget.id!, pageNo);
         print("GENRES ALBUM ::::::::::::::::");
@@ -232,6 +237,7 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.song) {
+        /// check current screen is  trending songs and call trending songs api
         final TrendingSongResponse? playlistRes = await YogitunesAPI()
             .fetchYogiTrendingSongData(getListUrl()!, pageNo, selectedSort);
         print("SONG ::::::::::::::::");
@@ -254,6 +260,7 @@ class _AlbumListState extends State<AlbumList> {
           isFinish = true;
         }
       } else if (mainType == MainType.track) {
+        /// check current screen is track and call get track api data
         final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
             await YogitunesAPI()
                 .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);

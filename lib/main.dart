@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
@@ -20,6 +21,7 @@ import 'package:blackhole/Screens/Login/signup.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Settings/subscription.dart';
+import 'package:blackhole/Screens/splash_screen.dart';
 import 'package:blackhole/Services/audio_service.dart';
 import 'package:blackhole/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,29 +36,30 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'Screens/splash_screen.dart';
-
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Paint.enableDithering = true;
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    Paint.enableDithering = true;
 
-  await Hive.initFlutter();
-  await openHiveBox('settings');
-  await openHiveBox('downloads');
-  await openHiveBox('Favorite Songs');
-  await openHiveBox('cache', limit: true);
-  if (Platform.isAndroid) {
-    setOptimalDisplayMode();
-  }
-  await startService();
-  // initialize the Intercom.
-  await Intercom.initialize('ebyep3ia',
-      iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
-      androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
-  // await Firebase.initializeApp();
-  // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  runApp(MyApp());
+    await Hive.initFlutter();
+    await openHiveBox('settings');
+    await openHiveBox('downloads');
+    await openHiveBox('Favorite Songs');
+    await openHiveBox('cache', limit: true);
+    if (Platform.isAndroid) {
+      setOptimalDisplayMode();
+    }
+    await startService();
+    // initialize the Intercom.
+    await Intercom.initialize('ebyep3ia',
+        iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
+        androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
+
+    await Firebase.initializeApp();
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    runApp(MyApp());
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 Future<void> setOptimalDisplayMode() async {

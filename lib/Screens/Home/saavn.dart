@@ -67,6 +67,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
       }
     }
 
+    /// fetch home page data
     final HomeResponse? recievedData = await YogitunesAPI().fetchHomePageData();
     if (recievedData != null) {
       if (recievedData.data != null) {
@@ -74,6 +75,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
       }
     }
 
+    /// fetch radio station list
     final RadioStationsResponse? radioStationsResponse =
         await YogitunesAPI().fetchYogiRadioStationPageData(1);
     if (radioStationsResponse != null) {
@@ -157,6 +159,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// recently played list
                     if (data!.data!.myRecentlyPlayedSongs != null)
                       if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
                         HeaderTitle(
@@ -225,6 +228,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// yoga plalists list
                     if (data!.data!.popularYogaPlaylists != null)
                       if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                         HeaderTitle(
@@ -280,6 +285,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    ///other activity list
                     if (data!.data!.browseByActivity != null)
                       if (data!.data!.browseByActivity!.isNotEmpty)
                         HeaderTitle(
@@ -418,6 +425,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// new releases list
                     if (data!.data!.newReleases != null)
                       if (data!.data!.newReleases!.isNotEmpty)
                         HeaderTitle(
@@ -472,6 +481,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// genres & moods list
                     if (data!.data!.browseByGenresMoods != null)
                       if (data!.data!.browseByGenresMoods!.isNotEmpty)
                         HeaderTitle(
@@ -610,6 +621,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// featured albums list
                     if (data!.data!.featuredAlbums != null)
                       if (data!.data!.featuredAlbums!.isNotEmpty)
                         if (data!.data!.featuredAlbums![0].albumsClean != null)
@@ -674,6 +687,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 },
                               ),
                             ),
+
+                    /// radio station list
                     if (lstRadioStation.isNotEmpty)
                       HeaderTitle(
                         title: 'Radio Station',
@@ -715,6 +730,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                           },
                         ),
                       ),
+
+                    /// popular album list
                     if (data!.data!.trendingAlbums != null)
                       if (data!.data!.trendingAlbums!.isNotEmpty)
                         HeaderTitle(
@@ -769,6 +786,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// popular playlist list
                     if (data!.data!.popularPlaylists != null)
                       if (data!.data!.popularPlaylists!.isNotEmpty)
                         HeaderTitle(
@@ -825,6 +844,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             },
                           ),
                         ),
+
+                    /// popular songs list
                     if (data!.data!.trendingSongsNew != null)
                       if (data!.data!.trendingSongsNew!.isNotEmpty)
                         HeaderTitle(
@@ -990,6 +1011,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
   }
 }
 
+/// text header title widget
 class HeaderTitle extends StatelessWidget {
   final String title;
   final Function()? viewAllOnTap;
@@ -1030,6 +1052,7 @@ class HeaderTitle extends StatelessWidget {
   }
 }
 
+/// text header widget
 class Header extends StatelessWidget {
   final String title;
   const Header({
@@ -1059,6 +1082,7 @@ class Header extends StatelessWidget {
   }
 }
 
+/// single song item widget
 class SongItem extends StatelessWidget {
   final List<String> itemImage;
   final String itemName;
@@ -1147,6 +1171,7 @@ class SongItem extends StatelessWidget {
   }
 }
 
+/// This function is used to format String
 String formatString(String? text) {
   return text == null
       ? ''

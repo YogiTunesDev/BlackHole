@@ -15,6 +15,8 @@ import 'package:blackhole/model/login_response.dart';
 import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
+import 'package:blackhole/model/radio_station_stream_response.dart';
+import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/reset_password_response.dart';
 import 'package:blackhole/model/search_all_album_response.dart';
 import 'package:blackhole/model/search_all_artists_response.dart';
@@ -23,8 +25,6 @@ import 'package:blackhole/model/search_all_track_response.dart';
 import 'package:blackhole/model/search_response.dart';
 import 'package:blackhole/model/see_all_library_albums_response.dart';
 import 'package:blackhole/model/signup_response.dart';
-import 'package:blackhole/model/radio_station_stream_response.dart';
-import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
@@ -33,9 +33,8 @@ import 'package:blackhole/model/trending_song_response.dart';
 import 'package:blackhole/model/user_info_response.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
+import 'package:http/http.dart';
 
 class YogitunesAPI {
   List preferredLanguages = Hive.box('settings')
@@ -143,6 +142,7 @@ class YogitunesAPI {
     });
   }
 
+  /// This function is used for check login api calling
   Future<bool?> logincheck(String email) async {
     LoginResponse? result;
     try {
@@ -168,6 +168,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to call login api
   Future<LoginResponse?> login(String email, String password) async {
     LoginResponse? result;
     try {
@@ -190,6 +191,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call signup api
   Future<SignupResponse?> signup(String name, String email, String password,
       bool isNewsLetterChecked) async {
     SignupResponse? result;
@@ -220,6 +222,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call forgot password api
   Future<ForgotPasswordResponse?> forgotPassword(String email) async {
     ForgotPasswordResponse? result;
     try {
@@ -240,6 +243,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call forgot password verification api
   Future<ForgotPasswordVerificationResponse?> forgotPasswordVerification(
       String email, String code) async {
     ForgotPasswordVerificationResponse? result;
@@ -265,6 +269,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call reset password api
   Future<ResetPasswordResponse?> resetPassword(String password) async {
     ResetPasswordResponse? result;
     final box = await Hive.openBox('api-token');
@@ -290,7 +295,7 @@ class YogitunesAPI {
     }
     return result;
   }
-
+  /// This function is used to get home page data api
   Future<HomeResponse?> fetchHomePageData() async {
     HomeResponse? result;
     try {
@@ -360,6 +365,8 @@ class YogitunesAPI {
     return result;
   }
 
+
+  /// This function is used to check subscription status
   Future<SubscriptionStatusResponse?> subscriptionStatus() async {
     SubscriptionStatusResponse? result;
     try {
@@ -378,6 +385,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to check payment success
   Future<SubscriptionStatusResponse?> paymentSuccess(
       {required String paymentId,
       required String subscriptionId,
@@ -440,6 +448,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call single song data api
   Future<RadioStationsStreamResponse?> fetchSingleSongData(int id) async {
     RadioStationsStreamResponse? result;
     try {
@@ -458,6 +467,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to call user data api
   Future<UserInfoResponse?> fetchUserData() async {
     UserInfoResponse? result;
     try {
@@ -474,6 +484,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi playlist data api
   Future<PlaylistResponse?> fetchYogiPlaylistData(String url, int pageNo,
       String sort, String durationFilter, String selectedType) async {
     PlaylistResponse? result;
@@ -498,6 +509,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi album data api
   Future<AlbumResponse?> fetchYogiAlbumData(
     String url,
     int pageNo,
@@ -518,6 +530,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi genres data api
   Future<GenresResponse?> fetchYogiGenresData(
     String url,
   ) async {
@@ -536,6 +549,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi genres album data api
   Future<AlbumResponse?> fetchYogiGenresAlbumData(
     String url,
     int id,
@@ -556,6 +570,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi single album data api
   Future<SingleAlbumResponse?> fetchYogiSingleAlbumData(
     int id,
   ) async {
@@ -576,6 +591,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi single playlist data api
   Future<SinglePlaylistResponse?> fetchYogiSinglePlaylistData(
     int id,
   ) async {
@@ -596,6 +612,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get yogi trending song data api
   Future<TrendingSongResponse?> fetchYogiTrendingSongData(
       String url, int pageNo, String sort) async {
     TrendingSongResponse? result;
@@ -680,6 +697,7 @@ class YogitunesAPI {
     return [];
   }
 
+  /// This function is used to get search api data
   Future<SearchResponse?> search(String keyword, bool isMyLibrary) async {
     SearchResponse? result;
     try {
@@ -699,6 +717,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get view all recent tracks api data
   Future<MyRecentlyPlayedSongResponse?> viewAllRecentTrack(
     String url, {
     int pageNo = 1,
@@ -720,6 +739,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get search all albums api data
   Future<SearchAllAlbumResponse?> searchAllAlbum(
       String keyword, bool isMyLibrary) async {
     SearchAllAlbumResponse? result;
@@ -740,6 +760,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get search all tracks api data
   Future<SearchAllTracksResponse?> searchAllTrack(
       String keyword, bool isMyLibrary) async {
     SearchAllTracksResponse? result;
@@ -760,6 +781,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get search all playlist api data
   Future<SearchAllPlaylistsResponse?> searchAllPlaylist(
       String keyword, bool isMyLibrary) async {
     SearchAllPlaylistsResponse? result;
@@ -780,6 +802,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get search all artist api data
   Future<SearchAllArtistsResponse?> searchAllArtists(
       String keyword, bool isMyLibrary) async {
     SearchAllArtistsResponse? result;
@@ -800,6 +823,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get artist api data
   Future<ArtistDataResponse?> artistData(int id) async {
     ArtistDataResponse? result;
     try {
@@ -818,6 +842,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get edit playlist api data
   Future<dynamic> editPlaylist(String playlistId, String name, List<String> lst,
       {bool isAdd = false}) async {
     List<Map> dataList = [];
@@ -864,6 +889,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get playlist song api data
   Future<TracksBybpmResponse?> fetchPlaylistSongData(
     String? vocals,
     String? tempo,
@@ -889,6 +915,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get playlist api data
   Future<CustomPlaylistResponse?> fetchPlaylistData() async {
     CustomPlaylistResponse? result;
     try {
@@ -904,6 +931,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get playlist add to library api data
   Future<String?> playlistAddToLibrary(int id, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -934,6 +962,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get album remove from library api data
   Future<String?> albumRemoveFromLibrary(int id, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -964,6 +993,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get album add to library api data
   Future<String?> albumAddToLibrary(int id, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -994,6 +1024,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get track remove from library api data
   Future<String?> trackRemoveFromLibrary(
       int id, int libraryId, BuildContext context) async {
     try {
@@ -1029,6 +1060,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get track add to library api data
   Future<String?> trackAddToLibrary(int id, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -1059,6 +1091,7 @@ class YogitunesAPI {
     }
   }
 
+  /// This function is used to get all library album api data
   Future<SeeAllLibraryAlbumsResponse?> seeAllLibraryAlbum() async {
     SeeAllLibraryAlbumsResponse? result;
     try {
@@ -1077,6 +1110,7 @@ class YogitunesAPI {
     return result;
   }
 
+  /// This function is used to get all library artist api data
   Future<SearchAllArtistsResponse?> seeAllLibraryArtist() async {
     SearchAllArtistsResponse? result;
     try {
@@ -1095,6 +1129,8 @@ class YogitunesAPI {
     return result;
   }
 
+
+  /// This function is used to get all library tracks api data
   Future<MyLibraryTrackResponse?> seeAllLibraryTracks(int pageNo) async {
     MyLibraryTrackResponse? result;
     try {
@@ -1114,6 +1150,8 @@ class YogitunesAPI {
     return result;
   }
 
+
+  /// This function is used to call create playlist api
   Future<String?> createPlaylist(String name, BuildContext context) async {
     try {
       final box = await Hive.openBox('api-token');
@@ -1147,6 +1185,8 @@ class YogitunesAPI {
     }
   }
 
+
+  /// This function is used to call delete playlist api
   Future deletePlylist(String plylistId, BuildContext context) async {
     var result;
     try {
@@ -1175,6 +1215,8 @@ class YogitunesAPI {
     // return result;
   }
 
+
+  /// This function is used to get top searches api data
   Future<List<String>> getTopSearches() async {
     try {
       final res = await getResponse(endpoints['topSearches']!, useProxy: true);
@@ -1190,6 +1232,8 @@ class YogitunesAPI {
     return List.empty();
   }
 
+
+  /// This function is used to get search results api data
   Future<List> fetchSongSearchResults({
     required String searchQuery,
     int count = 20,
@@ -1315,6 +1359,8 @@ class YogitunesAPI {
     return [result, position];
   }
 
+
+  /// This function is used to get all library album api data
   Future<List<Map>> fetchAlbums({
     required String searchQuery,
     required String type,
@@ -1346,6 +1392,8 @@ class YogitunesAPI {
     return List.empty();
   }
 
+
+  /// This function is used to get album songs api data
   Future<List> fetchAlbumSongs(String albumId) async {
     final String params = '${endpoints['albumDetails']}&cc=in&albumid=$albumId';
     final res = await getResponse(params);
@@ -1357,6 +1405,8 @@ class YogitunesAPI {
     return List.empty();
   }
 
+
+  /// This function is used to get artist song api data
   Future<Map<String, List>> fetchArtistSongs({
     required String artistToken,
     String category = '',
@@ -1447,6 +1497,8 @@ class YogitunesAPI {
     return data;
   }
 
+
+  /// This function is used to get all library album api data
   Future<List> fetchPlaylistSongs(String playlistId) async {
     final String params =
         '${endpoints["playlistDetails"]}&cc=in&listid=$playlistId';
@@ -1459,6 +1511,8 @@ class YogitunesAPI {
     return List.empty();
   }
 
+
+  /// This function is used to get top search result api data
   Future<List> fetchTopSearchResult(String searchQuery) async {
     final String params = 'p=1&q=$searchQuery&n=10&${endpoints["getResults"]}';
     final res = await getResponse(params, useProxy: true);
@@ -1472,6 +1526,8 @@ class YogitunesAPI {
     return List.empty();
   }
 
+
+  /// This function is used to get song details api data
   Future<Map> fetchSongDetails(String songId) async {
     final String params = 'pids=$songId&${endpoints["songDetails"]}';
     try {

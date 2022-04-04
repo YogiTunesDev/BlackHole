@@ -4,6 +4,7 @@ import 'package:blackhole/Screens/Settings/subscription.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
+/// This file is used for inapp purchase
 class SubscriptionStatus {
   SubscriptionStatus._();
   static final SubscriptionStatus instance = SubscriptionStatus._();

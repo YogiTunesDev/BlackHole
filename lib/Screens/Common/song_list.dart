@@ -118,6 +118,8 @@ class _SongsListPageState extends State<SongsListPage> {
         apiloading = true;
       });
       if (widget.songListType == SongListType.album) {
+        /// check current screen is album screen and call single album api
+
         final SingleAlbumResponse? albumRes =
             await YogitunesAPI().fetchYogiSingleAlbumData(widget.id!);
         if (albumRes != null) {
@@ -136,6 +138,8 @@ class _SongsListPageState extends State<SongsListPage> {
           }
         }
       } else if (widget.songListType == SongListType.playlist) {
+        /// check current screen is playlist screen and call single playlist api
+
         playlistRes =
             await YogitunesAPI().fetchYogiSinglePlaylistData(widget.id!);
 

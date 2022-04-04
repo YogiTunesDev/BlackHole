@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "990974183938",
+    "firebase_url": "https://yogitunes-ios.firebaseio.com",
+    "project_id": "yogitunes-ios",
+    "storage_bucket": "yogitunes-ios.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:990974183938:android:015daf455dbcd0e351b51b",
+        "android_client_info": {
+          "package_name": "com.app.yogitunes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "990974183938-qu9rh9b0n7t7sfddlutdu1rebck0v2dg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDtd5SD91r6RFcyjAsqpDD3b3bg6cgv9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "990974183938-qu9rh9b0n7t7sfddlutdu1rebck0v2dg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "990974183938-llq14lhl8bi0o9sc866ter6bvq9sn3tp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.mountainmandan.yogi-tunes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
