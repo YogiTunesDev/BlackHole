@@ -165,6 +165,8 @@ class _MiniPlayerState extends State<MiniPlayer> {
                                       : SizedBox.square(
                                           dimension: useDense ? 40.0 : 50.0,
                                           child: CachedNetworkImage(
+                                            memCacheHeight: useDense ? 80 : 100,
+                                            memCacheWidth: useDense ? 80 : 100,
                                             fit: BoxFit.cover,
                                             errorWidget: (
                                               BuildContext context,

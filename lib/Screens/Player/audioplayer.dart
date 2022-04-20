@@ -18,8 +18,6 @@ import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/dominant_color.dart';
 import 'package:blackhole/Helpers/lyrics.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
-import 'package:blackhole/Screens/Common/song_list.dart';
-import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,13 +29,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PlayScreen extends StatefulWidget {
   final List<SongItemModel> songsList;
@@ -162,7 +157,6 @@ class _PlayScreenState extends State<PlayScreen> {
       title: playTitle.split('(')[0],
       artist: playArtist,
       genre: response.genre,
-      
       artUri: Uri.file(imagePath),
       extras: {
         'url': response.url,
@@ -302,6 +296,8 @@ class _PlayScreenState extends State<PlayScreen> {
                       IconButton(
                         icon: Image.asset(
                           'assets/lyrics.png',
+                          cacheHeight: 100,
+                          cacheWidth: 100,
                         ),
                         tooltip: AppLocalizations.of(context)!.lyrics,
                         onPressed: () => cardKey.currentState!.toggleCard(),
@@ -1292,6 +1288,8 @@ class NowPlayingStream extends StatelessWidget {
                                         ),
                                       )
                                     : CachedNetworkImage(
+                                        memCacheHeight: 100,
+                                        memCacheWidth: 100,
                                         fit: BoxFit.cover,
                                         errorWidget:
                                             (BuildContext context, _, __) =>
@@ -1590,6 +1588,8 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                   ),
                                 )
                               : CachedNetworkImage(
+                                  memCacheHeight: (widget.width * 1.5).toInt(),
+                                  memCacheWidth: (widget.width * 1.5).toInt(),
                                   fit: BoxFit.cover,
                                   errorWidget: (BuildContext context, _, __) =>
                                       const Image(

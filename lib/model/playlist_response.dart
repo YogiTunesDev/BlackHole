@@ -352,7 +352,7 @@ class PlayListData {
         songlist.hashCode;
   }
 
-  List<String> getQuadImages() {
+  List<String> getQuadImages({bool isThumbnail = false}) {
     List<String> lstStr = [];
     if (quadImages != null) {
       if (TOTALIMAGES == 0) {
@@ -360,8 +360,8 @@ class PlayListData {
           if (quadImages?[i]?.imageUrl != null &&
               quadImages?[i]?.image != null) {
             if (quadImages![i]!.imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+              lstStr.add(
+                  '${quadImages![i]!.imageUrl}/${isThumbnail ? "thumb_" : ""}${quadImages![i]!.image}');
             }
           }
         }
@@ -370,12 +370,12 @@ class PlayListData {
           if (quadImages?[i]?.imageUrl != null &&
               quadImages?[i]?.image != null) {
             if (quadImages![i]!.imageUrl!.isNotEmpty) {
-              lstStr
-                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+              lstStr.add(
+                  '${quadImages![i]!.imageUrl}/${isThumbnail ? "thumb_" : ""}${quadImages![i]!.image}');
             } else {
               lstStr.add('');
             }
-          }else{
+          } else {
             lstStr.add('');
           }
         }

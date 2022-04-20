@@ -24,15 +24,11 @@ class _SplashScreenState extends State<SplashScreen> {
         });
 
         redirectAfterAuthentication(context);
-        await Future.delayed(Duration(seconds: 5));
+        ;
       } catch (e, stack) {
         print(e.toString());
         debugPrint(stack.toString());
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      } finally {}
     });
 
     super.initState();
@@ -50,9 +46,13 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset(Theme.of(context).brightness == Brightness.dark
-                    ? 'assets/splash_white.png'
-                    : 'assets/splash.png'),
+                Image.asset(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? 'assets/splash_white.png'
+                      : 'assets/splash.png',
+                  cacheHeight: 300,
+                  cacheWidth: 1000,
+                ),
                 // const Center(
                 //   child: CircularProgressIndicator(),
                 // ),

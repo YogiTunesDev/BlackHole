@@ -11,15 +11,17 @@ class Collage extends StatelessWidget {
   final String placeholderImage;
   final String? artistName;
   final String? tempDirPath;
-  const Collage({
-    Key? key,
-    required this.showGrid,
-    required this.imageList,
-    required this.placeholderImage,
-    this.fixSize = true,
-    this.artistName,
-    this.tempDirPath,
-  }) : super(key: key);
+  final int? cacheSize;
+  const Collage(
+      {Key? key,
+      required this.showGrid,
+      required this.imageList,
+      required this.placeholderImage,
+      this.fixSize = true,
+      this.artistName,
+      this.tempDirPath,
+      this.cacheSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,8 @@ class Collage extends StatelessWidget {
                   tempDirPath: tempDirPath!,
                 );
                 return CachedNetworkImage(
+                  memCacheHeight: cacheSize,
+                  memCacheWidth: cacheSize,
                   fit: BoxFit.cover,
                   errorWidget: (context, _, __) => Image(
                     fit: BoxFit.cover,
@@ -61,6 +65,8 @@ class Collage extends StatelessWidget {
                   children: imageList
                       .map(
                         (image) => CachedNetworkImage(
+                          memCacheHeight: cacheSize,
+                          memCacheWidth: cacheSize,
                           fit: BoxFit.cover,
                           errorWidget: (context, _, __) => Image(
                             fit: BoxFit.cover,
@@ -68,7 +74,7 @@ class Collage extends StatelessWidget {
                               placeholderImage,
                             ),
                           ),
-                          imageUrl: '${image}',
+                          imageUrl: image,
                           placeholder: (context, url) => Image(
                             fit: BoxFit.cover,
                             image: AssetImage(
@@ -80,6 +86,8 @@ class Collage extends StatelessWidget {
                       .toList(),
                 )
               : CachedNetworkImage(
+                  memCacheHeight: cacheSize,
+                  memCacheWidth: cacheSize,
                   fit: BoxFit.cover,
                   errorWidget: (context, _, __) => Image(
                     fit: BoxFit.cover,
@@ -93,17 +101,6 @@ class Collage extends StatelessWidget {
                   ),
                 ),
     );
-    // return Card(
-    //   elevation: 5,
-    //   margin: const EdgeInsets.symmetric(horizontal: 8.0),
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(
-    //       (artistName != null && tempDirPath != null) ? 100.0 : 7.0,
-    //     ),
-    //   ),
-    //   clipBehavior: Clip.antiAlias,
-    //   child:
-    // );
   }
 }
 

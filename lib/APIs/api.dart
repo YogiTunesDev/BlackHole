@@ -107,20 +107,17 @@ class YogitunesAPI {
     } else {
       url = Uri.parse('$baseUrl$apiStr$params');
     }
-    print('URL ::: $url');
-    print('Send Request');
+
     // preferredLanguages =
     //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
     // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
     final box = await Hive.openBox('api-token');
     final String apiToken = box.get('token').toString();
-    print('API TOKEN :::: $apiToken');
+
     headers = {
       'Authorization': 'Bearer $apiToken',
       'Accept': 'application/json'
     };
-
-    print('URL ::: $url');
 
     // if (useProxy && settingsBox.get('useProxy', defaultValue: false) as bool) {
     //   final proxyIP = settingsBox.get('proxyIp');
@@ -136,8 +133,6 @@ class YogitunesAPI {
     // }
 
     return get(url, headers: headers).onError((error, stackTrace) {
-      print(error);
-      print(stackTrace);
       return Response('', 404);
     });
   }
@@ -151,7 +146,7 @@ class YogitunesAPI {
       final res = await http.post(Uri.parse(url), body: {
         'email': email,
       });
-      print('DATA ::::${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         // result = LoginResponse?.fromMap(data as Map<String, dynamic>);
@@ -178,7 +173,7 @@ class YogitunesAPI {
         'email': email,
         'password': password,
       });
-      print('DATA ::::${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         result = LoginResponse?.fromMap(data as Map<String, dynamic>);
@@ -211,7 +206,6 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
-        print('DATA ::::$data');
         result = SignupResponse?.fromMap(data as Map<String, dynamic>);
         var box = await Hive.openBox('api-token');
         box.put('token', result.apiToken);
@@ -234,7 +228,6 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
-        print('$data');
         result = ForgotPasswordResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
@@ -253,11 +246,10 @@ class YogitunesAPI {
         'email': email,
         'verification_code': code,
       });
-      print('DATA ::::${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
-        print('DATA ::::$data');
         result = ForgotPasswordVerificationResponse?.fromMap(
             data as Map<String, dynamic>);
         var box = await Hive.openBox('api-token');
@@ -275,19 +267,18 @@ class YogitunesAPI {
     final box = await Hive.openBox('api-token');
 
     final String apiToken = box.get('token').toString();
-    print('API TOKEN :::: $apiToken');
+
     try {
       final url =
           "$baseUrl$apiStr${endpoints['resetPassword']}?password=$password";
-      print('$url');
+
       final res = await http.post(Uri.parse(url), headers: {
         'Authorization': 'Bearer $apiToken',
       });
-      print('DATA ::::${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
 
-        print('DATA ::::$data');
         result = ResetPasswordResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e) {
@@ -295,6 +286,7 @@ class YogitunesAPI {
     }
     return result;
   }
+
   /// This function is used to get home page data api
   Future<HomeResponse?> fetchHomePageData() async {
     HomeResponse? result;
@@ -314,7 +306,6 @@ class YogitunesAPI {
 
   Future<void> updatePlaySong(String id, String endOffset) async {
     try {
-      // print('$baseUrl${apiStr}play');
       List<Map<String, dynamic>> lstmap = [];
       lstmap.add({
         'source_type': '',
@@ -341,11 +332,8 @@ class YogitunesAPI {
         body: json
             .encode(mapData), //json.decode(json.encode(mapData).toString()),
       );
-      debugPrint('Body Data :: $res');
     } catch (e, stack) {
       log('Error in updatePlaySong: $e');
-      debugPrint(e.toString());
-      debugPrint(stack.toString());
     }
   }
 
@@ -365,7 +353,6 @@ class YogitunesAPI {
     return result;
   }
 
-
   /// This function is used to check subscription status
   Future<SubscriptionStatusResponse?> subscriptionStatus() async {
     SubscriptionStatusResponse? result;
@@ -373,7 +360,6 @@ class YogitunesAPI {
       final res = await getResponse(endpoints['subscriptionStatus']!);
 
       if (res.statusCode == 200) {
-        print("RESPONSE ::: ${res.body}");
         final Map data = json.decode(res.body) as Map;
         result =
             SubscriptionStatusResponse?.fromMap(data as Map<String, dynamic>);
@@ -393,7 +379,6 @@ class YogitunesAPI {
     SubscriptionStatusResponse? paymentSuccessResponse;
     try {
       final box = await Hive.openBox('api-token');
-      // print(dataList);
 
       final String apiToken = box.get('token').toString();
 
@@ -415,7 +400,7 @@ class YogitunesAPI {
         body: json.encode(mapData),
         headers: headers,
       );
-      print("RESPONSE PAYMENT SUCCESS ${res.body}");
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
@@ -435,8 +420,7 @@ class YogitunesAPI {
     try {
       final res =
           await getResponse('${endpoints['radioStations']!}/$id/stream');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiRadioStationStreamData(
@@ -454,8 +438,7 @@ class YogitunesAPI {
     try {
       final res =
           await getResponse('${endpoints['getSingleSong']!}/$id/stream');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiRadioStationStreamData(
@@ -472,8 +455,7 @@ class YogitunesAPI {
     UserInfoResponse? result;
     try {
       final res = await getResponse('${endpoints['userInfo']}');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = UserInfoResponse?.fromMap(data as Map<String, dynamic>);
@@ -496,8 +478,7 @@ class YogitunesAPI {
           (selectedType == null || selectedType == ''
               ? ''
               : '&yoga_type=$selectedType'));
-      print("res :: $res");
-      print("res :: ${res.body}");
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiPlaylistData(
@@ -518,8 +499,7 @@ class YogitunesAPI {
     AlbumResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo$sort');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
@@ -537,8 +517,7 @@ class YogitunesAPI {
     GenresResponse? result;
     try {
       final res = await getResponse('$url');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = GenresResponse?.fromMap(data as Map<String, dynamic>);
@@ -558,8 +537,7 @@ class YogitunesAPI {
     AlbumResponse? result;
     try {
       final res = await getResponse('$url/$id?page=$pageNo');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = AlbumResponse?.fromMap(data as Map<String, dynamic>);
@@ -577,8 +555,7 @@ class YogitunesAPI {
     SingleAlbumResponse? result;
     try {
       final res = await getResponse('browse/albums/$id');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiSingleALbumData(
@@ -598,8 +575,7 @@ class YogitunesAPI {
     SinglePlaylistResponse? result;
     try {
       final res = await getResponse('browse/playlists/$id');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiSinglePlaylistData(
@@ -618,8 +594,7 @@ class YogitunesAPI {
     TrendingSongResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo$sort');
-      print(res);
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiTrendingSongData(
@@ -703,8 +678,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['search']!}?keyword=$keyword&my_library=$isMyLibrary');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchResponse?.fromMap(
@@ -725,8 +699,7 @@ class YogitunesAPI {
     MyRecentlyPlayedSongResponse? result;
     try {
       final res = await getResponse('$url?page=$pageNo');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = MyRecentlyPlayedSongResponse?.fromMap(
@@ -746,8 +719,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['search']!}/albums?keyword=$keyword&my_library=$isMyLibrary');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchAllAlbumResponse?.fromMap(
@@ -767,8 +739,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['search']!}/tracks?keyword=$keyword&my_library=$isMyLibrary');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchAllTracksResponse?.fromMap(
@@ -788,8 +759,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['search']!}/playlists?keyword=$keyword&my_library=$isMyLibrary');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchAllPlaylistsResponse?.fromMap(
@@ -809,8 +779,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['search']!}/artists?keyword=$keyword&my_library=$isMyLibrary');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchAllArtistsResponse?.fromMap(
@@ -828,8 +797,7 @@ class YogitunesAPI {
     ArtistDataResponse? result;
     try {
       final res = await getResponse('${endpoints['getArtist']!}/$id');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = ArtistDataResponse?.fromMap(
@@ -853,7 +821,6 @@ class YogitunesAPI {
 
     try {
       final box = await Hive.openBox('api-token');
-      // print(dataList);
 
       final String apiToken = box.get('token').toString();
 
@@ -871,14 +838,13 @@ class YogitunesAPI {
         mapData['track_sync'] = "add";
         mapData['byop'] = false;
       }
-      print(url);
-      print(mapData);
+
       final res = await http.post(
         Uri.parse(url),
         body: json.encode(mapData),
         headers: headers,
       );
-      print(res.body);
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
@@ -901,8 +867,7 @@ class YogitunesAPI {
     try {
       final res = await getResponse(
           '${endpoints['playlistSongsList']!}/${tempo != null && tempo != '' ? tempo : 'All'}?page=${pageNo}&my_library=$isMyLibrary${vocals != null ? '&filter_vocal=${vocals.trim().replaceAll(" ", "-").toLowerCase()}' : ''}${style != null ? '&filter_style=${style.replaceAll('Electro acoustic', 'acoustic').toLowerCase()}' : ''}');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await TracksBybpmResponse.fromMap(
@@ -923,7 +888,6 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         result = CustomPlaylistResponse.fromMap(data as Map<String, dynamic>);
-        print(result);
       }
     } catch (e) {
       log('Error in fetchPlaylistData: $e');
@@ -1041,10 +1005,8 @@ class YogitunesAPI {
           'Authorization': 'Bearer $apiToken',
         },
       );
-      print("00000000000000 ${url}");
-      print("00000000000000 ${res.statusCode}");
+
       if (res.statusCode == 200) {
-        print("1111111111111111");
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         if (data['status'] as bool) {
           ShowSnackBar().showSnackBar(context, 'Track removed from library');
@@ -1096,8 +1058,7 @@ class YogitunesAPI {
     SeeAllLibraryAlbumsResponse? result;
     try {
       final res = await getResponse(endpoints['seeAllAlbumsLibrary']!);
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SeeAllLibraryAlbumsResponse?.fromMap(
@@ -1115,8 +1076,7 @@ class YogitunesAPI {
     SearchAllArtistsResponse? result;
     try {
       final res = await getResponse(endpoints['seeAllArtistLibrary']!);
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = SearchAllArtistsResponse?.fromMap(
@@ -1129,15 +1089,13 @@ class YogitunesAPI {
     return result;
   }
 
-
   /// This function is used to get all library tracks api data
   Future<MyLibraryTrackResponse?> seeAllLibraryTracks(int pageNo) async {
     MyLibraryTrackResponse? result;
     try {
       final res = await getResponse(
           '${endpoints['seeAllTracksLibrary']!}?page=$pageNo');
-      print('Playlist ::::: ${res.statusCode}');
-      print('Playlist ::::: ${res.body}');
+
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatMyLibraryTrackSong(
@@ -1149,7 +1107,6 @@ class YogitunesAPI {
     }
     return result;
   }
-
 
   /// This function is used to call create playlist api
   Future<String?> createPlaylist(String name, BuildContext context) async {
@@ -1185,7 +1142,6 @@ class YogitunesAPI {
     }
   }
 
-
   /// This function is used to call delete playlist api
   Future deletePlylist(String plylistId, BuildContext context) async {
     var result;
@@ -1207,14 +1163,12 @@ class YogitunesAPI {
             data['data'].toString(),
           );
         }
-        print('RESPONSE :::: $data');
       }
     } catch (e) {
       log('Error in deletePlylist: $e');
     }
     // return result;
   }
-
 
   /// This function is used to get top searches api data
   Future<List<String>> getTopSearches() async {
@@ -1231,7 +1185,6 @@ class YogitunesAPI {
     }
     return List.empty();
   }
-
 
   /// This function is used to get search results api data
   Future<List> fetchSongSearchResults({
@@ -1359,7 +1312,6 @@ class YogitunesAPI {
     return [result, position];
   }
 
-
   /// This function is used to get all library album api data
   Future<List<Map>> fetchAlbums({
     required String searchQuery,
@@ -1392,7 +1344,6 @@ class YogitunesAPI {
     return List.empty();
   }
 
-
   /// This function is used to get album songs api data
   Future<List> fetchAlbumSongs(String albumId) async {
     final String params = '${endpoints['albumDetails']}&cc=in&albumid=$albumId';
@@ -1404,7 +1355,6 @@ class YogitunesAPI {
     }
     return List.empty();
   }
-
 
   /// This function is used to get artist song api data
   Future<Map<String, List>> fetchArtistSongs({
@@ -1497,7 +1447,6 @@ class YogitunesAPI {
     return data;
   }
 
-
   /// This function is used to get all library album api data
   Future<List> fetchPlaylistSongs(String playlistId) async {
     final String params =
@@ -1510,7 +1459,6 @@ class YogitunesAPI {
     }
     return List.empty();
   }
-
 
   /// This function is used to get top search result api data
   Future<List> fetchTopSearchResult(String searchQuery) async {
@@ -1525,7 +1473,6 @@ class YogitunesAPI {
     }
     return List.empty();
   }
-
 
   /// This function is used to get song details api data
   Future<Map> fetchSongDetails(String songId) async {

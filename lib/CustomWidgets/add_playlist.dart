@@ -237,7 +237,6 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                         if (itemData.quadImages![0]!.imageUrl != null) {
                           imageUrl =
                               '${itemData.quadImages![0]!.imageUrl}/${itemData.quadImages![0]!.image}';
-                          ;
                         }
                       }
                     }

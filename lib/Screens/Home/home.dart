@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
     initFunction();
   }
 
-  void initFunction() async {
+  Future<void> initFunction() async {
     UniLinkService.instance.initUniLinks(context);
   }
 

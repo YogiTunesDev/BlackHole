@@ -5,7 +5,6 @@ import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
-import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
@@ -15,14 +14,12 @@ import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
-import 'package:blackhole/model/radio_station_stream_response.dart';
-import 'package:blackhole/model/song_model.dart';
-import 'package:blackhole/model/trending_song_response.dart';
-import 'package:blackhole/util/app_util.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:blackhole/model/single_playlist_response.dart'
     as singlePlaylistResponse;
+import 'package:blackhole/model/song_model.dart';
+import 'package:blackhole/model/trending_song_response.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum AlbumListType {
@@ -82,7 +79,7 @@ class _AlbumListState extends State<AlbumList> {
     pageNo = 1;
 
     if (widget.isFromLibrary) {
-      fatchData();
+      fetchData();
     } else {
       final String? finalUrl = getListUrl();
       if (finalUrl == null) {
@@ -94,13 +91,13 @@ class _AlbumListState extends State<AlbumList> {
     _scrollController.addListener(_listScrollListener);
   }
 
-  void fatchData() async {
+  Future<void> fetchData() async {
     try {
       apiLoading = true;
       setState(() {});
       final MyLibraryTrackResponse? playlistRes =
           await YogitunesAPI().seeAllLibraryTracks(pageNo);
-      print("SONG ::::::::::::::::");
+
       pageNo++;
       if (playlistRes != null) {
         if (playlistRes.status!) {
@@ -127,31 +124,23 @@ class _AlbumListState extends State<AlbumList> {
 
       // tempList = List.from(seeAllTrackLibrary);
     } on Exception catch (e, stack) {
-      debugPrint(e.toString());
-      debugPrint(stack.toString());
     } finally {
       apiLoading = false;
       setState(() {});
     }
   }
 
-  callback() {
-    setState(() {
-      fatchData();
-    });
-  }
-
-  void getApiData() async {
+  Future<void> getApiData() async {
     try {
       apiLoading = true;
       setState(() {});
       if (mainType == MainType.playlist) {
-          /// check current screen is  playlist and call playlist api
+        /// check current screen is  playlist and call playlist api
 
         final PlaylistResponse? playlistRes = await YogitunesAPI()
             .fetchYogiPlaylistData(getListUrl()!, pageNo, selectedSort,
                 selectedDuration, selectedType);
-        print("PLAYLIST ::::::::::::::::");
+
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -197,7 +186,7 @@ class _AlbumListState extends State<AlbumList> {
         /// check current screen is genres and call genres api
         final GenresResponse? playlistRes =
             await YogitunesAPI().fetchYogiGenresData(getListUrl()!);
-        print("GENRES ::::::::::::::::");
+
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -217,7 +206,7 @@ class _AlbumListState extends State<AlbumList> {
         /// check current screen is genres album and call genres album api
         final AlbumResponse? playlistRes = await YogitunesAPI()
             .fetchYogiGenresAlbumData(getListUrl()!, widget.id!, pageNo);
-        print("GENRES ALBUM ::::::::::::::::");
+
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -240,7 +229,7 @@ class _AlbumListState extends State<AlbumList> {
         /// check current screen is  trending songs and call trending songs api
         final TrendingSongResponse? playlistRes = await YogitunesAPI()
             .fetchYogiTrendingSongData(getListUrl()!, pageNo, selectedSort);
-        print("SONG ::::::::::::::::");
+
         pageNo++;
         if (playlistRes != null) {
           if (playlistRes.status!) {
@@ -264,7 +253,7 @@ class _AlbumListState extends State<AlbumList> {
         final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
             await YogitunesAPI()
                 .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
-        print("TRACK ::::::::::::::::");
+
         pageNo++;
         if (myRecentlyPlayedSongResponse != null) {
           if (myRecentlyPlayedSongResponse.data != null) {
@@ -283,8 +272,6 @@ class _AlbumListState extends State<AlbumList> {
         }
       }
     } on Exception catch (e, stack) {
-      debugPrint(e.toString());
-      debugPrint(stack.toString());
     } finally {
       apiLoading = false;
       setState(() {});
@@ -961,7 +948,7 @@ class _AlbumListState extends State<AlbumList> {
                                       isMyPlaylist: false,
                                       selectedPlaylist: selectedPlaylist,
                                       playlistName: '',
-                                      callback: () => callback(),
+                                      callback: () => fetchData(),
                                       isFromLibrary: widget.isFromLibrary,
                                     ),
                                   ],
@@ -1046,17 +1033,14 @@ class _AlbumListState extends State<AlbumList> {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
+                                    addAutomaticKeepAlives: false,
                                     itemBuilder: (context, index) {
                                       final PlayListData item =
                                           lstPlaylistData[index];
-                                      String itemImage = item
-                                              .quadImages!.isNotEmpty
-                                          ? item.quadImages![0] != null
-                                              ? ('${item.quadImages![0]!.imageUrl!}/${item.quadImages![0]!.image!}')
-                                              : ''
-                                          : '';
+
                                       return SongItem(
-                                        itemImage: item.getQuadImages(),
+                                        itemImage: item.getQuadImages(
+                                            isThumbnail: true),
                                         itemName: item.name!,
                                         onTap: () {
                                           Navigator.push(
@@ -1069,7 +1053,8 @@ class _AlbumListState extends State<AlbumList> {
                                                 songListType:
                                                     SongListType.playlist,
                                                 playlistName: item.name!,
-                                                playlistImage: item.getQuadImages(),
+                                                playlistImage:
+                                                    item.getQuadImages(),
                                                 id: item.id,
                                               ),
                                             ),
@@ -1173,7 +1158,9 @@ class _AlbumListState extends State<AlbumList> {
                                                           .songItemModel!;
 
                                                   return SongItem(
-                                                    itemImage:[ item.image ?? ''],
+                                                    itemImage: [
+                                                      item.image ?? ''
+                                                    ],
                                                     itemName: item.title ?? '',
                                                     onTap: () {
                                                       List<SongItemModel>
@@ -1220,7 +1207,7 @@ class _AlbumListState extends State<AlbumList> {
                                                           item =
                                                           lstRecentPlayedSong[
                                                               index];
-                                                      String itemImage = item
+                                                      final String itemImage = item
                                                                   .album !=
                                                               null
                                                           ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
@@ -1234,18 +1221,22 @@ class _AlbumListState extends State<AlbumList> {
                                                             context,
                                                             PageRouteBuilder(
                                                               opaque: false,
-                                                              pageBuilder: (_, __, ___) => SongsListPage(
-                                                                  songListType:
-                                                                      SongListType
-                                                                          .album,
-                                                                  playlistName: item
-                                                                      .album!
-                                                                      .name!,
-                                                                  playlistImage:
-                                                                      [itemImage],
-                                                                  id: item
-                                                                      .album!
-                                                                      .id),
+                                                              pageBuilder: (_,
+                                                                      __,
+                                                                      ___) =>
+                                                                  SongsListPage(
+                                                                      songListType:
+                                                                          SongListType
+                                                                              .album,
+                                                                      playlistName: item
+                                                                          .album!
+                                                                          .name!,
+                                                                      playlistImage: [
+                                                                        itemImage
+                                                                      ],
+                                                                      id: item
+                                                                          .album!
+                                                                          .id),
                                                             ),
                                                           );
 
@@ -1274,15 +1265,6 @@ class _AlbumListState extends State<AlbumList> {
                               ),
                             ),
                           )
-                        // ...lstPlaylistData.map((entry) {
-                        //   final PlayListData item = entry;
-                        //   return SongItem(
-                        //     itemImage: item.quadImages!.isNotEmpty
-                        //         ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                        //         : '',
-                        //     itemName: item.name!,
-                        //   );
-                        // }).toList()
                       ]),
                     )
                 ],
@@ -1342,7 +1324,7 @@ class _AlbumListState extends State<AlbumList> {
         _scrollController.position.maxScrollExtent - 100) {
       if (!isFinish & !apiLoading) {
         if (widget.isFromLibrary) {
-          fatchData();
+          fetchData();
         } else {
           if (widget.albumListType != AlbumListType.recentlyPlayedSong) {
             getApiData();

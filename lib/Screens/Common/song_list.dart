@@ -33,7 +33,7 @@ class SongsListPage extends StatefulWidget {
   final SongListType? songListType;
   final bool? isMyPlaylist;
   final bool isFromLibrary;
-  SongsListPage({
+  const SongsListPage({
     Key? key,
     this.songList,
     this.playlistImage,
@@ -106,13 +106,7 @@ class _SongsListPageState extends State<SongsListPage> {
     _scrollController.dispose();
   }
 
-  callback() {
-    setState(() {
-      _fetchSongs();
-    });
-  }
-
-  void _fetchSongs() async {
+  Future<void> _fetchSongs() async {
     try {
       setState(() {
         apiloading = true;
@@ -241,12 +235,6 @@ class _SongsListPageState extends State<SongsListPage> {
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Container(
-                        // width:
-                        // (!_scrollController.hasClients ||
-                        // _scrollController.positions.length > 1)
-                        // ?
-                        // MediaQuery.of(context).size.width,
-                        // : MediaQuery.of(context).size.width - 75,
                         margin: (!_scrollController.hasClients ||
                                 _scrollController.position.pixels <=
                                     MediaQuery.of(context).size.height * 0.2)
@@ -296,6 +284,8 @@ class _SongsListPageState extends State<SongsListPage> {
                               )
                             : mainPlayListImage.length == 1
                                 ? CachedNetworkImage(
+                                    memCacheHeight: 1000,
+                                    memCacheWidth: 1000,
                                     fit: BoxFit.cover,
                                     errorWidget: (context, _, __) =>
                                         const Image(
@@ -313,6 +303,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                     ),
                                   )
                                 : Collage(
+                                    cacheSize: 600,
                                     showGrid: true,
                                     imageList: mainPlayListImage,
                                     placeholderImage: 'assets/album.png',
@@ -525,6 +516,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: CachedNetworkImage(
+                                    memCacheHeight: 200,
+                                    memCacheWidth: 200,
                                     fit: BoxFit.cover,
                                     errorWidget: (context, _, __) =>
                                         const Image(
@@ -561,7 +554,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                       playlistName: mainPlayListName ?? '',
                                       playlistId:
                                           int.parse(widget.id.toString()),
-                                      callback: () => callback(),
+                                      callback: _fetchSongs,
                                     ),
                                   ],
                                 ),

@@ -3,11 +3,9 @@ import 'dart:math';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
-import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
-import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/radio_stations_response.dart';
@@ -16,8 +14,9 @@ import 'package:blackhole/model/user_info_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
+
 import 'album_list.dart';
 
 bool fetched = false;
@@ -147,595 +146,563 @@ class _SaavnHomePageState extends State<SaavnHomePage>
         MediaQuery.of(context).size.height > MediaQuery.of(context).size.width
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: apiLoading
-          ? const Center(
-              child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            ))
-          : data != null
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// recently played list
-                    if (data!.data!.myRecentlyPlayedSongs != null)
-                      if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'My Recently Played Albums',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType:
-                                      AlbumListType.recentlyPlayedSong,
-                                  albumName: 'Recent Played Albums',
+    return apiLoading
+        ? const Center(
+            child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(),
+          ))
+        : SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: data != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// recently played list
+                      if (data!.data!.myRecentlyPlayedSongs != null)
+                        if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'My Recently Played Albums',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType:
+                                        AlbumListType.recentlyPlayedSong,
+                                    albumName: 'Recent Played Albums',
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.myRecentlyPlayedSongs != null)
-                      if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount:
-                                data!.data!.myRecentlyPlayedSongs!.length,
-                            itemBuilder: (context, index) {
-                              final MyRecentlyPlayedSong item =
-                                  data!.data!.myRecentlyPlayedSongs![index];
-                              final String itemImage = item.album?.cover != null
-                                  ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image!}')
-                                  : '';
+                              );
+                            },
+                          ),
+                      if (data!.data!.myRecentlyPlayedSongs != null)
+                        if (data!.data!.myRecentlyPlayedSongs!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount:
+                                  data!.data!.myRecentlyPlayedSongs!.length,
+                              itemBuilder: (context, index) {
+                                final MyRecentlyPlayedSong item =
+                                    data!.data!.myRecentlyPlayedSongs![index];
+                                final String itemImage = item.album?.cover !=
+                                        null
+                                    ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image!}')
+                                    : '';
 
-                              String type = '';
-                              if (item.type != null) {
-                                if (item.type == 'Album') {
-                                  type = item.type.toString();
+                                String type = '';
+                                if (item.type != null) {
+                                  if (item.type == 'Album') {
+                                    type = item.type.toString();
+                                  }
                                 }
-                              }
 
-                              if (type.isNotEmpty) {
-                                return SongItem(
-                                  itemImage: [itemImage],
-                                  itemName: item.track!.name!,
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
-                                                songListType:
-                                                    SongListType.album,
-                                                playlistName: item.album!.name!,
-                                                playlistImage: [itemImage],
-                                                id: item.album!.id),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                return const SizedBox();
-                              }
-                            },
-                          ),
-                        ),
-
-                    /// yoga plalists list
-                    if (data!.data!.popularYogaPlaylists != null)
-                      if (data!.data!.popularYogaPlaylists!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'Yoga Playlists',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.yogaPlaylist,
-                                  albumName: 'Yoga Playlists',
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.popularYogaPlaylists != null)
-                      if (data!.data!.popularYogaPlaylists!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.popularYogaPlaylists!.length,
-                            itemBuilder: (context, index) {
-                              final PopularPlaylist item =
-                                  data!.data!.popularYogaPlaylists![index];
-                              final String itemImage = item
-                                      .quadImages!.isNotEmpty
-                                  ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                                  : '';
-                              return SongItem(
-                                itemImage: item.getQuadImages(),
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.playlist,
-                                        playlistName: item.name!,
-                                        playlistImage: item.getQuadImages(),
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-
-                    ///other activity list
-                    if (data!.data!.browseByActivity != null)
-                      if (data!.data!.browseByActivity!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'Other Activities',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.otherActivity,
-                                  albumName: 'Other Activities',
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.browseByActivity != null)
-                      if (data!.data!.browseByActivity!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.browseByActivity!.length,
-                            itemBuilder: (context, index) {
-                              final BrowseBy item =
-                                  data!.data!.browseByActivity![index];
-                              int randomNumber = Random().nextInt(11);
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => AlbumList(
-                                        albumListType:
-                                            AlbumListType.otherActivity,
-                                        albumName: item.name,
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  width: boxSize / 2 - 30,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox.square(
-                                          dimension: boxSize / 2 - 40,
-                                          child: Card(
-                                            elevation: 5,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                1000.0,
-                                              ),
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  height: boxSize / 2 - 40,
-                                                  width: boxSize / 2 - 40,
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        colorList[randomNumber],
-                                                        colorList[randomNumber]
-                                                            .withOpacity(0.5),
-                                                      ],
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Opacity(
-                                                  opacity: 0.2,
-                                                  child: SizedBox(
-                                                    height: boxSize / 2 - 40,
-                                                    width: boxSize / 2 - 40,
-                                                    child: const Image(
-                                                      fit: BoxFit.cover,
-                                                      image: AssetImage(
-                                                        'assets/album.png',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          formatString(item.name),
-                                          textAlign: TextAlign.center,
-                                          softWrap: false,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                              //     SongItem(
-                              //   itemImage: '',
-                              //   itemName: item.name!,
-                              //   isRound: true,
-                              //   onTap: () {
-                              //     Navigator.push(
-                              //       context,
-                              //       PageRouteBuilder(
-                              //         opaque: false,
-                              //         pageBuilder: (_, __, ___) => AlbumList(
-                              //           albumListType:
-                              //               AlbumListType.otherActivity,
-                              //           albumName: item.name,
-                              //           id: item.id,
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              // );
-                            },
-                          ),
-                        ),
-
-                    /// new releases list
-                    if (data!.data!.newReleases != null)
-                      if (data!.data!.newReleases!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'New Releases',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.newRelease,
-                                  albumName: 'New Releases',
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.newReleases != null)
-                      if (data!.data!.newReleases!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.newReleases!.length,
-                            itemBuilder: (context, index) {
-                              final NewRelease item =
-                                  data!.data!.newReleases![index];
-                              final String itemImage = item.cover != null
-                                  ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                                  : '';
-                              return SongItem(
-                                itemImage: [itemImage],
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.album,
-                                        playlistName: item.name!,
-                                        playlistImage: [itemImage],
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-
-                    /// genres & moods list
-                    if (data!.data!.browseByGenresMoods != null)
-                      if (data!.data!.browseByGenresMoods!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'Genres & Moods',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.genresMoods,
-                                  albumName: 'Genres & Moods',
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.browseByGenresMoods != null)
-                      if (data!.data!.browseByGenresMoods!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.browseByGenresMoods!.length,
-                            itemBuilder: (context, index) {
-                              final BrowseBy item =
-                                  data!.data!.browseByGenresMoods![index];
-                              int randomNumber = Random().nextInt(11);
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => AlbumList(
-                                        albumListType:
-                                            AlbumListType.genresMoods,
-                                        albumName: item.name,
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  width: boxSize / 2 - 30,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox.square(
-                                          dimension: boxSize / 2 - 40,
-                                          child: Card(
-                                            elevation: 5,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                1000.0,
-                                              ),
-                                            ),
-                                            clipBehavior: Clip.antiAlias,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  height: boxSize / 2 - 40,
-                                                  width: boxSize / 2 - 40,
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        colorList[randomNumber],
-                                                        colorList[randomNumber]
-                                                            .withOpacity(0.5),
-                                                      ],
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Opacity(
-                                                  opacity: 0.2,
-                                                  child: SizedBox(
-                                                    height: boxSize / 2 - 40,
-                                                    width: boxSize / 2 - 40,
-                                                    child: const Image(
-                                                      fit: BoxFit.cover,
-                                                      image: AssetImage(
-                                                        'assets/album.png',
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          formatString(item.name),
-                                          textAlign: TextAlign.center,
-                                          softWrap: false,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                              // return SongItem(
-                              //   itemImage: '',
-                              //   itemName: item.name!,
-                              //   isRound: true,
-                              //   onTap: () {
-                              //     Navigator.push(
-                              //       context,
-                              //       PageRouteBuilder(
-                              //         opaque: false,
-                              //         pageBuilder: (_, __, ___) => AlbumList(
-                              //           albumListType:
-                              //               AlbumListType.genresMoods,
-                              //           albumName: item.name,
-                              //           id: item.id,
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              // );
-                            },
-                          ),
-                        ),
-
-                    /// featured albums list
-                    if (data!.data!.featuredAlbums != null)
-                      if (data!.data!.featuredAlbums!.isNotEmpty)
-                        if (data!.data!.featuredAlbums![0].albumsClean != null)
-                          if (data!
-                              .data!.featuredAlbums![0].albumsClean!.isNotEmpty)
-                            HeaderTitle(
-                              title: 'Featured Albums',
-                              viewAllOnTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    opaque: false,
-                                    pageBuilder: (_, __, ___) =>
-                                        const AlbumList(
-                                      albumListType:
-                                          AlbumListType.featuredAlbums,
-                                      albumName: 'Featured Albums',
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    if (data!.data!.featuredAlbums != null)
-                      if (data!.data!.featuredAlbums!.isNotEmpty)
-                        if (data!.data!.featuredAlbums![0].albumsClean != null)
-                          if (data!
-                              .data!.featuredAlbums![0].albumsClean!.isNotEmpty)
-                            SizedBox(
-                              height: boxSize / 2 + 10,
-                              child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                itemCount: data!.data!.featuredAlbums![0]
-                                    .albumsClean!.length,
-                                itemBuilder: (context, index) {
-                                  final AlbumsClean item = data!.data!
-                                      .featuredAlbums![0].albumsClean![index];
-                                  final String itemImage = item.cover != null
-                                      ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
-                                      : '';
+                                if (type.isNotEmpty) {
                                   return SongItem(
                                     itemImage: [itemImage],
-                                    itemName: item.name!,
-                                    onTap: () {
+                                    itemName: item.track!.name!,
+                                    onTap: () async {
                                       Navigator.push(
                                         context,
                                         PageRouteBuilder(
                                           opaque: false,
                                           pageBuilder: (_, __, ___) =>
                                               SongsListPage(
-                                            songListType: SongListType.album,
-                                            playlistName: item.name!,
-                                            playlistImage: [itemImage],
-                                            id: item.id,
-                                          ),
+                                                  songListType:
+                                                      SongListType.album,
+                                                  playlistName:
+                                                      item.album!.name!,
+                                                  playlistImage: [itemImage],
+                                                  id: item.album!.id),
                                         ),
                                       );
                                     },
                                   );
+                                } else {
+                                  return const SizedBox();
+                                }
+                              },
+                            ),
+                          ),
+
+                      /// yoga plalists list
+                      if (data!.data!.popularYogaPlaylists != null)
+                        if (data!.data!.popularYogaPlaylists!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Yoga Playlists',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.yogaPlaylist,
+                                    albumName: 'Yoga Playlists',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      if (data!.data!.popularYogaPlaylists != null)
+                        if (data!.data!.popularYogaPlaylists!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount:
+                                  data!.data!.popularYogaPlaylists!.length,
+                              itemBuilder: (context, index) {
+                                final PopularPlaylist item =
+                                    data!.data!.popularYogaPlaylists![index];
+                                final String itemImage = item
+                                        .quadImages!.isNotEmpty
+                                    ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                    : '';
+                                return SongItem(
+                                  itemImage: item.getQuadImages(),
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.playlist,
+                                          playlistName: item.name!,
+                                          playlistImage: item.getQuadImages(),
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                      ///other activity list
+                      if (data!.data!.browseByActivity != null)
+                        if (data!.data!.browseByActivity!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Other Activities',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.otherActivity,
+                                    albumName: 'Other Activities',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      if (data!.data!.browseByActivity != null)
+                        if (data!.data!.browseByActivity!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount: data!.data!.browseByActivity!.length,
+                              itemBuilder: (context, index) {
+                                final BrowseBy item =
+                                    data!.data!.browseByActivity![index];
+                                int randomNumber = Random().nextInt(11);
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => AlbumList(
+                                          albumListType:
+                                              AlbumListType.otherActivity,
+                                          albumName: item.name,
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width: boxSize / 2 - 30,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox.square(
+                                            dimension: boxSize / 2 - 40,
+                                            child: Card(
+                                              elevation: 5,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  1000.0,
+                                                ),
+                                              ),
+                                              clipBehavior: Clip.antiAlias,
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    height: boxSize / 2 - 40,
+                                                    width: boxSize / 2 - 40,
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          colorList[
+                                                              randomNumber],
+                                                          colorList[
+                                                                  randomNumber]
+                                                              .withOpacity(0.5),
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Opacity(
+                                                    opacity: 0.2,
+                                                    child: SizedBox(
+                                                      height: boxSize / 2 - 40,
+                                                      width: boxSize / 2 - 40,
+                                                      child: const Image(
+                                                        fit: BoxFit.cover,
+                                                        image: AssetImage(
+                                                          'assets/album.png',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            formatString(item.name),
+                                            textAlign: TextAlign.center,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                //     SongItem(
+                                //   itemImage: '',
+                                //   itemName: item.name!,
+                                //   isRound: true,
+                                //   onTap: () {
+                                //     Navigator.push(
+                                //       context,
+                                //       PageRouteBuilder(
+                                //         opaque: false,
+                                //         pageBuilder: (_, __, ___) => AlbumList(
+                                //           albumListType:
+                                //               AlbumListType.otherActivity,
+                                //           albumName: item.name,
+                                //           id: item.id,
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                // );
+                              },
+                            ),
+                          ),
+
+                      /// new releases list
+                      if (data!.data!.newReleases != null)
+                        if (data!.data!.newReleases!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'New Releases',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.newRelease,
+                                    albumName: 'New Releases',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      if (data!.data!.newReleases != null)
+                        if (data!.data!.newReleases!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount: data!.data!.newReleases!.length,
+                              itemBuilder: (context, index) {
+                                final NewRelease item =
+                                    data!.data!.newReleases![index];
+                                final String itemImage = item.cover != null
+                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                    : '';
+                                return SongItem(
+                                  itemImage: [itemImage],
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.album,
+                                          playlistName: item.name!,
+                                          playlistImage: [itemImage],
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                      /// genres & moods list
+                      if (data!.data!.browseByGenresMoods != null)
+                        if (data!.data!.browseByGenresMoods!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Genres & Moods',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.genresMoods,
+                                    albumName: 'Genres & Moods',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      if (data!.data!.browseByGenresMoods != null)
+                        if (data!.data!.browseByGenresMoods!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount:
+                                  data!.data!.browseByGenresMoods!.length,
+                              itemBuilder: (context, index) {
+                                final BrowseBy item =
+                                    data!.data!.browseByGenresMoods![index];
+                                int randomNumber = Random().nextInt(11);
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => AlbumList(
+                                          albumListType:
+                                              AlbumListType.genresMoods,
+                                          albumName: item.name,
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width: boxSize / 2 - 30,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox.square(
+                                            dimension: boxSize / 2 - 40,
+                                            child: Card(
+                                              elevation: 5,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  1000.0,
+                                                ),
+                                              ),
+                                              clipBehavior: Clip.antiAlias,
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    height: boxSize / 2 - 40,
+                                                    width: boxSize / 2 - 40,
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          colorList[
+                                                              randomNumber],
+                                                          colorList[
+                                                                  randomNumber]
+                                                              .withOpacity(0.5),
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Opacity(
+                                                    opacity: 0.2,
+                                                    child: SizedBox(
+                                                      height: boxSize / 2 - 40,
+                                                      width: boxSize / 2 - 40,
+                                                      child: const Image(
+                                                        fit: BoxFit.cover,
+                                                        image: AssetImage(
+                                                          'assets/album.png',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            formatString(item.name),
+                                            textAlign: TextAlign.center,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                // return SongItem(
+                                //   itemImage: '',
+                                //   itemName: item.name!,
+                                //   isRound: true,
+                                //   onTap: () {
+                                //     Navigator.push(
+                                //       context,
+                                //       PageRouteBuilder(
+                                //         opaque: false,
+                                //         pageBuilder: (_, __, ___) => AlbumList(
+                                //           albumListType:
+                                //               AlbumListType.genresMoods,
+                                //           albumName: item.name,
+                                //           id: item.id,
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                // );
+                              },
+                            ),
+                          ),
+
+                      /// featured albums list
+                      if (data!.data!.featuredAlbums != null)
+                        if (data!.data!.featuredAlbums!.isNotEmpty)
+                          if (data!.data!.featuredAlbums![0].albumsClean !=
+                              null)
+                            if (data!.data!.featuredAlbums![0].albumsClean!
+                                .isNotEmpty)
+                              HeaderTitle(
+                                title: 'Featured Albums',
+                                viewAllOnTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) =>
+                                          const AlbumList(
+                                        albumListType:
+                                            AlbumListType.featuredAlbums,
+                                        albumName: 'Featured Albums',
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
-                            ),
-
-                    /// radio station list
-                    if (lstRadioStation.isNotEmpty)
-                      HeaderTitle(
-                        title: 'Radio Station',
-                        viewAllOnTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              opaque: false,
-                              pageBuilder: (_, __, ___) => const AlbumList(
-                                albumListType: AlbumListType.popularAlbum,
-                                albumName: 'Radio Station',
+                      if (data!.data!.featuredAlbums != null)
+                        if (data!.data!.featuredAlbums!.isNotEmpty)
+                          if (data!.data!.featuredAlbums![0].albumsClean !=
+                              null)
+                            if (data!.data!.featuredAlbums![0].albumsClean!
+                                .isNotEmpty)
+                              SizedBox(
+                                height: boxSize / 2 + 10,
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount: data!.data!.featuredAlbums![0]
+                                      .albumsClean!.length,
+                                  itemBuilder: (context, index) {
+                                    final AlbumsClean item = data!.data!
+                                        .featuredAlbums![0].albumsClean![index];
+                                    final String itemImage = item.cover != null
+                                        ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
+                                        : '';
+                                    return SongItem(
+                                      itemImage: [itemImage],
+                                      itemName: item.name!,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            opaque: false,
+                                            pageBuilder: (_, __, ___) =>
+                                                SongsListPage(
+                                              songListType: SongListType.album,
+                                              playlistName: item.name!,
+                                              playlistImage: [itemImage],
+                                              id: item.id,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    if (lstRadioStation.isNotEmpty)
-                      SizedBox(
-                        height: boxSize / 2 + 10,
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          itemCount: lstRadioStation.length,
-                          itemBuilder: (context, index) {
-                            final RadioStationsData item =
-                                lstRadioStation[index];
-                            final String itemImage = item.cover != null
-                                ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                                : '';
-                            return SongItem(
-                              itemImage: [itemImage],
-                              itemName: item.name!,
-                              onTap: () {
-                                openDialogForGetRadioStationStreamData(
-                                    item.id!);
-                              },
-                            );
-                          },
-                        ),
-                      ),
 
-                    /// popular album list
-                    if (data!.data!.trendingAlbums != null)
-                      if (data!.data!.trendingAlbums!.isNotEmpty)
+                      /// radio station list
+                      if (lstRadioStation.isNotEmpty)
                         HeaderTitle(
-                          title: 'Popular Albums',
+                          title: 'Radio Station',
                           viewAllOnTap: () {
                             Navigator.push(
                               context,
@@ -743,24 +710,23 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 opaque: false,
                                 pageBuilder: (_, __, ___) => const AlbumList(
                                   albumListType: AlbumListType.popularAlbum,
-                                  albumName: 'Popular Albums',
+                                  albumName: 'Radio Station',
                                 ),
                               ),
                             );
                           },
                         ),
-                    if (data!.data!.trendingAlbums != null)
-                      if (data!.data!.trendingAlbums!.isNotEmpty)
+                      if (lstRadioStation.isNotEmpty)
                         SizedBox(
                           height: boxSize / 2 + 10,
                           child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.trendingAlbums!.length,
+                            itemCount: lstRadioStation.length,
                             itemBuilder: (context, index) {
-                              final TrendingAlbum item =
-                                  data!.data!.trendingAlbums![index];
+                              final RadioStationsData item =
+                                  lstRadioStation[index];
                               final String itemImage = item.cover != null
                                   ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                   : '';
@@ -768,157 +734,203 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemImage: [itemImage],
                                 itemName: item.name!,
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.album,
-                                        playlistName: item.name!,
-                                        playlistImage: [itemImage],
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
+                                  openDialogForGetRadioStationStreamData(
+                                      item.id!);
                                 },
                               );
                             },
                           ),
                         ),
 
-                    /// popular playlist list
-                    if (data!.data!.popularPlaylists != null)
-                      if (data!.data!.popularPlaylists!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'Popular Playlists',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.popularPlaylist,
-                                  albumName: 'Popular Playlists',
+                      /// popular album list
+                      if (data!.data!.trendingAlbums != null)
+                        if (data!.data!.trendingAlbums!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Popular Albums',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.popularAlbum,
+                                    albumName: 'Popular Albums',
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.popularPlaylists != null)
-                      if (data!.data!.popularPlaylists!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.popularPlaylists!.length,
-                            itemBuilder: (context, index) {
-                              final PopularPlaylist item =
-                                  data!.data!.popularPlaylists![index];
-                              final String itemImage = item.quadImages != null
-                                  ? item.quadImages!.isNotEmpty
-                                      ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
-                                      : ''
-                                  : '';
-                              return SongItem(
-                                itemImage: item.getQuadImages(),
-                                itemName: item.name!,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SongsListPage(
-                                        songListType: SongListType.playlist,
-                                        playlistName: item.name!,
-                                        playlistImage: item.getQuadImages(),
-                                        id: item.id,
-                                      ),
-                                    ),
-                                  );
-                                },
                               );
                             },
                           ),
-                        ),
+                      if (data!.data!.trendingAlbums != null)
+                        if (data!.data!.trendingAlbums!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount: data!.data!.trendingAlbums!.length,
+                              itemBuilder: (context, index) {
+                                final TrendingAlbum item =
+                                    data!.data!.trendingAlbums![index];
+                                final String itemImage = item.cover != null
+                                    ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                    : '';
+                                return SongItem(
+                                  itemImage: [itemImage],
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.album,
+                                          playlistName: item.name!,
+                                          playlistImage: [itemImage],
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
 
-                    /// popular songs list
-                    if (data!.data!.trendingSongsNew != null)
-                      if (data!.data!.trendingSongsNew!.isNotEmpty)
-                        HeaderTitle(
-                          title: 'Popular Songs',
-                          viewAllOnTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                opaque: false,
-                                pageBuilder: (_, __, ___) => const AlbumList(
-                                  albumListType: AlbumListType.popularSong,
-                                  albumName: 'Popular Songs',
+                      /// popular playlist list
+                      if (data!.data!.popularPlaylists != null)
+                        if (data!.data!.popularPlaylists!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Popular Playlists',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType:
+                                        AlbumListType.popularPlaylist,
+                                    albumName: 'Popular Playlists',
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                    if (data!.data!.trendingSongsNew != null)
-                      if (data!.data!.trendingSongsNew!.isNotEmpty)
-                        SizedBox(
-                          height: boxSize / 2 + 10,
-                          child: ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            itemCount: data!.data!.trendingSongsNew!.length,
-                            itemBuilder: (context, index) {
-                              final SongItemModel item =
-                                  data!.data!.trendingSongsNew![index];
-                              // String imageUrl = item.cover != null
-                              //     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                              //     : '';
-                              return SongItem(
-                                itemImage: [item.image!],
-                                itemName: item.title!,
-                                onTap: () {
-                                  // List<SongItemModel> lstSongs = [];
-                                  // lstSongs.add(item);
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => PlayScreen(
-                                        songsList:
-                                            data!.data!.trendingSongsNew!,
-                                        index: index,
-                                        offline: false,
-                                        fromDownloads: false,
-                                        fromMiniplayer: false,
-                                        recommend: true,
-                                      ),
-                                    ),
-                                  );
-                                },
                               );
                             },
                           ),
-                        ),
-                  ],
-                )
-              : Center(
-                  child: emptyScreen(
-                    context,
-                    0,
-                    ':( ',
-                    100,
-                    AppLocalizations.of(context)!.sorry,
-                    60,
-                    AppLocalizations.of(context)!.resultsNotFound,
-                    20,
+                      if (data!.data!.popularPlaylists != null)
+                        if (data!.data!.popularPlaylists!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount: data!.data!.popularPlaylists!.length,
+                              itemBuilder: (context, index) {
+                                final PopularPlaylist item =
+                                    data!.data!.popularPlaylists![index];
+                                final String itemImage = item.quadImages != null
+                                    ? item.quadImages!.isNotEmpty
+                                        ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
+                                        : ''
+                                    : '';
+                                return SongItem(
+                                  itemImage: item.getQuadImages(),
+                                  itemName: item.name!,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) =>
+                                            SongsListPage(
+                                          songListType: SongListType.playlist,
+                                          playlistName: item.name!,
+                                          playlistImage: item.getQuadImages(),
+                                          id: item.id,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                      /// popular songs list
+                      if (data!.data!.trendingSongsNew != null)
+                        if (data!.data!.trendingSongsNew!.isNotEmpty)
+                          HeaderTitle(
+                            title: 'Popular Songs',
+                            viewAllOnTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (_, __, ___) => const AlbumList(
+                                    albumListType: AlbumListType.popularSong,
+                                    albumName: 'Popular Songs',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      if (data!.data!.trendingSongsNew != null)
+                        if (data!.data!.trendingSongsNew!.isNotEmpty)
+                          SizedBox(
+                            height: boxSize / 2 + 10,
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              itemCount: data!.data!.trendingSongsNew!.length,
+                              itemBuilder: (context, index) {
+                                final SongItemModel item =
+                                    data!.data!.trendingSongsNew![index];
+                                // String imageUrl = item.cover != null
+                                //     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
+                                //     : '';
+                                return SongItem(
+                                  itemImage: [item.image!],
+                                  itemName: item.title!,
+                                  onTap: () {
+                                    // List<SongItemModel> lstSongs = [];
+                                    // lstSongs.add(item);
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => PlayScreen(
+                                          songsList:
+                                              data!.data!.trendingSongsNew!,
+                                          index: index,
+                                          offline: false,
+                                          fromDownloads: false,
+                                          fromMiniplayer: false,
+                                          recommend: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                    ],
+                  )
+                : Center(
+                    child: emptyScreen(
+                      context,
+                      0,
+                      ':( ',
+                      100,
+                      AppLocalizations.of(context)!.sorry,
+                      60,
+                      AppLocalizations.of(context)!.resultsNotFound,
+                      20,
+                    ),
                   ),
-                ),
-    );
+          );
   }
 
   void openDialogForGetRadioStationStreamData(int id) async {
@@ -1102,6 +1114,7 @@ class SongItem extends StatelessWidget {
         MediaQuery.of(context).size.height > MediaQuery.of(context).size.width
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
+
     return InkWell(
       onTap: onTap,
       child: SizedBox(
@@ -1123,6 +1136,8 @@ class SongItem extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: itemImage.length == 1
                       ? CachedNetworkImage(
+                          memCacheHeight: 441,
+                          memCacheWidth: 441,
                           fit: BoxFit.cover,
                           errorWidget: (context, _, __) => Image(
                             fit: BoxFit.cover,
@@ -1144,6 +1159,7 @@ class SongItem extends StatelessWidget {
                           ),
                         )
                       : Collage(
+                          cacheSize: 120,
                           showGrid: true,
                           imageList: itemImage,
                           placeholderImage:
