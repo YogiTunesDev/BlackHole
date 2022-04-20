@@ -176,7 +176,6 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    debugInvertOversizedImages = true;
 
     return MaterialApp(
       title: 'Yogitunes',
