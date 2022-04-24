@@ -38,9 +38,11 @@ class _DownloadsState extends State<Downloads>
   final Map<String, List<Map>> _albums = {};
   final Map<String, List<Map>> _artists = {};
   final Map<String, List<Map>> _genres = {};
+  final Map<String, List<Map>> _playlists = {};
   List _sortedAlbumKeysList = [];
   List _sortedArtistKeysList = [];
   List _sortedGenreKeysList = [];
+  List _sortedPlaylistKeyList = [];
   TabController? _tcontroller;
   // int currentIndex = 0;
   String? tempPath = Hive.box('settings').get('tempDirPath')?.toString();
@@ -52,7 +54,7 @@ class _DownloadsState extends State<Downloads>
 
   @override
   void initState() {
-    _tcontroller = TabController(length: 3, vsync: this);
+    _tcontroller = TabController(length: 4, vsync: this);
     // _tcontroller!.addListener(changeTitle);
     if (tempPath == null) {
       getTemporaryDirectory().then((value) {
@@ -112,6 +114,17 @@ class _DownloadsState extends State<Downloads>
           MapEntry(element['genre'].toString(), [element])
         ]);
       }
+      if (_playlists.containsKey(element['mainPlaylistName'])) {
+        final List<Map> tempPlaylists =
+            _playlists[element['mainPlaylistName']]!;
+        tempPlaylists.add(element as Map);
+        _playlists.addEntries(
+            [MapEntry(element['mainPlaylistName'].toString(), tempPlaylists)]);
+      } else if (element.containsKey('mainPlaylistName')) {
+        _playlists.addEntries([
+          MapEntry(element['mainPlaylistName'].toString(), [element as Map])
+        ]);
+      }
     }
 
     sortSongs(sortVal: sortValue, order: orderValue);
@@ -119,7 +132,8 @@ class _DownloadsState extends State<Downloads>
     _sortedAlbumKeysList = _albums.keys.toList();
     _sortedArtistKeysList = _artists.keys.toList();
     _sortedGenreKeysList = _genres.keys.toList();
-
+    _sortedPlaylistKeyList = _playlists.keys.toList();
+    print("_playlists - $_sortedPlaylistKeyList");
     sortAlbums();
 
     added = true;
@@ -297,9 +311,9 @@ class _DownloadsState extends State<Downloads>
                       Tab(
                         text: AppLocalizations.of(context)!.artists,
                       ),
-                      // Tab(
-                      //   text: AppLocalizations.of(context)!.genres,
-                      // ),
+                      Tab(
+                        text: AppLocalizations.of(context)!.playlists,
+                      ),
                     ],
                   ),
                   actions: [
@@ -458,6 +472,12 @@ class _DownloadsState extends State<Downloads>
                             tempPath: tempPath,
                             offline: true,
                             sortedAlbumKeysList: _sortedArtistKeysList,
+                          ),
+                          AlbumsTab(
+                            albums: _playlists,
+                            offline: true,
+                            type: 'album',
+                            sortedAlbumKeysList: _sortedPlaylistKeyList,
                           ),
                           // AlbumsTab(
                           //   albums: _genres,

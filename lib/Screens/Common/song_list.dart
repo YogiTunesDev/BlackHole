@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
@@ -201,7 +202,17 @@ class _SongsListPageState extends State<SongsListPage> {
                       if (!apiloading && songList.isNotEmpty)
                         MultiDownloadButton(
                           data: List<dynamic>.from(
-                            songList.map((x) => x.toMap()),
+                            songList.map((x) {
+                              final map = x.toMap();
+                              if (widget.songListType ==
+                                  SongListType.playlist) {
+                                map['mainPlaylistName'] = mainPlayListName;
+                                map['mainPlaylistImages'] =
+                                    jsonEncode(mainPlayListImage);
+                              }
+
+                              return map;
+                            }),
                           ),
                           playlistName: mainPlayListName ?? '',
                         ),

@@ -18,25 +18,31 @@ class SongItemModel {
   final String? subtitle;
   final String? permaUrl;
   final String? libraryId;
-  SongItemModel({
-    this.id,
-    this.artist,
-    this.album,
-    this.image,
-    this.duration,
-    this.title,
-    this.url,
-    this.year,
-    this.language,
-    this.genre,
-    this.kbs,
-    this.hasLyrics,
-    this.releaseDate,
-    this.albumId,
-    this.subtitle,
-    this.permaUrl,
-    this.libraryId,
-  });
+
+  ///Tags only required to save playlist info locally.
+  final String? mainPlaylistName;
+  final List<String>? mainPlaylistImages;
+
+  SongItemModel(
+      {this.id,
+      this.artist,
+      this.album,
+      this.image,
+      this.duration,
+      this.title,
+      this.url,
+      this.year,
+      this.language,
+      this.genre,
+      this.kbs,
+      this.hasLyrics,
+      this.releaseDate,
+      this.albumId,
+      this.subtitle,
+      this.permaUrl,
+      this.libraryId,
+      this.mainPlaylistName,
+      this.mainPlaylistImages});
 
   SongItemModel copyWith({
     String? id,
@@ -79,7 +85,7 @@ class SongItemModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    final map = {
       'id': id,
       'artist': artist,
       'album': album,
@@ -97,8 +103,12 @@ class SongItemModel {
       'albumId': albumId,
       'subtitle': subtitle,
       'permaUrl': permaUrl,
-      'libraryId':libraryId,
+      'libraryId': libraryId,
     };
+    if (mainPlaylistName != null) map['mainPlaylistName'] = mainPlaylistName;
+    if (mainPlaylistImages != null)
+      map['mainPlaylistImages'] = jsonEncode(mainPlaylistImages);
+    return map;
   }
 
   factory SongItemModel.fromMap(Map<String, dynamic> map) {
@@ -127,6 +137,13 @@ class SongItemModel {
       subtitle: map['subtitle'] != null ? map['subtitle'] as String : null,
       permaUrl: map['permaUrl'] != null ? map['permaUrl'] as String : null,
       libraryId: map['libraryId'] != null ? map['libraryId'] as String : null,
+      mainPlaylistName: map['mainPlaylistName'] != null
+          ? map['mainPlaylistName'] as String
+          : null,
+      mainPlaylistImages: map['mainPlaylistImages'] != null
+          ? List<String>.from(
+              jsonDecode(map['mainPlaylistImages'] as String) as List<dynamic>)
+          : null,
     );
   }
 

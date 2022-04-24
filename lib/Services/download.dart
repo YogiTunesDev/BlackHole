@@ -430,6 +430,10 @@ class Download with ChangeNotifier {
           'from_yt': data['language'].toString() == 'YouTube',
           'dateAdded': DateTime.now().toString(),
         };
+        if (data['mainPlaylistName'] != null) {
+          songData['mainPlaylistName'] = data['mainPlaylistName'];
+          data['mainPlaylistImages'] = songData['mainPlaylistImages'];
+        }
         Hive.box('downloads').put(songData['id'], songData);
         getArtistImage(
           name: data['artist'].toString().split(', ').first,

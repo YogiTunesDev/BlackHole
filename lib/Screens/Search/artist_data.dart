@@ -364,7 +364,8 @@ class _ArtistDataState extends State<ArtistData> {
                                                   songListType:
                                                       SongListType.playlist,
                                                   playlistName: item.name!,
-                                                  playlistImage: item.getQuadImages(),
+                                                  playlistImage:
+                                                      item.getQuadImages(),
                                                   id: item.id,
                                                 ),
                                               ),
