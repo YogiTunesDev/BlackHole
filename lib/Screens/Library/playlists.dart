@@ -13,7 +13,6 @@ import 'package:blackhole/Helpers/search_add_playlist.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
-import 'package:blackhole/Screens/Library/liked.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -195,7 +194,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         width: 50,
                                         child: Collage(
                                           showGrid: true,
-                                          imageList: itemData.getQuadImages(),
+                                          cacheSize: 50,
+                                          imageList: itemData.getQuadImages(
+                                              isThumbnail: true),
                                           placeholderImage: "assets/cover.jpg",
                                         )),
                                   ),

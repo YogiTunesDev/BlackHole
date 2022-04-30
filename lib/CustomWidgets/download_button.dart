@@ -1,11 +1,13 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Services/download.dart';
+import 'package:blackhole/domain/providers/download_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
-class DownloadButton extends StatefulWidget {
+class DownloadButton extends ConsumerStatefulWidget {
   final Map data;
   final String? icon;
   final double? size;
@@ -20,35 +22,52 @@ class DownloadButton extends StatefulWidget {
   _DownloadButtonState createState() => _DownloadButtonState();
 }
 
-class _DownloadButtonState extends State<DownloadButton> {
+class _DownloadButtonState extends ConsumerState<DownloadButton> {
   Download down = Download();
   final Box downloadsBox = Hive.box('downloads');
   final ValueNotifier<bool> showStopButton = ValueNotifier<bool>(false);
 
   @override
   void initState() {
-    super.initState();
-    down.addListener(() {
-      setState(() {});
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      ref
+          .read(downloadStatusProvier.call(widget.data.toString()).notifier)
+          .checkIfAlreadyDownloaded([widget.data]);
+      // Future.delayed(const Duration(milliseconds: 200)).then((value) {
+      //   ref
+      //       .read(downloadStatusProvier.call(widget.data.toString()).notifier)
+      //       .addListener((state) {
+      //     if (state.state == DownloadStatus.Completed) {
+      //       ShowSnackBar().showSnackBar(
+      //         context,
+      //         'Song ${AppLocalizations.of(context)!.downed}',
+      //       );
+      //     }
+      //   });
+      // });
     });
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final downloadState =
+        ref.watch(downloadStatusProvier.call(widget.data.toString()));
+    final provider =
+        ref.read(downloadStatusProvier.call(widget.data.toString()).notifier);
     return SizedBox.square(
       dimension: 50,
       child: Center(
-        child: (downloadsBox.containsKey(widget.data['id']))
+        child: downloadState.state == DownloadStatus.Completed
             ? IconButton(
                 icon: const Icon(Icons.download_done_rounded),
                 tooltip: 'Download Done',
                 color: Theme.of(context).colorScheme.secondary,
                 iconSize: widget.size ?? 24.0,
-                onPressed: () {
-                  down.prepareDownload(context, widget.data);
-                },
+                onPressed: () {},
               )
-            : down.progress == 0
+            : downloadState.state == DownloadStatus.NotStarted
                 ? IconButton(
                     icon: Icon(
                       widget.icon == 'download'
@@ -58,8 +77,12 @@ class _DownloadButtonState extends State<DownloadButton> {
                     iconSize: widget.size ?? 24.0,
                     color: Theme.of(context).iconTheme.color,
                     tooltip: 'Download',
-                    onPressed: () {
-                      down.prepareDownload(context, widget.data);
+                    onPressed: () async {
+                      await provider.singleDownload(widget.data);
+                      ShowSnackBar().showSnackBar(
+                        context,
+                        'Song ${AppLocalizations.of(context)!.downed}',
+                      );
                     },
                   )
                 : GestureDetector(
@@ -67,7 +90,9 @@ class _DownloadButtonState extends State<DownloadButton> {
                       children: [
                         Center(
                           child: CircularProgressIndicator(
-                            value: down.progress == 1 ? null : down.progress,
+                            value: downloadState.progress == 1
+                                ? null
+                                : downloadState.progress,
                           ),
                         ),
                         Center(
@@ -85,7 +110,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                                 )!
                                     .stopDown,
                                 onPressed: () {
-                                  down.download = false;
+                                  // down.download = false;
                                 },
                               ),
                             ),
@@ -103,9 +128,7 @@ class _DownloadButtonState extends State<DownloadButton> {
                                       visible: !showValue,
                                       child: Center(
                                         child: Text(
-                                          down.progress == null
-                                              ? '0%'
-                                              : '${(100 * down.progress!).round()}%',
+                                          '${(100 * downloadState.progress).round()}%',
                                         ),
                                       ),
                                     ),
@@ -133,7 +156,7 @@ class _DownloadButtonState extends State<DownloadButton> {
   }
 }
 
-class MultiDownloadButton extends StatefulWidget {
+class MultiDownloadButton extends ConsumerStatefulWidget {
   final List data;
   final String playlistName;
   const MultiDownloadButton({
@@ -146,101 +169,92 @@ class MultiDownloadButton extends StatefulWidget {
   _MultiDownloadButtonState createState() => _MultiDownloadButtonState();
 }
 
-class _MultiDownloadButtonState extends State<MultiDownloadButton> {
-  Download down = Download();
-  int done = 0;
-
+class _MultiDownloadButtonState extends ConsumerState<MultiDownloadButton> {
   @override
   void initState() {
-    super.initState();
-    down.addListener(() {
-      setState(() {});
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      ref
+          .read(downloadStatusProvier.call(widget.playlistName).notifier)
+          .checkIfAlreadyDownloaded(widget.data);
     });
-  }
-
-  Future<void> _waitUntilDone(String id) async {
-    while (down.lastDownloadId != id) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    return;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final downloadState =
+        ref.watch(downloadStatusProvier.call(widget.playlistName));
+    final provider =
+        ref.read(downloadStatusProvier.call(widget.playlistName).notifier);
     return SizedBox(
-      width: 50,
-      height: 50,
-      child: Center(
-        child: (down.lastDownloadId == widget.data.last['id'])
-            ? IconButton(
-                icon: const Icon(
-                  Icons.download_done_rounded,
-                ),
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: 25.0,
-                tooltip: AppLocalizations.of(context)!.downDone,
-                onPressed: () {},
-              )
-            : down.progress == 0
-                ? Center(
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.download_rounded,
-                      ),
-                      iconSize: 25.0,
-                      // color: Theme.of(context).iconTheme.color,
-                      tooltip: AppLocalizations.of(context)!.down,
-                      onPressed: () async {
-                        for (final items in widget.data) {
-                          down.prepareDownload(
-                            context,
-                            items as Map,
-                            createFolder: true,
-                            folderName: widget.playlistName,
-                          );
-                          await _waitUntilDone(items['id'].toString());
-                          setState(() {
-                            done++;
-                          });
-                        }
-                      },
-                    ),
-                  )
-                : Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          down.progress == null
-                              ? '0%'
-                              : '${(100 * down.progress!).round()}%',
-                        ),
-                      ),
-                      Center(
-                        child: SizedBox(
-                          height: 35,
-                          width: 35,
-                          child: CircularProgressIndicator(
-                            value: down.progress == 1 ? null : down.progress,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(
-                            value: done / widget.data.length,
-                          ),
-                        ),
-                      ),
-                    ],
+        width: 50,
+        height: 50,
+        child: Center(
+          child: downloadState.state == DownloadStatus.Completed
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.download_done_rounded,
                   ),
-      ),
-    );
+                  color: Theme.of(context).colorScheme.secondary,
+                  iconSize: 25.0,
+                  tooltip: AppLocalizations.of(context)!.downDone,
+                  onPressed: () {},
+                )
+              : downloadState.state == DownloadStatus.NotStarted
+                  ? Center(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.download_rounded,
+                        ),
+                        iconSize: 25.0,
+                        // color: Theme.of(context).iconTheme.color,
+                        tooltip: AppLocalizations.of(context)!.down,
+                        onPressed: () async {
+                          await provider.downloadFiles(widget.data,
+                              createFolder: true,
+                              folderName: widget.playlistName);
+                          ShowSnackBar().showSnackBar(
+                            context,
+                            '"${widget.playlistName}" ${AppLocalizations.of(context)!.downed}',
+                          );
+                        },
+                      ),
+                    )
+                  : Stack(
+                      children: [
+                        Center(
+                          child: Text(
+                            '${(100 * downloadState.progress).round()}%',
+                          ),
+                        ),
+                        Center(
+                          child: SizedBox(
+                            height: 35,
+                            width: 35,
+                            child: CircularProgressIndicator(
+                              value: downloadState.progress == 1
+                                  ? null
+                                  : downloadState.progress,
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: CircularProgressIndicator(
+                              value: (downloadState.downloadedItems ?? 0) /
+                                  widget.data.length,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+        ));
   }
 }
 
-class AlbumDownloadButton extends StatefulWidget {
+class AlbumDownloadButton extends ConsumerStatefulWidget {
   final String albumId;
   final String albumName;
   const AlbumDownloadButton({
@@ -253,106 +267,116 @@ class AlbumDownloadButton extends StatefulWidget {
   _AlbumDownloadButtonState createState() => _AlbumDownloadButtonState();
 }
 
-class _AlbumDownloadButtonState extends State<AlbumDownloadButton> {
-  Download down = Download();
-  int done = 0;
-  List data = [];
-  bool finished = false;
-
+class _AlbumDownloadButtonState extends ConsumerState<AlbumDownloadButton> {
+  List<dynamic>? data;
   @override
   void initState() {
     super.initState();
-    down.addListener(() {
-      setState(() {});
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      checkIfAlreadyDownloaded();
     });
   }
 
-  Future<void> _waitUntilDone(String id) async {
-    while (down.lastDownloadId != id) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
-    return;
+  Future<void> checkIfAlreadyDownloaded() async {
+    final data = await YogitunesAPI().fetchAlbumSongs(widget.albumId);
+    ref
+        .read(downloadStatusProvier.call(widget.albumName).notifier)
+        .checkIfAlreadyDownloaded(data);
+    // ref
+    //     .read(downloadStatusProvier.call(widget.albumId).notifier)
+    //     .addListener((state) {
+    //   if (state.state == DownloadStatus.Completed) {
+    // ShowSnackBar().showSnackBar(
+    //   context,
+    //   '"${widget.albumName}" ${AppLocalizations.of(context)!.downed}',
+    // );
+    //   }
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 50,
-      height: 50,
-      child: Center(
-        child: finished
-            ? IconButton(
-                icon: const Icon(
-                  Icons.download_done_rounded,
-                ),
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: 25.0,
-                tooltip: AppLocalizations.of(context)!.downDone,
-                onPressed: () {},
-              )
-            : down.progress == 0
-                ? Center(
-                    child: IconButton(
+    final downloadState = ref.watch(downloadStatusProvier.call(widget.albumId));
+    final provider =
+        ref.read(downloadStatusProvier.call(widget.albumId).notifier);
+    return data == null
+        ? const SizedBox.shrink()
+        : SizedBox(
+            width: 50,
+            height: 50,
+            child: Center(
+              child: downloadState.state == DownloadStatus.Completed
+                  ? IconButton(
                       icon: const Icon(
-                        Icons.download_rounded,
+                        Icons.download_done_rounded,
                       ),
+                      color: Theme.of(context).colorScheme.secondary,
                       iconSize: 25.0,
-                      color: Theme.of(context).iconTheme.color,
-                      tooltip: AppLocalizations.of(context)!.down,
-                      onPressed: () async {
-                        ShowSnackBar().showSnackBar(
-                          context,
-                          '${AppLocalizations.of(context)!.downingAlbum} "${widget.albumName}"',
-                        );
-
-                        data = await YogitunesAPI()
-                            .fetchAlbumSongs(widget.albumId);
-                        for (final items in data) {
-                          down.prepareDownload(
-                            context,
-                            items as Map,
-                            createFolder: true,
-                            folderName: widget.albumName,
-                          );
-                          await _waitUntilDone(items['id'].toString());
-                          setState(() {
-                            done++;
-                          });
-                        }
-                        finished = true;
-                      },
-                    ),
-                  )
-                : Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          down.progress == null
-                              ? '0%'
-                              : '${(100 * down.progress!).round()}%',
-                        ),
-                      ),
-                      Center(
-                        child: SizedBox(
-                          height: 35,
-                          width: 35,
-                          child: CircularProgressIndicator(
-                            value: down.progress == 1 ? null : down.progress,
+                      tooltip: AppLocalizations.of(context)!.downDone,
+                      onPressed: () {},
+                    )
+                  : downloadState.state == DownloadStatus.NotStarted
+                      ? Center(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.download_rounded,
+                            ),
+                            iconSize: 25.0,
+                            color: Theme.of(context).iconTheme.color,
+                            tooltip: AppLocalizations.of(context)!.down,
+                            onPressed: () async {
+                              ShowSnackBar().showSnackBar(
+                                context,
+                                '${AppLocalizations.of(context)!.downingAlbum} "${widget.albumName}"',
+                              );
+                              await provider.downloadFiles(
+                                data!,
+                                createFolder: true,
+                                folderName: widget.albumName,
+                              );
+                              ShowSnackBar().showSnackBar(
+                                context,
+                                '"${widget.albumName}" ${AppLocalizations.of(context)!.downed}',
+                              );
+                            },
                           ),
+                        )
+                      : Stack(
+                          children: [
+                            Center(
+                              child: Text(
+                                '${(100 * downloadState.progress).round()}%',
+                              ),
+                            ),
+                            Center(
+                              child: SizedBox(
+                                height: 35,
+                                width: 35,
+                                child: CircularProgressIndicator(
+                                  value: downloadState.progress == 1
+                                      ? null
+                                      : downloadState.progress,
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  value: data == null
+                                      ? 0
+                                      : data!.isEmpty
+                                          ? 0
+                                          : (downloadState.downloadedItems ??
+                                                  0) /
+                                              data!.length,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Center(
-                        child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(
-                            value: data.isEmpty ? 0 : done / data.length,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-      ),
-    );
+            ),
+          );
   }
 }

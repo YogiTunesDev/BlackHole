@@ -7,6 +7,7 @@ import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
 import 'package:blackhole/CustomWidgets/download_button.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
+import 'package:blackhole/CustomWidgets/gradient_back_button.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/like_button.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
@@ -14,6 +15,7 @@ import 'package:blackhole/CustomWidgets/playlist_popupmenu.dart';
 import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
 import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
+import 'package:blackhole/domain/providers/download_provider.dart';
 import 'package:blackhole/model/single_album_response.dart';
 import 'package:blackhole/model/single_playlist_response.dart';
 import 'package:blackhole/model/song_model.dart';
@@ -21,6 +23,7 @@ import 'package:blackhole/util/const.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:html_unescape/html_unescape_small.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -196,6 +199,7 @@ class _SongsListPageState extends State<SongsListPage> {
                     elevation: 0,
                     stretch: true,
                     // floating: true,
+                    leading: const GradientBackButton(),
                     pinned: true,
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     actions: [
@@ -500,96 +504,107 @@ class _SongsListPageState extends State<SongsListPage> {
                                 ),
                               ),
                             ...songList.map((entry) {
-                              return ListTile(
-                                contentPadding:
-                                    const EdgeInsets.only(left: 15.0),
-                                title: Text(
-                                  '${entry.title}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
+                              return Consumer(builder: (context, ref, child) {
+                                if (widget.songListType ==
+                                    SongListType.playlist) {
+                                  ref.watch(downloadStatusProvier
+                                      .call(widget.playlistName));
+                                } else {
+                                  ref.watch(downloadStatusProvier
+                                      .call(widget.id.toString()));
+                                }
+                                return ListTile(
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 15.0),
+                                  title: Text(
+                                    '${entry.title}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                onLongPress: () {
-                                  copyToClipboard(
-                                    context: context,
-                                    text: '${entry.title}',
-                                  );
-                                },
-                                subtitle: Text(
-                                  entry.artist ?? 'Unkown',
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                leading: Card(
-                                  elevation: 8,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7.0),
+                                  onLongPress: () {
+                                    copyToClipboard(
+                                      context: context,
+                                      text: '${entry.title}',
+                                    );
+                                  },
+                                  subtitle: Text(
+                                    entry.artist ?? 'Unkown',
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: CachedNetworkImage(
-                                    memCacheHeight: 200,
-                                    memCacheWidth: 200,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, _, __) =>
-                                        const Image(
+                                  leading: Card(
+                                    elevation: 8,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: CachedNetworkImage(
+                                      memCacheHeight: 200,
+                                      memCacheWidth: 200,
                                       fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        'assets/cover.jpg',
-                                      ),
-                                    ),
-                                    imageUrl: '${entry.image}',
-                                    placeholder: (context, url) => const Image(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        'assets/cover.jpg',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    DownloadButton(
-                                      data: entry.toMap(),
-                                      icon: 'download',
-                                    ),
-                                    // LikeButton(
-                                    //   mediaItem: null,
-                                    //   data: entry,
-                                    // ),
-                                    SongTileTrailingMenu(
-                                      data: entry,
-                                      isMyPlaylist:
-                                          widget.isMyPlaylist ?? false,
-                                      selectedPlaylist: selectedPlaylist,
-                                      playlistName: mainPlayListName ?? '',
-                                      playlistId:
-                                          int.parse(widget.id.toString()),
-                                      callback: _fetchSongs,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  List<SongItemModel> songItemModel = [];
-                                  songItemModel.add(entry);
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (_, __, ___) => PlayScreen(
-                                        songsList: songList,
-                                        index: songList.indexWhere(
-                                          (element) => element == entry,
+                                      errorWidget: (context, _, __) =>
+                                          const Image(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'assets/cover.jpg',
                                         ),
-                                        offline: false,
-                                        fromDownloads: false,
-                                        fromMiniplayer: false,
-                                        recommend: true,
+                                      ),
+                                      imageUrl: '${entry.image}',
+                                      placeholder: (context, url) =>
+                                          const Image(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          'assets/cover.jpg',
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                              );
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      DownloadButton(
+                                        data: entry.toMap(),
+                                        icon: 'download',
+                                      ),
+                                      // LikeButton(
+                                      //   mediaItem: null,
+                                      //   data: entry,
+                                      // ),
+                                      SongTileTrailingMenu(
+                                        data: entry,
+                                        isMyPlaylist:
+                                            widget.isMyPlaylist ?? false,
+                                        selectedPlaylist: selectedPlaylist,
+                                        playlistName: mainPlayListName ?? '',
+                                        playlistId:
+                                            int.parse(widget.id.toString()),
+                                        callback: _fetchSongs,
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    List<SongItemModel> songItemModel = [];
+                                    songItemModel.add(entry);
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder: (_, __, ___) => PlayScreen(
+                                          songsList: songList,
+                                          index: songList.indexWhere(
+                                            (element) => element == entry,
+                                          ),
+                                          offline: false,
+                                          fromDownloads: false,
+                                          fromMiniplayer: false,
+                                          recommend: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              });
                             }).toList()
                           ],
                         )

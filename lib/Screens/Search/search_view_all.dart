@@ -1,5 +1,6 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
+import 'package:blackhole/CustomWidgets/gradient_back_button.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
@@ -112,20 +113,9 @@ class _SearchViewAllState extends State<SearchViewAll> {
                     stretch: true,
                     // floating: true,
                     pinned: true,
+                    leading: const GradientBackButton(),
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
-                    actions: [
-                      // MultiDownloadButton(
-                      //   data: songList,
-                      //   playlistName:
-                      //       widget.listItem['title']?.toString() ??
-                      //           'Songs',
-                      // ),
-                      // PlaylistPopupMenu(
-                      //   data: songList,
-                      //   title: widget.listItem['title']?.toString() ??
-                      //       'Songs',
-                      // ),
-                    ],
+
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
                         widget.title,

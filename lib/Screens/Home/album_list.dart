@@ -2,6 +2,7 @@ import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
 import 'package:blackhole/CustomWidgets/download_button.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
+import 'package:blackhole/CustomWidgets/gradient_back_button.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/song_tile_trailing_menu.dart';
@@ -304,6 +305,7 @@ class _AlbumListState extends State<AlbumList> {
                     stretch: true,
                     // floating: true,
                     pinned: true,
+                    leading: const GradientBackButton(),
                     expandedHeight: MediaQuery.of(context).size.height * 0.4,
                     actions: [
                       if (widget.albumListType == AlbumListType.yogaPlaylist ||
