@@ -504,107 +504,96 @@ class _SongsListPageState extends State<SongsListPage> {
                                 ),
                               ),
                             ...songList.map((entry) {
-                              return Consumer(builder: (context, ref, child) {
-                                if (widget.songListType ==
-                                    SongListType.playlist) {
-                                  ref.watch(downloadStatusProvier
-                                      .call(widget.playlistName));
-                                } else {
-                                  ref.watch(downloadStatusProvier
-                                      .call(widget.id.toString()));
-                                }
-                                return ListTile(
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 15.0),
-                                  title: Text(
-                                    '${entry.title}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                              return ListTile(
+                                contentPadding:
+                                    const EdgeInsets.only(left: 15.0),
+                                title: Text(
+                                  '${entry.title}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  onLongPress: () {
-                                    copyToClipboard(
-                                      context: context,
-                                      text: '${entry.title}',
-                                    );
-                                  },
-                                  subtitle: Text(
-                                    entry.artist ?? 'Unkown',
-                                    overflow: TextOverflow.ellipsis,
+                                ),
+                                onLongPress: () {
+                                  copyToClipboard(
+                                    context: context,
+                                    text: '${entry.title}',
+                                  );
+                                },
+                                subtitle: Text(
+                                  entry.artist ?? 'Unkown',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                leading: Card(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(7.0),
                                   ),
-                                  leading: Card(
-                                    elevation: 8,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: CachedNetworkImage(
-                                      memCacheHeight: 200,
-                                      memCacheWidth: 200,
+                                  clipBehavior: Clip.antiAlias,
+                                  child: CachedNetworkImage(
+                                    memCacheHeight: 200,
+                                    memCacheWidth: 200,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, _, __) =>
+                                        const Image(
                                       fit: BoxFit.cover,
-                                      errorWidget: (context, _, __) =>
-                                          const Image(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'assets/cover.jpg',
-                                        ),
+                                      image: AssetImage(
+                                        'assets/cover.jpg',
                                       ),
-                                      imageUrl: '${entry.image}',
-                                      placeholder: (context, url) =>
-                                          const Image(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                          'assets/cover.jpg',
-                                        ),
+                                    ),
+                                    imageUrl: '${entry.image}',
+                                    placeholder: (context, url) => const Image(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        'assets/cover.jpg',
                                       ),
                                     ),
                                   ),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      DownloadButton(
-                                        data: entry.toMap(),
-                                        icon: 'download',
-                                      ),
-                                      // LikeButton(
-                                      //   mediaItem: null,
-                                      //   data: entry,
-                                      // ),
-                                      SongTileTrailingMenu(
-                                        data: entry,
-                                        isMyPlaylist:
-                                            widget.isMyPlaylist ?? false,
-                                        selectedPlaylist: selectedPlaylist,
-                                        playlistName: mainPlayListName ?? '',
-                                        playlistId:
-                                            int.parse(widget.id.toString()),
-                                        callback: _fetchSongs,
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    List<SongItemModel> songItemModel = [];
-                                    songItemModel.add(entry);
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        opaque: false,
-                                        pageBuilder: (_, __, ___) => PlayScreen(
-                                          songsList: songList,
-                                          index: songList.indexWhere(
-                                            (element) => element == entry,
-                                          ),
-                                          offline: false,
-                                          fromDownloads: false,
-                                          fromMiniplayer: false,
-                                          recommend: true,
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    DownloadButton(
+                                      data: entry.toMap(),
+                                      icon: 'download',
+                                    ),
+                                    // LikeButton(
+                                    //   mediaItem: null,
+                                    //   data: entry,
+                                    // ),
+                                    SongTileTrailingMenu(
+                                      data: entry,
+                                      isMyPlaylist:
+                                          widget.isMyPlaylist ?? false,
+                                      selectedPlaylist: selectedPlaylist,
+                                      playlistName: mainPlayListName ?? '',
+                                      playlistId:
+                                          int.parse(widget.id.toString()),
+                                      callback: _fetchSongs,
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  List<SongItemModel> songItemModel = [];
+                                  songItemModel.add(entry);
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false,
+                                      pageBuilder: (_, __, ___) => PlayScreen(
+                                        songsList: songList,
+                                        index: songList.indexWhere(
+                                          (element) => element == entry,
                                         ),
+                                        offline: false,
+                                        fromDownloads: false,
+                                        fromMiniplayer: false,
+                                        recommend: true,
                                       ),
-                                    );
-                                  },
-                                );
-                              });
+                                    ),
+                                  );
+                                },
+                              );
                             }).toList()
                           ],
                         )

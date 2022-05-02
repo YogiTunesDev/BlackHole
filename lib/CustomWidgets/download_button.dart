@@ -31,20 +31,9 @@ class _DownloadButtonState extends ConsumerState<DownloadButton> {
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       ref
-          .read(downloadStatusProvier.call(widget.data.toString()).notifier)
+          .read(
+              downloadStatusProvier.call(widget.data['id'].toString()).notifier)
           .checkIfAlreadyDownloaded([widget.data]);
-      // Future.delayed(const Duration(milliseconds: 200)).then((value) {
-      //   ref
-      //       .read(downloadStatusProvier.call(widget.data.toString()).notifier)
-      //       .addListener((state) {
-      //     if (state.state == DownloadStatus.Completed) {
-      //       ShowSnackBar().showSnackBar(
-      //         context,
-      //         'Song ${AppLocalizations.of(context)!.downed}',
-      //       );
-      //     }
-      //   });
-      // });
     });
 
     super.initState();
@@ -53,9 +42,9 @@ class _DownloadButtonState extends ConsumerState<DownloadButton> {
   @override
   Widget build(BuildContext context) {
     final downloadState =
-        ref.watch(downloadStatusProvier.call(widget.data.toString()));
-    final provider =
-        ref.read(downloadStatusProvier.call(widget.data.toString()).notifier);
+        ref.watch(downloadStatusProvier.call(widget.data['id'].toString()));
+    final provider = ref.read(
+        downloadStatusProvier.call(widget.data['id'].toString()).notifier);
     return SizedBox.square(
       dimension: 50,
       child: Center(
