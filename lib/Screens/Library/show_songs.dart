@@ -32,7 +32,7 @@ class _SongsListState extends State<SongsList> {
   bool processStatus = false;
   int sortValue = Hive.box('settings').get('sortValue', defaultValue: 1) as int;
   int orderValue =
-      Hive.box('settings').get('orderValue', defaultValue: 1) as int;
+      Hive.box('settings').get('orderValue', defaultValue: 0) as int;
 
   Future<void> getSongs() async {
     added = true;

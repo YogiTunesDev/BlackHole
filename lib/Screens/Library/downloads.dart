@@ -48,7 +48,7 @@ class _DownloadsState extends State<Downloads>
   String? tempPath = Hive.box('settings').get('tempDirPath')?.toString();
   int sortValue = Hive.box('settings').get('sortValue', defaultValue: 1) as int;
   int orderValue =
-      Hive.box('settings').get('orderValue', defaultValue: 1) as int;
+      Hive.box('settings').get('orderValue', defaultValue: 0) as int;
   int albumSortValue =
       Hive.box('settings').get('albumSortValue', defaultValue: 2) as int;
 
