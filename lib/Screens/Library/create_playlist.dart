@@ -1,10 +1,5 @@
 import 'package:blackhole/APIs/api.dart';
-import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
-import 'package:blackhole/model/single_playlist_response.dart'
-    as singlePlaylistResponse;
-import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/tracks_by_bpm_response.dart';
-import 'package:blackhole/model/trending_song_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -160,10 +155,14 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                 Navigator.pop(context);
               } else {
                 final snackBar = SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    content: Text(res['data']['data'].toString(),
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary)));
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(
+                    res['data']['data'].toString(),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
@@ -190,7 +189,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                   children: [
                     Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 30),
+                        vertical: 10,
+                        horizontal: 30,
+                      ),
                       padding: const EdgeInsets.all(4),
                       // decoration: const BoxDecoration(
                       //   color: Colors.white,
@@ -204,7 +205,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 30),
+                        vertical: 10,
+                        horizontal: 30,
+                      ),
                       padding: const EdgeInsets.all(4),
                       // decoration: const BoxDecoration(
                       //   color: Colors.white,
@@ -234,8 +237,6 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: [
                                       ClipOval(
                                         child: Container(
@@ -280,8 +281,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (BuildContext context, int index) {
                             final double w = (width / mainDuration) *
-                                int.parse(legendGraphTemp[index]['duration']
-                                    .toString());
+                                int.parse(
+                                  legendGraphTemp[index]['duration'].toString(),
+                                );
                             return Container(
                               height: 50,
                               width: w,
@@ -297,7 +299,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                           fontSize: 8,
                                         ),
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                               ),
                             );
                           },
@@ -432,26 +434,24 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                         String? imgUrl;
                         String? albumName;
                         String? bpmType;
-                        if (item != null) {
-                          if (item.album != null) {
-                            if (item.album!.cover != null) {
-                              if (item.album!.cover!.image != null) {
-                                imgUrl =
-                                    '${item.album!.cover!.imgUrl}/${item.album!.cover!.image}';
-                              }
+                        if (item.album != null) {
+                          if (item.album!.cover != null) {
+                            if (item.album!.cover!.image != null) {
+                              imgUrl =
+                                  '${item.album!.cover!.imgUrl}/${item.album!.cover!.image}';
                             }
                           }
-                          if (item.album != null) {
-                            if (item.album!.profile != null) {
-                              if (item.album!.profile!.name != null) {
-                                albumName = item.album!.profile!.name;
-                              }
+                        }
+                        if (item.album != null) {
+                          if (item.album!.profile != null) {
+                            if (item.album!.profile!.name != null) {
+                              albumName = item.album!.profile!.name;
                             }
                           }
-                          if (item.bpm != null) {
-                            if (item.bpm!.bpm != null) {
-                              bpmType = item.bpm!.bpm;
-                            }
+                        }
+                        if (item.bpm != null) {
+                          if (item.bpm!.bpm != null) {
+                            bpmType = item.bpm!.bpm;
                           }
                         }
                         return ListTile(
@@ -504,8 +504,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                       mainDuration -= mDur ?? 0;
                                       selectedPlaylist
                                           .remove(item.id.toString());
-                                      legendGraph.removeWhere((element) =>
-                                          element['id'] == item.id);
+                                      legendGraph.removeWhere(
+                                        (element) => element['id'] == item.id,
+                                      );
 
                                       legendGraphTemp = [];
 
@@ -524,11 +525,12 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                               print(3);
                                               legendGraphTemp.add({
                                                 'duration': int.parse(
-                                                        legendGraph[i]
-                                                                ['duration']
-                                                            .toString()) +
+                                                      legendGraph[i]['duration']
+                                                          .toString(),
+                                                    ) +
                                                     int.parse(
-                                                        duration.toString()),
+                                                      duration.toString(),
+                                                    ),
                                                 'color': legendGraph[i]
                                                     ['color'],
                                               });
@@ -580,11 +582,12 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                               print(3);
                                               legendGraphTemp.add({
                                                 'duration': int.parse(
-                                                        legendGraph[i]
-                                                                ['duration']
-                                                            .toString()) +
+                                                      legendGraph[i]['duration']
+                                                          .toString(),
+                                                    ) +
                                                     int.parse(
-                                                        duration.toString()),
+                                                      duration.toString(),
+                                                    ),
                                                 'color': legendGraph[i]
                                                     ['color'],
                                               });
@@ -662,9 +665,13 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 }
 
 class Filters extends StatefulWidget {
-  Filters(
-      {Key? key, this.vocal, this.tempo, this.style, this.myLibrary = false})
-      : super(key: key);
+  const Filters({
+    Key? key,
+    this.vocal,
+    this.tempo,
+    this.style,
+    this.myLibrary = false,
+  }) : super(key: key);
 
   final String? vocal;
   final String? tempo;
@@ -798,16 +805,17 @@ class _FiltersState extends State<Filters> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                          color: selectedCategory == 0
-                              ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.6),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(100),
-                            bottomLeft: Radius.circular(100),
-                          )),
+                        color: selectedCategory == 0
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.6),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(100),
+                          bottomLeft: Radius.circular(100),
+                        ),
+                      ),
                       child: Center(
                         child: Text(
                           'All of YogiTunes',
@@ -835,16 +843,17 @@ class _FiltersState extends State<Filters> {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                          color: selectedCategory == 1
-                              ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.6),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(100),
-                            bottomRight: Radius.circular(100),
-                          )),
+                        color: selectedCategory == 1
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.6),
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(100),
+                          bottomRight: Radius.circular(100),
+                        ),
+                      ),
                       child: Center(
                         child: Text(
                           'My Library',
@@ -897,15 +906,16 @@ class _FiltersState extends State<Filters> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: selectedVocal == vocals[index]['val'].toString()
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).brightness == Brightness.light
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.6)),
+                      borderRadius: BorderRadius.circular(100),
+                      color: selectedVocal == vocals[index]['val'].toString()
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).brightness == Brightness.light
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.6),
+                    ),
                     child: Center(
                       child: Text(
                         vocals[index]['val'].toString(),
@@ -958,15 +968,16 @@ class _FiltersState extends State<Filters> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: selectedTempo == tempo[index]['val'].toString()
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).brightness == Brightness.light
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.6)),
+                      borderRadius: BorderRadius.circular(100),
+                      color: selectedTempo == tempo[index]['val'].toString()
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).brightness == Brightness.light
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.6),
+                    ),
                     child: Center(
                       child: Text(
                         tempo[index]['val'].toString(),
@@ -1019,15 +1030,16 @@ class _FiltersState extends State<Filters> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: selectedStyle == style[index]['val'].toString()
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).brightness == Brightness.light
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.6)),
+                      borderRadius: BorderRadius.circular(100),
+                      color: selectedStyle == style[index]['val'].toString()
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).brightness == Brightness.light
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.6),
+                    ),
                     child: Center(
                       child: Text(
                         style[index]['val'].toString(),

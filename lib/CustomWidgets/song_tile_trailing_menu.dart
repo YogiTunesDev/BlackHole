@@ -5,15 +5,12 @@ import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/add_mediitem_to_queue.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
-import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Search/search.dart';
-import 'package:blackhole/Services/youtube_services.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/util/const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -135,9 +132,9 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
                 color: Theme.of(context).iconTheme.color,
               ),
               const SizedBox(width: 10.0),
-              Text(widget.isFromLibrary
-                  ? 'Remove from library'
-                  : 'Add to library'),
+              Text(
+                widget.isFromLibrary ? 'Remove from library' : 'Add to library',
+              ),
             ],
           ),
         ),
@@ -159,7 +156,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         final MediaItem mediaItem =
             MediaItemConverter.mapToMediaItem(widget.data.toMap());
         if (value == 3) {
-           String strURL = strSHAREURL;
+          String strURL = strSHAREURL;
           strURL += 'tracks/';
           strURL += widget.data.id.toString();
           Share.share(strURL);
@@ -183,9 +180,10 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
         if (value == 5) {
           if (widget.isFromLibrary) {
             await YogitunesAPI().trackRemoveFromLibrary(
-                int.parse(widget.data.id.toString()),
-                int.parse(widget.data.libraryId.toString()),
-                context);
+              int.parse(widget.data.id.toString()),
+              int.parse(widget.data.libraryId.toString()),
+              context,
+            );
           } else {
             await YogitunesAPI().trackAddToLibrary(
                 int.parse(widget.data.id.toString()), context);
@@ -376,7 +374,6 @@ class _YtSongTileTrailingMenuState extends State<YtSongTileTrailingMenu> {
           launch(widget.data.url);
         }
         if (value == 5) {
-         
           Share.share(widget.data.url);
         }
       },

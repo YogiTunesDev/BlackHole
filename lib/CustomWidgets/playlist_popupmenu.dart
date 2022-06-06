@@ -2,8 +2,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/mediaitem_converter.dart';
-import 'package:blackhole/Helpers/playlist.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
+import 'package:blackhole/Screens/Library/edit_playlist.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,8 @@ class PlaylistPopupMenu extends StatefulWidget {
   final SongListType? songListType;
   final int id;
   final bool isFromMyLibrary;
+  final VoidCallback? callback;
+
   const PlaylistPopupMenu({
     Key? key,
     required this.data,
@@ -23,6 +25,7 @@ class PlaylistPopupMenu extends StatefulWidget {
     this.songListType,
     required this.id,
     this.isFromMyLibrary = false,
+    this.callback,
   }) : super(key: key);
 
   @override
@@ -66,35 +69,37 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
                   color: Theme.of(context).iconTheme.color,
                 ),
                 const SizedBox(width: 10.0),
-                Text(widget.isFromMyLibrary
-                    ? 'Remove from library'
-                    : 'Add to Library'),
+                Text(
+                  widget.isFromMyLibrary
+                      ? 'Remove from library'
+                      : 'Add to Library',
+                ),
               ],
             ),
           ),
-        // PopupMenuItem(
-        //   value: 1,
-        //   child: Row(
-        //     children: [
-        //       Icon(
-        //         Icons.favorite_border_rounded,
-        //         color: Theme.of(context).iconTheme.color,
-        //       ),
-        //       const SizedBox(width: 10.0),
-        //       Text(AppLocalizations.of(context)!.savePlaylist),
-        //     ],
-        //   ),
-        // ),
+        PopupMenuItem(
+          value: 3,
+          child: Row(
+            children: [
+              Icon(
+                Icons.edit_rounded,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              const SizedBox(width: 10.0),
+              Text(AppLocalizations.of(context)!.edit),
+            ],
+          ),
+        ),
       ],
       onSelected: (int? value) async {
-        if (value == 1) {
-          addPlaylist(widget.title, widget.data).then(
-            (value) => ShowSnackBar().showSnackBar(
-              context,
-              '"${widget.title}" ${AppLocalizations.of(context)!.addedToPlaylists}',
-            ),
-          );
-        }
+        // if (value == 1) {
+        //   addPlaylist(widget.title, widget.data).then(
+        //     (value) => ShowSnackBar().showSnackBar(
+        //       context,
+        //       '"${widget.title}" ${AppLocalizations.of(context)!.addedToPlaylists}',
+        //     ),
+        //   );
+        // }
         if (value == 2) {
           if (widget.songListType == SongListType.playlist) {
             await YogitunesAPI().playlistAddToLibrary(widget.id, context);
@@ -132,6 +137,23 @@ class _PlaylistPopupMenuState extends State<PlaylistPopupMenu> {
                   : AppLocalizations.of(context)!.cantAddToQueue,
             );
           }
+        }
+        if (value == 3) {
+          debugPrint('${widget.data}');
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) {
+                return EditPlaylist(
+                  data: widget.data,
+                  title: widget.title,
+                  playlistId: widget.id,
+                  playlistName: widget.title,
+                  selectedPlaylist: [],
+                  callback: widget.callback,
+                );
+              },
+            ),
+          );
         }
       },
     );

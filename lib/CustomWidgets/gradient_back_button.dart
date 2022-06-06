@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class GradientBackButton extends StatelessWidget {
-  const GradientBackButton({Key? key}) : super(key: key);
+  final bool navigatorData;
+
+  const GradientBackButton({Key? key, this.navigatorData = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class GradientBackButton extends StatelessWidget {
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        onTap: () => Navigator.pop(context),
+        onTap: () => Navigator.pop(context, navigatorData),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),

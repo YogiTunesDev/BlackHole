@@ -27,7 +27,7 @@ class PlaylistScreen extends StatefulWidget {
 }
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
-  Box settingsBox = Hive.box('settings');
+  final settingsBox = Hive.box('settings');
   List playlistNames = [];
   Map playlistDetails = {};
   bool loading = false;
@@ -36,9 +36,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    fetchPlaylistData();
     super.initState();
+    fetchPlaylistData();
   }
 
   Future fetchPlaylistData() async {
@@ -46,9 +45,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       dataLoader = true;
     });
     customPlaylistResponse = await YogitunesAPI().fetchPlaylistData();
-    setState(() {
-      dataLoader = false;
-    });
+
+    if (mounted) {
+      setState(() {
+        dataLoader = false;
+      });
+    }
   }
 
   @override
@@ -190,15 +192,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     child: SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: Collage(
-                                          showGrid: true,
-                                          cacheSize: 50,
-                                          imageList: itemData.getQuadImages(
-                                              isThumbnail: true),
-                                          placeholderImage: "assets/cover.jpg",
-                                        )),
+                                      height: 50,
+                                      width: 50,
+                                      child: Collage(
+                                        showGrid: true,
+                                        cacheSize: 50,
+                                        imageList: itemData.getQuadImages(
+                                          isThumbnail: true,
+                                        ),
+                                        placeholderImage: 'assets/cover.jpg',
+                                      ),
+                                    ),
                                   ),
                                   title: Text(
                                     customPlaylistResponse!
@@ -475,7 +479,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                     ],
                                   ),
                                   onTap: () async {
-                                    Navigator.push(
+                                    final bool? isPlaylistModified =
+                                        await Navigator.push<bool>(
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
@@ -493,6 +498,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         ),
                                       ),
                                     );
+                                    if (isPlaylistModified!) {
+                                      return fetchPlaylistData();
+                                    }
+
                                     // await Hive.openBox(name);
                                     // Navigator.push(
                                     //   context,
