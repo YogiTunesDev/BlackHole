@@ -259,10 +259,10 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                         height: 50,
                         width: 50,
                         child: Collage(
-                          showGrid: true,
-                          imageList: itemData.getQuadImages(),
-                          placeholderImage: 'assets/cover.jpg',
-                        ),
+                            showGrid: true,
+                            imageList: itemData.getQuadImages(),
+                            placeholderImage: 'assets/cover.jpg',
+                            cacheSize: 50),
                         // CachedNetworkImage(
                         //   fit: BoxFit.cover,
                         //   errorWidget: (context, _, __) => const Image(

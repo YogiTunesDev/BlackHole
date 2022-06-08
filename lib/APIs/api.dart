@@ -913,7 +913,7 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         if (data['status'] as bool) {
-          ShowSnackBar().showSnackBar(context, 'Plylist added to library');
+          ShowSnackBar().showSnackBar(context, 'Playlist added to library');
           return data['data'].toString();
         } else {
           ShowSnackBar().showSnackBar(context, data['data'].toString());
