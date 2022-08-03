@@ -29,7 +29,7 @@ class _DownloadButtonState extends ConsumerState<DownloadButton> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref
           .read(
               downloadStatusProvier.call(widget.data['id'].toString()).notifier)
@@ -161,7 +161,7 @@ class MultiDownloadButton extends ConsumerStatefulWidget {
 class _MultiDownloadButtonState extends ConsumerState<MultiDownloadButton> {
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref
           .read(downloadStatusProvier.call(widget.playlistName).notifier)
           .checkIfAlreadyDownloaded(widget.data);
@@ -261,7 +261,7 @@ class _AlbumDownloadButtonState extends ConsumerState<AlbumDownloadButton> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkIfAlreadyDownloaded();
     });
   }

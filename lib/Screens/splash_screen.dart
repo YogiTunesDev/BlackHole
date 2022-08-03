@@ -1,6 +1,5 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
-import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -17,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         setState(() {
           isLoading = true;
@@ -75,7 +74,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     //     const Duration(days: 0));
     // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     // return;
-    SubscriptionStatusResponse? subscriptionStatusResponse =
+    final subscriptionStatusResponse =
         await YogitunesAPI().subscriptionStatus();
     if (subscriptionStatusResponse != null) {
       if (subscriptionStatusResponse.status ?? false) {

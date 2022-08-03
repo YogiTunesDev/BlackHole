@@ -1,21 +1,8 @@
-import 'dart:io';
-
-import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
+import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
-import 'package:blackhole/CustomWidgets/popup.dart';
-import 'package:blackhole/CustomWidgets/snackbar.dart';
-import 'package:blackhole/CustomWidgets/textinput_dialog.dart';
-import 'package:blackhole/Helpers/backup_restore.dart';
 import 'package:blackhole/Helpers/config.dart';
 import 'package:blackhole/Helpers/countrycodes.dart';
-import 'package:blackhole/Helpers/picker.dart';
-import 'package:blackhole/Helpers/supabase.dart';
-import 'package:blackhole/Screens/Home/saavn.dart' as home_screen;
 import 'package:blackhole/Screens/Top Charts/top.dart' as top_screen;
-import 'package:blackhole/Services/ext_storage_provider.dart';
-import 'package:blackhole/main.dart';
-import 'package:device_info/device_info.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,11 +11,8 @@ import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info/package_info.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class SettingPage extends StatefulWidget {
   final Function? callback;
@@ -99,6 +83,8 @@ class _SettingPageState extends State<SettingPage> {
     defaultValue: ['Previous', 'Play/Pause', 'Next'],
   )?.toList() as List;
 
+  bool deletingAccount = false;
+
   @override
   void initState() {
     // FirebaseCrashlytics.instance.crash();
@@ -133,6 +119,35 @@ class _SettingPageState extends State<SettingPage> {
     return update;
   }
 
+  Future<void> deleteAccount() async {
+    setState(() {
+      deletingAccount = true;
+    });
+    final userData = Hive.box('settings').get('userInfoData') as Map;
+    final int? userId = userData['data']['id'] as int?;
+    final accountDeleteSuccess =
+        await YogitunesAPI().deleteAccount(userId!.toString());
+    if (accountDeleteSuccess) {
+      await Future.wait(
+        [
+          Hive.box('api-token').clear(),
+          Hive.box('settings').clear(),
+          Hive.box('downloads').clear(),
+          Hive.box('Favorite Songs').clear(),
+          Hive.box('cache').clear(),
+        ],
+      );
+    }
+    setState(() {
+      deletingAccount = false;
+    });
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (route) => false,
+    );
+  }
+
   // double _value = 20.0;
   @override
   Widget build(BuildContext context) {
@@ -141,7 +156,6 @@ class _SettingPageState extends State<SettingPage> {
       ...userThemes.keys.map((theme) => theme as String),
       'Custom',
     ];
-
     return Scaffold(
       // backgroundColor: Colors.transparent,
       body: CustomScrollView(
@@ -1470,6 +1484,117 @@ class _SettingPageState extends State<SettingPage> {
                                           : Colors.white,
                                     ),
                                   ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                  ),
+                  child: GradientCard(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Danger Zone',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Delete my account permanently from YogiTunes',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: InkWell(
+                              onTap: () async {
+                                var confirmDelete = await showDialog<bool>(
+                                  context: context,
+                                  builder: (_) {
+                                    return AlertDialog(
+                                      title: Column(
+                                        children: [
+                                          Text(
+                                            'Are you sure, You want to delete your account ?',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1,
+                                            //                     ),
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ), //<-----|
+                                                child: const Text('Cancel'),
+                                              ),
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () => Navigator.pop(
+                                                  context,
+                                                  true,
+                                                ), //<-----|
+                                                child: const Text('Confirm'),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                                if (confirmDelete!) {
+                                  await deleteAccount();
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.red.shade700,
+                                ),
+                                child: Center(
+                                  child: deletingAccount
+                                      ? const CircularProgressIndicator()
+                                      : const Text(
+                                          'Delete Account',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),

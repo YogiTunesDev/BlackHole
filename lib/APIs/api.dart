@@ -74,6 +74,7 @@ class YogitunesAPI {
     'trackRemoveFromLibrary': 'my-library/tracks/delete',
     'subscriptionStatus': 'users/subscription-status',
     'paymentSuccess': 'users/payment-success/google',
+    'removeAccount': 'users/remove-account',
     // 'topSearches': '__call=content.getTopSearches',
     // 'fromToken': '__call=webapi.get',
     // 'featuredRadio': '__call=webradio.createFeaturedStation',
@@ -1489,5 +1490,38 @@ class YogitunesAPI {
       log('Error in fetchSongDetails: $e');
     }
     return {};
+  }
+
+  /// Used to delete user account
+  Future<bool> deleteAccount(String userId) async {
+    final url = '$baseUrl$apiStr${endpoints['removeAccount']}';
+
+    final box = await Hive.openBox('api-token');
+    final String apiToken = box.get('token').toString();
+
+    final mapData = {
+      'user_id': userId,
+    };
+
+    final Map<String, String> headers = {
+      'Authorization': 'Bearer $apiToken',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    final res = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: json.encode(mapData),
+    );
+    if (res.statusCode == 200) {
+      final Map data = json.decode(res.body) as Map<String, dynamic>;
+      if (data['status'] as bool) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
   }
 }
