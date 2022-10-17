@@ -578,12 +578,13 @@ class YogitunesAPI {
 
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
+        log('Response : ${json.decode(res.body)}');
         result = await FormatResponse.formatYogiSinglePlaylistData(
           SinglePlaylistResponse?.fromMap(data as Map<String, dynamic>),
         );
       }
     } catch (e) {
-      log('Error in fetchYogiAlbumData: $e');
+      log('Error in fetchYogiAlbumData  : $e');
     }
     return result;
   }

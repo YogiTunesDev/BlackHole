@@ -801,11 +801,13 @@ import 'package:path_provider/path_provider.dart';
 // }
 
 class AlbumsTab extends StatefulWidget {
-  final Map<String, List> albums;
+  final Map<String, List<Map>> albums;
   final List sortedAlbumKeysList;
   final String? tempPath;
   final String type;
   final bool offline;
+  final Function(List<Map> item)? onDelete;
+
   const AlbumsTab({
     Key? key,
     required this.albums,
@@ -813,14 +815,14 @@ class AlbumsTab extends StatefulWidget {
     required this.sortedAlbumKeysList,
     required this.type,
     this.tempPath,
+    this.onDelete,
   }) : super(key: key);
 
   @override
   State<AlbumsTab> createState() => _AlbumsTabState();
 }
 
-class _AlbumsTabState extends State<AlbumsTab>
-    with AutomaticKeepAliveClientMixin {
+class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -840,10 +842,7 @@ class _AlbumsTabState extends State<AlbumsTab>
           )
         : GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width >
-                      MediaQuery.of(context).size.height
-                  ? 4
-                  : 2,
+              crossAxisCount: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 4 : 2,
               childAspectRatio: 0.8,
             ),
             physics: const BouncingScrollPhysics(),
@@ -852,11 +851,8 @@ class _AlbumsTabState extends State<AlbumsTab>
             // itemExtent: 70.0,
             itemCount: widget.sortedAlbumKeysList.length,
             itemBuilder: (context, index) {
-              final List imageList = widget
-                          .albums[widget.sortedAlbumKeysList[index]]!.length >=
-                      4
-                  ? widget.albums[widget.sortedAlbumKeysList[index]]!
-                      .sublist(0, 4)
+              final List imageList = widget.albums[widget.sortedAlbumKeysList[index]]!.length >= 4
+                  ? widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(0, 4)
                   : widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(
                       0,
                       widget.albums[widget.sortedAlbumKeysList[index]]!.length,
@@ -865,51 +861,52 @@ class _AlbumsTabState extends State<AlbumsTab>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                        child: (widget.offline)
-                            ? OfflineCollage(
-                                fixSize: false,
-                                imageList: imageList,
-                                showGrid: widget.type == 'genre',
-                                artistName: widget.type == 'artist'
-                                    ? widget.albums[widget
-                                                .sortedAlbumKeysList[index]]![0]
-                                            ['artist']
-                                        .toString()
-                                    : "Unkown",
-                                tempDirPath: widget.tempPath,
-                                placeholderImage: widget.type == 'artist'
-                                    ? 'assets/artist.png'
-                                    : 'assets/album.png',
-                              )
-                            : Collage(
-                                fixSize: false,
-                                imageList: [""], //imageList,
-                                showGrid: widget.type == 'genre',
-                                artistName: widget.type == 'artist'
-                                    ? widget.albums[widget
-                                                .sortedAlbumKeysList[index]]![0]
-                                            ['artist']
-                                        .toString()
-                                    : "Unkown",
-                                tempDirPath: widget.tempPath,
-                                placeholderImage: widget.type == 'artist'
-                                    ? 'assets/artist.png'
-                                    : 'assets/album.png',
-                              )),
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Expanded(
+                            child: (widget.offline)
+                                ? OfflineCollage(
+                                    fixSize: false,
+                                    imageList: imageList,
+                                    showGrid: widget.type == 'genre',
+                                    artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
+                                    tempDirPath: widget.tempPath,
+                                    placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
+                                  )
+                                : Collage(
+                                    fixSize: false,
+                                    imageList: [""],
+                                    //imageList,
+                                    showGrid: widget.type == 'genre',
+                                    artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
+                                    tempDirPath: widget.tempPath,
+                                    placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
+                                  )),
+                        Visibility(
+                          visible: widget.onDelete != null,
+                          child: IconButton(
+                            onPressed: () {
+                              widget.onDelete!(widget.albums[widget.sortedAlbumKeysList[index]]!);
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     ListTile(
                       dense: true,
                       minVerticalPadding: 0.0,
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
                       title: Text(
                         '${widget.sortedAlbumKeysList[index] != "null" ? widget.sortedAlbumKeysList[index] : "Unkown"}',
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        widget.albums[widget.sortedAlbumKeysList[index]]!
-                                    .length ==
-                                1
+                        widget.albums[widget.sortedAlbumKeysList[index]]!.length == 1
                             ? '${widget.albums[widget.sortedAlbumKeysList[index]]!.length} ${AppLocalizations.of(context)!.song}'
                             : '${widget.albums[widget.sortedAlbumKeysList[index]]!.length} ${AppLocalizations.of(context)!.songs}',
                         style: TextStyle(

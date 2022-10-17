@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'dart:developer';
 
 class QuadImage {
   QuadImage({
@@ -28,6 +28,15 @@ class QuadImage {
   }
 
   factory QuadImage.fromMap(Map<String, dynamic> map) {
+    try {
+      return QuadImage(
+        imageUrl: map['image_url'] != null ? map['image_url'] as String : null,
+        image: map['image'] != null ? map['image'] as String : null,
+      );
+    } catch (e) {
+      log('Error in 3  : $e');
+    }
+
     return QuadImage(
       imageUrl: map['image_url'] != null ? map['image_url'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
@@ -36,8 +45,7 @@ class QuadImage {
 
   String toJson() => json.encode(toMap());
 
-  factory QuadImage.fromJson(String source) =>
-      QuadImage.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory QuadImage.fromJson(String source) => QuadImage.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'QuadImage(imageUrl: $imageUrl, image: $image)';
@@ -46,9 +54,7 @@ class QuadImage {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is QuadImage &&
-        other.imageUrl == imageUrl &&
-        other.image == image;
+    return other is QuadImage && other.imageUrl == imageUrl && other.image == image;
   }
 
   @override

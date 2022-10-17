@@ -1450,7 +1450,7 @@ class _SettingPageState extends State<SettingPage> {
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             child: InkWell(
                               onTap: () async {
-                                await Intercom.displayMessenger();
+                                await Intercom.instance.displayMessenger();
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(12),

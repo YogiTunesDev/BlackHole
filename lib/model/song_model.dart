@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 class SongItemModel {
   final String? id;
@@ -106,20 +107,47 @@ class SongItemModel {
       'libraryId': libraryId,
     };
     if (mainPlaylistName != null) map['mainPlaylistName'] = mainPlaylistName;
-    if (mainPlaylistImages != null)
-      map['mainPlaylistImages'] = jsonEncode(mainPlaylistImages);
+    if (mainPlaylistImages != null) map['mainPlaylistImages'] = jsonEncode(mainPlaylistImages);
     return map;
   }
 
   factory SongItemModel.fromMap(Map<String, dynamic> map) {
+    try {
+      return SongItemModel(
+        id: map['id'] != null ? map['id'] as String : null,
+        artist: map['artist'] != null ? map['artist'] as String : null,
+        album: map['album'] != null ? map['album'] as String : null,
+        image: map['image'] != null ? map['image'] as String : null,
+        duration: map['duration'] != null ? int.parse(map['duration'].toString()) : null,
+        title: map['title'] != null ? map['title'] as String : null,
+        url: map['url'] != null
+            ? map['url'] as String
+            : map['path'] != null
+                ? map['path'] as String
+                : null,
+        year: map['year'] != null ? map['year'] as String : null,
+        language: map['language'] != null ? map['language'] as String : null,
+        genre: map['genre'] != null ? map['genre'] as String : null,
+        kbs: map['kbs'] != null ? map['kbs'] as String : null,
+        hasLyrics: map['hasLyrics'] != null ? map['hasLyrics'] as bool : null,
+        releaseDate: map['releaseDate'] != null ? map['releaseDate'] as String : null,
+        albumId: map['albumId'] != null ? map['albumId'] as String : null,
+        subtitle: map['subtitle'] != null ? map['subtitle'] as String : null,
+        permaUrl: map['permaUrl'] != null ? map['permaUrl'] as String : null,
+        libraryId: map['libraryId'] != null ? map['libraryId'] as String : null,
+        mainPlaylistName: map['mainPlaylistName'] != null ? map['mainPlaylistName'] as String : null,
+        mainPlaylistImages: map['mainPlaylistImages'] != null ? List<String>.from(jsonDecode(map['mainPlaylistImages'] as String) as List<dynamic>) : null,
+      );
+    } catch (e) {
+      log('Error in 8  : $e');
+    }
+
     return SongItemModel(
       id: map['id'] != null ? map['id'] as String : null,
       artist: map['artist'] != null ? map['artist'] as String : null,
       album: map['album'] != null ? map['album'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
-      duration: map['duration'] != null
-          ? int.parse(map['duration'].toString())
-          : null,
+      duration: map['duration'] != null ? int.parse(map['duration'].toString()) : null,
       title: map['title'] != null ? map['title'] as String : null,
       url: map['url'] != null
           ? map['url'] as String
@@ -131,26 +159,19 @@ class SongItemModel {
       genre: map['genre'] != null ? map['genre'] as String : null,
       kbs: map['kbs'] != null ? map['kbs'] as String : null,
       hasLyrics: map['hasLyrics'] != null ? map['hasLyrics'] as bool : null,
-      releaseDate:
-          map['releaseDate'] != null ? map['releaseDate'] as String : null,
+      releaseDate: map['releaseDate'] != null ? map['releaseDate'] as String : null,
       albumId: map['albumId'] != null ? map['albumId'] as String : null,
       subtitle: map['subtitle'] != null ? map['subtitle'] as String : null,
       permaUrl: map['permaUrl'] != null ? map['permaUrl'] as String : null,
       libraryId: map['libraryId'] != null ? map['libraryId'] as String : null,
-      mainPlaylistName: map['mainPlaylistName'] != null
-          ? map['mainPlaylistName'] as String
-          : null,
-      mainPlaylistImages: map['mainPlaylistImages'] != null
-          ? List<String>.from(
-              jsonDecode(map['mainPlaylistImages'] as String) as List<dynamic>)
-          : null,
+      mainPlaylistName: map['mainPlaylistName'] != null ? map['mainPlaylistName'] as String : null,
+      mainPlaylistImages: map['mainPlaylistImages'] != null ? List<String>.from(jsonDecode(map['mainPlaylistImages'] as String) as List<dynamic>) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SongItemModel.fromJson(String source) =>
-      SongItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SongItemModel.fromJson(String source) => SongItemModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
