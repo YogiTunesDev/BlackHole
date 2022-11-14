@@ -429,7 +429,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             onTap: () async {
                               Navigator.pop(context);
-                              var box = await Hive.openBox('api-token');
+                              final Box<String?> box = Hive.box('api-token');
                               box.put('token', null);
                               Hive.box('settings').put('name', null);
                               Hive.box('settings').put('userInfoData', {});
