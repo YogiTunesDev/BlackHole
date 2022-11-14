@@ -1,6 +1,8 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -75,7 +77,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     //     const Duration(days: 0));
     // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     // return;
-    SubscriptionStatusResponse? subscriptionStatusResponse =
+    final SubscriptionStatusResponse? subscriptionStatusResponse =
         await YogitunesAPI().subscriptionStatus();
     if (subscriptionStatusResponse != null) {
       if (subscriptionStatusResponse.status ?? false) {
@@ -89,12 +91,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
         // Navigator.pushNamed(context, '/subscription');
       }
     } else {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, '/subscription', (route) => false,
-      //     arguments: {
-      //       'isFirstTime': true,
-      //     });
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     }
     // return HomePage();
   } else {

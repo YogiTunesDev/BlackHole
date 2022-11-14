@@ -98,7 +98,7 @@ Future<void> startService() async {
   GetIt.I.registerSingleton<MyTheme>(MyTheme());
 }
 
-var apiTokenBox;
+late Box<String?> apiTokenBox;
 
 Future<void> openHiveBox(String boxName, {bool limit = false}) async {
   apiTokenBox = await Hive.openBox('api-token');
