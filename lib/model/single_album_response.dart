@@ -41,7 +41,7 @@ class SingleAlbumResponse {
   factory SingleAlbumResponse.fromMap(Map<String, dynamic> map) {
     return SingleAlbumResponse(
       status: map['status'] != null ? map['status'] as bool : null,
-      statusCode: map['status_code'] != null ? map['status_code'] as int : null,
+      statusCode: map['status_code'] != null ? int.parse(map['status_code'].toString()): null,
       data: map['data'] != null
           ? SingleAlbumData.fromMap(map['data'] as Map<String, dynamic>)
           : null,
@@ -138,11 +138,11 @@ class SingleAlbumData {
 
   factory SingleAlbumData.fromMap(Map<String, dynamic> map) {
     return SingleAlbumData(
-      id: map['id'] != null ? map['id'] as int : null,
+      id: map['id'] != null ? int.parse(map['id'].toString()) : null,
       name: map['name'] != null ? map['name'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
-      artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
+      artistId: map['artist_id'] != null ? int.parse(map['artist_id'].toString()): null,
       albumDuration: map['album_duration'] != null
           ? map['album_duration'] as String
           : null,

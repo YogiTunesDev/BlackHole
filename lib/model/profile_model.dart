@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'dart:developer';
 
 import 'cover_model.dart';
 
@@ -35,19 +35,26 @@ class Profile {
   }
 
   factory Profile.fromMap(Map<String, dynamic> map) {
+    try {
+      return Profile(
+        id: map['id'] != null ? map['id'] as int : null,
+        name: map['name'] != null ? map['name'] as String : null,
+        cover: map['cover'] != null ? Cover.fromMap(map['cover'] as Map<String, dynamic>) : null,
+      );
+    } catch (e) {
+      log('Error in 4 $e');
+    }
+
     return Profile(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      cover: map['cover'] != null
-          ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
-          : null,
+      cover: map['cover'] != null ? Cover.fromMap(map['cover'] as Map<String, dynamic>) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Profile.fromJson(String source) =>
-      Profile.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Profile.fromJson(String source) => Profile.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Profile(id: $id, name: $name, cover: $cover)';
@@ -56,10 +63,7 @@ class Profile {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Profile &&
-        other.id == id &&
-        other.name == name &&
-        other.cover == cover;
+    return other is Profile && other.id == id && other.name == name && other.cover == cover;
   }
 
   @override

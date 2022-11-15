@@ -375,7 +375,7 @@ class YogitunesAPI {
       required String paymentDate}) async {
     SubscriptionStatusResponse? paymentSuccessResponse;
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -575,12 +575,13 @@ class YogitunesAPI {
 
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map;
+        log('Response : ${json.decode(res.body)}');
         result = await FormatResponse.formatYogiSinglePlaylistData(
           SinglePlaylistResponse?.fromMap(data as Map<String, dynamic>),
         );
       }
     } catch (e) {
-      log('Error in fetchYogiAlbumData: $e');
+      log('Error in fetchYogiAlbumData  : $e');
     }
     return result;
   }
@@ -817,7 +818,7 @@ class YogitunesAPI {
     }
 
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -895,7 +896,7 @@ class YogitunesAPI {
   /// This function is used to get playlist add to library api data
   Future<String?> playlistAddToLibrary(int id, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -926,7 +927,7 @@ class YogitunesAPI {
   /// This function is used to get album remove from library api data
   Future<String?> albumRemoveFromLibrary(int id, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -957,7 +958,7 @@ class YogitunesAPI {
   /// This function is used to get album add to library api data
   Future<String?> albumAddToLibrary(int id, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -989,7 +990,7 @@ class YogitunesAPI {
   Future<String?> trackRemoveFromLibrary(
       int id, int libraryId, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -1022,7 +1023,7 @@ class YogitunesAPI {
   /// This function is used to get track add to library api data
   Future<String?> trackAddToLibrary(int id, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
@@ -1108,7 +1109,7 @@ class YogitunesAPI {
   /// This function is used to call create playlist api
   Future<String?> createPlaylist(String name, BuildContext context) async {
     try {
-      final box = await Hive.openBox('api-token');
+      final Box<String?> box = Hive.box('api-token');
 
       final String apiToken = box.get('token').toString();
 
