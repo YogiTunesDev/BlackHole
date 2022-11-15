@@ -1,5 +1,8 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/CustomWidgets/snackbar.dart';
+import 'package:blackhole/model/subscription_status_response.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -16,14 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
       try {
         setState(() {
           isLoading = true;
         });
 
         redirectAfterAuthentication(context);
-        ;
       } catch (e, stack) {
         print(e.toString());
         debugPrint(stack.toString());
@@ -74,7 +76,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     //     const Duration(days: 0));
     // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     // return;
-    final subscriptionStatusResponse =
+    final SubscriptionStatusResponse? subscriptionStatusResponse =
         await YogitunesAPI().subscriptionStatus();
     if (subscriptionStatusResponse != null) {
       if (subscriptionStatusResponse.status ?? false) {
@@ -88,12 +90,7 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
         // Navigator.pushNamed(context, '/subscription');
       }
     } else {
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, '/subscription', (route) => false,
-      //     arguments: {
-      //       'isFirstTime': true,
-      //     });
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     }
     // return HomePage();
   } else {

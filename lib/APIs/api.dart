@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/format.dart';
+import 'package:blackhole/main.dart';
 import 'package:blackhole/model/album_response.dart';
 import 'package:blackhole/model/artist_data_response.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
@@ -31,6 +32,7 @@ import 'package:blackhole/model/subscription_status_response.dart';
 import 'package:blackhole/model/tracks_by_bpm_response.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:blackhole/model/user_info_response.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -109,12 +111,10 @@ class YogitunesAPI {
       url = Uri.parse('$baseUrl$apiStr$params');
     }
 
-    // preferredLanguages =
-    //     preferredLanguages.map((lang) => lang.toLowerCase()).toList();
-    // final String languageHeader = 'L=${preferredLanguages.join('%2C')}';
-    final box = await Hive.openBox('api-token');
-    final String apiToken = box.get('token').toString();
-
+    final String? apiToken = apiTokenBox.get('token');
+    if (apiToken == null && apiToken == '') {
+      return Response('No Token Found', 404);
+    }
     headers = {
       'Authorization': 'Bearer $apiToken',
       'Accept': 'application/json'
@@ -134,7 +134,7 @@ class YogitunesAPI {
     // }
 
     return get(url, headers: headers).onError((error, stackTrace) {
-      return Response('', 404);
+      return Response('', 405);
     });
   }
 
@@ -156,8 +156,6 @@ class YogitunesAPI {
         } else {
           return false;
         }
-        // var box = await Hive.openBox('api-token');
-        // box.put('token', result.apiToken);
       }
     } catch (e) {
       log('Error in logincheck: $e');
@@ -178,8 +176,8 @@ class YogitunesAPI {
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         result = LoginResponse?.fromMap(data as Map<String, dynamic>);
-        var box = await Hive.openBox('api-token');
-        box.put('token', result.apiToken);
+
+        apiTokenBox.put('token', result.apiToken);
       }
     } catch (e) {
       log('Error in login: $e');
@@ -208,8 +206,8 @@ class YogitunesAPI {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
 
         result = SignupResponse?.fromMap(data as Map<String, dynamic>);
-        var box = await Hive.openBox('api-token');
-        box.put('token', result.apiToken);
+
+        apiTokenBox.put('token', result.apiToken);
       }
     } catch (e) {
       log('Error in signup: $e');
@@ -253,8 +251,8 @@ class YogitunesAPI {
 
         result = ForgotPasswordVerificationResponse?.fromMap(
             data as Map<String, dynamic>);
-        var box = await Hive.openBox('api-token');
-        box.put('token', result.apiToken);
+
+        apiTokenBox.put('token', result.apiToken);
       }
     } catch (e) {
       log('Error in forgotPasswordVerification: $e');
@@ -265,9 +263,8 @@ class YogitunesAPI {
   /// This function is used to call reset password api
   Future<ResetPasswordResponse?> resetPassword(String password) async {
     ResetPasswordResponse? result;
-    final box = await Hive.openBox('api-token');
 
-    final String apiToken = box.get('token').toString();
+    final String? apiToken = apiTokenBox.get('token');
 
     try {
       final url =
@@ -315,8 +312,8 @@ class YogitunesAPI {
         'start_offset': 0,
         'end_offset': endOffset,
       });
-      final box = await Hive.openBox('api-token');
-      final String apiToken = box.get('token').toString();
+
+      final String apiToken = apiTokenBox.get('token').toString();
 
       final Map<String, String> headers = {
         'Authorization': 'Bearer $apiToken',
@@ -366,8 +363,7 @@ class YogitunesAPI {
             SubscriptionStatusResponse?.fromMap(data as Map<String, dynamic>);
       }
     } catch (e, stack) {
-      log('Error in subscriptionStatus: $e');
-      log('Error in subscriptionStatus: $stack');
+      FirebaseCrashlytics.instance.recordError(e, stack);
     }
     return result;
   }
