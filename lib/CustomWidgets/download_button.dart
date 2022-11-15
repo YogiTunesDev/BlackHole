@@ -148,10 +148,12 @@ class _DownloadButtonState extends ConsumerState<DownloadButton> {
 class MultiDownloadButton extends ConsumerStatefulWidget {
   final List data;
   final String playlistName;
+  final int id;
   const MultiDownloadButton({
     Key? key,
     required this.data,
     required this.playlistName,
+    required this.id
   }) : super(key: key);
 
   @override
@@ -206,6 +208,7 @@ class _MultiDownloadButtonState extends ConsumerState<MultiDownloadButton> {
                             context,
                             '"${widget.playlistName}" ${AppLocalizations.of(context)!.downed}',
                           );
+                          await YogitunesAPI().playlistAddToLibrary(widget.id, context);
                         },
                       ),
                     )

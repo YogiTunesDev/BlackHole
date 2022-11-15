@@ -1,5 +1,5 @@
-
 import 'dart:convert';
+import 'dart:developer';
 
 class Tag {
   Tag({
@@ -33,19 +33,26 @@ class Tag {
   }
 
   factory Tag.fromMap(Map<String, dynamic> map) {
+    try {
+      return Tag(
+        id: map['id'] != null ? map['id'] as int : null,
+        name: map['name'] != null ? map['name'] as String : null,
+        pivot: map['pivot'] != null ? Pivot.fromMap(map['pivot'] as Map<String, dynamic>) as Pivot : null,
+      );
+    } catch (e) {
+      log('Error in 5  : $e');
+    }
+
     return Tag(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      pivot: map['pivot'] != null
-          ? Pivot.fromMap(map['pivot'] as Map<String, dynamic>) as Pivot
-          : null,
+      pivot: map['pivot'] != null ? Pivot.fromMap(map['pivot'] as Map<String, dynamic>) as Pivot : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Tag.fromJson(String source) =>
-      Tag.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Tag.fromJson(String source) => Tag.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Tag(id: $id, name: $name, pivot: $pivot)';
@@ -54,10 +61,7 @@ class Tag {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Tag &&
-        other.id == id &&
-        other.name == name &&
-        other.pivot == pivot;
+    return other is Tag && other.id == id && other.name == name && other.pivot == pivot;
   }
 
   @override
@@ -120,10 +124,8 @@ class Pivot {
       taggableId: map['taggable_id'] != null ? map['taggable_id'] as int : null,
       tagId: map['tag_id'] != null ? map['tag_id'] as int : null,
       taggerId: map['tagger_id'] != null ? map['tagger_id'] as int : null,
-      taggableType:
-          map['taggable_type'] != null ? map['taggable_type'] as String : null,
-      taggerType:
-          map['tagger_type'] != null ? map['tagger_type'] as String : null,
+      taggableType: map['taggable_type'] != null ? map['taggable_type'] as String : null,
+      taggerType: map['tagger_type'] != null ? map['tagger_type'] as String : null,
       context: map['context'] != null ? map['context'] as String : null,
       order: map['order'] != null ? map['order'] as String : null,
     );
@@ -131,8 +133,7 @@ class Pivot {
 
   String toJson() => json.encode(toMap());
 
-  factory Pivot.fromJson(String source) =>
-      Pivot.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Pivot.fromJson(String source) => Pivot.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -155,12 +156,6 @@ class Pivot {
 
   @override
   int get hashCode {
-    return taggableId.hashCode ^
-        tagId.hashCode ^
-        taggerId.hashCode ^
-        taggableType.hashCode ^
-        taggerType.hashCode ^
-        context.hashCode ^
-        order.hashCode;
+    return taggableId.hashCode ^ tagId.hashCode ^ taggerId.hashCode ^ taggableType.hashCode ^ taggerType.hashCode ^ context.hashCode ^ order.hashCode;
   }
 }

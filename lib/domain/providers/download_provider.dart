@@ -21,11 +21,11 @@ class DownloadState {
 final downloadStatusProvier =
     StateNotifierProvider.family<DownloadStatusProvider, DownloadState, String>(
         (ref, id) =>
-            DownloadStatusProvider(DownloadState.initital(), ref.read));
+            DownloadStatusProvider(DownloadState.initital(), ref));
 
 class DownloadStatusProvider extends StateNotifier<DownloadState> {
   final Download down = Download();
-  final Reader _ref;
+  final Ref _ref;
   DownloadStatusProvider(DownloadState state, this._ref) : super(state);
 
   void checkIfAlreadyDownloaded(List<dynamic> data) {
@@ -67,7 +67,7 @@ class DownloadStatusProvider extends StateNotifier<DownloadState> {
         await _controller.done;
 
         Future.delayed(const Duration(seconds: 1)).then((value) =>
-            _ref(downloadStatusProvier.call(items['id'].toString()).notifier)
+            _ref.read(downloadStatusProvier.call(items['id'].toString()).notifier)
                 .checkIfAlreadyDownloaded([items]));
       });
     }
