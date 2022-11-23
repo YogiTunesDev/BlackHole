@@ -35,7 +35,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -43,6 +46,7 @@ Future<void> main() async {
     Paint.enableDithering = true;
 
     await Hive.initFlutter();
+    await updateVersion();
     await openHiveBox('settings');
     await openHiveBox('downloads');
     await openHiveBox('Favorite Songs');
@@ -61,6 +65,21 @@ Future<void> main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(ProviderScope(child: MyApp()));
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+}
+
+Future<void> updateVersion() async {
+  final prefs = await SharedPreferences.getInstance();
+  final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  final String version = packageInfo.version;
+  final String buildNumber = packageInfo.buildNumber;
+  debugPrint('Version : $version($buildNumber)');
+  final String versionName = '$version($buildNumber)';
+  final String lastVersion = prefs.getString('last_version').toString();
+  if(versionName != lastVersion){
+    debugPrint('Version : $versionName');
+    await Hive.deleteFromDisk();
+    await prefs.setString('last_version', versionName);
+  }
 }
 
 Future<void> setOptimalDisplayMode() async {

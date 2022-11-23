@@ -25,7 +25,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -1505,7 +1505,7 @@ class _SettingPageState extends State<SettingPage> {
                             height: 5,
                           ),
                           Text(
-                            'Version 2.0\n',
+                            'Version $appVersion\n',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
