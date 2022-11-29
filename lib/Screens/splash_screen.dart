@@ -26,7 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
         });
 
         redirectAfterAuthentication(context);
-        ;
       } catch (e, stack) {
         print(e.toString());
         debugPrint(stack.toString());

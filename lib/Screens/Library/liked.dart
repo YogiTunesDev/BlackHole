@@ -864,25 +864,22 @@ class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixi
                     Stack(
                       alignment: Alignment.bottomRight,
                       children: [
-                        Expanded(
-                            child: (widget.offline)
-                                ? OfflineCollage(
-                                    fixSize: false,
-                                    imageList: imageList,
-                                    showGrid: widget.type == 'genre',
-                                    artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
-                                    tempDirPath: widget.tempPath,
-                                    placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
-                                  )
-                                : Collage(
-                                    fixSize: false,
-                                    imageList: [""],
-                                    //imageList,
-                                    showGrid: widget.type == 'genre',
-                                    artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
-                                    tempDirPath: widget.tempPath,
-                                    placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
-                                  )),
+                        if (widget.offline) OfflineCollage(
+                                fixSize: false,
+                                imageList: imageList,
+                                showGrid: widget.type == 'genre',
+                                artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
+                                tempDirPath: widget.tempPath,
+                                placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
+                              ) else Collage(
+                                fixSize: false,
+                                imageList: [""],
+                                //imageList,
+                                showGrid: widget.type == 'genre',
+                                artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
+                                tempDirPath: widget.tempPath,
+                                placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
+                              ),
                         Visibility(
                           visible: widget.onDelete != null,
                           child: IconButton(
