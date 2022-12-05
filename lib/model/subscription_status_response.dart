@@ -62,8 +62,11 @@ class SubscriptionStatusResponse {
           ? map['initial_platform'] as String
           : null,
       studioTeacher:
-          map['studio_teacher'] != null ? map['studio_teacher'] as bool : null,
-      validMobileSubscription: map['valid_mobile_subscription'] != null
+          map['studio_teacher'] != null && map['studio_teacher'] is bool
+              ? map['studio_teacher'] as bool
+              : null,
+      validMobileSubscription: map['valid_mobile_subscription'] != null &&
+              map['valid_mobile_subscription'] is bool
           ? map['valid_mobile_subscription'] as bool
           : null,
     );

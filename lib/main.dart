@@ -75,7 +75,7 @@ Future<void> updateVersion() async {
   debugPrint('Version : $version($buildNumber)');
   final String versionName = '$version($buildNumber)';
   final String lastVersion = prefs.getString('last_version').toString();
-  if(versionName != lastVersion){
+  if (versionName != lastVersion) {
     debugPrint('Version : $versionName');
     await Hive.deleteFromDisk();
     await prefs.setString('last_version', versionName);
