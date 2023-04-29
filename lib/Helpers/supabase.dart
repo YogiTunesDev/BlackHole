@@ -32,10 +32,7 @@ class SupaBase {
   }
 
   Future<int> createUser(Map data) async {
-    final response = await client
-        .from('Users')
-        .insert(data, returning: ReturningOption.minimal)
-        .execute();
+    final response = await client.from('Users').insert(data).execute();
     return response.status ?? 404;
   }
 }
