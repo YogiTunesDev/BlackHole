@@ -36,35 +36,42 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    Paint.enableDithering = true;
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      Paint.enableDithering = true;
 
-    await Hive.initFlutter();
-    await updateVersion();
-    await openHiveBox('settings');
-    await openHiveBox('downloads');
-    await openHiveBox('Favorite Songs');
-    await openHiveBox('cache', limit: true);
-    if (Platform.isAndroid) {
-      setOptimalDisplayMode();
-    }
-    await startService();
-    // initialize the Intercom.
-    await Intercom.instance.initialize('ebyep3ia',
+      await Hive.initFlutter();
+      await updateVersion();
+      await openHiveBox('settings');
+      await openHiveBox('downloads');
+      await openHiveBox('Favorite Songs');
+      await openHiveBox('cache', limit: true);
+      if (Platform.isAndroid) {
+        setOptimalDisplayMode();
+      }
+      await startService();
+      // initialize the Intercom.
+      await Intercom.instance.initialize(
+        'webp3ia',
         iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
-        androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258');
-
-    await Firebase.initializeApp();
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    runApp(ProviderScope(child: MyApp()));
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+        androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258',
+      );
+      await Firebase.initializeApp();
+      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      runApp(
+        ProviderScope(
+          child: MyApp(),
+        ),
+      );
+    },
+    (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
+  );
 }
 
 Future<void> updateVersion() async {
@@ -108,8 +115,6 @@ Future<void> startService() async {
       androidNotificationOngoing: true,
       androidNotificationIcon: 'drawable/ic_stat_music_note',
       androidShowNotificationBadge: true,
-      // androidStopForegroundOnPause: Hive.box('settings')
-      // .get('stopServiceOnPause', defaultValue: true) as bool,
       notificationColor: Colors.grey[900],
     ),
   );
@@ -131,7 +136,6 @@ Future<void> openHiveBox(String boxName, {bool limit = false}) async {
     await Hive.openBox(boxName);
     throw 'Failed to open $boxName Box\nError: $error';
   });
-  // clear box if it grows large
   if (limit && box.length > 500) {
     box.clear();
   }

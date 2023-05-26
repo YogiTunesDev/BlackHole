@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/copy_clipboard.dart';
 import 'package:blackhole/CustomWidgets/download_button.dart';
@@ -124,7 +123,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.transparent,
-                body: SearchBar(
+                body: CustomSearchBar(
                   controller: controller,
                   liveSearch: liveSearch,
                   autofocus: widget.autofocus,

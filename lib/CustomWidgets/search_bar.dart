@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
+class CustomSearchBar extends StatefulWidget {
   final Widget body;
   final bool autofocus;
   final bool liveSearch;
@@ -10,7 +10,7 @@ class SearchBar extends StatefulWidget {
   final TextEditingController controller;
   final Function(String)? onQueryChanged;
   final Function(String) onSubmitted;
-  const SearchBar({
+  const CustomSearchBar({
     Key? key,
     this.leading,
     this.hintText,
@@ -24,10 +24,10 @@ class SearchBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SearchBar> createState() => _SearchBarState();
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _CustomSearchBarState extends State<CustomSearchBar> {
   String tempQuery = '';
   String query = '';
 

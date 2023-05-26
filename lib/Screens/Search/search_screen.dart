@@ -4,11 +4,9 @@ import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
-import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Search/artist_data.dart';
-import 'package:blackhole/Screens/Search/search.dart';
 import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/search_response.dart';
@@ -282,12 +280,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ? !isMyLibrary
                                                   ? Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .background
                                                   : Colors.white
                                               : isMyLibrary
                                                   ? Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .background
                                                   : Colors.white,
                                         ),
                                       ),
@@ -329,12 +327,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ? Colors.white
                                                   : Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .background
                                               : isMyLibrary
                                                   ? Colors.white
                                                   : Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant,
+                                                      .background,
                                         ),
                                       ),
                                     ),

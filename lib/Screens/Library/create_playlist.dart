@@ -826,7 +826,7 @@ class _FiltersState extends State<Filters> {
                                         Brightness.light ||
                                     selectedCategory != 0
                                 ? Colors.white
-                                : Theme.of(context).colorScheme.primaryVariant,
+                                : Theme.of(context).colorScheme.background,
                           ),
                         ),
                       ),
@@ -864,7 +864,7 @@ class _FiltersState extends State<Filters> {
                                         Brightness.light ||
                                     selectedCategory != 1
                                 ? Colors.white
-                                : Theme.of(context).colorScheme.primaryVariant,
+                                : Theme.of(context).colorScheme.background,
                           ),
                         ),
                       ),
@@ -927,7 +927,7 @@ class _FiltersState extends State<Filters> {
                                   selectedVocal !=
                                       vocals[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.background,
                         ),
                       ),
                     ),
@@ -989,7 +989,7 @@ class _FiltersState extends State<Filters> {
                                   selectedTempo !=
                                       tempo[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.background,
                         ),
                       ),
                     ),
@@ -1051,7 +1051,7 @@ class _FiltersState extends State<Filters> {
                                   selectedStyle !=
                                       style[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.background,
                         ),
                       ),
                     ),

@@ -5,14 +5,10 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
-import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/Screens/Search/artist_data.dart';
-import 'package:blackhole/Screens/Top%20Charts/top.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
-import 'package:blackhole/model/home_model.dart';
-import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/search_all_album_response.dart';
 import 'package:blackhole/model/search_all_artists_response.dart';
@@ -20,8 +16,8 @@ import 'package:blackhole/model/search_all_playlists_response.dart';
 import 'package:blackhole/model/search_all_track_response.dart';
 import 'package:blackhole/model/see_all_library_albums_response.dart';
 import 'package:blackhole/model/song_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum SearchAllType { albums, playlists, tracks, artists, recent }
 

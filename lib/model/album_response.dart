@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 import 'cover_model.dart';
-import 'home_model.dart';
 import 'profile_model.dart';
 import 'track_model.dart';
 

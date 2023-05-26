@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:blackhole/Screens/Settings/subscription.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 

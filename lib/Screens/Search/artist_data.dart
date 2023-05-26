@@ -6,14 +6,13 @@ import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
-import 'package:blackhole/Screens/Search/search_view_all.dart';
 import 'package:blackhole/model/artist_data_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ArtistData extends StatefulWidget {
   ArtistData({Key? key, required this.id, this.image, required this.title})
