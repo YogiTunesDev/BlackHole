@@ -69,7 +69,7 @@ class _YouTubeSearchPageState extends State<YouTubeSearchPage> {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.transparent,
-                body: SearchBar(
+                body: CustomSearchBar(
                   controller: _controller,
                   liveSearch: liveSearch,
                   leading: IconButton(

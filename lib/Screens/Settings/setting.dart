@@ -1361,25 +1361,24 @@ class _SettingPageState extends State<SettingPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 0,
                           vertical: 5,
                         ),
                         child: BoxSwitchTile(
                           title: Text(
-                            'High quality streming',
+                            'High quality streaming',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                          keyName: 'highQualityStreming',
+                          keyName: 'highQualityStreaming',
                           defaultValue: Hive.box('settings').get(
-                              'highQualityStreming',
-                              defaultValue: false) as bool,
+                              'highQualityStreaming',
+                              defaultValue: false,) as bool,
                           onChanged: (bool val, Box box) {
                             Hive.box('settings')
-                                .put('highQualityStreming', val);
+                                .put('highQualityStreaming', val);
                             // box.put(
                             //   'useSystemTheme',
                             //   false,
@@ -1399,7 +1398,7 @@ class _SettingPageState extends State<SettingPage> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'High quality streming is 320kbps, normal streaming quality is 96kb.',
+                          'High quality streaming is 320kbps, normal streaming quality is 96kb.',
                           style: TextStyle(
                             fontSize: 13,
                             color: Theme.of(context).colorScheme.primary,
@@ -1527,7 +1526,7 @@ class _SettingPageState extends State<SettingPage> {
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .primaryVariant,
+                                    .primary,
                               ),
                             ),
                           ),
@@ -1546,7 +1545,7 @@ class _SettingPageState extends State<SettingPage> {
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .primaryVariant,
+                                    .primary,
                               ),
                             ),
                           )

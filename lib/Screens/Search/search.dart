@@ -124,7 +124,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.transparent,
-                body: SearchBar(
+                body: CustomSearchBar(
                   controller: controller,
                   liveSearch: liveSearch,
                   autofocus: widget.autofocus,

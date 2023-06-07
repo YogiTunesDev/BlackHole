@@ -87,7 +87,7 @@ class _YouTubeState extends State<YouTube>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
-      body: SearchBar(
+      body: CustomSearchBar(
         controller: _controller,
         liveSearch: false,
         showClose: false,

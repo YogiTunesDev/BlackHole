@@ -130,7 +130,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
+    final  args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -391,8 +391,8 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                 }
                               });
                             },
-                            child: Row(
-                              children: const [
+                            child: const Row(
+                              children: [
                                 Icon(Icons.filter_alt_rounded),
                                 Text(
                                   'Filter',
@@ -826,7 +826,7 @@ class _FiltersState extends State<Filters> {
                                         Brightness.light ||
                                     selectedCategory != 0
                                 ? Colors.white
-                                : Theme.of(context).colorScheme.primaryVariant,
+                                : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
@@ -864,7 +864,7 @@ class _FiltersState extends State<Filters> {
                                         Brightness.light ||
                                     selectedCategory != 1
                                 ? Colors.white
-                                : Theme.of(context).colorScheme.primaryVariant,
+                                : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
@@ -927,7 +927,7 @@ class _FiltersState extends State<Filters> {
                                   selectedVocal !=
                                       vocals[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -989,7 +989,7 @@ class _FiltersState extends State<Filters> {
                                   selectedTempo !=
                                       tempo[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -1051,7 +1051,7 @@ class _FiltersState extends State<Filters> {
                                   selectedStyle !=
                                       style[index]['val'].toString()
                               ? Colors.white
-                              : Theme.of(context).colorScheme.primaryVariant,
+                              : Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),

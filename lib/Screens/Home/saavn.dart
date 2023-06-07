@@ -5,6 +5,7 @@ import 'package:blackhole/CustomWidgets/collage.dart';
 import 'package:blackhole/CustomWidgets/empty_screen.dart';
 import 'package:blackhole/Screens/Common/popup_loader.dart';
 import 'package:blackhole/Screens/Common/song_list.dart';
+import 'package:blackhole/Screens/Home/album_list.dart';
 import 'package:blackhole/Screens/Player/audioplayer.dart';
 import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/radio_station_stream_response.dart';
@@ -12,12 +13,9 @@ import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/user_info_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
-
-import 'album_list.dart';
 
 bool fetched = false;
 List preferredLanguage = Hive.box('settings')
@@ -48,7 +46,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     apiLoading = true;
     setState(() {});
 
-    Map userInfoData =
+    final Map userInfoData =
         Hive.box('settings').get('userInfoData', defaultValue: {}) as Map;
     if (userInfoData.isEmpty) {
       final UserInfoResponse? userinfodatares =

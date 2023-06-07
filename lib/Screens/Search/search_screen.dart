@@ -240,7 +240,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   if (libraryVisibility)
                     Column(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -282,12 +281,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ? !isMyLibrary
                                                   ? Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .primary
                                                   : Colors.white
                                               : isMyLibrary
                                                   ? Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .primary
                                                   : Colors.white,
                                         ),
                                       ),
@@ -329,12 +328,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   ? Colors.white
                                                   : Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant
+                                                      .primary
                                               : isMyLibrary
                                                   ? Colors.white
                                                   : Theme.of(context)
                                                       .colorScheme
-                                                      .primaryVariant,
+                                                      .primary,
                                         ),
                                       ),
                                     ),
