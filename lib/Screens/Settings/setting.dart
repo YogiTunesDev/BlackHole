@@ -1207,8 +1207,19 @@ class _SettingPageState extends State<SettingPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/subscribe');
+                              onTap: () async {
+                                final Uri url = Uri(
+                                  scheme: 'https',
+                                  host: 'accounts.yogi-tunes.com',
+                                );
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+
+                                // Navigator.pushNamed(context, '/subscribe');
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(12),
@@ -1346,14 +1357,14 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                         child: BoxSwitchTile(
                           title: Text(
-                            'High quality streming',
+                            'High quality streaming',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
-                          keyName: 'highQualityStreming',
+                          keyName: 'highQualityStreaming',
                           defaultValue: Hive.box('settings').get(
                               'highQualityStreming',
                               defaultValue: false) as bool,
@@ -1430,7 +1441,19 @@ class _SettingPageState extends State<SettingPage> {
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             child: InkWell(
                               onTap: () async {
-                                await Intercom.instance.displayMessenger();
+                                final Uri url = Uri(
+                                  scheme: 'https',
+                                  host: 'yogi-tunes.com',
+                                  path: '/contact/',
+                                );
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+
+                                // await Intercom.instance.displayMessenger();
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(12),
@@ -1505,9 +1528,7 @@ class _SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .background,
+                                color: Theme.of(context).colorScheme.background,
                               ),
                             ),
                           ),
@@ -1524,9 +1545,7 @@ class _SettingPageState extends State<SettingPage> {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .background,
+                                color: Theme.of(context).colorScheme.background,
                               ),
                             ),
                           )
