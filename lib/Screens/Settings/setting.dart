@@ -1390,7 +1390,7 @@ class _SettingPageState extends State<SettingPage> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'High quality streaming is 320kbps, normal streaming quality is 96kb.',
+                          'High quality streming is 320kbps, normal streming quality is 96kb.',
                           style: TextStyle(
                             fontSize: 13,
                             color: Theme.of(context).colorScheme.primary,
