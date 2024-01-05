@@ -132,7 +132,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.transparent,
-                        primary: Colors.transparent,
+                        foregroundColor: Colors.transparent,
                       ),
                       onPressed: () {
                         launch('https://www.buymeacoffee.com/ankitsangwan');
@@ -153,7 +153,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         backgroundColor: Colors.transparent,
-                        primary: Colors.transparent,
+                        foregroundColor: Colors.transparent,
                       ),
                       onPressed: () {
                         const String upiUrl =

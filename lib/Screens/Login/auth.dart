@@ -1,6 +1,7 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Helpers/supabase.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -59,6 +60,8 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     }
     await Hive.box('settings').put('userId', userId);
+
+    FirebaseCrashlytics.instance.setUserIdentifier(userId);
   }
 
   @override

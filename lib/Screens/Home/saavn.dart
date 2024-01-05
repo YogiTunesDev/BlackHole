@@ -12,6 +12,7 @@ import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/user_info_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,12 +54,16 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     if (userInfoData.isEmpty) {
       final UserInfoResponse? userinfodatares =
           await YogitunesAPI().fetchUserData();
-      // print("RESPONSE DATA ::::: $recievedData");
+      print("RESPONSE DATA ::::: $userinfodatares");
       if (userinfodatares != null) {
         if (userinfodatares.data != null) {
           // Hive.box('cache').put('homepage', recievedData);
           Hive.box('settings').put('name', userinfodatares.data?.name);
           Hive.box('settings').put('userInfoData', userinfodatares.toMap());
+
+          final String userId = userinfodatares.data?.id?.toString() ?? '0';
+          FirebaseCrashlytics.instance.setUserIdentifier(userId);
+
           // lists = data.length;
           // lists = [...?data['collections']];
           // lists.insert((lists.length / 2).round(), 'likedArtists');
@@ -928,6 +933,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                       60,
                       AppLocalizations.of(context)!.resultsNotFound,
                       20,
+                      useOfflineMode: true,
                     ),
                   ),
           );
@@ -1115,6 +1121,9 @@ class SongItem extends StatelessWidget {
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
 
+    final String image =
+        itemImage.isNotEmpty ? itemImage[0] : 'assets/cover.jpg';
+
     return InkWell(
       onTap: onTap,
       child: SizedBox(
@@ -1145,7 +1154,7 @@ class SongItem extends StatelessWidget {
                                 ? 'assets/album.png'
                                 : 'assets/cover.jpg'),
                           ),
-                          imageUrl: itemImage[0],
+                          imageUrl: image,
                           //  item['image']
                           //     .toString()
                           //     .replaceAll('http:', 'https:')

@@ -204,12 +204,15 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
 
             Navigator.pop(context);
             if (res['status'] as bool) {
-              print('FUNCTION');
+              print('FUNCTION remove song: ' + widget.data.id.toString());
               widget.callback();
             } else {
               ShowSnackBar().showSnackBar(context, res['data'].toString());
             }
           } else {
+            print('FUNCTION add song: ');
+            print(mediaItem);
+
             AddToPlaylist().addToPlaylist(context, mediaItem);
           }
         }

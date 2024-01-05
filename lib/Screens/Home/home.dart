@@ -13,6 +13,7 @@ import 'package:blackhole/Screens/Search/search_screen.dart';
 import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Services/ext_storage_provider.dart';
 import 'package:blackhole/Services/uni_link_service.dart';
+import 'package:blackhole/main.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -428,10 +429,12 @@ class _HomePageState extends State<HomePage> {
                             ),
                             onTap: () async {
                               Navigator.pop(context);
-                              final Box<String?> box = Hive.box('api-token');
-                              box.put('token', null);
+
+                              // final Box<String?> box = Hive.box('api-token');
+                              apiTokenBox.put('token', null);
                               Hive.box('settings').put('name', null);
                               Hive.box('settings').put('userInfoData', {});
+
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/login', (route) => false);
                             },

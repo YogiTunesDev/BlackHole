@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+// import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -1061,7 +1061,7 @@ class _SettingPageState extends State<SettingPage> {
                         //                           ),
                         //                           TextButton(
                         //                             style: TextButton.styleFrom(
-                        //                               primary: Theme.of(context)
+                        //                               foregroundColor: Theme.of(context)
                         //                                           .colorScheme
                         //                                           .secondary ==
                         //                                       Colors.white
@@ -1210,13 +1210,14 @@ class _SettingPageState extends State<SettingPage> {
                               onTap: () async {
                                 final Uri url = Uri(
                                   scheme: 'https',
-                                  host: 'accounts.yogi-tunes.com',
+                                  host: 'www.yogi-tunes.com',
+                                  path: '/manage-subscription',
                                 );
 
-                                if (await canLaunchUrl(url)) {
+                                try {
                                   await launchUrl(url);
-                                } else {
-                                  throw 'Could not launch $url';
+                                } catch (e) {
+                                  print('Error: $e');
                                 }
 
                                 // Navigator.pushNamed(context, '/subscribe');
@@ -1390,7 +1391,7 @@ class _SettingPageState extends State<SettingPage> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'High quality streming is 320kbps, normal streming quality is 96kb.',
+                          'High quality streaming is 320kbps, normal streaming quality is 96kb.',
                           style: TextStyle(
                             fontSize: 13,
                             color: Theme.of(context).colorScheme.primary,
@@ -1447,10 +1448,10 @@ class _SettingPageState extends State<SettingPage> {
                                   path: '/contact/',
                                 );
 
-                                if (await canLaunchUrl(url)) {
+                                try {
                                   await launchUrl(url);
-                                } else {
-                                  throw 'Could not launch $url';
+                                } catch (e) {
+                                  print('Error: $e');
                                 }
 
                                 // await Intercom.instance.displayMessenger();
@@ -1736,7 +1737,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                       actions: [
                 //                         TextButton(
                 //                           style: TextButton.styleFrom(
-                //                             primary:
+                //                             foregroundColor:
                 //                                 Theme.of(context).brightness ==
                 //                                         Brightness.dark
                 //                                     ? Colors.white
@@ -1754,7 +1755,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                         ),
                 //                         TextButton(
                 //                           style: TextButton.styleFrom(
-                //                             primary: Theme.of(context)
+                //                             foregroundColor: Theme.of(context)
                 //                                         .colorScheme
                 //                                         .secondary ==
                 //                                     Colors.white
@@ -2112,7 +2113,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                             children: [
                 //                               TextButton(
                 //                                 style: TextButton.styleFrom(
-                //                                   primary: Theme.of(context)
+                //                                   foregroundColor: Theme.of(context)
                 //                                       .colorScheme
                 //                                       .secondary,
                 //                                 ),
@@ -2128,7 +2129,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                               ),
                 //                               TextButton(
                 //                                 style: TextButton.styleFrom(
-                //                                   primary: Theme.of(context)
+                //                                   foregroundColor: Theme.of(context)
                 //                                       .colorScheme
                 //                                       .secondary,
                 //                                 ),
@@ -2499,7 +2500,7 @@ class _SettingPageState extends State<SettingPage> {
                 //           subtitle: Text(downloadPath),
                 //           trailing: TextButton(
                 //             style: TextButton.styleFrom(
-                //               primary: Theme.of(context).brightness ==
+                //               foregroundColor: Theme.of(context).brightness ==
                 //                       Brightness.dark
                 //                   ? Colors.white
                 //                   : Colors.grey[700],
@@ -2935,7 +2936,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                     actions: [
                 //                       TextButton(
                 //                         style: TextButton.styleFrom(
-                //                           primary:
+                //                           foregroundColor:
                 //                               Theme.of(context).brightness ==
                 //                                       Brightness.dark
                 //                                   ? Colors.white
@@ -2953,7 +2954,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                       ),
                 //                       TextButton(
                 //                         style: TextButton.styleFrom(
-                //                           primary: Theme.of(context)
+                //                           foregroundColor: Theme.of(context)
                 //                                       .colorScheme
                 //                                       .secondary ==
                 //                                   Colors.white
@@ -3235,7 +3236,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                             children: [
                 //                               TextButton(
                 //                                 style: TextButton.styleFrom(
-                //                                   primary: Theme.of(context)
+                //                                   foregroundColor: Theme.of(context)
                 //                                       .colorScheme
                 //                                       .secondary,
                 //                                 ),
@@ -3251,7 +3252,7 @@ class _SettingPageState extends State<SettingPage> {
                 //                               ),
                 //                               TextButton(
                 //                                 style: TextButton.styleFrom(
-                //                                   primary: Theme.of(context)
+                //                                   foregroundColor: Theme.of(context)
                 //                                       .colorScheme
                 //                                       .secondary,
                 //                                 ),
@@ -3513,7 +3514,7 @@ class _SettingPageState extends State<SettingPage> {
                 //           },
                 //           trailing: TextButton(
                 //             style: TextButton.styleFrom(
-                //               primary: Theme.of(context).brightness ==
+                //               foregroundColor: Theme.of(context).brightness ==
                 //                       Brightness.dark
                 //                   ? Colors.white
                 //                   : Colors.grey[700],

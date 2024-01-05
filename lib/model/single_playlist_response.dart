@@ -45,8 +45,11 @@ class SinglePlaylistResponse {
     try {
       return SinglePlaylistResponse(
         status: map['status'] != null ? map['status'] as bool : null,
-        statusCode: map['status_code'] != null ? map['status_code'] as int : null,
-        data: map['data'] != null ? SinglePlaylistData.fromMap(map['data'] as Map<String, dynamic>) : null,
+        statusCode:
+            map['status_code'] != null ? map['status_code'] as int : null,
+        data: map['data'] != null
+            ? SinglePlaylistData.fromMap(map['data'] as Map<String, dynamic>)
+            : null,
       );
     } catch (e) {
       log('Error in 1  : $e');
@@ -54,22 +57,30 @@ class SinglePlaylistResponse {
     return SinglePlaylistResponse(
       status: map['status'] != null ? map['status'] as bool : null,
       statusCode: map['status_code'] != null ? map['status_code'] as int : null,
-      data: map['data'] != null ? SinglePlaylistData.fromMap(map['data'] as Map<String, dynamic>) : null,
+      data: map['data'] != null
+          ? SinglePlaylistData.fromMap(map['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SinglePlaylistResponse.fromJson(String source) => SinglePlaylistResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SinglePlaylistResponse.fromJson(String source) =>
+      SinglePlaylistResponse.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'SinglePlaylistResponse(status: $status, statusCode: $statusCode, data: $data)';
+  String toString() =>
+      'SinglePlaylistResponse(status: $status, statusCode: $statusCode, data: $data)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is SinglePlaylistResponse && other.status == status && other.statusCode == statusCode && other.data == data;
+    return other is SinglePlaylistResponse &&
+        other.status == status &&
+        other.statusCode == statusCode &&
+        other.data == data;
   }
 
   @override
@@ -162,14 +173,19 @@ class SinglePlaylistData {
       return SinglePlaylistData(
         id: map['id'] != null ? map['id'] as int : null,
         name: map['name'] != null ? map['name'] as String : null,
-        description: map['description'] != null ? map['description'] as String : null,
+        description:
+            map['description'] != null ? map['description'] as String : null,
         userId: map['user_id'] != null ? map['user_id'] as int : null,
         creatorId: map['creator_id'] != null ? map['creator_id'] as int : null,
         byop: map['byop'] != null ? map['byop'] as bool : null,
-        playlistDuration: map['playlist_duration'] != null ? map['playlist_duration'] as String : null,
+        playlistDuration: map['playlist_duration'] != null
+            ? map['playlist_duration'] as String
+            : null,
         quadImages: map['quadImages'] != null
             ? map['quadImages'].toString() != 'null'
-                ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null ? QuadImage.fromMap(x as Map<String, dynamic>) : null) as Iterable<dynamic>)
+                ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null
+                    ? QuadImage.fromMap(x as Map<String, dynamic>)
+                    : null) as Iterable<dynamic>)
                 : null
             : null,
         // map['quadImages'] != null
@@ -179,11 +195,29 @@ class SinglePlaylistData {
         //             : QuadImage()) as Iterable<dynamic>)
         //         : null
         //     : null,
-        profile: map['profile'] != null ? Profile.fromMap(map['profile'] as Map<String, dynamic>) : null,
-        tags: map['tags'] != null ? List<Tag>.from(map['tags']?.map((x) => Tag.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-        playlistTracks: map['playlist_tracks'] != null ? List<PlaylistTracks>.from(map['playlist_tracks']?.map((x) => PlaylistTracks.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-        tracks: map['tracks'] != null ? List<Tracks>.from(map['tracks']?.map((x) => Tracks.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-        lstSongItemModel: map['lstSongItemModel'] != null ? List<SongItemModel>.from(map['lstSongItemModel']?.map((x) => SongItemModel.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
+        profile: map['profile'] != null
+            ? Profile.fromMap(map['profile'] as Map<String, dynamic>)
+            : null,
+        tags: map['tags'] != null
+            ? List<Tag>.from(
+                map['tags']?.map((x) => Tag.fromMap(x as Map<String, dynamic>))
+                    as Iterable<dynamic>)
+            : null,
+        playlistTracks: map['playlist_tracks'] != null
+            ? List<PlaylistTracks>.from(map['playlist_tracks']?.map(
+                    (x) => PlaylistTracks.fromMap(x as Map<String, dynamic>))
+                as Iterable<dynamic>)
+            : null,
+        tracks: map['tracks'] != null
+            ? List<Tracks>.from(map['tracks']
+                    ?.map((x) => Tracks.fromMap(x as Map<String, dynamic>))
+                as Iterable<dynamic>)
+            : null,
+        lstSongItemModel: map['lstSongItemModel'] != null
+            ? List<SongItemModel>.from(map['lstSongItemModel']?.map(
+                    (x) => SongItemModel.fromMap(x as Map<String, dynamic>))
+                as Iterable<dynamic>)
+            : null,
       );
     } catch (e) {
       log('Error in 2  : $e');
@@ -191,14 +225,19 @@ class SinglePlaylistData {
     return SinglePlaylistData(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      description: map['description'] != null ? map['description'] as String : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
       userId: map['user_id'] != null ? map['user_id'] as int : null,
       creatorId: map['creator_id'] != null ? map['creator_id'] as int : null,
       byop: map['byop'] != null ? map['byop'] as bool : null,
-      playlistDuration: map['playlist_duration'] != null ? map['playlist_duration'] as String : null,
+      playlistDuration: map['playlist_duration'] != null
+          ? map['playlist_duration'] as String
+          : null,
       quadImages: map['quadImages'] != null
           ? map['quadImages'].toString() != 'null'
-              ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null ? QuadImage.fromMap(x as Map<String, dynamic>) : null) as Iterable<dynamic>)
+              ? List<QuadImage?>.from(map['quadImages']?.map((x) => x != null
+                  ? QuadImage.fromMap(x as Map<String, dynamic>)
+                  : null) as Iterable<dynamic>)
               : null
           : null,
       // map['quadImages'] != null
@@ -208,17 +247,36 @@ class SinglePlaylistData {
       //             : QuadImage()) as Iterable<dynamic>)
       //         : null
       //     : null,
-      profile: map['profile'] != null ? Profile.fromMap(map['profile'] as Map<String, dynamic>) : null,
-      tags: map['tags'] != null ? List<Tag>.from(map['tags']?.map((x) => Tag.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-      playlistTracks: map['playlist_tracks'] != null ? List<PlaylistTracks>.from(map['playlist_tracks']?.map((x) => PlaylistTracks.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-      tracks: map['tracks'] != null ? List<Tracks>.from(map['tracks']?.map((x) => Tracks.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-      lstSongItemModel: map['lstSongItemModel'] != null ? List<SongItemModel>.from(map['lstSongItemModel']?.map((x) => SongItemModel.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
+      profile: map['profile'] != null
+          ? Profile.fromMap(map['profile'] as Map<String, dynamic>)
+          : null,
+      tags: map['tags'] != null
+          ? List<Tag>.from(
+              map['tags']?.map((x) => Tag.fromMap(x as Map<String, dynamic>))
+                  as Iterable<dynamic>)
+          : null,
+      playlistTracks: map['playlist_tracks'] != null
+          ? List<PlaylistTracks>.from(map['playlist_tracks']?.map(
+                  (x) => PlaylistTracks.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
+          : null,
+      tracks: map['tracks'] != null
+          ? List<Tracks>.from(map['tracks']
+                  ?.map((x) => Tracks.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
+          : null,
+      lstSongItemModel: map['lstSongItemModel'] != null
+          ? List<SongItemModel>.from(map['lstSongItemModel']
+                  ?.map((x) => SongItemModel.fromMap(x as Map<String, dynamic>))
+              as Iterable<dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory SinglePlaylistData.fromJson(String source) => SinglePlaylistData.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory SinglePlaylistData.fromJson(String source) =>
+      SinglePlaylistData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -267,22 +325,28 @@ class SinglePlaylistData {
     if (quadImages != null) {
       if (TOTALIMAGES == 0) {
         for (var i = 0; i < quadImages!.length; i++) {
-          if (quadImages?[i]?.imageUrl != null && quadImages?[i]?.image != null) {
+          if (quadImages?[i]?.imageUrl != null &&
+              quadImages?[i]?.image != null) {
             if (quadImages![i]!.imageUrl!.isNotEmpty) {
-              lstStr.add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+              lstStr
+                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
             }
           }
         }
       } else {
         for (var i = 0; i < TOTALIMAGES; i++) {
-          if (quadImages?[i]?.imageUrl != null && quadImages?[i]?.image != null) {
+          if (quadImages?[i]?.imageUrl != null &&
+              quadImages?[i]?.image != null) {
             if (quadImages![i]!.imageUrl!.isNotEmpty) {
-              lstStr.add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
+              lstStr
+                  .add('${quadImages![i]!.imageUrl}/${quadImages![i]!.image}');
             } else {
-              lstStr.add('');
+              lstStr.add(
+                  'https://yogitunes-assets.s3.us-east-1.amazonaws.com/uploads/cover.jpg');
             }
           } else {
-            lstStr.add('');
+            lstStr.add(
+                'https://yogitunes-assets.s3.us-east-1.amazonaws.com/uploads/cover.jpg');
           }
         }
       }
@@ -331,9 +395,12 @@ class PlaylistTracks {
     try {
       return PlaylistTracks(
         trackId: map['track_id'] != null ? map['track_id'] as int : null,
-        playlistId: map['playlist_id'] != null ? map['playlist_id'] as int : null,
+        playlistId:
+            map['playlist_id'] != null ? map['playlist_id'] as int : null,
         order: map['order'] != null ? map['order'] as int : null,
-        track: map['track'] != null ? Track.fromMap(map['track'] as Map<String, dynamic>) : null,
+        track: map['track'] != null
+            ? Track.fromMap(map['track'] as Map<String, dynamic>)
+            : null,
       );
     } catch (e) {
       log('Error in 6  : $e');
@@ -343,13 +410,16 @@ class PlaylistTracks {
       trackId: map['track_id'] != null ? map['track_id'] as int : null,
       playlistId: map['playlist_id'] != null ? map['playlist_id'] as int : null,
       order: map['order'] != null ? map['order'] as int : null,
-      track: map['track'] != null ? Track.fromMap(map['track'] as Map<String, dynamic>) : null,
+      track: map['track'] != null
+          ? Track.fromMap(map['track'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory PlaylistTracks.fromJson(String source) => PlaylistTracks.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PlaylistTracks.fromJson(String source) =>
+      PlaylistTracks.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -360,12 +430,19 @@ class PlaylistTracks {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PlaylistTracks && other.trackId == trackId && other.playlistId == playlistId && other.order == order && other.track == track;
+    return other is PlaylistTracks &&
+        other.trackId == trackId &&
+        other.playlistId == playlistId &&
+        other.order == order &&
+        other.track == track;
   }
 
   @override
   int get hashCode {
-    return trackId.hashCode ^ playlistId.hashCode ^ order.hashCode ^ track.hashCode;
+    return trackId.hashCode ^
+        playlistId.hashCode ^
+        order.hashCode ^
+        track.hashCode;
   }
 }
 
@@ -431,16 +508,27 @@ class Track {
       albumId: map['albumId'] != null ? map['albumId'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       duration: map['duration'] != null ? map['duration'] as String : null,
-      album: map['album'] != null ? PLaylistTrackAlbum.fromMap(map['album'] as Map<String, dynamic>) : null,
-      files: map['files'] != null ? List<Files>.from(map['files']?.map((x) => Files.fromMap(x as Map<String, dynamic>)) as Iterable<dynamic>) : null,
-      bpm: map['bpm'] != null ? Bpm.fromMap(map['bpm'] as Map<String, dynamic>) : null,
-      songItemModel: map['songItemModel'] != null ? SongItemModel.fromMap(map['songItemModel'] as Map<String, dynamic>) : null,
+      album: map['album'] != null
+          ? PLaylistTrackAlbum.fromMap(map['album'] as Map<String, dynamic>)
+          : null,
+      files: map['files'] != null
+          ? List<Files>.from(
+              map['files']?.map((x) => Files.fromMap(x as Map<String, dynamic>))
+                  as Iterable<dynamic>)
+          : null,
+      bpm: map['bpm'] != null
+          ? Bpm.fromMap(map['bpm'] as Map<String, dynamic>)
+          : null,
+      songItemModel: map['songItemModel'] != null
+          ? SongItemModel.fromMap(map['songItemModel'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Track.fromJson(String source) => Track.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Track.fromJson(String source) =>
+      Track.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -464,7 +552,14 @@ class Track {
 
   @override
   int get hashCode {
-    return id.hashCode ^ albumId.hashCode ^ name.hashCode ^ duration.hashCode ^ album.hashCode ^ files.hashCode ^ bpm.hashCode ^ songItemModel.hashCode;
+    return id.hashCode ^
+        albumId.hashCode ^
+        name.hashCode ^
+        duration.hashCode ^
+        album.hashCode ^
+        files.hashCode ^
+        bpm.hashCode ^
+        songItemModel.hashCode;
   }
 }
 
@@ -503,7 +598,8 @@ class Bpm {
 
   String toJson() => json.encode(toMap());
 
-  factory Bpm.fromJson(String source) => Bpm.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Bpm.fromJson(String source) =>
+      Bpm.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Bpm(trackId: $trackId, bpm: $bpm)';
@@ -565,14 +661,19 @@ class PLaylistTrackAlbum {
       id: map['id'] != null ? map['id'] as int : null,
       artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      cover: map['cover'] != null ? Cover.fromMap(map['cover'] as Map<String, dynamic>) : null,
-      profile: map['profile'] != null ? Profile.fromMap(map['profile'] as Map<String, dynamic>) : null,
+      cover: map['cover'] != null
+          ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
+          : null,
+      profile: map['profile'] != null
+          ? Profile.fromMap(map['profile'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory PLaylistTrackAlbum.fromJson(String source) => PLaylistTrackAlbum.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PLaylistTrackAlbum.fromJson(String source) =>
+      PLaylistTrackAlbum.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -583,12 +684,21 @@ class PLaylistTrackAlbum {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PLaylistTrackAlbum && other.id == id && other.artistId == artistId && other.name == name && other.cover == cover && other.profile == profile;
+    return other is PLaylistTrackAlbum &&
+        other.id == id &&
+        other.artistId == artistId &&
+        other.name == name &&
+        other.cover == cover &&
+        other.profile == profile;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ artistId.hashCode ^ name.hashCode ^ cover.hashCode ^ profile.hashCode;
+    return id.hashCode ^
+        artistId.hashCode ^
+        name.hashCode ^
+        cover.hashCode ^
+        profile.hashCode;
   }
 }
 
@@ -645,7 +755,8 @@ class Files {
 
   String toJson() => json.encode(toMap());
 
-  factory Files.fromJson(String source) => Files.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Files.fromJson(String source) =>
+      Files.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -656,12 +767,21 @@ class Files {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Files && other.id == id && other.trackId == trackId && other.format == format && other.bitrate == bitrate && other.trackUrl == trackUrl;
+    return other is Files &&
+        other.id == id &&
+        other.trackId == trackId &&
+        other.format == format &&
+        other.bitrate == bitrate &&
+        other.trackUrl == trackUrl;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ trackId.hashCode ^ format.hashCode ^ bitrate.hashCode ^ trackUrl.hashCode;
+    return id.hashCode ^
+        trackId.hashCode ^
+        format.hashCode ^
+        bitrate.hashCode ^
+        trackUrl.hashCode;
   }
 }
 
@@ -776,22 +896,37 @@ class Tracks {
       return Tracks(
         id: map['id'] != null ? map['id'] as int : null,
         name: map['name'] != null ? map['name'] as String : null,
-        artistString: map['artist_string'] != null ? map['artist_string'] as String : null,
+        artistString: map['artist_string'] != null
+            ? map['artist_string'] as String
+            : null,
         duration: map['duration'] != null ? map['duration'] as String : null,
         isrc: map['isrc'] != null ? map['isrc'] as String : null,
         upc: map['upc'] != null ? map['upc'] as String : null,
         albumId: map['album_id'] != null ? map['album_id'] as int : null,
-        createdAt: map['created_at'] != null ? map['created_at'] as String : null,
-        updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
-        audiosaladTrackId: map['audiosalad_track_id'] != null ? map['audiosalad_track_id'] as int : null,
+        createdAt:
+            map['created_at'] != null ? map['created_at'] as String : null,
+        updatedAt:
+            map['updated_at'] != null ? map['updated_at'] as String : null,
+        audiosaladTrackId: map['audiosalad_track_id'] != null
+            ? map['audiosalad_track_id'] as int
+            : null,
         userType: map['user_type'] != null ? map['user_type'] as String : null,
         userId: map['user_id'] != null ? map['user_id'] as int : null,
         waveform: map['waveform'] != null ? map['waveform'] as String : null,
-        audiosaladCache: map['audiosalad_cache'] != null ? map['audiosalad_cache'].toString() : null,
-        priceInCents: map['price_in_cents'] != null ? map['price_in_cents'].toString(): null,
-        externalStreamUrl: map['external_stream_url'] != null ? map['external_stream_url'] as String : null,
-        deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
-        album: map['album'] != null ? Album.fromMap(map['album'] as Map<String, dynamic>) : null,
+        audiosaladCache: map['audiosalad_cache'] != null
+            ? map['audiosalad_cache'].toString()
+            : null,
+        priceInCents: map['price_in_cents'] != null
+            ? map['price_in_cents'].toString()
+            : null,
+        externalStreamUrl: map['external_stream_url'] != null
+            ? map['external_stream_url'] as String
+            : null,
+        deletedAt:
+            map['deleted_at'] != null ? map['deleted_at'] as String : null,
+        album: map['album'] != null
+            ? Album.fromMap(map['album'] as Map<String, dynamic>)
+            : null,
       );
     } catch (e) {
       log('Error in 7  : $e');
@@ -800,28 +935,40 @@ class Tracks {
     return Tracks(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
-      artistString: map['artist_string'] != null ? map['artist_string'] as String : null,
+      artistString:
+          map['artist_string'] != null ? map['artist_string'] as String : null,
       duration: map['duration'] != null ? map['duration'] as String : null,
       isrc: map['isrc'] != null ? map['isrc'] as String : null,
       upc: map['upc'] != null ? map['upc'] as String : null,
       albumId: map['album_id'] != null ? map['album_id'] as int : null,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
       updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
-      audiosaladTrackId: map['audiosalad_track_id'] != null ? map['audiosalad_track_id'] as int : null,
+      audiosaladTrackId: map['audiosalad_track_id'] != null
+          ? map['audiosalad_track_id'] as int
+          : null,
       userType: map['user_type'] != null ? map['user_type'] as String : null,
       userId: map['user_id'] != null ? map['user_id'] as int : null,
       waveform: map['waveform'] != null ? map['waveform'] as String : null,
-      audiosaladCache: map['audiosalad_cache'] != null ? map['audiosalad_cache'] as String : null,
-      priceInCents: map['price_in_cents'] != null ? map['price_in_cents'] as String : null,
-      externalStreamUrl: map['external_stream_url'] != null ? map['external_stream_url'] as String : null,
+      audiosaladCache: map['audiosalad_cache'] != null
+          ? map['audiosalad_cache'] as String
+          : null,
+      priceInCents: map['price_in_cents'] != null
+          ? map['price_in_cents'] as String
+          : null,
+      externalStreamUrl: map['external_stream_url'] != null
+          ? map['external_stream_url'] as String
+          : null,
       deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
-      album: map['album'] != null ? Album.fromMap(map['album'] as Map<String, dynamic>) : null,
+      album: map['album'] != null
+          ? Album.fromMap(map['album'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Tracks.fromJson(String source) => Tracks.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Tracks.fromJson(String source) =>
+      Tracks.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -997,29 +1144,45 @@ class Album {
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] != null ? map['name'] as String : null,
       artistId: map['artist_id'] != null ? map['artist_id'] as int : null,
-      recordLabelId: map['record_label_id'] != null ? map['record_label_id'] as int : null,
-      tmpCoverUrl: map['tmp_cover_url'] != null ? map['tmp_cover_url'] as String : null,
+      recordLabelId:
+          map['record_label_id'] != null ? map['record_label_id'] as int : null,
+      tmpCoverUrl:
+          map['tmp_cover_url'] != null ? map['tmp_cover_url'] as String : null,
       createdAt: map['created_at'] != null ? map['created_at'] as String : null,
       updatedAt: map['updated_at'] != null ? map['updated_at'] as String : null,
-      audiosaladReleaseId: map['audiosalad_release_id'] != null ? map['audiosalad_release_id'].toString() as String : null,
+      audiosaladReleaseId: map['audiosalad_release_id'] != null
+          ? map['audiosalad_release_id'].toString() as String
+          : null,
       available: map['available'] != null ? map['available'] as bool : null,
-      releaseDate: map['release_date'] != null ? map['release_date'] as String : null,
-      description: map['description'] != null ? map['description'] as String : null,
-      audiosaladState: map['audiosalad_state'] != null ? map['audiosalad_state'] as String : null,
-      audiosaladCache: map['audiosalad_cache'] != null ? map['audiosalad_cache'] as String : null,
-      distributorId: map['distributor_id'] != null ? map['distributor_id'] as String : null,
+      releaseDate:
+          map['release_date'] != null ? map['release_date'] as String : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
+      audiosaladState: map['audiosalad_state'] != null
+          ? map['audiosalad_state'] as String
+          : null,
+      audiosaladCache: map['audiosalad_cache'] != null
+          ? map['audiosalad_cache'] as String
+          : null,
+      distributorId: map['distributor_id'] != null
+          ? map['distributor_id'] as String
+          : null,
       upc: map['upc'] != null ? map['upc'] as String : null,
       catalog: map['catalog'] != null ? map['catalog'] as String : null,
-      priceInCents: map['price_in_cents'] != null ? map['price_in_cents'] as int : null,
+      priceInCents:
+          map['price_in_cents'] != null ? map['price_in_cents'] as int : null,
       ddexState: map['ddex_state'] != null ? map['ddex_state'] as String : null,
       deletedAt: map['deleted_at'] != null ? map['deleted_at'] as String : null,
-      cover: map['cover'] != null ? Cover.fromMap(map['cover'] as Map<String, dynamic>) : null,
+      cover: map['cover'] != null
+          ? Cover.fromMap(map['cover'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Album.fromJson(String source) => Album.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Album.fromJson(String source) =>
+      Album.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

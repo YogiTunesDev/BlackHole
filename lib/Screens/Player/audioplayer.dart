@@ -235,6 +235,7 @@ class _PlayScreenState extends State<PlayScreen> {
       final String str = mediaItemTemp.id;
       final String endOffset = mediaItemTemp.duration!.inSeconds.toString();
       print("Send Request");
+      print(mediaItemTemp.id);
       await YogitunesAPI().updatePlaySong(str, endOffset);
     }
   }
@@ -461,6 +462,9 @@ class _PlayScreenState extends State<PlayScreen> {
                             );
                           }
                           if (value == 0) {
+                            print('Add to playlist: ');
+                            print(mediaItem);
+
                             AddToPlaylist().addToPlaylist(context, mediaItem);
                           }
                         },
@@ -821,7 +825,7 @@ class _PlayScreenState extends State<PlayScreen> {
               children: [
                 TextButton(
                   style: TextButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.secondary,
                   ),
                   onPressed: () {
                     sleepTimer(0);
@@ -835,7 +839,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
-                    primary:
+                    foregroundColor:
                         Theme.of(context).colorScheme.secondary == Colors.white
                             ? Colors.black
                             : Colors.white,

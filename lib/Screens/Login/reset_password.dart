@@ -1,5 +1,6 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/main.dart';
 import 'package:blackhole/model/reset_password_response.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -275,9 +276,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                             if (resetPasswordResponse != null) {
                                               if (resetPasswordResponse
                                                   .status!) {
-                                                var box = await Hive.openBox(
-                                                    'api-token');
-                                                box.put('token', null);
+                                                // var box = await Hive.openBox(
+                                                //     'api-token');
+                                                apiTokenBox.put('token', null);
                                                 Navigator.popAndPushNamed(
                                                     context, '/login');
                                               } else {

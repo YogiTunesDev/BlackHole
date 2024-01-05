@@ -132,6 +132,7 @@ class _AlbumSearchPageState extends State<AlbumSearchPage> {
                           60,
                           AppLocalizations.of(context)!.resultsNotFound,
                           20,
+                          useOfflineMode: true,
                         )
                       : CustomScrollView(
                           physics: const BouncingScrollPhysics(),

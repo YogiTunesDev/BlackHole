@@ -3,8 +3,11 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/Helpers/supabase.dart';
 import 'package:blackhole/model/forgot_password_response.dart';
 import 'package:blackhole/model/login_response.dart';
+import 'package:blackhole/Screens/Settings/subscription.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import '../splash_screen.dart';
@@ -22,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool isObscure = true;
   String? errorMessage;
+  bool subscriptionStatus = true;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool forgotLoader = false;
@@ -31,6 +35,174 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _dialogBuilder(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('No Active Subscription Found'),
+          content: Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                        text:
+                            'It appears there is not an active subscription associated with this email address.'),
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                            text:
+                                '\n\nIf you think you are seeing this in error please contact us for support '),
+                        TextSpan(
+                          text: 'here.',
+                          style: const TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              final Uri url = Uri(
+                                scheme: 'https',
+                                host: 'www.yogi-tunes.com',
+                                path: '/contact',
+                              );
+
+                              launchUrl(url);
+                            },
+                        ),
+                        const TextSpan(
+                            text: '\n\nTo set up a new subscription visit '),
+                        TextSpan(
+                          text: 'here.',
+                          style: const TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SubscriptionScreen()),
+                              );
+                            },
+                        ),
+                        const TextSpan(
+                            text:
+                                '\n\nIf the above link doesn\'t work visit here to subscribe and '),
+                        TextSpan(
+                          text: 'get support.',
+                          style: const TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              final Uri url = Uri(
+                                scheme: 'https',
+                                host: 'www.yogi-tunes.com',
+                                path: '/pricing',
+                              );
+
+                              launchUrl(url);
+                            },
+                        ),
+                      ],
+                    ),
+                  ],
+                  style: TextStyle(
+                    // height: 0.97,
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                ),
+                height: 55.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Theme.of(context).colorScheme.secondary,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 5.0,
+                      offset: Offset(0.0, 3.0),
+                    )
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'Back to Login',
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Hive.deleteFromDisk();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (route) => false);
+              },
+            ),
+            // TextButton(
+            //   style: TextButton.styleFrom(
+            //     textStyle: Theme.of(context).textTheme.labelLarge,
+            //   ),
+            //   child: Container(
+            //     margin: const EdgeInsets.symmetric(
+            //       vertical: 10.0,
+            //     ),
+            //     height: 55.0,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(10.0),
+            //       color: Theme.of(context).colorScheme.secondary,
+            //       boxShadow: const [
+            //         BoxShadow(
+            //           color: Colors.black26,
+            //           blurRadius: 5.0,
+            //           offset: Offset(0.0, 3.0),
+            //         )
+            //       ],
+            //     ),
+            //     child: Center(
+            //       child: Text(
+            //         'Subscribe Now',
+            //         style: TextStyle(
+            //           color: Theme.of(context).brightness == Brightness.dark
+            //               ? Colors.black
+            //               : Colors.white,
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: 20.0,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
+          ],
+        );
+      },
+    );
   }
 
   Future _addUserData(String name) async {
@@ -316,8 +488,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                           if (loginResponse != null) {
                                             if (loginResponse.status!) {
-                                              redirectAfterAuthentication(
-                                                  context);
+                                              subscriptionStatus =
+                                                  await checkSubscriptionStatus(
+                                                      context);
+
+                                              if (subscriptionStatus == true) {
+                                                redirectAfterAuthentication(
+                                                    context);
+                                              } else {
+                                                await _dialogBuilder(context);
+                                              }
+
                                               // Navigator.pushNamed(
                                               //     context, '/home');
                                             } else {

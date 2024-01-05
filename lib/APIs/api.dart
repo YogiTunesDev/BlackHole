@@ -39,9 +39,11 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class YogitunesAPI {
-  List preferredLanguages = Hive.box('settings')
-      .get('preferredLanguage', defaultValue: ['Hindi']) as List;
+  // List preferredLanguages = Hive.box('settings')
+  //     .get('preferredLanguage', defaultValue: ['Hindi']) as List;
   Map<String, String> headers = {};
+
+  // String baseUrl = 'https://api.yogitunes.dev/';
   String baseUrl = 'https://api2.yogi-tunes.com/';
   String apiStr = 'api/';
   Box settingsBox = Hive.box('settings');
@@ -131,6 +133,8 @@ class YogitunesAPI {
     //   final IOClient myClient = IOClient(httpClient);
     //   return myClient.get(url, headers: headers);
     // }
+
+    print(url);
 
     return get(url, headers: headers).onError((error, stackTrace) {
       return Response('', 405);
@@ -439,6 +443,9 @@ class YogitunesAPI {
         final Map data = json.decode(res.body) as Map;
         result = await FormatResponse.formatYogiRadioStationStreamData(
             RadioStationsStreamResponse?.fromMap(data as Map<String, dynamic>));
+
+        print('Single Song Result: ');
+        print(result);
       }
     } catch (e) {
       log('Error in fetchHomePageData: $e');
@@ -812,6 +819,8 @@ class YogitunesAPI {
       {bool isAdd = false}) async {
     List<Map> dataList = [];
 
+    print(lst);
+
     for (int i = 0; i < lst.length; i++) {
       dataList.insert(i, {'id': lst[i], 'order': isAdd ? 0 : (i + 1)});
     }
@@ -836,6 +845,9 @@ class YogitunesAPI {
         mapData['byop'] = false;
       }
 
+      print('Edit Playlist: ');
+      print(mapData);
+
       final res = await http.post(
         Uri.parse(url),
         body: json.encode(mapData),
@@ -844,6 +856,8 @@ class YogitunesAPI {
 
       if (res.statusCode == 200) {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
+
+        print(data);
 
         return data;
       }

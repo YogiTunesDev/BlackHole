@@ -178,6 +178,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                             60,
                             AppLocalizations.of(context)!.resultsNotFound,
                             20,
+                            useOfflineMode: true,
                           )
                         else if (searchAllType == SearchAllType.albums &&
                             seeAllLibraryAlbumsResponse != null)
@@ -191,6 +192,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               60,
                               AppLocalizations.of(context)!.resultsNotFound,
                               20,
+                              useOfflineMode: true,
                             )
                           else
                             GridView.builder(
@@ -251,6 +253,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                               60,
                               AppLocalizations.of(context)!.resultsNotFound,
                               20,
+                              useOfflineMode: true,
                             )
                           else
                             GridView.builder(
@@ -335,6 +338,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                             60,
                             AppLocalizations.of(context)!.resultsNotFound,
                             20,
+                            useOfflineMode: true,
                           )
                         else if (searchAllType == SearchAllType.tracks &&
                             searchAllTracksResponse != null)

@@ -502,7 +502,7 @@ class _DownloadedSongsState extends State<DownloadedSongs>
 //                             actions: [
 //                               TextButton(
 //                                 style: TextButton.styleFrom(
-//                                   primary: Theme.of(context).brightness ==
+//                                   foregroundColor: Theme.of(context).brightness ==
 //                                           Brightness.dark
 //                                       ? Colors.white
 //                                       : Colors.grey[700],
@@ -517,7 +517,7 @@ class _DownloadedSongsState extends State<DownloadedSongs>
 //                               ),
 //                               TextButton(
 //                                 style: TextButton.styleFrom(
-//                                   primary: Colors.white,
+//                                   foregroundColor: Colors.white,
 //                                   backgroundColor:
 //                                       Theme.of(context).accentColor,
 //                                 ),
@@ -777,7 +777,7 @@ class _SongsTabState extends State<SongsTab>
                           //             actions: [
                           //               TextButton(
                           //                 style: TextButton.styleFrom(
-                          //                   primary: Theme.of(context).brightness ==
+                          //                   foregroundColor: Theme.of(context).brightness ==
                           //                           Brightness.dark
                           //                       ? Colors.white
                           //                       : Colors.grey[700],
@@ -792,7 +792,7 @@ class _SongsTabState extends State<SongsTab>
                           //               ),
                           //               TextButton(
                           //                 style: TextButton.styleFrom(
-                          //                   primary: Colors.white,
+                          //                   foregroundColor: Colors.white,
                           //                   backgroundColor:
                           //                       Theme.of(context).accentColor,
                           //                 ),
@@ -1039,7 +1039,7 @@ class _SongsTabState extends State<SongsTab>
                           //             actions: [
                           //               TextButton(
                           //                 style: TextButton.styleFrom(
-                          //                   primary: Theme.of(context).brightness ==
+                          //                   foregroundColor: Theme.of(context).brightness ==
                           //                           Brightness.dark
                           //                       ? Colors.white
                           //                       : Colors.grey[700],
@@ -1051,7 +1051,7 @@ class _SongsTabState extends State<SongsTab>
                           //               ),
                           //               TextButton(
                           //                 style: TextButton.styleFrom(
-                          //                   primary: Colors.white,
+                          //                   foregroundColor: Colors.white,
                           //                   backgroundColor:
                           //                       Theme.of(context).accentColor,
                           //                 ),

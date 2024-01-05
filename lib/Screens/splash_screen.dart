@@ -64,6 +64,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
+Future<bool> checkSubscriptionStatus(BuildContext context) async {
+  final SubscriptionStatusResponse? subscriptionStatusResponse =
+      await YogitunesAPI().subscriptionStatus();
+
+  if (subscriptionStatusResponse != null) {
+    if (subscriptionStatusResponse.status ?? false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 Future<void> redirectAfterAuthentication(BuildContext context) async {
   print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
 
@@ -74,23 +89,8 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     //     const Duration(days: 0));
     // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     // return;
-    final SubscriptionStatusResponse? subscriptionStatusResponse =
-        await YogitunesAPI().subscriptionStatus();
-    if (subscriptionStatusResponse != null) {
-      if (subscriptionStatusResponse.status ?? false) {
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/subscription', (route) => false,
-            arguments: {
-              'isFirstTime': true,
-            });
-        // Navigator.pushNamed(context, '/subscription');
-      }
-    } else {
-      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-    }
     // return HomePage();
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
   } else {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     // Navigator.pushNamed(context, '/login');

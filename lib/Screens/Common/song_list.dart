@@ -117,7 +117,12 @@ class _SongsListPageState extends State<SongsListPage> {
       if (widget.songListType == SongListType.album) {
         /// check current screen is album screen and call single album api
 
-        final SingleAlbumResponse? albumRes = await YogitunesAPI().fetchYogiSingleAlbumData(widget.id!);
+        final SingleAlbumResponse? albumRes =
+            await YogitunesAPI().fetchYogiSingleAlbumData(widget.id!);
+
+        print("Entered... SongListType album");
+        print(albumRes);
+
         if (albumRes != null) {
           if (albumRes.status!) {
             if (albumRes.data != null) {
@@ -126,7 +131,9 @@ class _SongsListPageState extends State<SongsListPage> {
                   songList = albumRes.data!.lstSongItemModel!;
                 }
               }
-              mainPlayListImage[0] = (albumRes.data?.cover?.imgUrl ?? '') + (albumRes.data?.cover?.imgUrl != null ? '/' : '') + (albumRes.data?.cover?.image ?? '');
+              mainPlayListImage[0] = (albumRes.data?.cover?.imgUrl ?? '') +
+                  (albumRes.data?.cover?.imgUrl != null ? '/' : '') +
+                  (albumRes.data?.cover?.image ?? '');
               mainPlayListName ??= albumRes.data?.name ?? '';
             }
           }
@@ -134,7 +141,11 @@ class _SongsListPageState extends State<SongsListPage> {
       } else if (widget.songListType == SongListType.playlist) {
         /// check current screen is playlist screen and call single playlist api
 
-        playlistRes = await YogitunesAPI().fetchYogiSinglePlaylistData(widget.id!);
+        playlistRes =
+            await YogitunesAPI().fetchYogiSinglePlaylistData(widget.id!);
+
+        print("Entered... SongListType playlist");
+        print(playlistRes);
 
         if (playlistRes != null) {
           if (playlistRes!.status!) {
@@ -142,8 +153,11 @@ class _SongsListPageState extends State<SongsListPage> {
               if (playlistRes!.data!.lstSongItemModel != null) {
                 if (playlistRes!.data!.lstSongItemModel!.isNotEmpty) {
                   songList = playlistRes!.data!.lstSongItemModel!;
-                  for (int i = 0; i < playlistRes!.data!.lstSongItemModel!.length; i++) {
-                    selectedPlaylist.insert(i, playlistRes!.data!.lstSongItemModel![i].id.toString());
+                  for (int i = 0;
+                      i < playlistRes!.data!.lstSongItemModel!.length;
+                      i++) {
+                    selectedPlaylist.insert(i,
+                        playlistRes!.data!.lstSongItemModel![i].id.toString());
                   }
                 }
               }
@@ -208,9 +222,11 @@ class _SongsListPageState extends State<SongsListPage> {
                             data: List<dynamic>.from(
                               songList.map((x) {
                                 final map = x.toMap();
-                                if (widget.songListType == SongListType.playlist) {
+                                if (widget.songListType ==
+                                    SongListType.playlist) {
                                   map['mainPlaylistName'] = mainPlayListName;
-                                  map['mainPlaylistImages'] = jsonEncode(mainPlayListImage);
+                                  map['mainPlaylistImages'] =
+                                      jsonEncode(mainPlayListImage);
                                 }
 
                                 return map;
@@ -250,7 +266,9 @@ class _SongsListPageState extends State<SongsListPage> {
                       ],
                       flexibleSpace: FlexibleSpaceBar(
                         title: Container(
-                          margin: (!_scrollController.hasClients || _scrollController.position.pixels <= MediaQuery.of(context).size.height * 0.2)
+                          margin: (!_scrollController.hasClients ||
+                                  _scrollController.position.pixels <=
+                                      MediaQuery.of(context).size.height * 0.2)
                               ? EdgeInsets.zero
                               : const EdgeInsets.only(
                                   left: 50,
@@ -258,8 +276,18 @@ class _SongsListPageState extends State<SongsListPage> {
                                 ),
                           child: Text(
                             playlistRes?.data?.name.toString() ?? '',
-                            maxLines: (!_scrollController.hasClients || _scrollController.position.pixels <= MediaQuery.of(context).size.height * 0.2) ? 3 : 1,
-                            textAlign: (!_scrollController.hasClients || _scrollController.position.pixels <= MediaQuery.of(context).size.height * 0.2) ? TextAlign.center : TextAlign.left,
+                            maxLines: (!_scrollController.hasClients ||
+                                    _scrollController.position.pixels <=
+                                        MediaQuery.of(context).size.height *
+                                            0.2)
+                                ? 3
+                                : 1,
+                            textAlign: (!_scrollController.hasClients ||
+                                    _scrollController.position.pixels <=
+                                        MediaQuery.of(context).size.height *
+                                            0.2)
+                                ? TextAlign.center
+                                : TextAlign.left,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -292,14 +320,16 @@ class _SongsListPageState extends State<SongsListPage> {
                                       memCacheHeight: 1000,
                                       memCacheWidth: 1000,
                                       fit: BoxFit.cover,
-                                      errorWidget: (context, _, __) => const Image(
+                                      errorWidget: (context, _, __) =>
+                                          const Image(
                                         fit: BoxFit.cover,
                                         image: AssetImage(
                                           'assets/album.png',
                                         ),
                                       ),
                                       imageUrl: mainPlayListImage[0],
-                                      placeholder: (context, url) => const Image(
+                                      placeholder: (context, url) =>
+                                          const Image(
                                         fit: BoxFit.cover,
                                         image: AssetImage(
                                           'assets/album.png',
@@ -324,8 +354,10 @@ class _SongsListPageState extends State<SongsListPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
                                   child: SizedBox(
-                                    height: MediaQuery.of(context).size.width / 7,
-                                    width: MediaQuery.of(context).size.width / 7,
+                                    height:
+                                        MediaQuery.of(context).size.width / 7,
+                                    width:
+                                        MediaQuery.of(context).size.width / 7,
                                     child: const CircularProgressIndicator(),
                                   ),
                                 ),
@@ -341,13 +373,15 @@ class _SongsListPageState extends State<SongsListPage> {
                               60,
                               AppLocalizations.of(context)!.resultsNotFound,
                               20,
+                              useOfflineMode: true,
                             )
                           else
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     GestureDetector(
                                       onTap: () {
@@ -355,7 +389,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) => PlayScreen(
+                                            pageBuilder: (_, __, ___) =>
+                                                PlayScreen(
                                               songsList: songList,
                                               index: 0,
                                               offline: false,
@@ -374,8 +409,11 @@ class _SongsListPageState extends State<SongsListPage> {
                                         height: 45.0,
                                         width: 120,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(100.0),
-                                          color: Theme.of(context).colorScheme.secondary,
+                                          borderRadius:
+                                              BorderRadius.circular(100.0),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.black26,
@@ -385,19 +423,31 @@ class _SongsListPageState extends State<SongsListPage> {
                                           ],
                                         ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.play_arrow_rounded,
-                                              color: Theme.of(context).colorScheme.secondary == Colors.white ? Colors.black : Colors.white,
+                                              color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary ==
+                                                      Colors.white
+                                                  ? Colors.black
+                                                  : Colors.white,
                                             ),
                                             const SizedBox(width: 5.0),
                                             Text(
-                                              AppLocalizations.of(context)!.play,
+                                              AppLocalizations.of(context)!
+                                                  .play,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18.0,
-                                                color: Theme.of(context).colorScheme.secondary == Colors.white ? Colors.black : Colors.white,
+                                                color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary ==
+                                                        Colors.white
+                                                    ? Colors.black
+                                                    : Colors.white,
                                               ),
                                               textAlign: TextAlign.center,
                                             ),
@@ -407,13 +457,15 @@ class _SongsListPageState extends State<SongsListPage> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        final List<SongItemModel> tempList = List.from(songList);
+                                        final List<SongItemModel> tempList =
+                                            List.from(songList);
                                         tempList.shuffle();
                                         Navigator.push(
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) => PlayScreen(
+                                            pageBuilder: (_, __, ___) =>
+                                                PlayScreen(
                                               songsList: tempList,
                                               index: 0,
                                               offline: false,
@@ -432,7 +484,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                         height: 45.0,
                                         width: 130,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(100.0),
+                                          borderRadius:
+                                              BorderRadius.circular(100.0),
                                           color: Colors.white,
                                           boxShadow: const [
                                             BoxShadow(
@@ -443,7 +496,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                           ],
                                         ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             const Icon(
                                               Icons.shuffle_rounded,
@@ -451,7 +505,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                             ),
                                             const SizedBox(width: 5.0),
                                             Text(
-                                              AppLocalizations.of(context)!.shuffle,
+                                              AppLocalizations.of(context)!
+                                                  .shuffle,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18.0,
@@ -465,11 +520,16 @@ class _SongsListPageState extends State<SongsListPage> {
                                     ),
                                   ],
                                 ),
-                                if (widget.songListType == SongListType.playlist)
+                                if (widget.songListType ==
+                                    SongListType.playlist)
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 10, right: 20, left: 20),
                                     child: Text(
-                                      playlistRes?.data?.playlistDuration != null ? 'Duration: ${playlistRes!.data!.playlistDuration.toString()}' : '',
+                                      playlistRes?.data?.playlistDuration !=
+                                              null
+                                          ? 'Duration: ${playlistRes!.data!.playlistDuration.toString()}'
+                                          : '',
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -480,7 +540,8 @@ class _SongsListPageState extends State<SongsListPage> {
                                   itemBuilder: (context, index) {
                                     return ListTile(
                                       key: ValueKey('$index'),
-                                      contentPadding: const EdgeInsets.only(left: 15.0),
+                                      contentPadding:
+                                          const EdgeInsets.only(left: 15.0),
                                       title: Text(
                                         '${songList[index].title}',
                                         overflow: TextOverflow.ellipsis,
@@ -501,21 +562,24 @@ class _SongsListPageState extends State<SongsListPage> {
                                       leading: Card(
                                         elevation: 8,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(7.0),
+                                          borderRadius:
+                                              BorderRadius.circular(7.0),
                                         ),
                                         clipBehavior: Clip.antiAlias,
                                         child: CachedNetworkImage(
                                           memCacheHeight: 200,
                                           memCacheWidth: 200,
                                           fit: BoxFit.cover,
-                                          errorWidget: (context, _, __) => const Image(
+                                          errorWidget: (context, _, __) =>
+                                              const Image(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
                                               'assets/cover.jpg',
                                             ),
                                           ),
                                           imageUrl: '${songList[index].image}',
-                                          placeholder: (context, url) => const Image(
+                                          placeholder: (context, url) =>
+                                              const Image(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
                                               'assets/cover.jpg',
@@ -536,10 +600,13 @@ class _SongsListPageState extends State<SongsListPage> {
                                           // ),
                                           SongTileTrailingMenu(
                                             data: songList[index],
-                                            isMyPlaylist: widget.isMyPlaylist ?? false,
+                                            isMyPlaylist:
+                                                widget.isMyPlaylist ?? false,
                                             selectedPlaylist: selectedPlaylist,
-                                            playlistName: playlistRes?.data?.name ?? '',
-                                            playlistId: int.parse(widget.id.toString()),
+                                            playlistName:
+                                                playlistRes?.data?.name ?? '',
+                                            playlistId:
+                                                int.parse(widget.id.toString()),
                                             callback: () => _fetchSongs(
                                               playlistModified: true,
                                             ),
@@ -553,10 +620,12 @@ class _SongsListPageState extends State<SongsListPage> {
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) => PlayScreen(
+                                            pageBuilder: (_, __, ___) =>
+                                                PlayScreen(
                                               songsList: songList,
                                               index: songList.indexWhere(
-                                                (element) => element == songList[index],
+                                                (element) =>
+                                                    element == songList[index],
                                               ),
                                               offline: false,
                                               fromDownloads: false,

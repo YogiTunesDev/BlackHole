@@ -56,8 +56,10 @@ class AppTheme {
             brightness: Brightness.light,
             secondary: currentTheme.currentColor(),
           ),
+      useMaterial3: false,
     );
   }
+
   /// used for app dark theme
   static ThemeData darkTheme({
     required BuildContext context,
@@ -66,7 +68,7 @@ class AppTheme {
       fontFamily: 'SharpSans',
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          primary: Colors.white,
+          foregroundColor: Colors.white,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
@@ -119,6 +121,7 @@ class AppTheme {
             secondary: Color(0xFFFFFFFF),
             brightness: Brightness.dark,
           ),
+      useMaterial3: false,
     );
   }
 }

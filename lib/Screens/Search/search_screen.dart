@@ -447,6 +447,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 60,
                                 AppLocalizations.of(context)!.resultsNotFound,
                                 20,
+                                useOfflineMode: true,
                               ),
                           if (searchResponse!.data!.tracks != null)
                             if (searchResponse!.data!.tracks!.isNotEmpty)
@@ -573,7 +574,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     final String itemImage = item.cover != null
                                         ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                         : '';
-                                        
+
                                     return SongItem(
                                       itemImage: [itemImage],
                                       itemName: item.name!,
@@ -647,7 +648,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                               songListType:
                                                   SongListType.playlist,
                                               playlistName: item.name!,
-                                              playlistImage: item.getQuadImages(),
+                                              playlistImage:
+                                                  item.getQuadImages(),
                                               id: item.id,
                                             ),
                                           ),

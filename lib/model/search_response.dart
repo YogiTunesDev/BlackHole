@@ -366,10 +366,12 @@ class Playlist {
             if (quadImages![i].imageUrl!.isNotEmpty) {
               lstStr.add('${quadImages![i].imageUrl}/${quadImages![i].image}');
             } else {
-              lstStr.add('');
+              lstStr.add(
+                  'https://yogitunes-assets.s3.us-east-1.amazonaws.com/uploads/cover.jpg');
             }
           } else {
-            lstStr.add('');
+            lstStr.add(
+                'https://yogitunes-assets.s3.us-east-1.amazonaws.com/uploads/cover.jpg');
           }
         }
       }

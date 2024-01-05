@@ -26,6 +26,7 @@ import 'package:blackhole/Services/audio_service.dart';
 import 'package:blackhole/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -34,16 +35,27 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
+// import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Toggle this to cause an async error to be thrown during initialization
+// and to test that runZonedGuarded() catches the error
+const _kShouldTestAsyncErrorOnInit = false;
+
+// Toggle this for testing Crashlytics in your app locally.
+const _kTestingCrashlytics = true;
 
 Future<void> main() async {
   runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      Paint.enableDithering = true;
+
+      await Firebase.initializeApp();
+
+      // Deprecated: https://api.flutter.dev/flutter/dart-ui/Paint/enableDithering.html
+      // Paint.enableDithering = true;
 
       await Hive.initFlutter();
       await updateVersion();
@@ -51,19 +63,59 @@ Future<void> main() async {
       await openHiveBox('downloads');
       await openHiveBox('Favorite Songs');
       await openHiveBox('cache', limit: true);
+
       if (Platform.isAndroid) {
         setOptimalDisplayMode();
       }
+
       await startService();
+
       // initialize the Intercom.
-      await Intercom.instance.initialize(
-        'webp3ia',
-        iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
-        androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258',
-      );
-      await Firebase.initializeApp();
-      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      // await Intercom.instance.initialize(
+      //   'webp3ia',
+      //   iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
+      //   androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258',
+      // );
+      const fatalError = false;
+
+      if (_kTestingCrashlytics) {
+        // Force enable crashlytics collection enabled if we're testing it.
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(true);
+      } else {
+        // Else only enable it in non-debug builds.
+        // You could additionally extend this to allow users to opt-in.
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(!kDebugMode);
+      }
+
+      // Non-async exceptions
+      FlutterError.onError = (errorDetails) {
+        if (fatalError) {
+          // If you want to record a "fatal" exception
+          FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+          // ignore: dead_code
+        } else {
+          // If you want to record a "non-fatal" exception
+          FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+        }
+      };
+
+      // Async exceptions
+      PlatformDispatcher.instance.onError = (error, stack) {
+        if (fatalError) {
+          // If you want to record a "fatal" exception
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+          // ignore: dead_code
+        } else {
+          // If you want to record a "non-fatal" exception
+          FirebaseCrashlytics.instance.recordError(error, stack);
+        }
+        return true;
+      };
+
+      FirebaseCrashlytics.instance.setUserIdentifier('0');
+
       runApp(
         ProviderScope(
           child: MyApp(),
@@ -155,6 +207,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     callIntent();
     final String lang =
         Hive.box('settings').get('lang', defaultValue: 'English') as String;

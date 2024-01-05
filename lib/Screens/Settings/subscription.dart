@@ -162,6 +162,15 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         appBar: AppBar(
           leading: isFirstTime ? Container() : null,
           title: Text("Subscription"),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: 'Close',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
         body: isLoading
             ? const Center(
@@ -251,48 +260,91 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      if (products.isNotEmpty)
-                        if (buttonLoading)
-                          CircularProgressIndicator()
-                        else
-                          InkWell(
-                            onTap: () async {
-                              setState(() {
-                                buttonLoading = true;
-                              });
-                              FlutterInappPurchase.instance
-                                  .requestPurchase(products[0].productId!);
-                              // final PurchaseParam purchaseParam =
-                              //     PurchaseParam(productDetails: products[0]);
+                      // if (products.isNotEmpty)
+                      //   if (buttonLoading) CircularProgressIndicator()
+                      // else
+                      //   InkWell(
+                      //     onTap: () async {
+                      //       setState(() {
+                      //         buttonLoading = true;
+                      //       });
+                      //       FlutterInappPurchase.instance
+                      //           .requestPurchase(products[0].productId!);
+                      //       // final PurchaseParam purchaseParam =
+                      //       //     PurchaseParam(productDetails: products[0]);
 
-                              // InAppPurchase.instance
-                              //     .buyNonConsumable(purchaseParam: purchaseParam);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              margin: const EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Subscribe',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.black
-                                        : Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                      //       // InAppPurchase.instance
+                      //       //     .buyNonConsumable(purchaseParam: purchaseParam);
+                      //     },
+                      //     child: Container(
+                      //       padding: const EdgeInsets.all(12),
+                      //       margin: const EdgeInsets.symmetric(vertical: 15),
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(100),
+                      //         color: Theme.of(context).colorScheme.secondary,
+                      //       ),
+                      //       child: Center(
+                      //         child: Text(
+                      //           'Subscribe',
+                      //           style: TextStyle(
+                      //             fontSize: 16,
+                      //             color: Theme.of(context).brightness ==
+                      //                     Brightness.dark
+                      //                 ? Colors.black
+                      //                 : Colors.white,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
                     ],
                   ),
                 ),
               ),
+        bottomNavigationBar: Container(
+          height: 100,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: products.isNotEmpty && buttonLoading
+                ? Center(child: CircularProgressIndicator())
+                : Center(
+                    child: InkWell(
+                      onTap: () async {
+                        setState(() {
+                          buttonLoading = true;
+                        });
+                        FlutterInappPurchase.instance
+                            .requestPurchase(products[0].productId!);
+                        // final PurchaseParam purchaseParam =
+                        //     PurchaseParam(productDetails: products[0]);
+
+                        // InAppPurchase.instance
+                        //     .buyNonConsumable(purchaseParam: purchaseParam);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Subscribe',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        ),
       ),
     );
   }

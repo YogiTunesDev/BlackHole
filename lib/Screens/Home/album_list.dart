@@ -34,6 +34,7 @@ enum AlbumListType {
   popularSong,
   recentlyPlayedSong,
 }
+
 enum MainType { album, playlist, genres, genresAlbum, song, track }
 
 class AlbumList extends StatefulWidget {
@@ -751,6 +752,7 @@ class _AlbumListState extends State<AlbumList> {
                           60,
                           AppLocalizations.of(context)!.resultsNotFound,
                           20,
+                          useOfflineMode: true,
                         )
                       else
                         Column(
@@ -1021,6 +1023,7 @@ class _AlbumListState extends State<AlbumList> {
                             60,
                             AppLocalizations.of(context)!.resultsNotFound,
                             20,
+                            useOfflineMode: true,
                           )
                         else
                           Padding(

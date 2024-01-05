@@ -8,16 +8,19 @@ class SupaBase {
 
   Future<Map> getUpdate() async {
     final response =
-        await client.from('Update').select().order('LatestVersion').execute();
-    final List result = response.data as List;
+        await client.from('Update').select().order('LatestVersion');
+
+    print(response);
+
+    final List result = response as List;
     return result.isEmpty
         ? {}
         : {
-            'LatestVersion': response.data[0]['LatestVersion'],
-            'LatestUrl': response.data[0]['LatestUrl'],
-            'arm64-v8a': response.data[0]['arm64-v8a'],
-            'armeabi-v7a': response.data[0]['armeabi-v7a'],
-            'universal': response.data[0]['universal'],
+            'LatestVersion': response[0]['LatestVersion'],
+            'LatestUrl': response[0]['LatestUrl'],
+            'arm64-v8a': response[0]['arm64-v8a'],
+            'armeabi-v7a': response[0]['armeabi-v7a'],
+            'universal': response[0]['universal'],
           };
   }
 
@@ -32,10 +35,12 @@ class SupaBase {
   }
 
   Future<int> createUser(Map data) async {
-    final response = await client
-        .from('Users')
-        .insert(data, returning: ReturningOption.minimal)
-        .execute();
-    return response.status ?? 404;
+    try {
+      await client.from('Users').insert(data).select();
+
+      return 200;
+    } catch (e) {
+      return 404;
+    }
   }
 }

@@ -258,7 +258,7 @@ class _PrefScreenState extends State<PrefScreen> {
                                                       TextButton(
                                                         style: TextButton
                                                             .styleFrom(
-                                                          primary:
+                                                          foregroundColor:
                                                               Theme.of(context)
                                                                   .colorScheme
                                                                   .secondary,
@@ -278,7 +278,7 @@ class _PrefScreenState extends State<PrefScreen> {
                                                       TextButton(
                                                         style: TextButton
                                                             .styleFrom(
-                                                          primary:
+                                                          foregroundColor:
                                                               Theme.of(context)
                                                                   .colorScheme
                                                                   .secondary,

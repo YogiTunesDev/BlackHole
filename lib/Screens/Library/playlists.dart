@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer' as developer;
+
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/APIs/spotify_api.dart';
 import 'package:blackhole/CustomWidgets/collage.dart';
@@ -13,6 +16,7 @@ import 'package:blackhole/Screens/Common/song_list.dart';
 import 'package:blackhole/model/custom_playlist_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -162,12 +166,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             emptyScreen(
                               context,
                               0,
-                              ':( ',
+                              ':(',
                               100,
                               AppLocalizations.of(context)!.sorry,
                               60,
                               AppLocalizations.of(context)!.resultsNotFound,
                               20,
+                              useOfflineMode: true,
                             )
                           else
                             ListView.builder(
@@ -347,7 +352,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         //       actions: [
                                         //         TextButton(
                                         //           style: TextButton.styleFrom(
-                                        //             primary: Theme.of(context)
+                                        //             foregroundColor: Theme.of(context)
                                         //                 .iconTheme
                                         //                 .color,
                                         //           ),
@@ -362,7 +367,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         //         ),
                                         //         TextButton(
                                         //           style: TextButton.styleFrom(
-                                        //             primary: Colors.white,
+                                        //             foregroundColor: Colors.white,
                                         //             backgroundColor:
                                         //                 Theme.of(context)
                                         //                     .colorScheme
@@ -463,7 +468,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         value: 2,
                                         child: Row(
                                           children: [
-                                            const Icon(MdiIcons.share),
+                                            Icon(MdiIcons.share),
                                             const SizedBox(width: 10.0),
                                             Text(
                                               AppLocalizations.of(context)!

@@ -31,7 +31,8 @@ class Downloads extends StatefulWidget {
   _DownloadsState createState() => _DownloadsState();
 }
 
-class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMixin {
+class _DownloadsState extends State<Downloads>
+    with SingleTickerProviderStateMixin {
   Box downloadsBox = Hive.box('downloads');
   bool added = false;
   List _songs = [];
@@ -48,8 +49,10 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
   // int currentIndex = 0;
   String? tempPath = Hive.box('settings').get('tempDirPath')?.toString();
   int sortValue = Hive.box('settings').get('sortValue', defaultValue: 1) as int;
-  int orderValue = Hive.box('settings').get('orderValue', defaultValue: 0) as int;
-  int albumSortValue = Hive.box('settings').get('albumSortValue', defaultValue: 2) as int;
+  int orderValue =
+      Hive.box('settings').get('orderValue', defaultValue: 0) as int;
+  int albumSortValue =
+      Hive.box('settings').get('albumSortValue', defaultValue: 2) as int;
 
   @override
   void initState() {
@@ -96,7 +99,8 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
       if (_artists.containsKey(element['artist'])) {
         final List<Map> tempArtist = _artists[element['artist']]!;
         tempArtist.add(element);
-        _artists.addEntries([MapEntry(element['artist'].toString(), tempArtist)]);
+        _artists
+            .addEntries([MapEntry(element['artist'].toString(), tempArtist)]);
       } else {
         _artists.addEntries([
           MapEntry(element['artist'].toString(), [element])
@@ -113,9 +117,11 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
         ]);
       }
       if (_playlists.containsKey(element['mainPlaylistName'])) {
-        final List<Map> tempPlaylists = _playlists[element['mainPlaylistName']]!;
+        final List<Map> tempPlaylists =
+            _playlists[element['mainPlaylistName']]!;
         tempPlaylists.add(element as Map);
-        _playlists.addEntries([MapEntry(element['mainPlaylistName'].toString(), tempPlaylists)]);
+        _playlists.addEntries(
+            [MapEntry(element['mainPlaylistName'].toString(), tempPlaylists)]);
       } else if (element.containsKey('mainPlaylistName')) {
         _playlists.addEntries([
           MapEntry(element['mainPlaylistName'].toString(), [element as Map])
@@ -140,32 +146,50 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
     switch (sortVal) {
       case 0:
         _songs.sort(
-          (a, b) => a['title'].toString().toUpperCase().compareTo(b['title'].toString().toUpperCase()),
+          (a, b) => a['title']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['title'].toString().toUpperCase()),
         );
         break;
       case 1:
         _songs.sort(
-          (a, b) => a['dateAdded'].toString().toUpperCase().compareTo(b['dateAdded'].toString().toUpperCase()),
+          (a, b) => a['dateAdded']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['dateAdded'].toString().toUpperCase()),
         );
         break;
       case 2:
         _songs.sort(
-          (a, b) => a['album'].toString().toUpperCase().compareTo(b['album'].toString().toUpperCase()),
+          (a, b) => a['album']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['album'].toString().toUpperCase()),
         );
         break;
       case 3:
         _songs.sort(
-          (a, b) => a['artist'].toString().toUpperCase().compareTo(b['artist'].toString().toUpperCase()),
+          (a, b) => a['artist']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['artist'].toString().toUpperCase()),
         );
         break;
       case 4:
         _songs.sort(
-          (a, b) => a['duration'].toString().toUpperCase().compareTo(b['duration'].toString().toUpperCase()),
+          (a, b) => a['duration']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['duration'].toString().toUpperCase()),
         );
         break;
       default:
         _songs.sort(
-          (b, a) => a['dateAdded'].toString().toUpperCase().compareTo(b['dateAdded'].toString().toUpperCase()),
+          (b, a) => a['dateAdded']
+              .toString()
+              .toUpperCase()
+              .compareTo(b['dateAdded'].toString().toUpperCase()),
         );
         break;
     }
@@ -178,35 +202,47 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
   void sortAlbums() {
     if (albumSortValue == 0) {
       _sortedAlbumKeysList.sort(
-        (a, b) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (a, b) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
       _sortedArtistKeysList.sort(
-        (a, b) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (a, b) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
       _sortedGenreKeysList.sort(
-        (a, b) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (a, b) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
     }
     if (albumSortValue == 1) {
       _sortedAlbumKeysList.sort(
-        (b, a) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (b, a) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
       _sortedArtistKeysList.sort(
-        (b, a) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (b, a) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
       _sortedGenreKeysList.sort(
-        (b, a) => a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
+        (b, a) =>
+            a.toString().toUpperCase().compareTo(b.toString().toUpperCase()),
       );
     }
     if (albumSortValue == 2) {
-      _sortedAlbumKeysList.sort((b, a) => _albums[a]!.length.compareTo(_albums[b]!.length));
-      _sortedArtistKeysList.sort((b, a) => _artists[a]!.length.compareTo(_artists[b]!.length));
-      _sortedGenreKeysList.sort((b, a) => _genres[a]!.length.compareTo(_genres[b]!.length));
+      _sortedAlbumKeysList
+          .sort((b, a) => _albums[a]!.length.compareTo(_albums[b]!.length));
+      _sortedArtistKeysList
+          .sort((b, a) => _artists[a]!.length.compareTo(_artists[b]!.length));
+      _sortedGenreKeysList
+          .sort((b, a) => _genres[a]!.length.compareTo(_genres[b]!.length));
     }
     if (albumSortValue == 3) {
-      _sortedAlbumKeysList.sort((a, b) => _albums[a]!.length.compareTo(_albums[b]!.length));
-      _sortedArtistKeysList.sort((a, b) => _artists[a]!.length.compareTo(_artists[b]!.length));
-      _sortedGenreKeysList.sort((a, b) => _genres[a]!.length.compareTo(_genres[b]!.length));
+      _sortedAlbumKeysList
+          .sort((a, b) => _albums[a]!.length.compareTo(_albums[b]!.length));
+      _sortedArtistKeysList
+          .sort((a, b) => _artists[a]!.length.compareTo(_artists[b]!.length));
+      _sortedGenreKeysList
+          .sort((a, b) => _genres[a]!.length.compareTo(_genres[b]!.length));
     }
   }
 
@@ -265,7 +301,10 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
                 appBar: AppBar(
                   title: Text(AppLocalizations.of(context)!.downs),
                   centerTitle: true,
-                  backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.transparent : Theme.of(context).colorScheme.secondary,
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.transparent
+                          : Theme.of(context).colorScheme.secondary,
                   elevation: 0,
                   bottom: TabBar(
                     controller: _tcontroller,
@@ -351,7 +390,11 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
                                         if (sortValue == sortTypes.indexOf(e))
                                           Icon(
                                             Icons.check_rounded,
-                                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.grey[700],
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.grey[700],
                                           )
                                         else
                                           const SizedBox(),
@@ -374,13 +417,18 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
                             orderTypes
                                 .map(
                                   (e) => PopupMenuItem(
-                                    value: sortTypes.length + orderTypes.indexOf(e),
+                                    value: sortTypes.length +
+                                        orderTypes.indexOf(e),
                                     child: Row(
                                       children: [
                                         if (orderValue == orderTypes.indexOf(e))
                                           Icon(
                                             Icons.check_rounded,
-                                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.grey[700],
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.grey[700],
                                           )
                                         else
                                           const SizedBox(),
@@ -439,11 +487,15 @@ class _DownloadsState extends State<Downloads> with SingleTickerProviderStateMix
                             sortedAlbumKeysList: _sortedPlaylistKeyList,
                             onDelete: (item) async {
                               for (final element in item) {
-                                final bool isDeleted = await deleteSong(element, true);
+                                final bool isDeleted =
+                                    await deleteSong(element, true);
                                 if (isDeleted) {
-                                  if (item.indexOf(element) == item.length - 1) {
-                                    _sortedPlaylistKeyList.remove(element['mainPlaylistName']);
-                                    _playlists.remove(element['mainPlaylistName']);
+                                  if (item.indexOf(element) ==
+                                      item.length - 1) {
+                                    _sortedPlaylistKeyList
+                                        .remove(element['mainPlaylistName']);
+                                    _playlists
+                                        .remove(element['mainPlaylistName']);
                                     setState(() {});
                                   }
                                 }
@@ -476,13 +528,20 @@ Future<Map> editTags(Map song, BuildContext context) async {
 
       FileImage songImage = FileImage(File(song['image'].toString()));
 
-      final _titlecontroller = TextEditingController(text: song['title'].toString());
-      final _albumcontroller = TextEditingController(text: song['album'].toString());
-      final _artistcontroller = TextEditingController(text: song['artist'].toString());
-      final _albumArtistController = TextEditingController(text: song['albumArtist'].toString());
-      final _genrecontroller = TextEditingController(text: song['genre'].toString());
-      final _yearcontroller = TextEditingController(text: song['year'].toString());
-      final _pathcontroller = TextEditingController(text: song['path'].toString());
+      final _titlecontroller =
+          TextEditingController(text: song['title'].toString());
+      final _albumcontroller =
+          TextEditingController(text: song['album'].toString());
+      final _artistcontroller =
+          TextEditingController(text: song['artist'].toString());
+      final _albumArtistController =
+          TextEditingController(text: song['albumArtist'].toString());
+      final _genrecontroller =
+          TextEditingController(text: song['genre'].toString());
+      final _yearcontroller =
+          TextEditingController(text: song['year'].toString());
+      final _pathcontroller =
+          TextEditingController(text: song['path'].toString());
 
       return AlertDialog(
         shape: RoundedRectangleBorder(
@@ -675,7 +734,9 @@ Future<Map> editTags(Map song, BuildContext context) async {
         actions: [
           TextButton(
             style: TextButton.styleFrom(
-              primary: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.grey[700],
+              foregroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.grey[700],
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -684,7 +745,7 @@ Future<Map> editTags(Map song, BuildContext context) async {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              primary: Colors.white,
+              foregroundColor: Colors.white,
               backgroundColor: Theme.of(context).colorScheme.secondary,
             ),
             onPressed: () async {
@@ -733,7 +794,9 @@ Future<Map> editTags(Map song, BuildContext context) async {
             child: Text(
               AppLocalizations.of(context)!.ok,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary == Colors.white ? Colors.black : null,
+                color: Theme.of(context).colorScheme.secondary == Colors.white
+                    ? Colors.black
+                    : null,
               ),
             ),
           ),
@@ -761,7 +824,8 @@ class DownSongsTab extends StatefulWidget {
   State<DownSongsTab> createState() => _DownSongsTabState();
 }
 
-class _DownSongsTabState extends State<DownSongsTab> with AutomaticKeepAliveClientMixin {
+class _DownSongsTabState extends State<DownSongsTab>
+    with AutomaticKeepAliveClientMixin {
   Future<void> downImage(
     String imageFilePath,
     String songFilePath,
@@ -776,7 +840,8 @@ class _DownSongsTabState extends State<DownSongsTab> with AutomaticKeepAliveClie
         file.writeAsBytesSync(image);
       }
     } catch (e) {
-      final HttpClientRequest request2 = await HttpClient().getUrl(Uri.parse(url));
+      final HttpClientRequest request2 =
+          await HttpClient().getUrl(Uri.parse(url));
       final HttpClientResponse response2 = await request2.close();
       final bytes2 = await consolidateHttpClientResponseBytes(response2);
       await file.writeAsBytes(bytes2);
@@ -834,7 +899,8 @@ class _DownSongsTabState extends State<DownSongsTab> with AutomaticKeepAliveClie
                               ),
                             ),
                             errorBuilder: (_, __, ___) {
-                              if (widget.songs[index]['image'] != null && widget.songs[index]['image_url'] != null) {
+                              if (widget.songs[index]['image'] != null &&
+                                  widget.songs[index]['image_url'] != null) {
                                 downImage(
                                   widget.songs[index]['image'].toString(),
                                   widget.songs[index]['path'].toString(),
@@ -858,8 +924,11 @@ class _DownSongsTabState extends State<DownSongsTab> with AutomaticKeepAliveClie
                           PageRouteBuilder(
                             opaque: false,
                             pageBuilder: (_, __, ___) => PlayScreen(
-                              songsList: List<SongItemModel>.from(widget.songs.map(
-                                (x) => SongItemModel.fromMap(json.decode(json.encode(x)) as Map<String, dynamic>),
+                              songsList:
+                                  List<SongItemModel>.from(widget.songs.map(
+                                (x) => SongItemModel.fromMap(
+                                    json.decode(json.encode(x))
+                                        as Map<String, dynamic>),
                               )),
                               index: index,
                               offline: true,
@@ -920,7 +989,8 @@ class _DownSongsTabState extends State<DownSongsTab> with AutomaticKeepAliveClie
                                     ),
                                     const SizedBox(width: 10.0),
                                     Text(
-                                      AppLocalizations.of(context)!.addToPlaylist,
+                                      AppLocalizations.of(context)!
+                                          .addToPlaylist,
                                     ),
                                   ],
                                 ),

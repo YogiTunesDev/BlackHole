@@ -179,6 +179,7 @@ class _ArtistDataState extends State<ArtistData> {
                           60,
                           AppLocalizations.of(context)!.resultsNotFound,
                           20,
+                          useOfflineMode: true,
                         )
                       else if (artistDataResponse!.data!.topHits!.isEmpty &&
                           artistDataResponse!.data!.playlists!.isEmpty &&

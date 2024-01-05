@@ -306,6 +306,9 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                       } else {
                         selectedPlaylist.add(widget.trackId.toString());
 
+                        print('Song ID: ' + widget.trackId.toString());
+                        print('Adding to playlist: ${selectedPlaylist}');
+
                         final res = await YogitunesAPI().editPlaylist(
                           playlist.id!.toString(),
                           playlist.name!,

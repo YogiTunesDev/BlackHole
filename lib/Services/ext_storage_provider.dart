@@ -26,44 +26,50 @@ class ExtStorageProvider {
     try {
       // checking platform
       if (Platform.isAndroid) {
-        if (await requestPermission(Permission.storage)) {
-          directory = await getExternalStorageDirectory();
+        // if (await requestPermission(Permission.audio)) {
+        // print(dirName);
+        // print(await getApplicationDocumentsDirectory());
 
-          // getting main path
-          final String newPath = directory!.path
-              .replaceFirst('Android/data/com.app.yogitunes/files', dirName);
+        directory = await getApplicationDocumentsDirectory();
 
-          directory = Directory(newPath);
+        // getting main path
+        // final String newPath = directory!.path
+        //     .replaceFirst('Android/data/com.app.yogitunes/files', dirName);
 
-          // checking if directory exist or not
-          if (!await directory.exists()) {
-            // if directory not exists then asking for permission to create folder
-            await requestPermission(Permission.manageExternalStorage);
-            //creating folder
+        // print(newPath);
 
-            await directory.create(recursive: true);
-          }
-          if (await directory.exists()) {
-            try {
-              // if directory exists then returning the complete path
-              return newPath;
-            } catch (e) {
-              rethrow;
-            }
-          }
-        } else {
-          return throw 'something went wrong';
-        }
+        // directory = Directory(newPath);
+
+        // // checking if directory exist or not
+        // if (!await directory.exists()) {
+        //   // if directory not exists then asking for permission to create folder
+        //   await requestPermission(Permission.manageExternalStorage);
+        //   //creating folder
+
+        //   await directory.create(recursive: true);
+        // }
+
+        // if (await directory.exists()) {
+        //   try {
+        //     // if directory exists then returning the complete path
+        //     return newPath;
+        //   } catch (e) {
+        //     rethrow;
+        //   }
+        // }
+
+        return directory.path;
       } else if (Platform.isIOS) {
         directory = await getApplicationDocumentsDirectory();
+
         return directory.path;
       } else {
         directory = await getDownloadsDirectory();
+
         return directory!.path;
       }
     } catch (e) {
-      rethrow;
+      return throw 'Downloads exception: $e';
     }
-    return directory.path;
   }
 }
