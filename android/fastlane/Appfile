@@ -1,0 +1,4 @@
+json_key_file("app/composed-circle-403804-ea6d248ffa9b.json")
+# json_key_file("app/google-service.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.app.yogitunes") # e.g. com.krausefx.app
+

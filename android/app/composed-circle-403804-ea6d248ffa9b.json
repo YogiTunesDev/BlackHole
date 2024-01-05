@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "composed-circle-403804",
+  "private_key_id": "ea6d248ffa9b3b047a4f8a827a3091d88fce2106",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5UcLBx6On+jUE\nOtEUr1Bfl2Mq9Aeqj0+CqJhBgqxmH7wu0QHoXGAviosxdVNo7uvOTcjHd06W7PUb\nzsSwbr1aWLbL94L2BnwjLkfCT3CBGVdBk5HI/b5u7lNGhfBDat0RoKW4eFBcu85m\n47sKtURu9MIycftT+w7HRr3pGXlO7aB4baIrxGEOXz1hSrockpap+MhCPYK1bOUe\nZ905cW9jpfhvLlsRIcSAT7RMpupWncgE0TTcda8O9jVKBUqSo1EK0Lv3j9wwOFlu\niQ5bjWT7mco3KNGPZgtS0FuQbAS6d9cQv37eB6R2TNbcLQSNoYmkM7tfCVx9vl9a\nPJeYdpcBAgMBAAECggEAB74b4RkAVE6yu5sh/GdhOCc07ljc/6ImcCbvWpBVN9yU\nUg/rMJw4bBARpfa5DgmqajeLf5LzYoCisn9abiUoTd+mPoIYM4N8mQMwXhTP1mL6\nx2t9FCzO0adtLQWATu7Gbvu7ZMhJEkDJ/DhASq+dXPXmrbEfryfue4KwAU7OR875\nRj1nnFcm0em05NuMN20U+0fd8lQgpwBz3SeltYhxbwxV2UVJqn3kns22Dk/ovXbY\n8o1EHJAY0/+aD0C04yE/LJHaFRvLqc33ZA/FSu/HdwplP3rmnoL3aIeDl/Nbs4Io\n6e6Ta7+L446yPhiIn14dnvIWf+wRS3PVX/QFATq6uQKBgQDuowLYbr4V/l0V1hBN\n8RnuvW0cPYS0HFTmLkbZWScElmW9PXGWVEOnqlWn9i71yb31ENqjsDyYOMMKgcx3\nosyZ00cWhcS6F3nk82bmEsiRurpzszqRDp+0lyyP+iR93h+DmFoz2dNnmR+74tGS\nDtXpVkI/sw9Iyj/RAst7O1+EOQKBgQDGzaDvdsMgLXHvBTWHz8WcVPJOzDWK1l6h\nxbFrK70CeWhllY2zK3FhLHmchBjjxKW5sgqJSddfxuiKkbyIe9KeyQZLoon6IUle\nqLhnuW9SZkuE8nNnBPHeOAGy+lW5SkjKMyzw82bFPVPUsnxfO6Hexsn5m63byhuq\noceq2Xx5CQKBgQCewFbOQK231+V491UVZMVJqz6AwPQdFZPtJPAA+2wXgy3ffJap\n2RjA23HsMLwAytrRwwqQRlepNGmb/clV9TmDQ6hQ9WBwI9n1U28qs2g2ejA7dAoM\nIdxguQjuJwxLp47zblDjmY8nphgUV8nvDmuDtNyRn78VP2bA1skjC9Z5EQKBgEsV\nfqLyh9+vSkir/vu8TTYuHxYDqnU1YahXshp3+nrkv7keMtZoofnBgmzKt1vO+YiY\n5cHUUbOqvEkZocsqePHfmrEWQmZmC//kWUFTl+fXGs6rg0p1Y6Q6IuomAhppI/S6\nP08Bnt7/upmqj66oJwqsqbvMQG2yd6CKWY79dTWBAoGBAKUFVqaOfu7WZdymo1oi\nRWLkk57XJDK5X16uXyunotOadsTL9BALb8YAiR0/m/LkZJrIAaPDNF1SknxqhXJu\nVUWAwmNhwC/6OGUt6ui40v3QW43RdryHjEF9KJ7Ekvx7OfbRkYJZWkUiXIehsg1h\nONRaTuDzxYAydfOp3b/P9JL9\n-----END PRIVATE KEY-----\n",
+  "client_email": "fastlane-google-play-store-upl@composed-circle-403804.iam.gserviceaccount.com",
+  "client_id": "107709887633997494082",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fastlane-google-play-store-upl%40composed-circle-403804.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
