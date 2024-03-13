@@ -18,6 +18,11 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: "Runner.xcodeproj"
+    )
+    
     api_key = app_store_connect_api_key(
       key_id: "RH58242NAK",
       issuer_id: "9799e866-a96e-4bb5-adcd-fecfbb07012d",

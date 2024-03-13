@@ -18,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      print("In the splash screen");
       try {
         setState(() {
           isLoading = true;
@@ -49,12 +50,12 @@ class _SplashScreenState extends State<SplashScreen> {
                   Theme.of(context).brightness == Brightness.dark
                       ? 'assets/splash_white.png'
                       : 'assets/splash.png',
-                  cacheHeight: 300,
-                  cacheWidth: 1000,
+                  // cacheHeight: 300,
+                  // cacheWidth: 1000,
                 ),
-                // const Center(
-                //   child: CircularProgressIndicator(),
-                // ),
+                const Center(
+                  child: CircularProgressIndicator(color: Colors.black87),
+                ),
               ],
             ),
           ),
@@ -68,6 +69,8 @@ Future<bool> checkSubscriptionStatus(BuildContext context) async {
   final SubscriptionStatusResponse? subscriptionStatusResponse =
       await YogitunesAPI().subscriptionStatus();
 
+  // print('subscriptionStatus: ' + subscriptionStatusResponse.to);
+
   if (subscriptionStatusResponse != null) {
     if (subscriptionStatusResponse.status ?? false) {
       return true;
@@ -80,7 +83,7 @@ Future<bool> checkSubscriptionStatus(BuildContext context) async {
 }
 
 Future<void> redirectAfterAuthentication(BuildContext context) async {
-  print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
+  // print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
 
   if (apiTokenBox.get('token') != null) {
     // bool val = await SubscriptionStatus.subscriptionStatus(
@@ -90,9 +93,13 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     // Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     // return;
     // return HomePage();
+    //await Future.delayed(const Duration(seconds: 5), () {
     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    //});
   } else {
-    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    await Future.delayed(const Duration(seconds: 5), () {
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    });
     // Navigator.pushNamed(context, '/login');
     // return AuthScreen();
   }

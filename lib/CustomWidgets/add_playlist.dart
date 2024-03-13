@@ -16,8 +16,7 @@ class AddToOffPlaylist {
   OfflineAudioQuery offlineAudioQuery = OfflineAudioQuery();
 
   Future<void> addToOffPlaylist(BuildContext context, int audioId) async {
-    List<PlaylistModel> playlistDetails =
-        await offlineAudioQuery.getPlaylists();
+    List<PlaylistModel> playlistDetails = await offlineAudioQuery.getPlaylists();
     showModalBottomSheet(
       isDismissible: true,
       backgroundColor: Colors.transparent,
@@ -122,8 +121,8 @@ class AddToOffPlaylist {
 
 class AddToPlaylist {
   Box settingsBox = Hive.box('settings');
-  List playlistNames = Hive.box('settings')
-      .get('playlistNames', defaultValue: ['Favorite Songs']) as List;
+  List playlistNames =
+      Hive.box('settings').get('playlistNames', defaultValue: ['Favorite Songs']) as List;
   Map playlistDetails =
       Hive.box('settings').get('playlistDetails', defaultValue: {}) as Map;
 
@@ -134,7 +133,7 @@ class AddToPlaylist {
       context: context,
       builder: (BuildContext context) {
         return AddSongToPlayList(
-          trackId: mediaItem!.id.toString(),
+          trackId: mediaItem!.id,
         );
       },
     );
@@ -199,7 +198,6 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                 ),
               ),
               onTap: () {
-                print("Hello");
                 showTextInputDialog(
                   context: context,
                   keyboardType: TextInputType.text,
@@ -222,15 +220,13 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 reverse: true,
-                itemCount: customPlaylistResponse!
-                    .data!.length, //playlistNames.length,
+                itemCount: customPlaylistResponse!.data!.length, //playlistNames.length,
                 itemBuilder: (context, index) {
                   var playlist = customPlaylistResponse!.data![index].playlist!;
                   var playlistTracks =
                       customPlaylistResponse!.data![index].playlistTracks!;
                   String? imageUrl;
-                  PlaylistResponseData itemData =
-                      customPlaylistResponse!.data![index];
+                  PlaylistResponseData itemData = customPlaylistResponse!.data![index];
                   if (itemData.quadImages != null) {
                     if (itemData.quadImages!.isNotEmpty) {
                       if (itemData.quadImages![0] != null) {
@@ -301,11 +297,13 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
 
                       if (selectedPlaylist.contains(widget.trackId)) {
                         ShowSnackBar().showSnackBar(
-                            context, 'song already exist in playlist');
+                            context, 'The song already exists in playlist.');
                         Navigator.pop(context);
                       } else {
                         selectedPlaylist.add(widget.trackId.toString());
 
+                        print('Song ID RAW: ');
+                        print(widget.trackId);
                         print('Song ID: ' + widget.trackId.toString());
                         print('Adding to playlist: ${selectedPlaylist}');
 
@@ -317,13 +315,18 @@ class _AddSongToPlayListState extends State<AddSongToPlayList> {
                         );
 
                         if (res['status'] as bool) {
-                          ShowSnackBar().showSnackBar(
-                              context, 'song successfully added!');
+                          ShowSnackBar()
+                              .showSnackBar(context, 'Song successfully added!');
+
                           Navigator.pop(context);
+
                           Navigator.pop(context);
                         } else {
-                          ShowSnackBar()
-                              .showSnackBar(context, res['data'].toString());
+                          ShowSnackBar().showSnackBar(context, res['data'].toString(),
+                              duration: Duration(milliseconds: 3000));
+
+                          Navigator.pop(context);
+
                           Navigator.pop(context);
                         }
                       }

@@ -49,8 +49,8 @@ class _SearchScreenState extends State<SearchScreen> {
     searchCacheData = await Hive.openBox('searchData');
 
     // searchCacheData = await HiveManager.instance.openHiveBox('searchData');
-    List<String> lstMain = searchCacheData!
-        .get("searchKeywordList", defaultValue: []) as List<String>;
+    List<String> lstMain =
+        searchCacheData!.get("searchKeywordList", defaultValue: ['']) as List<String>;
     lstKeywordSearch.addAll(lstMain);
     setState(() {});
   }
@@ -70,6 +70,9 @@ class _SearchScreenState extends State<SearchScreen> {
     controller.selection =
         TextSelection(baseOffset: search.length, extentOffset: search.length);
     searchResponse = await YogitunesAPI().search(search, isMyLibrary);
+
+    print('searchResponse: $searchResponse');
+
     setState(() {
       isLoading = false;
     });
@@ -130,8 +133,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ? MediaQuery.of(context).size.width
                                 : max(
                                     MediaQuery.of(context).size.width -
-                                        _scrollController.offset
-                                            .roundToDouble(),
+                                        _scrollController.offset.roundToDouble(),
                                     MediaQuery.of(context).size.width - 75,
                                   ),
                             height: 52.0,
@@ -161,12 +163,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       color: Colors.transparent,
                                     ),
                                   ),
-                                  fillColor:
-                                      Theme.of(context).colorScheme.secondary,
+                                  fillColor: Theme.of(context).colorScheme.secondary,
                                   prefixIcon: Icon(
                                     CupertinoIcons.search,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
+                                    color: Theme.of(context).colorScheme.secondary,
                                   ),
                                   suffixIcon: controller.text.isEmpty
                                       ? const SizedBox(
@@ -183,9 +183,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           },
                                           child: Icon(
                                             Icons.clear,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                   border: InputBorder.none,
@@ -257,9 +256,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     height: 50,
                                     decoration: BoxDecoration(
                                       color: !isMyLibrary
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .secondary
+                                          ? Theme.of(context).colorScheme.secondary
                                           : Theme.of(context)
                                               .colorScheme
                                               .primary
@@ -304,9 +301,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     height: 50,
                                     decoration: BoxDecoration(
                                         color: isMyLibrary
-                                            ? Theme.of(context)
-                                                .colorScheme
-                                                .secondary
+                                            ? Theme.of(context).colorScheme.secondary
                                             : Theme.of(context)
                                                 .colorScheme
                                                 .primary
@@ -362,15 +357,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                         splashColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () {
-                                          controller.text =
-                                              lstKeywordSearch[index];
+                                          controller.text = lstKeywordSearch[index];
                                           controller.value = TextEditingValue(
                                             text: controller.text,
                                             selection: TextSelection.collapsed(
                                                 offset: controller.text.length),
                                           );
-                                          onSubmitSearch(
-                                              lstKeywordSearch[index]);
+                                          onSubmitSearch(lstKeywordSearch[index]);
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -395,9 +388,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       onTap: () {
                                         setState(() {
                                           lstKeywordSearch.removeAt(index);
-                                          searchCacheData!.put(
-                                              "searchKeywordList",
-                                              lstKeywordSearch);
+                                          searchCacheData!
+                                              .put("searchKeywordList", lstKeywordSearch);
                                         });
                                       },
                                       child: const Padding(
@@ -458,8 +450,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SearchViewAll(
+                                      pageBuilder: (_, __, ___) => SearchViewAll(
                                         isMyLibrary: isMyLibrary,
                                         keyword: controller.text,
                                         title: 'Tracks',
@@ -476,10 +467,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: ListView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  itemCount:
-                                      searchResponse!.data!.tracks!.length,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount: searchResponse!.data!.tracks!.length,
                                   itemBuilder: (context, index) {
                                     final Track item =
                                         searchResponse!.data!.tracks![index];
@@ -503,24 +492,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                             await YogitunesAPI()
                                                 .fetchSingleSongData(item.id!);
                                         Navigator.pop(context);
-                                        if (radioStationsStreamResponse !=
-                                            null) {
-                                          if (radioStationsStreamResponse
-                                                  .songItemModel !=
+                                        if (radioStationsStreamResponse != null) {
+                                          if (radioStationsStreamResponse.songItemModel !=
                                               null) {
                                             if (radioStationsStreamResponse
                                                 .songItemModel!.isNotEmpty) {
                                               List<SongItemModel> lstSong = [];
 
+                                              print(
+                                                  'radioStationsStreamResponse.songItemModel: $radioStationsStreamResponse.songItemModel');
+
                                               Navigator.push(
                                                 context,
                                                 PageRouteBuilder(
                                                   opaque: false,
-                                                  pageBuilder: (_, __, ___) =>
-                                                      PlayScreen(
-                                                    songsList:
-                                                        radioStationsStreamResponse
-                                                            .songItemModel!,
+                                                  pageBuilder: (_, __, ___) => PlayScreen(
+                                                    songsList: radioStationsStreamResponse
+                                                        .songItemModel!,
                                                     index: 0,
                                                     offline: false,
                                                     fromDownloads: false,
@@ -546,8 +534,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SearchViewAll(
+                                      pageBuilder: (_, __, ___) => SearchViewAll(
                                         isMyLibrary: isMyLibrary,
                                         keyword: controller.text,
                                         title: 'Album',
@@ -564,10 +551,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: ListView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  itemCount:
-                                      searchResponse!.data!.albums!.length,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount: searchResponse!.data!.albums!.length,
                                   itemBuilder: (context, index) {
                                     final Album item =
                                         searchResponse!.data!.albums![index];
@@ -583,8 +568,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                SongsListPage(
+                                            pageBuilder: (_, __, ___) => SongsListPage(
                                               songListType: SongListType.album,
                                               playlistName: item.name!,
                                               playlistImage: [itemImage],
@@ -606,8 +590,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SearchViewAll(
+                                      pageBuilder: (_, __, ___) => SearchViewAll(
                                         isMyLibrary: isMyLibrary,
                                         keyword: controller.text,
                                         title: 'Playlists',
@@ -624,15 +607,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: ListView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  itemCount:
-                                      searchResponse!.data!.playlists!.length,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount: searchResponse!.data!.playlists!.length,
                                   itemBuilder: (context, index) {
                                     final Playlist item =
                                         searchResponse!.data!.playlists![index];
-                                    final String itemImage = item
-                                            .quadImages!.isNotEmpty
+                                    final String itemImage = item.quadImages!.isNotEmpty
                                         ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                         : '';
                                     return SongItem(
@@ -643,13 +623,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                SongsListPage(
-                                              songListType:
-                                                  SongListType.playlist,
+                                            pageBuilder: (_, __, ___) => SongsListPage(
+                                              songListType: SongListType.playlist,
                                               playlistName: item.name!,
-                                              playlistImage:
-                                                  item.getQuadImages(),
+                                              playlistImage: item.getQuadImages(),
                                               id: item.id,
                                             ),
                                           ),
@@ -668,8 +645,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          SearchViewAll(
+                                      pageBuilder: (_, __, ___) => SearchViewAll(
                                         isMyLibrary: isMyLibrary,
                                         keyword: controller.text,
                                         title: 'Artists',
@@ -686,10 +662,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 child: ListView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  itemCount:
-                                      searchResponse!.data!.artists!.length,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount: searchResponse!.data!.artists!.length,
                                   itemBuilder: (context, index) {
                                     final Artist item =
                                         searchResponse!.data!.artists![index];
@@ -704,8 +678,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                ArtistData(
+                                            pageBuilder: (_, __, ___) => ArtistData(
                                               id: item.id!,
                                               title: item.name!,
                                               image: itemImage,
@@ -740,8 +713,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
             ),

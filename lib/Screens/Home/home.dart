@@ -32,12 +32,9 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
   bool checked = false;
   String? appVersion;
-  String? name =
-      Hive.box('settings').get('name', defaultValue: 'Guest') as String?;
-  bool checkUpdate =
-      Hive.box('settings').get('checkUpdate', defaultValue: false) as bool;
-  bool autoBackup =
-      Hive.box('settings').get('autoBackup', defaultValue: false) as bool;
+  String? name = Hive.box('settings').get('name', defaultValue: 'Guest') as String?;
+  bool checkUpdate = Hive.box('settings').get('checkUpdate', defaultValue: false) as bool;
+  bool autoBackup = Hive.box('settings').get('autoBackup', defaultValue: false) as bool;
   DateTime? backButtonPressTime;
 
   String capitalize(String msg) {
@@ -62,8 +59,7 @@ class _HomePageState extends State<HomePage> {
 
     for (int i = 0; i < latestList.length; i++) {
       try {
-        if (int.parse(latestList[i] as String) >
-            int.parse(currentList[i] as String)) {
+        if (int.parse(latestList[i] as String) > int.parse(currentList[i] as String)) {
           update = true;
           break;
         }
@@ -103,16 +99,12 @@ class _HomePageState extends State<HomePage> {
       checked = true;
       final SupaBase db = SupaBase();
       final DateTime now = DateTime.now();
-      final List lastLogin = now
-          .toUtc()
-          .add(const Duration(hours: 5, minutes: 30))
-          .toString()
-          .split('.')
-        ..removeLast()
-        ..join('.');
+      final List lastLogin =
+          now.toUtc().add(const Duration(hours: 5, minutes: 30)).toString().split('.')
+            ..removeLast()
+            ..join('.');
       updateUserDetails('lastLogin', '${lastLogin[0]} IST');
-      final String offset =
-          now.timeZoneOffset.toString().replaceAll('.000000', '');
+      final String offset = now.timeZoneOffset.toString().replaceAll('.000000', '');
 
       updateUserDetails(
         'timeZone',
@@ -129,13 +121,11 @@ class _HomePageState extends State<HomePage> {
               value['LatestVersion'] as String,
               appVersion!,
             )) {
-              List? abis =
-                  await Hive.box('settings').get('supportedAbis') as List?;
+              List? abis = await Hive.box('settings').get('supportedAbis') as List?;
 
               if (abis == null) {
                 final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                final AndroidDeviceInfo androidDeviceInfo =
-                    await deviceInfo.androidInfo;
+                final AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
                 abis = androidDeviceInfo.supportedAbis;
                 await Hive.box('settings').put('supportedAbis', abis);
               }
@@ -201,7 +191,8 @@ class _HomePageState extends State<HomePage> {
             )!
                 .playlists: playlistNames,
           };
-          ExtStorageProvider.getExtStorage(dirName: 'BlackHole/Backups')
+          ExtStorageProvider.getExtStorage(
+                  dirName: 'BlackHole/Backups', writeAccess: true)
               .then((value) {
             createBackup(
               context,
@@ -278,8 +269,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             children: <TextSpan>[
                               TextSpan(
-                                text:
-                                    appVersion == null ? '' : '\nv$appVersion',
+                                text: appVersion == null ? '' : '\nv$appVersion',
                                 style: const TextStyle(
                                   fontSize: 7.0,
                                 ),
@@ -326,8 +316,7 @@ class _HomePageState extends State<HomePage> {
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
                             ),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                             leading: Icon(
                               Icons.home_rounded,
                               color: Theme.of(context).colorScheme.secondary,
@@ -373,10 +362,8 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                           ListTile(
-                            title:
-                                Text(AppLocalizations.of(context)!.playlists),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            title: Text(AppLocalizations.of(context)!.playlists),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                             leading: Icon(
                               Icons.playlist_play_rounded,
                               color: Theme.of(context).iconTheme.color,
@@ -388,11 +375,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                           ListTile(
                             title: Text(AppLocalizations.of(context)!.settings),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                             leading: Icon(
-                              Icons
-                                  .settings_rounded, // miscellaneous_services_rounded,
+                              Icons.settings_rounded, // miscellaneous_services_rounded,
                               color: Theme.of(context).iconTheme.color,
                             ),
                             onTap: () {
@@ -400,8 +385,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      SettingPage(callback: callback),
+                                  builder: (context) => SettingPage(callback: callback),
                                 ),
                               );
                             },
@@ -421,8 +405,7 @@ class _HomePageState extends State<HomePage> {
                           // ),
                           ListTile(
                             title: Text('Logout'),
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
                             leading: Icon(
                               Icons.lock,
                               color: Theme.of(context).iconTheme.color,
@@ -506,14 +489,12 @@ class _HomePageState extends State<HomePage> {
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
+                                                  padding: const EdgeInsets.only(
                                                     left: 15.0,
                                                   ),
                                                   child: ValueListenableBuilder(
                                                     valueListenable:
-                                                        Hive.box('settings')
-                                                            .listenable(),
+                                                        Hive.box('settings').listenable(),
                                                     builder: (
                                                       BuildContext context,
                                                       Box box,
@@ -529,15 +510,12 @@ class _HomePageState extends State<HomePage> {
                                                           )}',
                                                         style: TextStyle(
                                                           // letterSpacing: 2,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .secondary,
+                                                          color: Theme.of(context)
+                                                              .colorScheme
+                                                              .secondary,
                                                           fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                          fontWeight: FontWeight.bold,
+                                                          overflow: TextOverflow.ellipsis,
                                                         ),
                                                       );
                                                     },
@@ -699,8 +677,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Builder(
                             builder: (context) => Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, left: 4.0),
+                              padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                               child: Transform.rotate(
                                 angle: 22 / 7 * 2,
                                 child: ClipRRect(

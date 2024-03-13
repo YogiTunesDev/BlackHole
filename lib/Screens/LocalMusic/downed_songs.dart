@@ -31,8 +31,7 @@ class DownloadedSongs extends StatefulWidget {
   _DownloadedSongsState createState() => _DownloadedSongsState();
 }
 
-class _DownloadedSongsState extends State<DownloadedSongs>
-    with TickerProviderStateMixin {
+class _DownloadedSongsState extends State<DownloadedSongs> with TickerProviderStateMixin {
   List<SongModel> _songs = [];
   String? tempPath = Hive.box('settings').get('tempDirPath')?.toString();
   final Map<String, List<SongModel>> _albums = {};
@@ -46,14 +45,10 @@ class _DownloadedSongsState extends State<DownloadedSongs>
 
   bool added = false;
   int sortValue = Hive.box('settings').get('sortValue', defaultValue: 1) as int;
-  int orderValue =
-      Hive.box('settings').get('orderValue', defaultValue: 1) as int;
-  int albumSortValue =
-      Hive.box('settings').get('albumSortValue', defaultValue: 2) as int;
-  List dirPaths =
-      Hive.box('settings').get('searchPaths', defaultValue: []) as List;
-  int minDuration =
-      Hive.box('settings').get('minDuration', defaultValue: 10) as int;
+  int orderValue = Hive.box('settings').get('orderValue', defaultValue: 1) as int;
+  int albumSortValue = Hive.box('settings').get('albumSortValue', defaultValue: 2) as int;
+  List dirPaths = Hive.box('settings').get('searchPaths', defaultValue: []) as List;
+  int minDuration = Hive.box('settings').get('minDuration', defaultValue: 10) as int;
   List blackLists =
       Hive.box('settings').get('blacklistedPaths', defaultValue: []) as List;
   TabController? _tcontroller;
@@ -76,8 +71,7 @@ class _DownloadedSongsState extends State<DownloadedSongs>
 
   @override
   void initState() {
-    _tcontroller =
-        TabController(length: widget.showPlaylists ? 5 : 4, vsync: this);
+    _tcontroller = TabController(length: widget.showPlaylists ? 5 : 4, vsync: this);
     getData();
     super.initState();
   }
@@ -301,8 +295,7 @@ class _DownloadedSongsState extends State<DownloadedSongs>
                           orderTypes
                               .map(
                                 (e) => PopupMenuItem(
-                                  value:
-                                      sortTypes.length + orderTypes.indexOf(e),
+                                  value: sortTypes.length + orderTypes.indexOf(e),
                                   child: Row(
                                     children: [
                                       if (orderValue == orderTypes.indexOf(e))
@@ -330,10 +323,9 @@ class _DownloadedSongsState extends State<DownloadedSongs>
                     ),
                   ],
                   centerTitle: true,
-                  backgroundColor:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.transparent
-                          : Theme.of(context).colorScheme.secondary,
+                  backgroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.transparent
+                      : Theme.of(context).colorScheme.secondary,
                   elevation: 0,
                 ),
                 body: !added
@@ -640,8 +632,7 @@ class SongsTab extends StatefulWidget {
   State<SongsTab> createState() => _SongsTabState();
 }
 
-class _SongsTabState extends State<SongsTab>
-    with AutomaticKeepAliveClientMixin {
+class _SongsTabState extends State<SongsTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -1259,8 +1250,7 @@ class AlbumsTab extends StatefulWidget {
   State<AlbumsTab> createState() => _AlbumsTabState();
 }
 
-class _AlbumsTabState extends State<AlbumsTab>
-    with AutomaticKeepAliveClientMixin {
+class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -1279,8 +1269,7 @@ class _AlbumsTabState extends State<AlbumsTab>
             id: widget.albums[widget.albumsList[index]]![0].id,
             type: ArtworkType.AUDIO,
             tempPath: widget.tempPath,
-            fileName:
-                widget.albums[widget.albumsList[index]]![0].displayNameWOExt,
+            fileName: widget.albums[widget.albumsList[index]]![0].displayNameWOExt,
           ),
           title: Text(
             widget.albumsList[index],

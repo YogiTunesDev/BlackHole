@@ -18,13 +18,13 @@ enum DownloadedStatus { SongExists, Completed, Failed }
 class Download {
   int? rememberOption;
   final ValueNotifier<bool> remember = ValueNotifier<bool>(false);
-  String preferredDownloadQuality = Hive.box('settings')
-      .get('downloadQuality', defaultValue: '320 kbps') as String;
+  String preferredDownloadQuality =
+      Hive.box('settings').get('downloadQuality', defaultValue: '320 kbps') as String;
   String downloadFormat = 'mp3';
-  bool createDownloadFolder = Hive.box('settings')
-      .get('createDownloadFolder', defaultValue: false) as bool;
-  bool createYoutubeFolder = Hive.box('settings')
-      .get('createYoutubeFolder', defaultValue: false) as bool;
+  bool createDownloadFolder =
+      Hive.box('settings').get('createDownloadFolder', defaultValue: false) as bool;
+  bool createYoutubeFolder =
+      Hive.box('settings').get('createYoutubeFolder', defaultValue: false) as bool;
 
   bool downloadLyrics =
       Hive.box('settings').get('downloadLyrics', defaultValue: false) as bool;
@@ -52,8 +52,7 @@ class Download {
     final RegExp avoid = RegExp(r'[\.\\\*\:\"\?#/;\|]');
     data['title'] = data['title'].toString().split('(From')[0].trim();
     String filename = '${data["title"]} - ${data["artist"]}';
-    String dlPath =
-        Hive.box('settings').get('downloadPath', defaultValue: '') as String;
+    String dlPath = Hive.box('settings').get('downloadPath', defaultValue: '') as String;
     if (filename.length > 200) {
       final String temp = filename.substring(0, 200);
       final List tempList = temp.split(', ');
@@ -64,7 +63,7 @@ class Download {
     filename = '${filename.replaceAll(avoid, "").replaceAll("  ", " ")}.mp3';
     if (dlPath == '') {
       final String? temp =
-          await ExtStorageProvider.getExtStorage(dirName: 'Music');
+          await ExtStorageProvider.getExtStorage(dirName: 'Music', writeAccess: true);
       dlPath = temp!;
     }
     if (data['url'].toString().contains('google') && createYoutubeFolder) {
@@ -385,8 +384,8 @@ class Download {
       final Tag tag = Tag(
         title: data['title'].toString(),
         artist: data['artist'].toString(),
-        albumArtist: data['album_artist']?.toString() ??
-            data['artist']?.toString().split(', ')[0],
+        albumArtist:
+            data['album_artist']?.toString() ?? data['artist']?.toString().split(', ')[0],
         artwork: filepath2,
         album: data['album'].toString(),
         genre: data['language'].toString(),
@@ -413,8 +412,8 @@ class Download {
         'title': data['title'].toString(),
         'subtitle': data['subtitle'].toString(),
         'artist': data['artist'].toString(),
-        'albumArtist': data['album_artist']?.toString() ??
-            data['artist']?.toString().split(', ')[0],
+        'albumArtist':
+            data['album_artist']?.toString() ?? data['artist']?.toString().split(', ')[0],
         'album': data['album'].toString(),
         'genre': data['language'].toString(),
         'year': data['year'].toString(),
@@ -444,8 +443,7 @@ class Download {
   }
 
   List<String> checkIfAllSongsDownloaded(List<String> songIDs) {
-    songIDs
-        .removeWhere((element) => Hive.box('downloads').get(element) != null);
+    songIDs.removeWhere((element) => Hive.box('downloads').get(element) != null);
     return songIDs;
   }
 }

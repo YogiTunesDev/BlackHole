@@ -57,17 +57,16 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   bool fromMiniplayer = false;
-  String preferredQuality = Hive.box('settings')
-      .get('streamingQuality', defaultValue: '96 kbps')
-      .toString();
+  String preferredQuality =
+      Hive.box('settings').get('streamingQuality', defaultValue: '96 kbps').toString();
   String repeatMode =
       Hive.box('settings').get('repeatMode', defaultValue: 'None').toString();
   bool enforceRepeat =
       Hive.box('settings').get('enforceRepeat', defaultValue: false) as bool;
   bool useImageColor =
       Hive.box('settings').get('useImageColor', defaultValue: true) as bool;
-  bool useFullScreenGradient = Hive.box('settings')
-      .get('useFullScreenGradient', defaultValue: false) as bool;
+  bool useFullScreenGradient =
+      Hive.box('settings').get('useFullScreenGradient', defaultValue: false) as bool;
   List<MediaItem> globalQueue = [];
   int globalIndex = 0;
   List<SongItemModel> response = [];
@@ -107,8 +106,7 @@ class _PlayScreenState extends State<PlayScreen> {
       }
       fromDownloads = widget.fromDownloads;
       if (widget.offline == null) {
-        if (audioHandler.mediaItem.value?.extras!['url'].startsWith('http')
-            as bool) {
+        if (audioHandler.mediaItem.value?.extras!['url'].startsWith('http') as bool) {
           offline = false;
         } else {
           offline = true;
@@ -139,13 +137,10 @@ class _PlayScreenState extends State<PlayScreen> {
     // ? playTitle = response.displayNameWOExt
     //: playTitle = response.title!;
     String playArtist = response.artist!;
-    playArtist == '<unknown>'
-        ? playArtist = 'Unknown'
-        : playArtist = response.artist!;
+    playArtist == '<unknown>' ? playArtist = 'Unknown' : playArtist = response.artist!;
 
     final String playAlbum = response.album!;
-    final int playDuration =
-        response.duration ?? 180000; // response.duration ??
+    final int playDuration = response.duration ?? 180000; // response.duration ??
     final String imagePath =
         response.image!; //'${tempDir.path}/${response.displayNameWOExt}.jpg';
 
@@ -173,8 +168,7 @@ class _PlayScreenState extends State<PlayScreen> {
       if (!await file.exists()) {
         final byteData = await rootBundle.load('assets/cover.jpg');
         await file.writeAsBytes(
-          byteData.buffer
-              .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+          byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
         );
       }
       for (int i = 0; i < response.length; i++) {
@@ -207,7 +201,6 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<void> updateNplay() async {
-    print(globalQueue);
     await audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
     await audioHandler.updateQueue(globalQueue);
     await audioHandler.skipToQueueItem(globalIndex);
@@ -401,8 +394,7 @@ class _PlayScreenState extends State<PlayScreen> {
                           }
                           if (value == 3) {
                             await YogitunesAPI().trackAddToLibrary(
-                                int.parse(widget.songsList[widget.index].id
-                                    .toString()),
+                                int.parse(widget.songsList[widget.index].id.toString()),
                                 context);
                           }
                           if (value == 1) {
@@ -416,9 +408,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                   title: Text(
                                     AppLocalizations.of(context)!.sleepTimer,
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                   ),
                                   contentPadding: const EdgeInsets.all(10.0),
@@ -428,8 +418,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                         AppLocalizations.of(context)!.sleepDur,
                                       ),
                                       subtitle: Text(
-                                        AppLocalizations.of(context)!
-                                            .sleepDurSub,
+                                        AppLocalizations.of(context)!.sleepDurSub,
                                       ),
                                       dense: true,
                                       onTap: () {
@@ -442,12 +431,10 @@ class _PlayScreenState extends State<PlayScreen> {
                                     ),
                                     ListTile(
                                       title: Text(
-                                        AppLocalizations.of(context)!
-                                            .sleepAfter,
+                                        AppLocalizations.of(context)!.sleepAfter,
                                       ),
                                       subtitle: Text(
-                                        AppLocalizations.of(context)!
-                                            .sleepAfterSub,
+                                        AppLocalizations.of(context)!.sleepAfterSub,
                                       ),
                                       dense: true,
                                       isThreeLine: true,
@@ -462,8 +449,7 @@ class _PlayScreenState extends State<PlayScreen> {
                             );
                           }
                           if (value == 0) {
-                            print('Add to playlist: ');
-                            print(mediaItem);
+                            print('Add to playlist mediaItem: $mediaItem');
 
                             AddToPlaylist().addToPlaylist(context, mediaItem);
                           }
@@ -477,13 +463,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                       children: [
                                         Icon(
                                           Icons.album_rounded,
-                                          color:
-                                              Theme.of(context).iconTheme.color,
+                                          color: Theme.of(context).iconTheme.color,
                                         ),
                                         const SizedBox(width: 10.0),
                                         Text(
-                                          AppLocalizations.of(context)!
-                                              .viewAlbum,
+                                          AppLocalizations.of(context)!.viewAlbum,
                                         ),
                                       ],
                                     ),
@@ -494,13 +478,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                     children: [
                                       Icon(
                                         CupertinoIcons.timer,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .sleepTimer,
+                                        AppLocalizations.of(context)!.sleepTimer,
                                       ),
                                     ],
                                   ),
@@ -515,13 +497,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                       children: [
                                         Icon(
                                           Icons.equalizer_rounded,
-                                          color:
-                                              Theme.of(context).iconTheme.color,
+                                          color: Theme.of(context).iconTheme.color,
                                         ),
                                         const SizedBox(width: 10.0),
                                         Text(
-                                          AppLocalizations.of(context)!
-                                              .equalizer,
+                                          AppLocalizations.of(context)!.equalizer,
                                         ),
                                       ],
                                     ),
@@ -532,8 +512,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                     children: [
                                       Icon(
                                         Icons.info_rounded,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
@@ -554,8 +533,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                         ),
                                         const SizedBox(width: 10.0),
                                         Text(
-                                          AppLocalizations.of(context)!
-                                              .viewAlbum,
+                                          AppLocalizations.of(context)!.viewAlbum,
                                         ),
                                       ],
                                     ),
@@ -566,13 +544,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                     children: [
                                       Icon(
                                         Icons.playlist_add_rounded,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .addToPlaylist,
+                                        AppLocalizations.of(context)!.addToPlaylist,
                                       ),
                                     ],
                                   ),
@@ -583,13 +559,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                     children: [
                                       Icon(
                                         CupertinoIcons.timer,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        AppLocalizations.of(context)!
-                                            .sleepTimer,
+                                        AppLocalizations.of(context)!.sleepTimer,
                                       ),
                                     ],
                                   ),
@@ -600,8 +574,7 @@ class _PlayScreenState extends State<PlayScreen> {
                                     children: [
                                       Icon(
                                         Icons.library_add_rounded,
-                                        color:
-                                            Theme.of(context).iconTheme.color,
+                                        color: Theme.of(context).iconTheme.color,
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
@@ -620,13 +593,11 @@ class _PlayScreenState extends State<PlayScreen> {
                                       children: [
                                         Icon(
                                           Icons.equalizer_rounded,
-                                          color:
-                                              Theme.of(context).iconTheme.color,
+                                          color: Theme.of(context).iconTheme.color,
                                         ),
                                         const SizedBox(width: 10.0),
                                         Text(
-                                          AppLocalizations.of(context)!
-                                              .equalizer,
+                                          AppLocalizations.of(context)!.equalizer,
                                         ),
                                       ],
                                     ),
@@ -740,9 +711,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   duration: const Duration(milliseconds: 600),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      begin: !useImageColor
-                          ? Alignment.topLeft
-                          : Alignment.topCenter,
+                      begin: !useImageColor ? Alignment.topLeft : Alignment.topCenter,
                       end: !useImageColor
                           ? Alignment.bottomRight
                           : !useFullScreenGradient
@@ -901,8 +870,7 @@ class PositionData {
 }
 
 class QueueState {
-  static const QueueState empty =
-      QueueState([], 0, [], AudioServiceRepeatMode.none);
+  static const QueueState empty = QueueState([], 0, [], AudioServiceRepeatMode.none);
 
   final List<MediaItem> queue;
   final int? queueIndex;
@@ -919,11 +887,9 @@ class QueueState {
   bool get hasPrevious =>
       repeatMode != AudioServiceRepeatMode.none || (queueIndex ?? 0) > 0;
   bool get hasNext =>
-      repeatMode != AudioServiceRepeatMode.none ||
-      (queueIndex ?? 0) + 1 < queue.length;
+      repeatMode != AudioServiceRepeatMode.none || (queueIndex ?? 0) + 1 < queue.length;
 
-  List<int> get indices =>
-      shuffleIndices ?? List.generate(queue.length, (i) => i);
+  List<int> get indices => shuffleIndices ?? List.generate(queue.length, (i) => i);
 }
 
 class ControlButtons extends StatelessWidget {
@@ -1027,8 +993,7 @@ class ControlButtons extends StatelessWidget {
                               child: playing
                                   ? FloatingActionButton(
                                       elevation: 10,
-                                      tooltip:
-                                          AppLocalizations.of(context)!.pause,
+                                      tooltip: AppLocalizations.of(context)!.pause,
                                       backgroundColor: Colors.white,
                                       onPressed: audioHandler.pause,
                                       child: const Icon(
@@ -1039,8 +1004,7 @@ class ControlButtons extends StatelessWidget {
                                     )
                                   : FloatingActionButton(
                                       elevation: 10,
-                                      tooltip:
-                                          AppLocalizations.of(context)!.play,
+                                      tooltip: AppLocalizations.of(context)!.play,
                                       backgroundColor: Colors.white,
                                       onPressed: audioHandler.play,
                                       child: const Icon(
@@ -1067,9 +1031,7 @@ class ControlButtons extends StatelessWidget {
                   iconSize: miniplayer ? 24.0 : 45.0,
                   tooltip: AppLocalizations.of(context)!.skipNext,
                   color: Theme.of(context).iconTheme.color,
-                  onPressed: queueState?.hasNext ?? true
-                      ? audioHandler.skipToNext
-                      : null,
+                  onPressed: queueState?.hasNext ?? true ? audioHandler.skipToNext : null,
                 );
               },
             );
@@ -1160,8 +1122,7 @@ class NowPlayingStream extends StatelessWidget {
               child: ListTileTheme(
                 selectedColor: Theme.of(context).colorScheme.secondary,
                 child: ListTile(
-                  contentPadding:
-                      const EdgeInsets.only(left: 16.0, right: 10.0),
+                  contentPadding: const EdgeInsets.only(left: 16.0, right: 10.0),
                   selected: index == queueState.queueIndex,
                   trailing: index == queueState.queueIndex
                       ? IconButton(
@@ -1171,10 +1132,7 @@ class NowPlayingStream extends StatelessWidget {
                           tooltip: AppLocalizations.of(context)!.playing,
                           onPressed: () {},
                         )
-                      : queue[index]
-                              .extras!['url']
-                              .toString()
-                              .startsWith('http')
+                      : queue[index].extras!['url'].toString().startsWith('http')
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -1189,30 +1147,20 @@ class NowPlayingStream extends StatelessWidget {
                                     'artist': queue[index].artist.toString(),
                                     'album': queue[index].album.toString(),
                                     'image': queue[index].artUri.toString(),
-                                    'duration': queue[index]
-                                        .duration!
-                                        .inSeconds
-                                        .toString(),
+                                    'duration':
+                                        queue[index].duration!.inSeconds.toString(),
                                     'title': queue[index].title,
-                                    'url':
-                                        queue[index].extras?['url'].toString(),
-                                    'year':
-                                        queue[index].extras?['year'].toString(),
-                                    'language': queue[index]
-                                        .extras?['language']
-                                        .toString(),
+                                    'url': queue[index].extras?['url'].toString(),
+                                    'year': queue[index].extras?['year'].toString(),
+                                    'language':
+                                        queue[index].extras?['language'].toString(),
                                     'genre': queue[index].genre?.toString(),
                                     '320kbps': queue[index].extras?['320kbps'],
-                                    'has_lyrics':
-                                        queue[index].extras?['has_lyrics'],
-                                    'release_date':
-                                        queue[index].extras?['release_date'],
-                                    'album_id':
-                                        queue[index].extras?['album_id'],
-                                    'subtitle':
-                                        queue[index].extras?['subtitle'],
-                                    'perma_url':
-                                        queue[index].extras?['perma_url'],
+                                    'has_lyrics': queue[index].extras?['has_lyrics'],
+                                    'release_date': queue[index].extras?['release_date'],
+                                    'album_id': queue[index].extras?['album_id'],
+                                    'subtitle': queue[index].extras?['subtitle'],
+                                    'perma_url': queue[index].extras?['perma_url'],
                                   },
                                 )
                               ],
@@ -1222,8 +1170,7 @@ class NowPlayingStream extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (queue[index].extras?['addedByAutoplay'] as bool? ??
-                          false)
+                      if (queue[index].extras?['addedByAutoplay'] as bool? ?? false)
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -1247,9 +1194,7 @@ class NowPlayingStream extends StatelessWidget {
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontSize: 8.0,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Theme.of(context).colorScheme.secondary,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -1278,10 +1223,7 @@ class NowPlayingStream extends StatelessWidget {
                             : SizedBox(
                                 height: 50.0,
                                 width: 50.0,
-                                child: queue[index]
-                                        .artUri
-                                        .toString()
-                                        .startsWith('file:')
+                                child: queue[index].artUri.toString().startsWith('file:')
                                     ? Image(
                                         fit: BoxFit.cover,
                                         image: FileImage(
@@ -1294,24 +1236,21 @@ class NowPlayingStream extends StatelessWidget {
                                         memCacheHeight: 100,
                                         memCacheWidth: 100,
                                         fit: BoxFit.cover,
-                                        errorWidget:
-                                            (BuildContext context, _, __) =>
-                                                const Image(
+                                        errorWidget: (BuildContext context, _, __) =>
+                                            const Image(
                                           fit: BoxFit.cover,
                                           image: AssetImage(
                                             'assets/cover.jpg',
                                           ),
                                         ),
-                                        placeholder:
-                                            (BuildContext context, _) =>
-                                                const Image(
+                                        placeholder: (BuildContext context, _) =>
+                                            const Image(
                                           fit: BoxFit.cover,
                                           image: AssetImage(
                                             'assets/cover.jpg',
                                           ),
                                         ),
-                                        imageUrl:
-                                            queue[index].artUri.toString(),
+                                        imageUrl: queue[index].artUri.toString(),
                                       ),
                               ),
                       ),
@@ -1396,8 +1335,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                   } else {
                     Lyrics.getLyrics(
                       id: widget.mediaItem.id,
-                      saavnHas:
-                          widget.mediaItem.extras?['has_lyrics'] == 'true',
+                      saavnHas: widget.mediaItem.extras?['has_lyrics'] == 'true',
                       title: widget.mediaItem.title,
                       artist: widget.mediaItem.artist.toString(),
                     ).then((value) {
@@ -1454,8 +1392,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                           100.0,
                                           AppLocalizations.of(context)!.lyrics,
                                           60.0,
-                                          AppLocalizations.of(context)!
-                                              .notAvailable,
+                                          AppLocalizations.of(context)!.notAvailable,
                                           20.0,
                                           useWhite: true,
                                         )
@@ -1488,10 +1425,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                             );
                           },
                           icon: const Icon(Icons.copy_rounded),
-                          color: Theme.of(context)
-                              .iconTheme
-                              .color!
-                              .withOpacity(0.6),
+                          color: Theme.of(context).iconTheme.color!.withOpacity(0.6),
                         ),
                       ),
                     ),
@@ -1539,8 +1473,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                         : () {
                             if (!widget.offline) {
                               Feedback.forLongPress(context);
-                              AddToPlaylist()
-                                  .addToPlaylist(context, widget.mediaItem);
+                              AddToPlaylist().addToPlaylist(context, widget.mediaItem);
                             }
                           },
                     onVerticalDragStart: !enabled
@@ -1576,9 +1509,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           clipBehavior: Clip.antiAlias,
-                          child: widget.mediaItem.artUri
-                                  .toString()
-                                  .startsWith('file')
+                          child: widget.mediaItem.artUri.toString().startsWith('file')
                               ? Image(
                                   fit: BoxFit.cover,
                                   height: widget.width * 0.75,
@@ -1599,8 +1530,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                     fit: BoxFit.cover,
                                     image: AssetImage('assets/cover.jpg'),
                                   ),
-                                  placeholder: (BuildContext context, _) =>
-                                      const Image(
+                                  placeholder: (BuildContext context, _) => const Image(
                                     fit: BoxFit.cover,
                                     image: AssetImage('assets/cover.jpg'),
                                   ),
@@ -1625,8 +1555,7 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                     ),
                                     clipBehavior: Clip.antiAlias,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Expanded(
@@ -1635,26 +1564,22 @@ class _ArtWorkWidgetState extends State<ArtWorkWidget> {
                                             child: RotatedBox(
                                               quarterTurns: -1,
                                               child: SliderTheme(
-                                                data: SliderTheme.of(context)
-                                                    .copyWith(
-                                                  thumbShape:
-                                                      HiddenThumbComponentShape(),
-                                                  activeTrackColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary,
-                                                  inactiveTrackColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary
-                                                          .withOpacity(0.4),
+                                                data: SliderTheme.of(context).copyWith(
+                                                  thumbShape: HiddenThumbComponentShape(),
+                                                  activeTrackColor: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  inactiveTrackColor: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary
+                                                      .withOpacity(0.4),
                                                   trackShape:
                                                       const RoundedRectSliderTrackShape(),
                                                 ),
                                                 child: ExcludeSemantics(
                                                   child: Slider(
-                                                    value: widget.audioHandler
-                                                        .volume.value,
+                                                    value:
+                                                        widget.audioHandler.volume.value,
                                                     onChanged: (_) {},
                                                   ),
                                                 ),
@@ -1721,9 +1646,8 @@ class NameNControls extends StatelessWidget {
     this.width,
   });
 
-  Stream<Duration> get _bufferedPositionStream => audioHandler.playbackState
-      .map((state) => state.bufferedPosition)
-      .distinct();
+  Stream<Duration> get _bufferedPositionStream =>
+      audioHandler.playbackState.map((state) => state.bufferedPosition).distinct();
   Stream<Duration?> get _durationStream =>
       audioHandler.mediaItem.map((item) => item?.duration).distinct();
   Stream<PositionData> get _positionDataStream =>
@@ -1790,13 +1714,9 @@ class NameNControls extends StatelessWidget {
                       children: [
                         /// Title container
                         SizedBox(
-                          height:
-                              (35.0) * MediaQuery.of(context).textScaleFactor,
+                          height: (35.0) * MediaQuery.of(context).textScaleFactor,
                           child: AnimatedText(
-                            text: mediaItem.title
-                                .split(' (')[0]
-                                .split('|')[0]
-                                .trim(),
+                            text: mediaItem.title.split(' (')[0].split('|')[0].trim(),
                             pauseAfterRound: const Duration(seconds: 3),
                             showFadingOnlyWhenScrolling: false,
                             fadingEdgeEndFraction: 0.1,
@@ -1814,8 +1734,7 @@ class NameNControls extends StatelessWidget {
 
                         /// Subtitle container
                         SizedBox(
-                          height:
-                              (18.0) * MediaQuery.of(context).textScaleFactor,
+                          height: (18.0) * MediaQuery.of(context).textScaleFactor,
                           child: AnimatedText(
                             text:
                                 '${mediaItem.artist ?? "Unknown"} • ${mediaItem.album ?? "Unknown"}',
@@ -1873,9 +1792,7 @@ class NameNControls extends StatelessWidget {
                       StreamBuilder<bool>(
                         stream: audioHandler.playbackState
                             .map(
-                              (state) =>
-                                  state.shuffleMode ==
-                                  AudioServiceShuffleMode.all,
+                              (state) => state.shuffleMode == AudioServiceShuffleMode.all,
                             )
                             .distinct(),
                         builder: (context, snapshot) {
@@ -1913,8 +1830,7 @@ class NameNControls extends StatelessWidget {
                             .map((state) => state.repeatMode)
                             .distinct(),
                         builder: (context, snapshot) {
-                          final repeatMode =
-                              snapshot.data ?? AudioServiceRepeatMode.none;
+                          final repeatMode = snapshot.data ?? AudioServiceRepeatMode.none;
                           const texts = ['None', 'All', 'One'];
                           final icons = [
                             Icon(
@@ -1936,17 +1852,15 @@ class NameNControls extends StatelessWidget {
                           final index = cycleModes.indexOf(repeatMode);
                           return IconButton(
                             icon: icons[index],
-                            tooltip:
-                                'Repeat ${texts[(index + 1) % texts.length]}',
+                            tooltip: 'Repeat ${texts[(index + 1) % texts.length]}',
                             onPressed: () {
                               Hive.box('settings').put(
                                 'repeatMode',
                                 texts[(index + 1) % texts.length],
                               );
                               audioHandler.setRepeatMode(
-                                cycleModes[
-                                    (cycleModes.indexOf(repeatMode) + 1) %
-                                        cycleModes.length],
+                                cycleModes[(cycleModes.indexOf(repeatMode) + 1) %
+                                    cycleModes.length],
                               );
                             },
                           );
@@ -1960,13 +1874,11 @@ class NameNControls extends StatelessWidget {
                             'artist': mediaItem.artist.toString(),
                             'album': mediaItem.album.toString(),
                             'image': mediaItem.artUri.toString(),
-                            'duration':
-                                mediaItem.duration?.inSeconds.toString(),
+                            'duration': mediaItem.duration?.inSeconds.toString(),
                             'title': mediaItem.title,
                             'url': mediaItem.extras!['url'].toString(),
                             'year': mediaItem.extras!['year'].toString(),
-                            'language':
-                                mediaItem.extras!['language'].toString(),
+                            'language': mediaItem.extras!['language'].toString(),
                             'genre': mediaItem.genre?.toString(),
                             '320kbps': mediaItem.extras?['320kbps'],
                             'has_lyrics': mediaItem.extras?['has_lyrics'],

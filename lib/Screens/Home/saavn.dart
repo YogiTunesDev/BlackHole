@@ -21,10 +21,9 @@ import 'package:hive/hive.dart';
 import 'album_list.dart';
 
 bool fetched = false;
-List preferredLanguage = Hive.box('settings')
-    .get('preferredLanguage', defaultValue: ['Hindi']) as List;
-List likedRadio =
-    Hive.box('settings').get('likedRadio', defaultValue: []) as List;
+List preferredLanguage =
+    Hive.box('settings').get('preferredLanguage', defaultValue: ['Hindi']) as List;
+List likedRadio = Hive.box('settings').get('likedRadio', defaultValue: []) as List;
 
 //     Hive.box('cache').get('homepage', defaultValue: {}) as HomeResponse?;
 // List lists = ['recent', ...?data['collections']];
@@ -38,22 +37,18 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     with AutomaticKeepAliveClientMixin<SaavnHomePage> {
   HomeResponse? data;
   List<RadioStationsData> lstRadioStation = [];
-  List recentList =
-      Hive.box('cache').get('recentSongs', defaultValue: []) as List;
-  Map likedArtists =
-      Hive.box('settings').get('likedArtists', defaultValue: {}) as Map;
-  List blacklistedHomeSections = Hive.box('settings')
-      .get('blacklistedHomeSections', defaultValue: []) as List;
+  List recentList = Hive.box('cache').get('recentSongs', defaultValue: []) as List;
+  Map likedArtists = Hive.box('settings').get('likedArtists', defaultValue: {}) as Map;
+  List blacklistedHomeSections =
+      Hive.box('settings').get('blacklistedHomeSections', defaultValue: []) as List;
   bool apiLoading = false;
   Future<void> getHomePageData() async {
     apiLoading = true;
     setState(() {});
 
-    Map userInfoData =
-        Hive.box('settings').get('userInfoData', defaultValue: {}) as Map;
+    Map userInfoData = Hive.box('settings').get('userInfoData', defaultValue: {}) as Map;
     if (userInfoData.isEmpty) {
-      final UserInfoResponse? userinfodatares =
-          await YogitunesAPI().fetchUserData();
+      final UserInfoResponse? userinfodatares = await YogitunesAPI().fetchUserData();
       print("RESPONSE DATA ::::: $userinfodatares");
       if (userinfodatares != null) {
         if (userinfodatares.data != null) {
@@ -174,8 +169,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 PageRouteBuilder(
                                   opaque: false,
                                   pageBuilder: (_, __, ___) => const AlbumList(
-                                    albumListType:
-                                        AlbumListType.recentlyPlayedSong,
+                                    albumListType: AlbumListType.recentlyPlayedSong,
                                     albumName: 'Recent Played Albums',
                                   ),
                                 ),
@@ -190,13 +184,11 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              itemCount:
-                                  data!.data!.myRecentlyPlayedSongs!.length,
+                              itemCount: data!.data!.myRecentlyPlayedSongs!.length,
                               itemBuilder: (context, index) {
                                 final MyRecentlyPlayedSong item =
                                     data!.data!.myRecentlyPlayedSongs![index];
-                                final String itemImage = item.album?.cover !=
-                                        null
+                                final String itemImage = item.album?.cover != null
                                     ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image!}')
                                     : '';
 
@@ -216,14 +208,11 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                         context,
                                         PageRouteBuilder(
                                           opaque: false,
-                                          pageBuilder: (_, __, ___) =>
-                                              SongsListPage(
-                                                  songListType:
-                                                      SongListType.album,
-                                                  playlistName:
-                                                      item.album!.name!,
-                                                  playlistImage: [itemImage],
-                                                  id: item.album!.id),
+                                          pageBuilder: (_, __, ___) => SongsListPage(
+                                              songListType: SongListType.album,
+                                              playlistName: item.album!.name!,
+                                              playlistImage: [itemImage],
+                                              id: item.album!.id),
                                         ),
                                       );
                                     },
@@ -239,7 +228,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                       if (data!.data!.popularYogaPlaylists != null)
                         if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                           HeaderTitle(
-                            title: 'Yoga Playlists',
+                            title: 'Yoga Playlists 1',
                             viewAllOnTap: () {
                               Navigator.push(
                                 context,
@@ -247,7 +236,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                   opaque: false,
                                   pageBuilder: (_, __, ___) => const AlbumList(
                                     albumListType: AlbumListType.yogaPlaylist,
-                                    albumName: 'Yoga Playlists',
+                                    albumName: 'Yoga Playlists 2',
                                   ),
                                 ),
                               );
@@ -261,13 +250,11 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              itemCount:
-                                  data!.data!.popularYogaPlaylists!.length,
+                              itemCount: data!.data!.popularYogaPlaylists!.length,
                               itemBuilder: (context, index) {
                                 final PopularPlaylist item =
                                     data!.data!.popularYogaPlaylists![index];
-                                final String itemImage = item
-                                        .quadImages!.isNotEmpty
+                                final String itemImage = item.quadImages!.isNotEmpty
                                     ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
                                     : '';
                                 return SongItem(
@@ -278,8 +265,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.playlist,
                                           playlistName: item.name!,
                                           playlistImage: item.getQuadImages(),
@@ -331,8 +317,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       PageRouteBuilder(
                                         opaque: false,
                                         pageBuilder: (_, __, ___) => AlbumList(
-                                          albumListType:
-                                              AlbumListType.otherActivity,
+                                          albumListType: AlbumListType.otherActivity,
                                           albumName: item.name,
                                           id: item.id,
                                         ),
@@ -344,16 +329,14 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 5),
                                       child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           SizedBox.square(
                                             dimension: boxSize / 2 - 40,
                                             child: Card(
                                               elevation: 5,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
+                                                borderRadius: BorderRadius.circular(
                                                   1000.0,
                                                 ),
                                               ),
@@ -366,16 +349,12 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                                     decoration: BoxDecoration(
                                                       gradient: LinearGradient(
                                                         colors: [
-                                                          colorList[
-                                                              randomNumber],
-                                                          colorList[
-                                                                  randomNumber]
+                                                          colorList[randomNumber],
+                                                          colorList[randomNumber]
                                                               .withOpacity(0.5),
                                                         ],
-                                                        begin:
-                                                            Alignment.topLeft,
-                                                        end: Alignment
-                                                            .bottomRight,
+                                                        begin: Alignment.topLeft,
+                                                        end: Alignment.bottomRight,
                                                       ),
                                                     ),
                                                   ),
@@ -464,8 +443,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               itemCount: data!.data!.newReleases!.length,
                               itemBuilder: (context, index) {
-                                final NewRelease item =
-                                    data!.data!.newReleases![index];
+                                final NewRelease item = data!.data!.newReleases![index];
                                 final String itemImage = item.cover != null
                                     ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                     : '';
@@ -477,8 +455,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.album,
                                           playlistName: item.name!,
                                           playlistImage: [itemImage],
@@ -518,8 +495,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               physics: const BouncingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              itemCount:
-                                  data!.data!.browseByGenresMoods!.length,
+                              itemCount: data!.data!.browseByGenresMoods!.length,
                               itemBuilder: (context, index) {
                                 final BrowseBy item =
                                     data!.data!.browseByGenresMoods![index];
@@ -531,8 +507,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       PageRouteBuilder(
                                         opaque: false,
                                         pageBuilder: (_, __, ___) => AlbumList(
-                                          albumListType:
-                                              AlbumListType.genresMoods,
+                                          albumListType: AlbumListType.genresMoods,
                                           albumName: item.name,
                                           id: item.id,
                                         ),
@@ -544,16 +519,14 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 5),
                                       child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           SizedBox.square(
                                             dimension: boxSize / 2 - 40,
                                             child: Card(
                                               elevation: 5,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
+                                                borderRadius: BorderRadius.circular(
                                                   1000.0,
                                                 ),
                                               ),
@@ -566,16 +539,12 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                                     decoration: BoxDecoration(
                                                       gradient: LinearGradient(
                                                         colors: [
-                                                          colorList[
-                                                              randomNumber],
-                                                          colorList[
-                                                                  randomNumber]
+                                                          colorList[randomNumber],
+                                                          colorList[randomNumber]
                                                               .withOpacity(0.5),
                                                         ],
-                                                        begin:
-                                                            Alignment.topLeft,
-                                                        end: Alignment
-                                                            .bottomRight,
+                                                        begin: Alignment.topLeft,
+                                                        end: Alignment.bottomRight,
                                                       ),
                                                     ),
                                                   ),
@@ -639,10 +608,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                       /// featured albums list
                       if (data!.data!.featuredAlbums != null)
                         if (data!.data!.featuredAlbums!.isNotEmpty)
-                          if (data!.data!.featuredAlbums![0].albumsClean !=
-                              null)
-                            if (data!.data!.featuredAlbums![0].albumsClean!
-                                .isNotEmpty)
+                          if (data!.data!.featuredAlbums![0].albumsClean != null)
+                            if (data!.data!.featuredAlbums![0].albumsClean!.isNotEmpty)
                               HeaderTitle(
                                 title: 'Featured Albums',
                                 viewAllOnTap: () {
@@ -650,10 +617,8 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                     context,
                                     PageRouteBuilder(
                                       opaque: false,
-                                      pageBuilder: (_, __, ___) =>
-                                          const AlbumList(
-                                        albumListType:
-                                            AlbumListType.featuredAlbums,
+                                      pageBuilder: (_, __, ___) => const AlbumList(
+                                        albumListType: AlbumListType.featuredAlbums,
                                         albumName: 'Featured Albums',
                                       ),
                                     ),
@@ -662,22 +627,19 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                               ),
                       if (data!.data!.featuredAlbums != null)
                         if (data!.data!.featuredAlbums!.isNotEmpty)
-                          if (data!.data!.featuredAlbums![0].albumsClean !=
-                              null)
-                            if (data!.data!.featuredAlbums![0].albumsClean!
-                                .isNotEmpty)
+                          if (data!.data!.featuredAlbums![0].albumsClean != null)
+                            if (data!.data!.featuredAlbums![0].albumsClean!.isNotEmpty)
                               SizedBox(
                                 height: boxSize / 2 + 10,
                                 child: ListView.builder(
                                   physics: const BouncingScrollPhysics(),
                                   scrollDirection: Axis.horizontal,
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  itemCount: data!.data!.featuredAlbums![0]
-                                      .albumsClean!.length,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  itemCount:
+                                      data!.data!.featuredAlbums![0].albumsClean!.length,
                                   itemBuilder: (context, index) {
-                                    final AlbumsClean item = data!.data!
-                                        .featuredAlbums![0].albumsClean![index];
+                                    final AlbumsClean item = data!
+                                        .data!.featuredAlbums![0].albumsClean![index];
                                     final String itemImage = item.cover != null
                                         ? ('${item.cover!.imgUrl!}/${item.cover!.image!}')
                                         : '';
@@ -689,8 +651,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                           context,
                                           PageRouteBuilder(
                                             opaque: false,
-                                            pageBuilder: (_, __, ___) =>
-                                                SongsListPage(
+                                            pageBuilder: (_, __, ___) => SongsListPage(
                                               songListType: SongListType.album,
                                               playlistName: item.name!,
                                               playlistImage: [itemImage],
@@ -730,8 +691,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             itemCount: lstRadioStation.length,
                             itemBuilder: (context, index) {
-                              final RadioStationsData item =
-                                  lstRadioStation[index];
+                              final RadioStationsData item = lstRadioStation[index];
                               final String itemImage = item.cover != null
                                   ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
                                   : '';
@@ -739,8 +699,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 itemImage: [itemImage],
                                 itemName: item.name!,
                                 onTap: () {
-                                  openDialogForGetRadioStationStreamData(
-                                      item.id!);
+                                  openDialogForGetRadioStationStreamData(item.id!);
                                 },
                               );
                             },
@@ -788,8 +747,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.album,
                                           playlistName: item.name!,
                                           playlistImage: [itemImage],
@@ -814,8 +772,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                 PageRouteBuilder(
                                   opaque: false,
                                   pageBuilder: (_, __, ___) => const AlbumList(
-                                    albumListType:
-                                        AlbumListType.popularPlaylist,
+                                    albumListType: AlbumListType.popularPlaylist,
                                     albumName: 'Popular Playlists',
                                   ),
                                 ),
@@ -847,8 +804,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.playlist,
                                           playlistName: item.name!,
                                           playlistImage: item.getQuadImages(),
@@ -906,8 +862,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                       PageRouteBuilder(
                                         opaque: false,
                                         pageBuilder: (_, __, ___) => PlayScreen(
-                                          songsList:
-                                              data!.data!.trendingSongsNew!,
+                                          songsList: data!.data!.trendingSongsNew!,
                                           index: index,
                                           offline: false,
                                           fromDownloads: false,
@@ -1033,8 +988,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
 class HeaderTitle extends StatelessWidget {
   final String title;
   final Function()? viewAllOnTap;
-  const HeaderTitle({Key? key, required this.title, this.viewAllOnTap})
-      : super(key: key);
+  const HeaderTitle({Key? key, required this.title, this.viewAllOnTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1121,8 +1075,7 @@ class SongItem extends StatelessWidget {
             ? MediaQuery.of(context).size.width
             : MediaQuery.of(context).size.height;
 
-    final String image =
-        itemImage.isNotEmpty ? itemImage[0] : 'assets/cover.jpg';
+    final String image = itemImage.isNotEmpty ? itemImage[0] : 'assets/cover.jpg';
 
     return InkWell(
       onTap: onTap,
@@ -1150,9 +1103,8 @@ class SongItem extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorWidget: (context, _, __) => Image(
                             fit: BoxFit.cover,
-                            image: AssetImage(isRound
-                                ? 'assets/album.png'
-                                : 'assets/cover.jpg'),
+                            image: AssetImage(
+                                isRound ? 'assets/album.png' : 'assets/cover.jpg'),
                           ),
                           imageUrl: image,
                           //  item['image']

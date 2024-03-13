@@ -8,8 +8,7 @@ import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/playlist_response.dart' as PlayListResponse;
 import 'package:blackhole/model/radio_station_stream_response.dart';
 import 'package:blackhole/model/single_album_response.dart';
-import 'package:blackhole/model/single_playlist_response.dart'
-    as SinglePlaylistResponse;
+import 'package:blackhole/model/single_playlist_response.dart' as SinglePlaylistResponse;
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/track_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
@@ -25,8 +24,7 @@ class FormatResponse {
 
     final Uint8List encrypted = base64.decode(input);
     final List<int> decrypted = desECB.decrypt(encrypted);
-    final String decoded =
-        utf8.decode(decrypted).replaceAll(RegExp(r'\.mp4.*'), '.mp4');
+    final String decoded = utf8.decode(decrypted).replaceAll(RegExp(r'\.mp4.*'), '.mp4');
     return decoded.replaceAll('http:', 'https:');
   }
 
@@ -78,26 +76,22 @@ class FormatResponse {
       if (response['more_info']?['artistMap']?['primary_artists'] == null ||
           response['more_info']?['artistMap']?['primary_artists'].length == 0) {
         if (response['more_info']?['artistMap']?['featured_artists'] == null ||
-            response['more_info']?['artistMap']?['featured_artists'].length ==
-                0) {
+            response['more_info']?['artistMap']?['featured_artists'].length == 0) {
           if (response['more_info']?['artistMap']?['artists'] == null ||
               response['more_info']?['artistMap']?['artists'].length == 0) {
             artistNames.add('Unknown');
           } else {
-            response['more_info']['artistMap']['artists'][0]['id']
-                .forEach((element) {
+            response['more_info']['artistMap']['artists'][0]['id'].forEach((element) {
               artistNames.add(element['name']);
             });
           }
         } else {
-          response['more_info']['artistMap']['featured_artists']
-              .forEach((element) {
+          response['more_info']['artistMap']['featured_artists'].forEach((element) {
             artistNames.add(element['name']);
           });
         }
       } else {
-        response['more_info']['artistMap']['primary_artists']
-            .forEach((element) {
+        response['more_info']['artistMap']['primary_artists'].forEach((element) {
           artistNames.add(element['name']);
         });
       }
@@ -143,8 +137,7 @@ class FormatResponse {
           response['primary_artists'].toString().trim() == '') {
         if (response['featured_artists'] == null ||
             response['featured_artists'].toString().trim() == '') {
-          if (response['singers'] == null ||
-              response['singer'].toString().trim() == '') {
+          if (response['singers'] == null || response['singer'].toString().trim() == '') {
             response['singers'].toString().split(', ').forEach((element) {
               artistNames.add(element);
             });
@@ -152,10 +145,7 @@ class FormatResponse {
             artistNames.add('Unknown');
           }
         } else {
-          response['featured_artists']
-              .toString()
-              .split(', ')
-              .forEach((element) {
+          response['featured_artists'].toString().split(', ').forEach((element) {
             artistNames.add(element);
           });
         }
@@ -257,15 +247,12 @@ class FormatResponse {
         'title': formatString(response['title'].toString()),
         'artist': response['music'] == null
             ? (response['more_info']?['music']) == null
-                ? (response['more_info']?['artistMap']?['primary_artists'] ==
-                            null ||
-                        (response['more_info']?['artistMap']?['primary_artists']
-                                as List)
+                ? (response['more_info']?['artistMap']?['primary_artists'] == null ||
+                        (response['more_info']?['artistMap']?['primary_artists'] as List)
                             .isEmpty)
                     ? ''
                     : formatString(
-                        response['more_info']['artistMap']['primary_artists'][0]
-                                ['name']
+                        response['more_info']['artistMap']['primary_artists'][0]['name']
                             .toString(),
                       )
                 : formatString(response['more_info']['music'].toString())
@@ -389,8 +376,7 @@ class FormatResponse {
       if (response['more_info']?['artistMap']?['primary_artists'] == null ||
           response['more_info']['artistMap']['primary_artists'].length == 0) {
         if (response['more_info']?['artistMap']?['featured_artists'] == null ||
-            response['more_info']['artistMap']['featured_artists'].length ==
-                0) {
+            response['more_info']['artistMap']['featured_artists'].length == 0) {
           if (response['more_info']?['artistMap']?['artists'] == null ||
               response['more_info']['artistMap']['artists'].length == 0) {
             artistNames.add('Unknown');
@@ -400,14 +386,12 @@ class FormatResponse {
             });
           }
         } else {
-          response['more_info']['artistMap']['featured_artists']
-              .forEach((element) {
+          response['more_info']['artistMap']['featured_artists'].forEach((element) {
             artistNames.add(element['name']);
           });
         }
       } else {
-        response['more_info']['artistMap']['primary_artists']
-            .forEach((element) {
+        response['more_info']['artistMap']['primary_artists'].forEach((element) {
           artistNames.add(element['name']);
         });
       }
@@ -499,8 +483,8 @@ class FormatResponse {
 
   static Future<PlayListResponse.PlaylistResponse?> formatYogiPlaylistData(
       PlayListResponse.PlaylistResponse? playlistRes) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     PlayListResponse.PlaylistResponse? mainRes;
     try {
       final PlayListResponse.PlaylistResponse? res = playlistRes;
@@ -512,8 +496,7 @@ class FormatResponse {
               List<PlayListResponse.PlayListData>? playListDataTemp =
                   res.data!.playListData;
               for (var i = 0; i < playListDataTemp!.length; i++) {
-                final PlayListResponse.PlayListData item =
-                    res.data!.playListData![i];
+                final PlayListResponse.PlayListData item = res.data!.playListData![i];
                 List<SongItemModel> songList = [];
                 for (var j = 0; j < item.tracksOnly!.length; j++) {
                   PlayListResponse.TracksOnly trackonly = item.tracksOnly![j];
@@ -561,8 +544,7 @@ class FormatResponse {
                       album: albumName,
                       image: imageUrl,
                       url: isHighQualityStreming
-                          ? trackonly
-                              .files![trackonly.files!.length - 1].trackUrl
+                          ? trackonly.files![trackonly.files!.length - 1].trackUrl
                           : trackonly.files![0].trackUrl,
                       artist: artistName,
                       duration: mDur,
@@ -591,8 +573,8 @@ class FormatResponse {
 
   static Future<SingleAlbumResponse?> formatYogiSingleALbumData(
       SingleAlbumResponse? playlistRes) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     SingleAlbumResponse? mainRes;
     try {
       final SingleAlbumResponse? res = playlistRes;
@@ -679,8 +661,8 @@ class FormatResponse {
   static Future<SinglePlaylistResponse.SinglePlaylistResponse?>
       formatYogiSinglePlaylistData(
           SinglePlaylistResponse.SinglePlaylistResponse? playlistRes) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     SinglePlaylistResponse.SinglePlaylistResponse? mainRes;
     try {
       final SinglePlaylistResponse.SinglePlaylistResponse? res = playlistRes;
@@ -695,13 +677,12 @@ class FormatResponse {
             }
             List<SongItemModel> songList = [];
             if (res.data!.playlistTracks != null) {
-              final List<SinglePlaylistResponse.PlaylistTracks>
-                  playListDataTemp = res.data!.playlistTracks!;
+              final List<SinglePlaylistResponse.PlaylistTracks> playListDataTemp =
+                  res.data!.playlistTracks!;
               for (var i = 0; i < playListDataTemp.length; i++) {
                 final SinglePlaylistResponse.PlaylistTracks playlisttrackonly =
                     playListDataTemp[i];
-                final SinglePlaylistResponse.Track trackonly =
-                    playlisttrackonly.track!;
+                final SinglePlaylistResponse.Track trackonly = playlisttrackonly.track!;
                 final String imageUrl = trackonly.album!.cover != null
                     ? '${trackonly.album!.cover!.imgUrl!}/${trackonly.album!.cover!.image!}'
                     : '';
@@ -758,8 +739,8 @@ class FormatResponse {
             }
             final SinglePlaylistResponse.SinglePlaylistData singleAlbumData =
                 res.data!.copyWith(lstSongItemModel: songList);
-            final SinglePlaylistResponse.SinglePlaylistResponse
-                finalSingleAlbum = res.copyWith(data: singleAlbumData);
+            final SinglePlaylistResponse.SinglePlaylistResponse finalSingleAlbum =
+                res.copyWith(data: singleAlbumData);
             mainRes = finalSingleAlbum;
           }
         }
@@ -777,8 +758,8 @@ class FormatResponse {
 
   static Future<MyLibraryTrackResponse?> formatMyLibraryTrackSong(
       MyLibraryTrackResponse? myLibraryTrackres) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     MyLibraryTrackResponse? mainRes;
     try {
       final MyLibraryTrackResponse? res = myLibraryTrackres;
@@ -789,8 +770,7 @@ class FormatResponse {
             if (res.data!.data != null) {
               List<MyLibraryTrack> playListDataTemp = res.data!.data!;
               for (var i = 0; i < playListDataTemp.length; i++) {
-                final SinglePlaylistResponse.Track trackonly =
-                    playListDataTemp[i].track!;
+                final SinglePlaylistResponse.Track trackonly = playListDataTemp[i].track!;
                 String imageUrl = '';
                 String? albumName;
                 String? albumId;
@@ -883,8 +863,8 @@ class FormatResponse {
 
   static Future<TrendingSongResponse?> formatYogiTrendingSongData(
       TrendingSongResponse? playlistRes) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     TrendingSongResponse? mainRes;
     try {
       final TrendingSongResponse? res = playlistRes;
@@ -893,11 +873,9 @@ class FormatResponse {
           if (res.data != null) {
             // List<SongItemModel> songList = [];
             if (res.data!.data != null) {
-              List<SinglePlaylistResponse.Track> playListDataTemp =
-                  res.data!.data!;
+              List<SinglePlaylistResponse.Track> playListDataTemp = res.data!.data!;
               for (var i = 0; i < playListDataTemp.length; i++) {
-                final SinglePlaylistResponse.Track trackonly =
-                    playListDataTemp[i];
+                final SinglePlaylistResponse.Track trackonly = playListDataTemp[i];
                 String imageUrl = '';
                 String? albumName;
                 String? albumId;
@@ -958,8 +936,7 @@ class FormatResponse {
                   artist: artistName,
                   duration: mDur,
                 );
-                playListDataTemp[i] =
-                    trackonly.copyWith(songItemModel: songItem);
+                playListDataTemp[i] = trackonly.copyWith(songItemModel: songItem);
               }
               final TrendingSongData singleAlbumData =
                   res.data!.copyWith(data: playListDataTemp);
@@ -982,10 +959,9 @@ class FormatResponse {
     }
   }
 
-  static Future<HomeResponse?> formatHomePageData(
-      HomeResponse? homeResponse) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+  static Future<HomeResponse?> formatHomePageData(HomeResponse? homeResponse) async {
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     try {
       final HomeResponse res = homeResponse!;
       List<SongItemModel> songList = [];
@@ -994,9 +970,8 @@ class FormatResponse {
         if (res.data?.trendingSongs != null) {
           for (var i = 0; i < res.data!.trendingSongs!.length; i++) {
             final TrendingAlbum item = res.data!.trendingSongs![i];
-            final String imageUrl = item.cover != null
-                ? '${item.cover!.imgUrl!}/${item.cover!.image!}'
-                : '';
+            final String imageUrl =
+                item.cover != null ? '${item.cover!.imgUrl!}/${item.cover!.image!}' : '';
             String? albumName;
             String? artistName;
 
@@ -1034,8 +1009,7 @@ class FormatResponse {
                 album: albumName,
                 image: imageUrl,
                 url: isHighQualityStreming
-                    ? item.tracks![0].files![item.tracks![0].files!.length - 1]
-                        .trackUrl
+                    ? item.tracks![0].files![item.tracks![0].files!.length - 1].trackUrl
                     : item.tracks![0].files![0].trackUrl,
                 artist: artistName,
                 duration: mDur,
@@ -1075,8 +1049,8 @@ class FormatResponse {
 
   static Future<RadioStationsStreamResponse?> formatYogiRadioStationStreamData(
       RadioStationsStreamResponse? playlistRes) async {
-    bool isHighQualityStreming = Hive.box('settings')
-        .get('highQualityStreming', defaultValue: false) as bool;
+    bool isHighQualityStreming =
+        Hive.box('settings').get('highQualityStreming', defaultValue: false) as bool;
     RadioStationsStreamResponse? mainRes;
     try {
       final RadioStationsStreamResponse? res = playlistRes;
@@ -1089,12 +1063,9 @@ class FormatResponse {
             for (var i = 0; i < playListDataTemp!.length; i++) {
               final RadioStationsStreamData trackonly = playListDataTemp[i];
 
-              print('formatYogiRadioStationStreamData trackonly: ');
-              print(trackonly);
+              print('formatYogiRadioStationStreamData trackonly: $trackonly');
 
-              print('track only hashcode: ');
-              print(trackonly.hashCode.toString());
-              print(trackonly.hashCode.toString());
+              print('track only hashcode: ' + trackonly.hashCode.toString());
 
               // final String imageUrl = ;
               int? mDur;
@@ -1117,7 +1088,7 @@ class FormatResponse {
               }
               songList.add(
                 SongItemModel(
-                  id: trackonly.hashCode.toString(),
+                  id: trackonly.id.toString(), //trackonly.hashCode.toString()
                   title: trackonly.title,
                   subtitle: trackonly.title,
                   album: trackonly.artist,
@@ -1177,8 +1148,8 @@ class FormatResponse {
               Map cachedDetails =
                   Hive.box('cache').get(item['id'], defaultValue: {}) as Map;
               if (cachedDetails.isEmpty) {
-                cachedDetails = await YogitunesAPI()
-                    .fetchSongDetails(item['id'].toString());
+                cachedDetails =
+                    await YogitunesAPI().fetchSongDetails(item['id'].toString());
                 Hive.box('cache').put(cachedDetails['id'], cachedDetails);
               }
               list[i] = cachedDetails;

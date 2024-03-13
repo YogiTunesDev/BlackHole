@@ -15,8 +15,7 @@ import 'package:blackhole/model/home_model.dart';
 import 'package:blackhole/model/my_library_track_response.dart';
 import 'package:blackhole/model/my_recently_played_song_response.dart';
 import 'package:blackhole/model/playlist_response.dart';
-import 'package:blackhole/model/single_playlist_response.dart'
-    as singlePlaylistResponse;
+import 'package:blackhole/model/single_playlist_response.dart' as singlePlaylistResponse;
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/trending_song_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -108,8 +107,7 @@ class _AlbumListState extends State<AlbumList> {
               // seeAllTrackLibrary.addAll(playlistRes.data!.data!);
               for (int i = 0; i <= playlistRes.data!.data!.length; i++) {
                 tempList.add(playlistRes.data!.data![i].songItemModel!);
-                selectedPlaylist.insert(
-                    i, playlistRes.data!.data![i].id.toString());
+                selectedPlaylist.insert(i, playlistRes.data!.data![i].id.toString());
               }
             } else {
               isFinish = true;
@@ -139,9 +137,8 @@ class _AlbumListState extends State<AlbumList> {
       if (mainType == MainType.playlist) {
         /// check current screen is  playlist and call playlist api
 
-        final PlaylistResponse? playlistRes = await YogitunesAPI()
-            .fetchYogiPlaylistData(getListUrl()!, pageNo, selectedSort,
-                selectedDuration, selectedType);
+        final PlaylistResponse? playlistRes = await YogitunesAPI().fetchYogiPlaylistData(
+            getListUrl()!, pageNo, selectedSort, selectedDuration, selectedType);
 
         pageNo++;
         if (playlistRes != null) {
@@ -163,8 +160,8 @@ class _AlbumListState extends State<AlbumList> {
         }
       } else if (mainType == MainType.album) {
         /// check current screen is album and album api
-        final AlbumResponse? playlistRes = await YogitunesAPI()
-            .fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
+        final AlbumResponse? playlistRes =
+            await YogitunesAPI().fetchYogiAlbumData(getListUrl()!, pageNo, selectedSort);
 
         pageNo++;
         if (playlistRes != null) {
@@ -253,20 +250,15 @@ class _AlbumListState extends State<AlbumList> {
       } else if (mainType == MainType.track) {
         /// check current screen is track and call get track api data
         final MyRecentlyPlayedSongResponse? myRecentlyPlayedSongResponse =
-            await YogitunesAPI()
-                .viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
+            await YogitunesAPI().viewAllRecentTrack(getListUrl()!, pageNo: pageNo);
 
         pageNo++;
         if (myRecentlyPlayedSongResponse != null) {
           if (myRecentlyPlayedSongResponse.data != null) {
-            for (int i = 0;
-                i < myRecentlyPlayedSongResponse.data!.length;
-                i++) {
+            for (int i = 0; i < myRecentlyPlayedSongResponse.data!.length; i++) {
               if (myRecentlyPlayedSongResponse.data![i].type != null) {
-                if (myRecentlyPlayedSongResponse.data![i].type!.toString() ==
-                    'Album') {
-                  lstRecentPlayedSong
-                      .add(myRecentlyPlayedSongResponse.data![i]);
+                if (myRecentlyPlayedSongResponse.data![i].type!.toString() == 'Album') {
+                  lstRecentPlayedSong.add(myRecentlyPlayedSongResponse.data![i]);
                 }
               }
             }
@@ -326,10 +318,8 @@ class _AlbumListState extends State<AlbumList> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 20),
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         const SizedBox(
@@ -340,9 +330,8 @@ class _AlbumListState extends State<AlbumList> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 20,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                         const SizedBox(
@@ -353,9 +342,8 @@ class _AlbumListState extends State<AlbumList> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                         const SizedBox(
@@ -367,8 +355,7 @@ class _AlbumListState extends State<AlbumList> {
                                               name: '30m',
                                               onTap: () {
                                                 setState(() {
-                                                  if (selectedDuration ==
-                                                      '30') {
+                                                  if (selectedDuration == '30') {
                                                     selectedDuration = '';
                                                   } else {
                                                     selectedDuration = '30';
@@ -378,8 +365,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              isSelected:
-                                                  selectedDuration == '30',
+                                              isSelected: selectedDuration == '30',
                                             ),
                                             const SizedBox(
                                               width: 5,
@@ -388,8 +374,7 @@ class _AlbumListState extends State<AlbumList> {
                                               name: '45m',
                                               onTap: () {
                                                 setState(() {
-                                                  if (selectedDuration ==
-                                                      '45') {
+                                                  if (selectedDuration == '45') {
                                                     selectedDuration = '';
                                                   } else {
                                                     selectedDuration = '45';
@@ -399,8 +384,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              isSelected:
-                                                  selectedDuration == '45',
+                                              isSelected: selectedDuration == '45',
                                             ),
                                             const SizedBox(
                                               width: 5,
@@ -409,8 +393,7 @@ class _AlbumListState extends State<AlbumList> {
                                               name: '60m',
                                               onTap: () {
                                                 setState(() {
-                                                  if (selectedDuration ==
-                                                      '60') {
+                                                  if (selectedDuration == '60') {
                                                     selectedDuration = '';
                                                   } else {
                                                     selectedDuration = '60';
@@ -420,8 +403,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              isSelected:
-                                                  selectedDuration == '60',
+                                              isSelected: selectedDuration == '60',
                                             ),
                                             const SizedBox(
                                               width: 5,
@@ -430,8 +412,7 @@ class _AlbumListState extends State<AlbumList> {
                                               name: '75m',
                                               onTap: () {
                                                 setState(() {
-                                                  if (selectedDuration ==
-                                                      '75') {
+                                                  if (selectedDuration == '75') {
                                                     selectedDuration = '';
                                                   } else {
                                                     selectedDuration = '75';
@@ -441,8 +422,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              isSelected:
-                                                  selectedDuration == '75',
+                                              isSelected: selectedDuration == '75',
                                             ),
                                             const SizedBox(
                                               width: 5,
@@ -451,8 +431,7 @@ class _AlbumListState extends State<AlbumList> {
                                               name: '90m',
                                               onTap: () {
                                                 setState(() {
-                                                  if (selectedDuration ==
-                                                      '90') {
+                                                  if (selectedDuration == '90') {
                                                     selectedDuration = '';
                                                   } else {
                                                     selectedDuration = '90';
@@ -462,8 +441,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   Navigator.pop(context);
                                                 });
                                               },
-                                              isSelected:
-                                                  selectedDuration == '90',
+                                              isSelected: selectedDuration == '90',
                                             ),
                                           ],
                                         ),
@@ -498,16 +476,15 @@ class _AlbumListState extends State<AlbumList> {
                                                             'Vinyasa Gentle') {
                                                           selectedType = '';
                                                         } else {
-                                                          selectedType =
-                                                              'Vinyasa Gentle';
+                                                          selectedType = 'Vinyasa Gentle';
                                                         }
                                                         clearAllData();
                                                         getApiData();
                                                         Navigator.pop(context);
                                                       });
                                                     },
-                                                    isSelected: selectedType ==
-                                                        'Vinyasa Gentle',
+                                                    isSelected:
+                                                        selectedType == 'Vinyasa Gentle',
                                                   ),
                                                   const SizedBox(
                                                     width: 5,
@@ -520,16 +497,15 @@ class _AlbumListState extends State<AlbumList> {
                                                             'Vinyasa Strong') {
                                                           selectedType = '';
                                                         } else {
-                                                          selectedType =
-                                                              'Vinyasa Strong';
+                                                          selectedType = 'Vinyasa Strong';
                                                         }
                                                         clearAllData();
                                                         getApiData();
                                                         Navigator.pop(context);
                                                       });
                                                     },
-                                                    isSelected: selectedType ==
-                                                        'Vinyasa Strong',
+                                                    isSelected:
+                                                        selectedType == 'Vinyasa Strong',
                                                   ),
                                                 ],
                                               ),
@@ -554,8 +530,8 @@ class _AlbumListState extends State<AlbumList> {
                                                         Navigator.pop(context);
                                                       });
                                                     },
-                                                    isSelected: selectedType ==
-                                                        'Yin/Restorative',
+                                                    isSelected:
+                                                        selectedType == 'Yin/Restorative',
                                                   ),
                                                   const SizedBox(
                                                     width: 5,
@@ -568,16 +544,15 @@ class _AlbumListState extends State<AlbumList> {
                                                             'Power Flow') {
                                                           selectedType = '';
                                                         } else {
-                                                          selectedType =
-                                                              'Power Flow';
+                                                          selectedType = 'Power Flow';
                                                         }
                                                         clearAllData();
                                                         getApiData();
                                                         Navigator.pop(context);
                                                       });
                                                     },
-                                                    isSelected: selectedType ==
-                                                        'Power Flow',
+                                                    isSelected:
+                                                        selectedType == 'Power Flow',
                                                   ),
                                                 ],
                                               ),
@@ -593,10 +568,8 @@ class _AlbumListState extends State<AlbumList> {
                           icon: const Icon(Icons.filter_alt_rounded),
                         ),
                       if (widget.albumListType == AlbumListType.yogaPlaylist ||
-                          widget.albumListType ==
-                              AlbumListType.featuredAlbums ||
-                          widget.albumListType ==
-                              AlbumListType.popularPlaylist ||
+                          widget.albumListType == AlbumListType.featuredAlbums ||
+                          widget.albumListType == AlbumListType.popularPlaylist ||
                           widget.albumListType == AlbumListType.newRelease ||
                           widget.albumListType == AlbumListType.popularSong ||
                           widget.albumListType == AlbumListType.popularAlbum)
@@ -628,9 +601,7 @@ class _AlbumListState extends State<AlbumList> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                                            color: Theme.of(context).colorScheme.primary,
                                           ),
                                         ),
                                       ),
@@ -638,15 +609,12 @@ class _AlbumListState extends State<AlbumList> {
                                       ListTile(
                                         onTap: () {
                                           setState(() {
-                                            selectedSort =
-                                                widget.albumListType ==
-                                                            AlbumListType
-                                                                .yogaPlaylist ||
-                                                        widget.albumListType ==
-                                                            AlbumListType
-                                                                .popularPlaylist
-                                                    ? '&orderBy=created_at'
-                                                    : '&orderBy=artist';
+                                            selectedSort = widget.albumListType ==
+                                                        AlbumListType.yogaPlaylist ||
+                                                    widget.albumListType ==
+                                                        AlbumListType.popularPlaylist
+                                                ? '&orderBy=created_at'
+                                                : '&orderBy=artist';
                                             clearAllData();
 
                                             getApiData();
@@ -655,19 +623,15 @@ class _AlbumListState extends State<AlbumList> {
                                         },
                                         title: Text(
                                           widget.albumListType ==
-                                                      AlbumListType
-                                                          .yogaPlaylist ||
+                                                      AlbumListType.yogaPlaylist ||
                                                   widget.albumListType ==
-                                                      AlbumListType
-                                                          .popularPlaylist
+                                                      AlbumListType.popularPlaylist
                                               ? 'Created At'
                                               : 'Artist',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                                            color: Theme.of(context).colorScheme.primary,
                                           ),
                                         ),
                                       ),
@@ -681,9 +645,8 @@ class _AlbumListState extends State<AlbumList> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 16,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                       ),
@@ -785,11 +748,8 @@ class _AlbumListState extends State<AlbumList> {
                                     height: 45.0,
                                     width: 120,
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      borderRadius: BorderRadius.circular(100.0),
+                                      color: Theme.of(context).colorScheme.secondary,
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -799,17 +759,15 @@ class _AlbumListState extends State<AlbumList> {
                                       ],
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.play_arrow_rounded,
-                                          color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary ==
-                                                  Colors.white
-                                              ? Colors.black
-                                              : Colors.white,
+                                          color:
+                                              Theme.of(context).colorScheme.secondary ==
+                                                      Colors.white
+                                                  ? Colors.black
+                                                  : Colors.white,
                                         ),
                                         const SizedBox(width: 5.0),
                                         Text(
@@ -817,12 +775,11 @@ class _AlbumListState extends State<AlbumList> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18.0,
-                                            color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary ==
-                                                    Colors.white
-                                                ? Colors.black
-                                                : Colors.white,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary ==
+                                                        Colors.white
+                                                    ? Colors.black
+                                                    : Colors.white,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -856,8 +813,7 @@ class _AlbumListState extends State<AlbumList> {
                                     height: 45.0,
                                     width: 130,
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(100.0),
+                                      borderRadius: BorderRadius.circular(100.0),
                                       color: Colors.white,
                                       boxShadow: const [
                                         BoxShadow(
@@ -868,8 +824,7 @@ class _AlbumListState extends State<AlbumList> {
                                       ],
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         const Icon(
                                           Icons.shuffle_rounded,
@@ -893,8 +848,7 @@ class _AlbumListState extends State<AlbumList> {
                             ),
                             ...tempList.map((entry) {
                               return ListTile(
-                                contentPadding:
-                                    const EdgeInsets.only(left: 15.0),
+                                contentPadding: const EdgeInsets.only(left: 15.0),
                                 title: Text(
                                   '${entry.title}',
                                   overflow: TextOverflow.ellipsis,
@@ -920,8 +874,7 @@ class _AlbumListState extends State<AlbumList> {
                                   clipBehavior: Clip.antiAlias,
                                   child: CachedNetworkImage(
                                     fit: BoxFit.cover,
-                                    errorWidget: (context, _, __) =>
-                                        const Image(
+                                    errorWidget: (context, _, __) => const Image(
                                       fit: BoxFit.cover,
                                       image: AssetImage(
                                         'assets/cover.jpg',
@@ -1001,16 +954,12 @@ class _AlbumListState extends State<AlbumList> {
                   else
                     SliverList(
                       delegate: SliverChildListDelegate([
-                        if (((lstPlaylistData.isEmpty &&
-                                    mainType == MainType.playlist) ||
-                                (lstAlbumData.isEmpty &&
-                                    mainType == MainType.album) ||
-                                (lstGenresData.isEmpty &&
-                                    mainType == MainType.genres) ||
+                        if (((lstPlaylistData.isEmpty && mainType == MainType.playlist) ||
+                                (lstAlbumData.isEmpty && mainType == MainType.album) ||
+                                (lstGenresData.isEmpty && mainType == MainType.genres) ||
                                 (lstAlbumData.isEmpty &&
                                     mainType == MainType.genresAlbum) ||
-                                (lstSongTrending.isEmpty &&
-                                    mainType == MainType.song) ||
+                                (lstSongTrending.isEmpty && mainType == MainType.song) ||
                                 (lstRecentPlayedSong.isEmpty &&
                                     mainType == MainType.track)) &&
                             !apiLoading)
@@ -1036,30 +985,24 @@ class _AlbumListState extends State<AlbumList> {
                                     ),
                                     itemCount: lstPlaylistData.length,
                                     shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    physics: const NeverScrollableScrollPhysics(),
                                     addAutomaticKeepAlives: false,
                                     itemBuilder: (context, index) {
-                                      final PlayListData item =
-                                          lstPlaylistData[index];
+                                      final PlayListData item = lstPlaylistData[index];
 
                                       return SongItem(
-                                        itemImage: item.getQuadImages(
-                                            isThumbnail: true),
+                                        itemImage: item.getQuadImages(isThumbnail: true),
                                         itemName: item.name!,
                                         onTap: () {
                                           Navigator.push(
                                             context,
                                             PageRouteBuilder(
                                               opaque: false,
-                                              pageBuilder: (_, __, ___) =>
-                                                  SongsListPage(
+                                              pageBuilder: (_, __, ___) => SongsListPage(
                                                 // songList: item.songlist,
-                                                songListType:
-                                                    SongListType.playlist,
+                                                songListType: SongListType.playlist,
                                                 playlistName: item.name!,
-                                                playlistImage:
-                                                    item.getQuadImages(),
+                                                playlistImage: item.getQuadImages(),
                                                 id: item.id,
                                               ),
                                             ),
@@ -1077,13 +1020,10 @@ class _AlbumListState extends State<AlbumList> {
                                         ),
                                         itemCount: lstAlbumData.length,
                                         shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          final AlbumData item =
-                                              lstAlbumData[index];
-                                          final String itemImage = item
-                                                      .cover!.image !=
+                                          final AlbumData item = lstAlbumData[index];
+                                          final String itemImage = item.cover!.image !=
                                                   null
                                               ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                               : '';
@@ -1097,8 +1037,7 @@ class _AlbumListState extends State<AlbumList> {
                                                   opaque: false,
                                                   pageBuilder: (_, __, ___) =>
                                                       SongsListPage(
-                                                    songListType:
-                                                        SongListType.album,
+                                                    songListType: SongListType.album,
                                                     playlistName: item.name!,
                                                     playlistImage: [itemImage],
                                                     id: item.id,
@@ -1117,8 +1056,7 @@ class _AlbumListState extends State<AlbumList> {
                                             ),
                                             itemCount: lstGenresData.length,
                                             shrinkWrap: true,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             itemBuilder: (context, index) {
                                               final GenresData item =
                                                   lstGenresData[index];
@@ -1132,11 +1070,10 @@ class _AlbumListState extends State<AlbumList> {
                                                     context,
                                                     PageRouteBuilder(
                                                       opaque: false,
-                                                      pageBuilder:
-                                                          (_, __, ___) =>
-                                                              AlbumList(
-                                                        albumListType: widget
-                                                            .albumListType,
+                                                      pageBuilder: (_, __, ___) =>
+                                                          AlbumList(
+                                                        albumListType:
+                                                            widget.albumListType,
                                                         albumName: item.name,
                                                         id: item.id,
                                                       ),
@@ -1152,8 +1089,7 @@ class _AlbumListState extends State<AlbumList> {
                                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                                   crossAxisCount: 2,
                                                 ),
-                                                itemCount:
-                                                    lstSongTrending.length,
+                                                itemCount: lstSongTrending.length,
                                                 shrinkWrap: true,
                                                 physics:
                                                     const NeverScrollableScrollPhysics(),
@@ -1163,29 +1099,23 @@ class _AlbumListState extends State<AlbumList> {
                                                           .songItemModel!;
 
                                                   return SongItem(
-                                                    itemImage: [
-                                                      item.image ?? ''
-                                                    ],
+                                                    itemImage: [item.image ?? ''],
                                                     itemName: item.title ?? '',
                                                     onTap: () {
-                                                      List<SongItemModel>
-                                                          lstMainSongs = [];
+                                                      List<SongItemModel> lstMainSongs =
+                                                          [];
                                                       lstMainSongs.add(item);
                                                       Navigator.push(
                                                         context,
                                                         PageRouteBuilder(
                                                           opaque: false,
-                                                          pageBuilder:
-                                                              (_, __, ___) =>
-                                                                  PlayScreen(
-                                                            songsList:
-                                                                lstMainSongs,
+                                                          pageBuilder: (_, __, ___) =>
+                                                              PlayScreen(
+                                                            songsList: lstMainSongs,
                                                             index: 0,
                                                             offline: false,
-                                                            fromDownloads:
-                                                                false,
-                                                            fromMiniplayer:
-                                                                false,
+                                                            fromDownloads: false,
+                                                            fromMiniplayer: false,
                                                             recommend: true,
                                                           ),
                                                         ),
@@ -1200,18 +1130,13 @@ class _AlbumListState extends State<AlbumList> {
                                                         const SliverGridDelegateWithFixedCrossAxisCount(
                                                       crossAxisCount: 2,
                                                     ),
-                                                    itemCount:
-                                                        lstRecentPlayedSong
-                                                            .length,
+                                                    itemCount: lstRecentPlayedSong.length,
                                                     shrinkWrap: true,
                                                     physics:
                                                         const NeverScrollableScrollPhysics(),
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      final MyRecentlyPlayedSong
-                                                          item =
-                                                          lstRecentPlayedSong[
-                                                              index];
+                                                    itemBuilder: (context, index) {
+                                                      final MyRecentlyPlayedSong item =
+                                                          lstRecentPlayedSong[index];
                                                       final String itemImage = item
                                                                   .album !=
                                                               null
@@ -1219,29 +1144,23 @@ class _AlbumListState extends State<AlbumList> {
                                                           : '';
                                                       return SongItem(
                                                         itemImage: [itemImage],
-                                                        itemName:
-                                                            item.track!.name!,
+                                                        itemName: item.track!.name!,
                                                         onTap: () async {
                                                           Navigator.push(
                                                             context,
                                                             PageRouteBuilder(
                                                               opaque: false,
-                                                              pageBuilder: (_,
-                                                                      __,
-                                                                      ___) =>
+                                                              pageBuilder: (_, __, ___) =>
                                                                   SongsListPage(
                                                                       songListType:
                                                                           SongListType
                                                                               .album,
                                                                       playlistName: item
-                                                                          .album!
-                                                                          .name!,
+                                                                          .album!.name!,
                                                                       playlistImage: [
                                                                         itemImage
                                                                       ],
-                                                                      id: item
-                                                                          .album!
-                                                                          .id),
+                                                                      id: item.album!.id),
                                                             ),
                                                           );
 

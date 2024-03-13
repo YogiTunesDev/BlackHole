@@ -61,8 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(
                           text: 'here.',
                           style: const TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black87, fontWeight: FontWeight.bold),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               final Uri url = Uri(
@@ -74,20 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               launchUrl(url);
                             },
                         ),
-                        const TextSpan(
-                            text: '\n\nTo set up a new subscription visit '),
+                        const TextSpan(text: '\n\nTo set up a new subscription visit '),
                         TextSpan(
                           text: 'here.',
                           style: const TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black87, fontWeight: FontWeight.bold),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SubscriptionScreen()),
+                                    builder: (context) => const SubscriptionScreen()),
                               );
                             },
                         ),
@@ -97,8 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(
                           text: 'get support.',
                           style: const TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black87, fontWeight: FontWeight.bold),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               final Uri url = Uri(
@@ -158,8 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               onPressed: () {
                 Hive.deleteFromDisk();
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
               },
             ),
             // TextButton(
@@ -209,13 +203,10 @@ class _LoginScreenState extends State<LoginScreen> {
     int? status;
     await Hive.box('settings').put('name', name.trim());
     final DateTime now = DateTime.now();
-    final List createDate = now
-        .toUtc()
-        .add(const Duration(hours: 5, minutes: 30))
-        .toString()
-        .split('.')
-      ..removeLast()
-      ..join('.');
+    final List createDate =
+        now.toUtc().add(const Duration(hours: 5, minutes: 30)).toString().split('.')
+          ..removeLast()
+          ..join('.');
 
     String userId = uuid.v1();
     status = await SupaBase().createUser({
@@ -241,8 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return GradientContainer(
       child: SafeArea(
         child: Scaffold(
@@ -284,9 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 0.97,
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                   ),
                                 ),
@@ -299,8 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(
                                   // height: 0.97,
                                   fontSize: 18,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                                 //
                               ),
@@ -325,10 +312,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.grey[100],
+                                      color:
+                                          Theme.of(context).brightness == Brightness.dark
+                                              ? Colors.black
+                                              : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -340,12 +327,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: TextFormField(
                                       obscureText: isObscure,
                                       controller: passwordController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
+                                      textAlignVertical: TextAlignVertical.center,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
+                                        focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             width: 1.5,
                                             color: Colors.transparent,
@@ -361,23 +346,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                             isObscure
                                                 ? Icons.visibility_off
                                                 : Icons.visibility,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                                            color:
+                                                Theme.of(context).colorScheme.secondary,
                                           ),
                                         ),
                                         prefixIcon: Icon(
                                           Icons.lock,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
+                                          color: Theme.of(context).colorScheme.secondary,
                                         ),
                                         border: InputBorder.none,
                                         hintText: 'Enter Your Password',
                                         hintStyle: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                       ),
                                       // onSubmitted: (String value) async {
@@ -431,20 +411,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                             });
                                             final ForgotPasswordResponse?
                                                 forgotPasswordResponse =
-                                                await YogitunesAPI()
-                                                    .forgotPassword(
+                                                await YogitunesAPI().forgotPassword(
                                               args['email'].toString(),
                                             );
 
-                                            if (forgotPasswordResponse !=
-                                                null) {
-                                              if (forgotPasswordResponse
-                                                  .status!) {
+                                            if (forgotPasswordResponse != null) {
+                                              if (forgotPasswordResponse.status!) {
                                                 Navigator.pushNamed(context,
                                                     '/forgotPasswordVerification',
                                                     arguments: {
-                                                      'email': args['email']
-                                                          .toString(),
+                                                      'email': args['email'].toString(),
                                                     });
                                               } else {
                                                 // errorMessage =
@@ -489,12 +465,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           if (loginResponse != null) {
                                             if (loginResponse.status!) {
                                               subscriptionStatus =
-                                                  await checkSubscriptionStatus(
-                                                      context);
+                                                  await checkSubscriptionStatus(context);
 
                                               if (subscriptionStatus == true) {
-                                                redirectAfterAuthentication(
-                                                    context);
+                                                redirectAfterAuthentication(context);
                                               } else {
                                                 await _dialogBuilder(context);
                                               }
@@ -522,11 +496,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         height: 55.0,
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          color: Theme.of(context).colorScheme.secondary,
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.black26,
@@ -539,8 +510,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Text(
                                             'Login',
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                          .brightness ==
+                                              color: Theme.of(context).brightness ==
                                                       Brightness.dark
                                                   ? Colors.black
                                                   : Colors.white,

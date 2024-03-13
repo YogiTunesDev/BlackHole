@@ -80,13 +80,11 @@ Future<void> main() async {
 
       if (_kTestingCrashlytics) {
         // Force enable crashlytics collection enabled if we're testing it.
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       } else {
         // Else only enable it in non-debug builds.
         // You could additionally extend this to allow users to opt-in.
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(!kDebugMode);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
       }
 
       // Non-async exceptions
@@ -131,9 +129,13 @@ Future<void> updateVersion() async {
   final PackageInfo packageInfo = await PackageInfo.fromPlatform();
   final String version = packageInfo.version;
   final String buildNumber = packageInfo.buildNumber;
+
+  debugPrint('PREFS : ${prefs}');
   debugPrint('Version : $version($buildNumber)');
+
   final String versionName = '$version($buildNumber)';
   final String lastVersion = prefs.getString('last_version').toString();
+
   if (versionName != lastVersion) {
     debugPrint('Version : $versionName');
     await Hive.deleteFromDisk();
@@ -209,6 +211,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     callIntent();
+
+    final boxName = Hive.box("settings");
+
+    print('Settings Box: ${boxName.toMap()}');
+
+    final boxNameDl = Hive.box("downloads");
+
+    print('Downloads Box: ${boxNameDl.toMap()}');
+
     final String lang =
         Hive.box('settings').get('lang', defaultValue: 'English') as String;
     final Map<String, String> codes = {
