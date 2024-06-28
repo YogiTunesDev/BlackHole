@@ -38,13 +38,16 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+import 'package:blackhole/Helpers/sentry.dart';
+// import 'package:blackhole/Helpers/global_state.dart';
+
 class YogitunesAPI {
   // List preferredLanguages = Hive.box('settings')
   //     .get('preferredLanguage', defaultValue: ['Hindi']) as List;
   Map<String, String> headers = {};
 
-  String baseUrl = 'https://api.yogitunes.dev/';
-  // String baseUrl = 'https://api2.yogi-tunes.com/';
+  // String baseUrl = 'https://cold-farm-1lijwhmxbepe.vapor-farm-g1.com/';
+  String baseUrl = 'https://api2.yogi-tunes.com/';
   // String baseUrl = 'http://darkmatter.local:8000/';
   // String baseUrl = 'http://192.168.0.100:8000/';
   String apiStr = 'api/';
@@ -133,8 +136,6 @@ class YogitunesAPI {
     //   return myClient.get(url, headers: headers);
     // }
 
-    print(url);
-
     return get(url, headers: headers).onError((error, stackTrace) {
       return Response('', 405);
     });
@@ -154,6 +155,7 @@ class YogitunesAPI {
         final Map data = json.decode(res.body) as Map<String, dynamic>;
         // result = LoginResponse?.fromMap(data as Map<String, dynamic>);
         if (data['data']['status'] == true) {
+          // GlobalState().isLoggedIn = true;
           return true;
         } else {
           return false;
@@ -180,6 +182,19 @@ class YogitunesAPI {
         result = LoginResponse?.fromMap(data as Map<String, dynamic>);
 
         apiTokenBox.put('token', result.apiToken);
+
+        final user = await YogitunesAPI().fetchUserData();
+
+        final String id = user?.data?.id?.toString() ?? '';
+        final String name = user?.data?.name ?? '';
+        final String email = user?.data?.email ?? '';
+
+        FirebaseCrashlytics.instance.setUserIdentifier(id);
+
+        SentryService.instance.setUserContext(id, name, email);
+
+        // GlobalState().isSentryServiceSet = true;
+        // GlobalState().isLoggedIn = true;
       }
     } catch (e) {
       log('Error in login: $e');
