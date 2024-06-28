@@ -5,6 +5,7 @@ import 'package:blackhole/CustomWidgets/gradient_containers.dart';
 import 'package:blackhole/CustomWidgets/miniplayer.dart';
 import 'package:blackhole/CustomWidgets/snackbar.dart';
 import 'package:blackhole/Helpers/backup_restore.dart';
+import 'package:blackhole/Helpers/sentry.dart';
 import 'package:blackhole/Helpers/supabase.dart';
 import 'package:blackhole/Screens/Home/saavn.dart';
 import 'package:blackhole/Screens/Library/library.dart';
@@ -21,6 +22,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -417,6 +419,8 @@ class _HomePageState extends State<HomePage> {
                               apiTokenBox.put('token', null);
                               Hive.box('settings').put('name', null);
                               Hive.box('settings').put('userInfoData', {});
+
+                              SentryService.instance.clearUserContext();
 
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/login', (route) => false);
