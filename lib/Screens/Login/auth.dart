@@ -32,13 +32,10 @@ class _AuthScreenState extends State<AuthScreen> {
     int? status;
     await Hive.box('settings').put('name', name.trim());
     final DateTime now = DateTime.now();
-    final List createDate = now
-        .toUtc()
-        .add(const Duration(hours: 5, minutes: 30))
-        .toString()
-        .split('.')
-      ..removeLast()
-      ..join('.');
+    final List createDate =
+        now.toUtc().add(const Duration(hours: 5, minutes: 30)).toString().split('.')
+          ..removeLast()
+          ..join('.');
 
     String userId = uuid.v1();
     status = await SupaBase().createUser({
@@ -107,9 +104,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       height: 0.97,
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                     //
                                   ),
@@ -124,8 +119,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   // height: 0.97,
                                   fontSize: 24,
                                   fontWeight: FontWeight.w400,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                                 //
                               ),
@@ -147,10 +141,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                     // height: 57.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.grey[100],
+                                      color:
+                                          Theme.of(context).brightness == Brightness.dark
+                                              ? Colors.black
+                                              : Colors.grey[100],
                                       boxShadow: const [
                                         BoxShadow(
                                           color: Colors.black26,
@@ -161,12 +155,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ),
                                     child: TextFormField(
                                       controller: emailController,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
+                                      textAlignVertical: TextAlignVertical.center,
                                       keyboardType: TextInputType.emailAddress,
                                       decoration: InputDecoration(
-                                        focusedBorder:
-                                            const UnderlineInputBorder(
+                                        focusedBorder: const UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             width: 1.5,
                                             color: Colors.transparent,
@@ -174,16 +166,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                         ),
                                         prefixIcon: Icon(
                                           Icons.mail,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                         border: InputBorder.none,
                                         hintText: "Enter Your Email",
                                         hintStyle: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                       ),
                                       // onSubmitted: (String value) async {
@@ -204,8 +192,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                             r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
                                         if (value!.isEmpty) {
                                           return 'Please enter valid email';
-                                        } else if (!emailRegex
-                                            .hasMatch(value)) {
+                                        } else if (!emailRegex.hasMatch(value)) {
                                           return 'Please enter valid email';
                                         }
                                         return null;
@@ -251,18 +238,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
                                           if (loginResponse != null) {
                                             if (loginResponse) {
-                                              Navigator.pushNamed(
-                                                  context, '/loginmain',
+                                              Navigator.pushNamed(context, '/loginmain',
                                                   arguments: {
-                                                    'email':
-                                                        emailController.text
+                                                    'email': emailController.text
                                                   });
                                             } else {
-                                              Navigator.pushNamed(
-                                                  context, '/signup',
+                                              Navigator.pushNamed(context, '/signup',
                                                   arguments: {
-                                                    'email':
-                                                        emailController.text
+                                                    'email': emailController.text
                                                   });
 
                                               // setState(() {});
@@ -282,11 +265,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                         ),
                                         height: 55.0,
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          color: Theme.of(context).colorScheme.secondary,
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Colors.black26,
@@ -299,8 +279,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                           child: Text(
                                             'Sign In / Register',
                                             style: TextStyle(
-                                              color: Theme.of(context)
-                                                          .brightness ==
+                                              color: Theme.of(context).brightness ==
                                                       Brightness.dark
                                                   ? Colors.black
                                                   : Colors.white,

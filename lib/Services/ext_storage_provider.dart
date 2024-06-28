@@ -20,6 +20,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class ExtStorageProvider {
@@ -45,58 +46,76 @@ class ExtStorageProvider {
     Directory? directory;
 
     try {
-      // checking platform
-      if (Platform.isAndroid) {
-        if (await requestPermission(Permission.storage)) {
-          directory = await getExternalStorageDirectory();
+      final dir = await getApplicationSupportDirectory();
 
-          // getting main path
-          final String newPath = directory!.path
-              .replaceFirst('Android/data/com.shadow.blackhole/files', dirName);
+      final downloadDir = Directory('${dir.path}/downloads');
 
-          directory = Directory(newPath);
-
-          print('Android Directory: $directory');
-
-          // checking if directory exist or not
-          if (!await directory.exists()) {
-            // if directory not exists then asking for permission to create folder
-            await requestPermission(Permission.manageExternalStorage);
-            //creating folder
-
-            await directory.create(recursive: true);
-          }
-          if (await directory.exists()) {
-            try {
-              if (writeAccess) {
-                await requestPermission(Permission.manageExternalStorage);
-              }
-              // if directory exists then returning the complete path
-              return newPath;
-            } catch (e) {
-              rethrow;
-            }
-          }
-        } else {
-          return throw 'something went wrong';
-        }
-      } else if (Platform.isIOS || Platform.isMacOS) {
-        directory = await getApplicationDocumentsDirectory();
-
-        print('iOS Directory Before: ${directory}');
-
-        final finalDirName = dirName.replaceAll('BlackHole/', '');
-
-        print('iOS Directory After: ${directory.path}/$finalDirName');
-
-        return '${directory.path}/$finalDirName';
-      } else {
-        directory = await getDownloadsDirectory();
-        return '${directory!.path}/$dirName';
+      if (!downloadDir.existsSync()) {
+        downloadDir.createSync(recursive: true);
       }
-    } catch (e) {
+
+      print('DOWNLOAD PATH ====>>> ${downloadDir.path}');
+
+      return downloadDir.path;
+    } catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+
       rethrow;
     }
-    return directory.path;
+
+    // try {
+    //   // checking platform
+    //   if (Platform.isAndroid) {
+    //     if (await requestPermission(Permission.storage)) {
+    //       directory = await getExternalStorageDirectory();
+
+    //       // getting main path
+    //       final String newPath = directory!.path
+    //           .replaceFirst('Android/data/com.shadow.blackhole/files', dirName);
+
+    //       directory = Directory(newPath);
+
+    //       print('Android Directory: $directory');
+
+    //       // checking if directory exist or not
+    //       if (!await directory.exists()) {
+    //         // if directory not exists then asking for permission to create folder
+    //         await requestPermission(Permission.manageExternalStorage);
+    //         //creating folder
+
+    //         await directory.create(recursive: true);
+    //       }
+    //       if (await directory.exists()) {
+    //         try {
+    //           if (writeAccess) {
+    //             await requestPermission(Permission.manageExternalStorage);
+    //           }
+    //           // if directory exists then returning the complete path
+    //           return newPath;
+    //         } catch (e) {
+    //           rethrow;
+    //         }
+    //       }
+    //     } else {
+    //       return throw 'something went wrong';
+    //     }
+    //   } else if (Platform.isIOS || Platform.isMacOS) {
+    //     directory = await getApplicationDocumentsDirectory();
+
+    //     print('iOS Directory Before: ${directory}');
+
+    //     final finalDirName = dirName.replaceAll('BlackHole/', '');
+
+    //     print('iOS Directory After: ${directory.path}/$finalDirName');
+
+    //     return '${directory.path}/$finalDirName';
+    //   } else {
+    //     directory = await getDownloadsDirectory();
+    //     return '${directory!.path}/$dirName';
+    //   }
+    // } catch (e) {
+    //   rethrow;
+    // }
+    // return directory.path;
   }
 }

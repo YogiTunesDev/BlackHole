@@ -18,11 +18,28 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    update_code_signing_settings(
-      use_automatic_signing: true,
-      path: "Runner.xcodeproj"
-    )
+
+  update_code_signing_settings(
+    use_automatic_signing: true,
+    path: "Runner.xcodeproj"
+  )
     
+  api_key = app_store_connect_api_key(
+    key_id: "RH58242NAK",
+    issuer_id: "9799e866-a96e-4bb5-adcd-fecfbb07012d",
+    key_filepath: "../AuthKey_RH58242NAK.p8",
+    duration: 1200, # optional (maximum 1200)
+    in_house: false # optional but may be required if using match/sigh
+  )
+
+  build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+
+  upload_to_testflight(api_key: api_key)
+ end
+
+  desc "Push a new release build to TestFlight"
+  lane :release do
+
     api_key = app_store_connect_api_key(
       key_id: "RH58242NAK",
       issuer_id: "9799e866-a96e-4bb5-adcd-fecfbb07012d",
@@ -30,12 +47,18 @@ platform :ios do
       duration: 1200, # optional (maximum 1200)
       in_house: false # optional but may be required if using match/sigh
     )
-    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+
+    # sync_code_signing
+
+    disable_automatic_code_signing(path: "Runner.xcodeproj")
+    
+    build_app
+    
+    enable_automatic_code_signing(path: "Runner.xcodeproj")
+
     upload_to_testflight(api_key: api_key)
   end
-end
 
-platform :ios do
   desc "Upload symbols to Crashlytics"
   lane :toCrashlytics do
     upload_symbols_to_crashlytics

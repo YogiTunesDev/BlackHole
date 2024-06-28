@@ -10,7 +10,6 @@ environment:
   sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
-  app_links: ^3.5.0
   audio_service: ^0.18.12
   audiotagger: ^2.2.1
   cached_network_image: ^3.3.0
@@ -21,6 +20,7 @@ dependencies:
   flip_card: ^0.7.0
   flutter:
     sdk: flutter
+  app_links: ^3.5.0
   flutter_archive: ^6.0.0
   flutter_displaymode: ^0.6.0
   # flutter_downloader: ^1.7.1
@@ -59,6 +59,7 @@ dependencies:
   shared_preferences: ^2.0.15
   package_info_plus: ^5.0.1
   connectivity_plus: ^5.0.2
+  sentry_flutter: ^8.3.0
 
 dev_dependencies:
   flutter_test:

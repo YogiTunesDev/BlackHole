@@ -53,6 +53,7 @@ class Download {
     data['title'] = data['title'].toString().split('(From')[0].trim();
     String filename = '${data["title"]} - ${data["artist"]}';
     String dlPath = Hive.box('settings').get('downloadPath', defaultValue: '') as String;
+
     if (filename.length > 200) {
       final String temp = filename.substring(0, 200);
       final List tempList = temp.split(', ');
@@ -61,25 +62,28 @@ class Download {
     }
 
     filename = '${filename.replaceAll(avoid, "").replaceAll("  ", " ")}.mp3';
+
     if (dlPath == '') {
       final String? temp =
           await ExtStorageProvider.getExtStorage(dirName: 'Music', writeAccess: true);
+
       dlPath = temp!;
     }
-    if (data['url'].toString().contains('google') && createYoutubeFolder) {
-      dlPath = '$dlPath/YouTube';
-      if (!await Directory(dlPath).exists()) {
-        await Directory(dlPath).create();
-      }
-    }
 
-    if (createFolder && createDownloadFolder && folderName != null) {
-      final String foldername = folderName.replaceAll(avoid, '');
-      dlPath = '$dlPath/$foldername';
-      if (!await Directory(dlPath).exists()) {
-        await Directory(dlPath).create();
-      }
-    }
+    // if (data['url'].toString().contains('google') && createYoutubeFolder) {
+    //   dlPath = '$dlPath/YouTube';
+    //   if (!await Directory(dlPath).exists()) {
+    //     await Directory(dlPath).create();
+    //   }
+    // }
+
+    // if (createFolder && createDownloadFolder && folderName != null) {
+    //   final String foldername = folderName.replaceAll(avoid, '');
+    //   dlPath = '$dlPath/$foldername';
+    //   if (!await Directory(dlPath).exists()) {
+    //     await Directory(dlPath).create();
+    //   }
+    // }
 
     final bool exists = await File('$dlPath/$filename').exists();
     if (exists) {
@@ -304,7 +308,9 @@ class Download {
     String? appPath;
     final List<int> _bytes = [];
     String lyrics;
+
     final artname = fileName.replaceAll('.mp3', '.jpg');
+
     if (!Platform.isWindows) {
       appPath = Hive.box('settings').get('tempDirPath')?.toString();
       appPath ??= (await getTemporaryDirectory()).path;
@@ -312,6 +318,9 @@ class Download {
       final Directory? temp = await getDownloadsDirectory();
       appPath = temp!.path;
     }
+
+    appPath = dlPath;
+
     // if (data['url'].toString().contains('google')) {
     // filename = filename.replaceAll('.m4a', '.opus');
     // }
@@ -319,7 +328,6 @@ class Download {
       await File('$dlPath/$fileName')
           .create(recursive: true)
           .then((value) => filepath = value.path);
-      // print('created audio file');
 
       await File('$appPath/$artname')
           .create(recursive: true)
@@ -328,10 +336,11 @@ class Download {
       await [
         Permission.manageExternalStorage,
       ].request();
+
       await File('$dlPath/$fileName')
           .create(recursive: true)
           .then((value) => filepath = value.path);
-      // print('created audio file');
+
       await File('$appPath/$artname')
           .create(recursive: true)
           .then((value) => filepath2 = value.path);
@@ -393,8 +402,6 @@ class Download {
         lyrics: lyrics,
         comment: 'BlackHole',
       );
-
-      print(filepath);
 
       try {
         final tagger = Audiotagger();

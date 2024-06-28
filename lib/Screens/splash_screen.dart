@@ -1,6 +1,8 @@
 import 'package:blackhole/APIs/api.dart';
 import 'package:blackhole/CustomWidgets/gradient_containers.dart';
+import 'package:blackhole/Helpers/sentry.dart';
 import 'package:blackhole/model/subscription_status_response.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -94,6 +96,18 @@ Future<void> redirectAfterAuthentication(BuildContext context) async {
     // return;
     // return HomePage();
     //await Future.delayed(const Duration(seconds: 5), () {
+
+    // Set user context
+    final user = await YogitunesAPI().fetchUserData();
+
+    final String id = user?.data?.id?.toString() ?? '';
+    final String name = user?.data?.name ?? '';
+    final String email = user?.data?.email ?? '';
+
+    FirebaseCrashlytics.instance.setUserIdentifier(id);
+
+    SentryService.instance.setUserContext(id, name, email);
+
     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     //});
   } else {

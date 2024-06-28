@@ -23,6 +23,8 @@ import 'package:blackhole/Screens/Settings/setting.dart';
 import 'package:blackhole/Screens/Settings/subscription.dart';
 import 'package:blackhole/Screens/splash_screen.dart';
 import 'package:blackhole/Services/audio_service.dart';
+import 'package:blackhole/Services/download_service.dart';
+import 'package:blackhole/Services/ext_storage_provider.dart';
 import 'package:blackhole/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -37,8 +39,11 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 // Toggle this to cause an async error to be thrown during initialization
 // and to test that runZonedGuarded() catches the error
@@ -48,80 +53,141 @@ const _kShouldTestAsyncErrorOnInit = false;
 const _kTestingCrashlytics = true;
 
 Future<void> main() async {
-  runZonedGuarded<Future<void>>(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-      await Firebase.initializeApp();
+    await Firebase.initializeApp();
 
-      // Deprecated: https://api.flutter.dev/flutter/dart-ui/Paint/enableDithering.html
-      // Paint.enableDithering = true;
+    // Deprecated: https://api.flutter.dev/flutter/dart-ui/Paint/enableDithering.html
+    // Paint.enableDithering = true;
 
-      await Hive.initFlutter();
-      await updateVersion();
-      await openHiveBox('settings');
-      await openHiveBox('downloads');
-      await openHiveBox('Favorite Songs');
-      await openHiveBox('cache', limit: true);
+    final appSupportDir = await getApplicationSupportDirectory();
+    final hivePath = Directory('${appSupportDir.path}/hive');
 
-      if (Platform.isAndroid) {
-        setOptimalDisplayMode();
-      }
+    if (!hivePath.existsSync()) {
+      hivePath.createSync(recursive: true);
+    }
 
-      await startService();
+    Hive.init(hivePath.path);
 
-      // initialize the Intercom.
-      // await Intercom.instance.initialize(
-      //   'webp3ia',
-      //   iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
-      //   androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258',
-      // );
-      const fatalError = false;
+    // await Hive.initFlutter();
 
-      if (_kTestingCrashlytics) {
-        // Force enable crashlytics collection enabled if we're testing it.
-        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    await updateVersion();
+
+    await openHiveBox('settings');
+
+    await openHiveBox('downloads');
+
+    await openHiveBox('Favorite Songs');
+
+    await openHiveBox('cache', limit: true);
+
+    await updatePathsInHive();
+
+    DownloadService();
+
+    if (Platform.isAndroid) {
+      setOptimalDisplayMode();
+    }
+
+    await startService();
+
+    // initialize the Intercom.
+    // await Intercom.instance.initialize(
+    //   'webp3ia',
+    //   iosApiKey: 'ios_sdk-738cc4fe35c05c02d8327071864ab4cbc0d93304',
+    //   androidApiKey: 'android_sdk-8e4b65d2a33865bb973ae7d40dc868bdf4528258',
+    // );
+    const fatalError = false;
+
+    if (_kTestingCrashlytics) {
+      // Force enable crashlytics collection enabled if we're testing it.
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    } else {
+      // Else only enable it in non-debug builds.
+      // You could additionally extend this to allow users to opt-in.
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+    }
+
+    // Non-async exceptions
+    FlutterError.onError = (errorDetails) {
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+        // ignore: dead_code
       } else {
-        // Else only enable it in non-debug builds.
-        // You could additionally extend this to allow users to opt-in.
-        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
       }
+    };
 
-      // Non-async exceptions
-      FlutterError.onError = (errorDetails) {
-        if (fatalError) {
-          // If you want to record a "fatal" exception
-          FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-          // ignore: dead_code
-        } else {
-          // If you want to record a "non-fatal" exception
-          FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-        }
-      };
+    // Async exceptions
+    PlatformDispatcher.instance.onError = (error, stack) {
+      if (fatalError) {
+        // If you want to record a "fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        // ignore: dead_code
+      } else {
+        // If you want to record a "non-fatal" exception
+        FirebaseCrashlytics.instance.recordError(error, stack);
+      }
+      return true;
+    };
 
-      // Async exceptions
-      PlatformDispatcher.instance.onError = (error, stack) {
-        if (fatalError) {
-          // If you want to record a "fatal" exception
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-          // ignore: dead_code
-        } else {
-          // If you want to record a "non-fatal" exception
-          FirebaseCrashlytics.instance.recordError(error, stack);
-        }
-        return true;
-      };
+    FirebaseCrashlytics.instance.setUserIdentifier('0');
 
-      FirebaseCrashlytics.instance.setUserIdentifier('0');
+    // Initialize Sentry SDK
+    await SentryFlutter.init((options) {
+      options.dsn =
+          'https://aff50c0a1ec48db5dc356ea09ce1fddd@o4507455731269632.ingest.us.sentry.io/4507455736315904';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+      // The sampling rate for profiling is relative to tracesSampleRate
+      // Setting to 1.0 will profile 100% of sampled transactions:
+      options.profilesSampleRate = 1.0;
+    });
 
-      runApp(
-        ProviderScope(
-          child: MyApp(),
-        ),
-      );
-    },
-    (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
-  );
+    runApp(
+      ProviderScope(
+        child: MyApp(),
+      ),
+    );
+  }, (error, stackTrace) {
+    Sentry.captureException(error, stackTrace: stackTrace);
+
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+  });
+}
+
+Future<void> updatePathsInHive() async {
+  final currentSandboxPath =
+      await ExtStorageProvider.getExtStorage(dirName: "downloads", writeAccess: false) ??
+          '';
+
+  final box = Hive.box('downloads');
+  final keys = box.keys.toList();
+
+  for (var key in keys) {
+    final data = box.get(key) as Map<dynamic, dynamic>;
+
+    if (data.containsKey('path') && data.containsKey('image')) {
+      data['path'] = _replacePath(data['path'].toString(), currentSandboxPath);
+
+      data['image'] = _replacePath(data['image'].toString(), currentSandboxPath);
+
+      await box.put(key, data);
+    }
+  }
+}
+
+String _getFilename(String filePath) {
+  return path.basename(filePath);
+}
+
+String _replacePath(String oldPath, String currentSandboxPath) {
+  final filePath = _getFilename(oldPath);
+  return path.join(currentSandboxPath, '', filePath);
 }
 
 Future<void> updateVersion() async {
@@ -130,15 +196,14 @@ Future<void> updateVersion() async {
   final String version = packageInfo.version;
   final String buildNumber = packageInfo.buildNumber;
 
-  debugPrint('PREFS : ${prefs}');
-  debugPrint('Version : $version($buildNumber)');
-
   final String versionName = '$version($buildNumber)';
   final String lastVersion = prefs.getString('last_version').toString();
 
+  print('Current Installed Version : $lastVersion');
+  print('Latest Upgrade Version : $versionName');
+
   if (versionName != lastVersion) {
-    debugPrint('Version : $versionName');
-    await Hive.deleteFromDisk();
+    // await Hive.deleteFromDisk();
     await prefs.setString('last_version', versionName);
   }
 }

@@ -12,7 +12,6 @@ import 'package:blackhole/model/radio_stations_response.dart';
 import 'package:blackhole/model/song_model.dart';
 import 'package:blackhole/model/user_info_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,15 +48,14 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     Map userInfoData = Hive.box('settings').get('userInfoData', defaultValue: {}) as Map;
     if (userInfoData.isEmpty) {
       final UserInfoResponse? userinfodatares = await YogitunesAPI().fetchUserData();
-      print("RESPONSE DATA ::::: $userinfodatares");
+
+      // print("RESPONSE DATA ::::: $userinfodatares");
+
       if (userinfodatares != null) {
         if (userinfodatares.data != null) {
           // Hive.box('cache').put('homepage', recievedData);
           Hive.box('settings').put('name', userinfodatares.data?.name);
           Hive.box('settings').put('userInfoData', userinfodatares.toMap());
-
-          final String userId = userinfodatares.data?.id?.toString() ?? '0';
-          FirebaseCrashlytics.instance.setUserIdentifier(userId);
 
           // lists = data.length;
           // lists = [...?data['collections']];

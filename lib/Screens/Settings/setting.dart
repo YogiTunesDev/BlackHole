@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sentry/sentry.dart';
 
 class SettingPage extends StatefulWidget {
   final Function? callback;
@@ -25,30 +26,24 @@ class _SettingPageState extends State<SettingPage> {
       .get('downloadPath', defaultValue: '/storage/emulated/0/Music') as String;
   // List dirPaths =
   // Hive.box('settings').get('blacklistedPaths', defaultValue: []) as List;
-  List blacklistedHomeSections = Hive.box('settings')
-      .get('blacklistedHomeSections', defaultValue: []) as List;
-  String streamingQuality = Hive.box('settings')
-      .get('streamingQuality', defaultValue: '96 kbps') as String;
-  String downloadQuality = Hive.box('settings')
-      .get('downloadQuality', defaultValue: '320 kbps') as String;
-  String lang =
-      Hive.box('settings').get('lang', defaultValue: 'English') as String;
+  List blacklistedHomeSections =
+      Hive.box('settings').get('blacklistedHomeSections', defaultValue: []) as List;
+  String streamingQuality =
+      Hive.box('settings').get('streamingQuality', defaultValue: '96 kbps') as String;
+  String downloadQuality =
+      Hive.box('settings').get('downloadQuality', defaultValue: '320 kbps') as String;
+  String lang = Hive.box('settings').get('lang', defaultValue: 'English') as String;
   String canvasColor =
       Hive.box('settings').get('canvasColor', defaultValue: 'Grey') as String;
   String cardColor =
       Hive.box('settings').get('cardColor', defaultValue: 'Grey900') as String;
-  String theme =
-      Hive.box('settings').get('theme', defaultValue: 'Default') as String;
-  Map userThemes =
-      Hive.box('settings').get('userThemes', defaultValue: {}) as Map;
-  String region =
-      Hive.box('settings').get('region', defaultValue: 'India') as String;
-  bool useProxy =
-      Hive.box('settings').get('useProxy', defaultValue: false) as bool;
+  String theme = Hive.box('settings').get('theme', defaultValue: 'Default') as String;
+  Map userThemes = Hive.box('settings').get('userThemes', defaultValue: {}) as Map;
+  String region = Hive.box('settings').get('region', defaultValue: 'India') as String;
+  bool useProxy = Hive.box('settings').get('useProxy', defaultValue: false) as bool;
   String themeColor =
       Hive.box('settings').get('themeColor', defaultValue: 'Teal') as String;
-  int crossFadeValue =
-      Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
+  int crossFadeValue = Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
   int colorHue = Hive.box('settings').get('colorHue', defaultValue: 400) as int;
   List<String> languages = [
     'Hindi',
@@ -1226,18 +1221,17 @@ class _SettingPageState extends State<SettingPage> {
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                                 child: Center(
                                   child: Text(
                                     'Manage Subscription',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color:
+                                          Theme.of(context).brightness == Brightness.dark
+                                              ? Colors.black
+                                              : Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1366,12 +1360,10 @@ class _SettingPageState extends State<SettingPage> {
                             ),
                           ),
                           keyName: 'highQualityStreaming',
-                          defaultValue: Hive.box('settings').get(
-                              'highQualityStreming',
-                              defaultValue: false) as bool,
+                          defaultValue: Hive.box('settings')
+                              .get('highQualityStreming', defaultValue: false) as bool,
                           onChanged: (bool val, Box box) {
-                            Hive.box('settings')
-                                .put('highQualityStreming', val);
+                            Hive.box('settings').put('highQualityStreming', val);
                             // box.put(
                             //   'useSystemTheme',
                             //   false,
@@ -1448,10 +1440,20 @@ class _SettingPageState extends State<SettingPage> {
                                   path: '/contact/',
                                 );
 
+                                // try {
+                                //   throw 'Test Sentry Error';
+                                // } catch (exception, stackTrace) {
+                                //   await Sentry.captureException(
+                                //     exception,
+                                //     stackTrace: stackTrace,
+                                //   );
+                                // }
+
                                 try {
                                   await launchUrl(url);
-                                } catch (e) {
-                                  print('Error: $e');
+                                } catch (e, stackTrace) {
+                                  await Sentry.captureException(e,
+                                      stackTrace: stackTrace);
                                 }
 
                                 // await Intercom.instance.displayMessenger();
@@ -1460,18 +1462,17 @@ class _SettingPageState extends State<SettingPage> {
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                                 child: Center(
                                   child: Text(
                                     'Send a message',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color:
+                                          Theme.of(context).brightness == Brightness.dark
+                                              ? Colors.black
+                                              : Colors.white,
                                     ),
                                   ),
                                 ),
@@ -1492,8 +1493,7 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   child: GradientCard(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -1521,8 +1521,7 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              await launch(
-                                  'https://www.yogi-tunes.com/terms-conditions');
+                              await launch('https://www.yogi-tunes.com/terms-conditions');
                             },
                             child: Text(
                               'Terms & Condition',
@@ -1538,8 +1537,7 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              await launch(
-                                  'https://www.yogi-tunes.com/privacy-policy');
+                              await launch('https://www.yogi-tunes.com/privacy-policy');
                             },
                             child: Text(
                               'Privacy Policy',
@@ -3828,8 +3826,7 @@ class BoxSwitchTile extends StatelessWidget {
           subtitle: subtitle,
           isThreeLine: isThreeLine ?? false,
           dense: true,
-          value: box.get(keyName, defaultValue: defaultValue) as bool? ??
-              defaultValue,
+          value: box.get(keyName, defaultValue: defaultValue) as bool? ?? defaultValue,
           onChanged: (val) {
             box.put(keyName, val);
             onChanged?.call(val, box);
@@ -3842,8 +3839,7 @@ class BoxSwitchTile extends StatelessWidget {
 
 class SpotifyCountry {
   Future<String> changeCountry({required BuildContext context}) async {
-    String region =
-        Hive.box('settings').get('region', defaultValue: 'India') as String;
+    String region = Hive.box('settings').get('region', defaultValue: 'India') as String;
     await showModalBottomSheet(
       isDismissible: true,
       backgroundColor: Colors.transparent,
