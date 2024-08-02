@@ -168,8 +168,7 @@ class TopPage extends StatefulWidget {
   _TopPageState createState() => _TopPageState();
 }
 
-class _TopPageState extends State<TopPage>
-    with AutomaticKeepAliveClientMixin<TopPage> {
+class _TopPageState extends State<TopPage> with AutomaticKeepAliveClientMixin<TopPage> {
   Future<void> getData(String region) async {
     fetched = true;
     final List temp = await compute(scrapData, region);
@@ -195,12 +194,10 @@ class _TopPageState extends State<TopPage>
   Future<void> getCachedData(String region) async {
     fetched = true;
     if (region != 'global') {
-      cachedItems =
-          await Hive.box('cache').get(region, defaultValue: []) as List;
+      cachedItems = await Hive.box('cache').get(region, defaultValue: []) as List;
     }
     if (region == 'global') {
-      cachedGlobalItems =
-          await Hive.box('cache').get(region, defaultValue: []) as List;
+      cachedGlobalItems = await Hive.box('cache').get(region, defaultValue: []) as List;
     }
     setState(() {});
   }

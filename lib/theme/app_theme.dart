@@ -21,8 +21,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(width: 1.5, color: currentTheme.currentColor()),
+          borderSide: BorderSide(width: 1.5, color: currentTheme.currentColor()),
         ),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -44,8 +43,8 @@ class AppTheme {
       disabledColor: Colors.grey[600],
       brightness: Brightness.light,
       indicatorColor: currentTheme.currentColor(),
-      progressIndicatorTheme: const ProgressIndicatorThemeData()
-          .copyWith(color: currentTheme.currentColor()),
+      progressIndicatorTheme:
+          const ProgressIndicatorThemeData().copyWith(color: currentTheme.currentColor()),
       iconTheme: IconThemeData(
         color: Colors.grey[800],
         opacity: 1.0,
@@ -77,13 +76,11 @@ class AppTheme {
         selectionHandleColor:
             Colors.white.withOpacity(0.2), //currentTheme.currentColor(),
         cursorColor: const Color(0xFFFFFFFF), //currentTheme.currentColor(),
-        selectionColor:
-            Colors.white.withOpacity(0.2), // currentTheme.currentColor(),
+        selectionColor: Colors.white.withOpacity(0.2), // currentTheme.currentColor(),
       ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
-          borderSide:
-              BorderSide(width: 1.5, color: currentTheme.currentColor()),
+          borderSide: BorderSide(width: 1.5, color: currentTheme.currentColor()),
         ),
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,

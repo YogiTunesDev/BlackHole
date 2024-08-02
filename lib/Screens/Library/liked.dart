@@ -824,8 +824,11 @@ class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixi
           )
         : GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 4 : 2,
-              childAspectRatio: 0.8,
+              crossAxisCount:
+                  MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
+                      ? 4
+                      : 2,
+              childAspectRatio: 0.7,
             ),
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(top: 15.0, bottom: 10.0),
@@ -833,12 +836,13 @@ class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixi
             // itemExtent: 70.0,
             itemCount: widget.sortedAlbumKeysList.length,
             itemBuilder: (context, index) {
-              final List imageList = widget.albums[widget.sortedAlbumKeysList[index]]!.length >= 4
-                  ? widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(0, 4)
-                  : widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(
-                      0,
-                      widget.albums[widget.sortedAlbumKeysList[index]]!.length,
-                    );
+              final List imageList =
+                  widget.albums[widget.sortedAlbumKeysList[index]]!.length >= 4
+                      ? widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(0, 4)
+                      : widget.albums[widget.sortedAlbumKeysList[index]]!.sublist(
+                          0,
+                          widget.albums[widget.sortedAlbumKeysList[index]]!.length,
+                        );
               return GestureDetector(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -846,27 +850,43 @@ class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixi
                     Stack(
                       alignment: Alignment.bottomRight,
                       children: [
-                        if (widget.offline) OfflineCollage(
-                                fixSize: false,
-                                imageList: imageList,
-                                showGrid: widget.type == 'genre',
-                                artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
-                                tempDirPath: widget.tempPath,
-                                placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
-                              ) else Collage(
-                                fixSize: false,
-                                imageList: [""],
-                                //imageList,
-                                showGrid: widget.type == 'genre',
-                                artistName: widget.type == 'artist' ? widget.albums[widget.sortedAlbumKeysList[index]]![0]['artist'].toString() : "Unkown",
-                                tempDirPath: widget.tempPath,
-                                placeholderImage: widget.type == 'artist' ? 'assets/artist.png' : 'assets/album.png',
-                              ),
+                        if (widget.offline)
+                          OfflineCollage(
+                            fixSize: false,
+                            imageList: imageList,
+                            showGrid: widget.type == 'genre',
+                            artistName: widget.type == 'artist'
+                                ? widget.albums[widget.sortedAlbumKeysList[index]]![0]
+                                        ['artist']
+                                    .toString()
+                                : "Unkown",
+                            tempDirPath: widget.tempPath,
+                            placeholderImage: widget.type == 'artist'
+                                ? 'assets/artist.png'
+                                : 'assets/album.png',
+                          )
+                        else
+                          Collage(
+                            fixSize: false,
+                            imageList: [""],
+                            //imageList,
+                            showGrid: widget.type == 'genre',
+                            artistName: widget.type == 'artist'
+                                ? widget.albums[widget.sortedAlbumKeysList[index]]![0]
+                                        ['artist']
+                                    .toString()
+                                : "Unkown",
+                            tempDirPath: widget.tempPath,
+                            placeholderImage: widget.type == 'artist'
+                                ? 'assets/artist.png'
+                                : 'assets/album.png',
+                          ),
                         Visibility(
                           visible: widget.onDelete != null,
                           child: IconButton(
                             onPressed: () {
-                              widget.onDelete!(widget.albums[widget.sortedAlbumKeysList[index]]!);
+                              widget.onDelete!(
+                                  widget.albums[widget.sortedAlbumKeysList[index]]!);
                             },
                             icon: const Icon(
                               Icons.delete,
@@ -879,7 +899,10 @@ class _AlbumsTabState extends State<AlbumsTab> with AutomaticKeepAliveClientMixi
                     ListTile(
                       dense: true,
                       minVerticalPadding: 0.0,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      contentPadding: const EdgeInsets.only(
+                        left: 30,
+                        right: 30,
+                      ),
                       title: Text(
                         '${widget.sortedAlbumKeysList[index] != "null" ? widget.sortedAlbumKeysList[index] : "Unkown"}',
                         overflow: TextOverflow.ellipsis,

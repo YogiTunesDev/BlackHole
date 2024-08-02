@@ -13,10 +13,8 @@ class SearchAddPlaylist {
     try {
       final RegExpMatch? id = RegExp(r'.*list\=(.*?)&').firstMatch(link);
       if (id != null) {
-        final Playlist metadata =
-            await YouTubeServices().getPlaylistDetails(id[1]!);
-        final List<Video> tracks =
-            await YouTubeServices().getPlaylistSongs(id[1]!);
+        final Playlist metadata = await YouTubeServices().getPlaylistDetails(id[1]!);
+        final List<Video> tracks = await YouTubeServices().getPlaylistSongs(id[1]!);
         return {
           'title': metadata.title,
           'image': metadata.thumbnails.standardResUrl,
@@ -73,8 +71,7 @@ class SearchAddPlaylist {
                   builder: (ctxt, AsyncSnapshot snapshot) {
                     final Map? data = snapshot.data as Map?;
                     final int _done = (data ?? const {})['done'] as int? ?? 0;
-                    final String name =
-                        (data ?? const {})['name'] as String? ?? '';
+                    final String name = (data ?? const {})['name'] as String? ?? '';
                     if (_done == _total) Navigator.pop(ctxt);
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

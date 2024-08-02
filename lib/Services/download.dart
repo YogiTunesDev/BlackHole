@@ -410,7 +410,7 @@ class Download {
           tag: tag,
         );
       } catch (e, s) {
-        print('Failed to edit tags\n$e\n$s');
+        // print('Failed to edit tags\n$e\n$s');
       }
       client.close();
       _progressController.close();

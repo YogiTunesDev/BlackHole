@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      print("In the splash screen");
+      // print("In the splash screen");
       try {
         setState(() {
           isLoading = true;
@@ -71,7 +71,7 @@ Future<bool> checkSubscriptionStatus(BuildContext context) async {
   final SubscriptionStatusResponse? subscriptionStatusResponse =
       await YogitunesAPI().subscriptionStatus();
 
-  // print('subscriptionStatus: ' + subscriptionStatusResponse.to);
+  // print('subscriptionStatus: ' + subscriptionStatusResponse.toString());
 
   if (subscriptionStatusResponse != null) {
     if (subscriptionStatusResponse.status ?? false) {
@@ -85,7 +85,7 @@ Future<bool> checkSubscriptionStatus(BuildContext context) async {
 }
 
 Future<void> redirectAfterAuthentication(BuildContext context) async {
-  // print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
+  // // print(" apiTokenBox.get('token')  ->" + apiTokenBox.get('token').toString());
 
   if (apiTokenBox.get('token') != null) {
     // bool val = await SubscriptionStatus.subscriptionStatus(

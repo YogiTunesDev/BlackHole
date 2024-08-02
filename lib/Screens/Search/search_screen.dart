@@ -71,7 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
         TextSelection(baseOffset: search.length, extentOffset: search.length);
     searchResponse = await YogitunesAPI().search(search, isMyLibrary);
 
-    print('searchResponse: $searchResponse');
+    // print('searchResponse: $searchResponse');
 
     setState(() {
       isLoading = false;

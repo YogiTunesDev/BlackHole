@@ -54,7 +54,7 @@ class ExtStorageProvider {
         downloadDir.createSync(recursive: true);
       }
 
-      print('DOWNLOAD PATH ====>>> ${downloadDir.path}');
+      // print('DOWNLOAD PATH ====>>> ${downloadDir.path}');
 
       return downloadDir.path;
     } catch (e, stackTrace) {
@@ -75,7 +75,7 @@ class ExtStorageProvider {
 
     //       directory = Directory(newPath);
 
-    //       print('Android Directory: $directory');
+    //       // print('Android Directory: $directory');
 
     //       // checking if directory exist or not
     //       if (!await directory.exists()) {
@@ -102,11 +102,11 @@ class ExtStorageProvider {
     //   } else if (Platform.isIOS || Platform.isMacOS) {
     //     directory = await getApplicationDocumentsDirectory();
 
-    //     print('iOS Directory Before: ${directory}');
+    //     // print('iOS Directory Before: ${directory}');
 
     //     final finalDirName = dirName.replaceAll('BlackHole/', '');
 
-    //     print('iOS Directory After: ${directory.path}/$finalDirName');
+    //     // print('iOS Directory After: ${directory.path}/$finalDirName');
 
     //     return '${directory.path}/$finalDirName';
     //   } else {

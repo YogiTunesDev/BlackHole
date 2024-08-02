@@ -80,7 +80,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             : [
                 androidInAppPackage,
               ]);
-    print("items  ::  ${items}");
+    // print("items  ::  ${items}");
     for (final item in items) {
       products.add(item);
     }
@@ -89,23 +89,22 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     // await Future.delayed(const Duration(seconds: 2));
     // if (response.notFoundIDs.isNotEmpty) {
     //   // Handle the error.
-    //   print("Error ");
+    //   // print("Error ");
     // }
     // products = response.productDetails;
     // if (products.isNotEmpty) {
     //   print(products[0].price);
     // }
-    // print("products :: " + products.length.toString());
+    // // print("products :: " + products.length.toString());
     _purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((productItem) async {
-      print('purchase-updated: $productItem');
+      // print('purchase-updated: $productItem');
       if (productItem != null) {
         String dateStr =
             "${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}";
         SubscriptionStatusResponse? paymentSuccessResponse =
             await YogitunesAPI().paymentSuccess(
-          subscriptionId:
-              Platform.isIOS ? iosInAppPackage : androidInAppPackage,
+          subscriptionId: Platform.isIOS ? iosInAppPackage : androidInAppPackage,
           paymentDate: productItem.transactionDate!.toIso8601String(),
           paymentId: "0" + productItem.transactionId!,
         );
@@ -114,8 +113,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           if (paymentSuccessResponse.status!) {
             redirectAfterAuthentication(context);
           } else {
-            ShowSnackBar()
-                .showSnackBar(context, paymentSuccessResponse.message!);
+            ShowSnackBar().showSnackBar(context, paymentSuccessResponse.message!);
           }
         }
       }
@@ -126,7 +124,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
     StreamSubscription _purchaseErrorSubscription =
         FlutterInappPurchase.purchaseError.listen((purchaseError) {
-      print('purchase-error: $purchaseError');
+      // print('purchase-error: $purchaseError');
       setState(() {
         buttonLoading = false;
       });
@@ -201,9 +199,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                   ),
                                 ),
@@ -333,8 +329,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                             'Subscribe',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
+                              color: Theme.of(context).brightness == Brightness.dark
                                   ? Colors.black
                                   : Colors.white,
                             ),

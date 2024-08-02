@@ -49,7 +49,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
     if (userInfoData.isEmpty) {
       final UserInfoResponse? userinfodatares = await YogitunesAPI().fetchUserData();
 
-      // print("RESPONSE DATA ::::: $userinfodatares");
+      // // print("RESPONSE DATA ::::: $userinfodatares");
 
       if (userinfodatares != null) {
         if (userinfodatares.data != null) {
@@ -226,7 +226,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                       if (data!.data!.popularYogaPlaylists != null)
                         if (data!.data!.popularYogaPlaylists!.isNotEmpty)
                           HeaderTitle(
-                            title: 'Yoga Playlists 1',
+                            title: 'Yoga Playlists',
                             viewAllOnTap: () {
                               Navigator.push(
                                 context,
@@ -234,7 +234,7 @@ class _SaavnHomePageState extends State<SaavnHomePage>
                                   opaque: false,
                                   pageBuilder: (_, __, ___) => const AlbumList(
                                     albumListType: AlbumListType.yogaPlaylist,
-                                    albumName: 'Yoga Playlists 2',
+                                    albumName: 'Yoga Playlists',
                                   ),
                                 ),
                               );

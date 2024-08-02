@@ -40,11 +40,10 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   final _mediaItemExpando = Expando<MediaItem>();
 
   Stream<List<IndexedAudioSource>> get _effectiveSequence => Rx.combineLatest3<
-              List<IndexedAudioSource>?,
-              List<int>?,
-              bool,
-              List<IndexedAudioSource>?>(_player!.sequenceStream,
-          _player!.shuffleIndicesStream, _player!.shuffleModeEnabledStream,
+              List<IndexedAudioSource>?, List<int>?, bool, List<IndexedAudioSource>?>(
+          _player!.sequenceStream,
+          _player!.shuffleIndicesStream,
+          _player!.shuffleModeEnabledStream,
           (sequence, shuffleIndices, shuffleModeEnabled) {
         if (sequence == null) return [];
         if (!shuffleModeEnabled) return sequence;
@@ -63,8 +62,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
     for (var i = 0; i < effectiveIndices.length; i++) {
       shuffleIndicesInv[effectiveIndices[i]] = i;
     }
-    return (shuffleModeEnabled &&
-            ((currentIndex ?? 0) < shuffleIndicesInv.length))
+    return (shuffleModeEnabled && ((currentIndex ?? 0) < shuffleIndicesInv.length))
         ? shuffleIndicesInv[currentIndex ?? 0]
         : currentIndex;
   }
@@ -99,7 +97,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
     _positionDataStream.listen((event) {
       int crossFadeValue =
           Hive.box('settings').get('crossFadeValue', defaultValue: 0) as int;
-      // print("crossFadeValue :: ${crossFadeValue}");
+      // // print("crossFadeValue :: ${crossFadeValue}");
       double volumeDataTemp = (volumeData * 100 / crossFadeValue) / 5;
 
       if (crossFadeValue != 0) {
@@ -125,9 +123,9 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
         }
         // print(
         // "Counter value :: ${counterValue} || player Volume :: ${_player!.volume} || volumeData ::$volumeData || volumeDataTemp :: $volumeDataTemp || ((volumeData*volumeDataTemp)/100) :: ${((volumeData * volumeDataTemp) / 100)}");
-        // print("event Duration Decond :: ${event.position.inSeconds}");
-        // print("event Duration  :: ${event.duration.inSeconds}");
-        // print("Position Duration :: ${event.position}");
+        // // print("event Duration Decond :: ${event.position.inSeconds}");
+        // // print("event Duration  :: ${event.duration.inSeconds}");
+        // // print("Position Duration :: ${event.position}");
       }
     });
   }
@@ -155,22 +153,18 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
       playbackState.add(playbackState.value.copyWith(speed: speed));
     });
 
-    preferredQuality = Hive.box('settings')
-        .get('streamingQuality', defaultValue: '96 kbps')
-        .toString();
+    preferredQuality =
+        Hive.box('settings').get('streamingQuality', defaultValue: '96 kbps').toString();
     // cacheSong =
     //     Hive.box('settings').get('cacheSong', defaultValue: false) as bool;
-    recommend =
-        Hive.box('settings').get('autoplay', defaultValue: true) as bool;
-    loadStart =
-        Hive.box('settings').get('loadStart', defaultValue: true) as bool;
+    recommend = Hive.box('settings').get('autoplay', defaultValue: true) as bool;
+    loadStart = Hive.box('settings').get('loadStart', defaultValue: true) as bool;
     if (loadStart) {
-      final List recentList = await Hive.box('cache')
-          .get('recentSongs', defaultValue: [])?.toList() as List;
+      final List recentList =
+          await Hive.box('cache').get('recentSongs', defaultValue: [])?.toList() as List;
 
-      final List<MediaItem> lastQueue = recentList
-          .map((e) => MediaItemConverter.mapToMediaItem(e as Map))
-          .toList();
+      final List<MediaItem> lastQueue =
+          recentList.map((e) => MediaItemConverter.mapToMediaItem(e as Map)).toList();
       await updateQueue(lastQueue);
     }
 
@@ -183,12 +177,11 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
         }
       }
 
-      if (item.artUri.toString().startsWith('http') &&
-          item.genre != 'YouTube') {
+      if (item.artUri.toString().startsWith('http') && item.genre != 'YouTube') {
         addRecentlyPlayed(item);
         final String str = item.id;
         final String endOffset = item.duration!.inSeconds.toString();
-        print("Send Request");
+        // print("Send Request");
         YogitunesAPI().updatePlaySong(str, endOffset);
         _recentSubject.add([item]);
 
@@ -221,9 +214,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
         shuffleIndices,
         shuffleModeEnabled: shuffleModeEnabled,
       );
-      return (queueIndex != null && queueIndex < queue.length)
-          ? queue[queueIndex]
-          : null;
+      return (queueIndex != null && queueIndex < queue.length) ? queue[queueIndex] : null;
     }).whereType<MediaItem>().distinct().listen(mediaItem.add);
 
     // Propagate all events from the audio player to AudioService clients.
@@ -241,8 +232,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
     // Broadcast the current queue.
     _effectiveSequence
         .map(
-          (sequence) =>
-              sequence.map((source) => _mediaItemExpando[source]!).toList(),
+          (sequence) => sequence.map((source) => _mediaItemExpando[source]!).toList(),
         )
         .pipe(queue);
 
@@ -257,8 +247,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   AudioSource _itemToSource(MediaItem mediaItem) {
     AudioSource _audioSource;
     if (mediaItem.artUri.toString().startsWith('file:')) {
-      _audioSource =
-          AudioSource.uri(Uri.file(mediaItem.extras!['url'].toString()));
+      _audioSource = AudioSource.uri(Uri.file(mediaItem.extras!['url'].toString()));
     } else {
       if (downloadsBox.containsKey(mediaItem.id) && useDown) {
         _audioSource = AudioSource.uri(
@@ -294,9 +283,8 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   }
 
   List<AudioSource> _itemsToSources(List<MediaItem> mediaItems) {
-    preferredQuality = Hive.box('settings')
-        .get('streamingQuality', defaultValue: '96 kbps')
-        .toString();
+    preferredQuality =
+        Hive.box('settings').get('streamingQuality', defaultValue: '96 kbps').toString();
     // cacheSong =
     //     Hive.box('settings').get('cacheSong', defaultValue: false) as bool;
     useDown = Hive.box('settings').get('useDown', defaultValue: true) as bool;
@@ -305,8 +293,8 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
 
   @override
   Future<void> onTaskRemoved() async {
-    final bool stopForegroundService = Hive.box('settings')
-        .get('stopForegroundService', defaultValue: true) as bool;
+    final bool stopForegroundService =
+        Hive.box('settings').get('stopForegroundService', defaultValue: true) as bool;
     if (stopForegroundService) {
       await stop();
     }
@@ -334,9 +322,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
             ? stream.shareValueSeeded(<String, dynamic>{})
             : stream.shareValue();
       default:
-        return Stream.value(queue.value)
-            .map((_) => <String, dynamic>{})
-            .shareValue();
+        return Stream.value(queue.value).map((_) => <String, dynamic>{}).shareValue();
     }
   }
 
@@ -357,8 +343,8 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
   }
 
   Future<void> addRecentlyPlayed(MediaItem mediaitem) async {
-    List recentList = await Hive.box('cache')
-        .get('recentSongs', defaultValue: [])?.toList() as List;
+    List recentList =
+        await Hive.box('cache').get('recentSongs', defaultValue: [])?.toList() as List;
 
     final Map item = MediaItemConverter.mediaItemtoMap(mediaitem);
     recentList.insert(0, item);
@@ -428,8 +414,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
 
     _player!.seek(
       Duration.zero,
-      index:
-          _player!.shuffleModeEnabled ? _player!.shuffleIndices![index] : index,
+      index: _player!.shuffleModeEnabled ? _player!.shuffleIndices![index] : index,
     );
   }
 
@@ -491,11 +476,7 @@ class AudioPlayerHandlerImpl extends BaseAudioHandler
     final List<AndroidEqualizerBand> bands = _equalizerParams!.bands;
     final List<Map> bandList = bands
         .map(
-          (e) => {
-            'centerFrequency': e.centerFrequency,
-            'gain': e.gain,
-            'index': e.index
-          },
+          (e) => {'centerFrequency': e.centerFrequency, 'gain': e.gain, 'index': e.index},
         )
         .toList();
 

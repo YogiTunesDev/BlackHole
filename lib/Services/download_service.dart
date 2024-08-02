@@ -23,7 +23,7 @@ class DownloadService {
     // Convert box data to a suitable format
     final boxData = _box.toMap();
 
-    print('Downloads Backup data: $boxData');
+    // print('Downloads Backup data: $boxData');
 
     // final response = await http.post(
     //   Uri.parse('https://your-backup-api.com/backup'),
@@ -32,9 +32,9 @@ class DownloadService {
     // );
 
     // if (response.statusCode == 200) {
-    //   print('Backup successful');
+    //   // print('Backup successful');
     // } else {
-    //   print('Backup failed: ${response.statusCode}');
+    //   // print('Backup failed: ${response.statusCode}');
     // }
   }
 

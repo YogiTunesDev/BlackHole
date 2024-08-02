@@ -199,8 +199,8 @@ Future<void> updateVersion() async {
   final String versionName = '$version($buildNumber)';
   final String lastVersion = prefs.getString('last_version').toString();
 
-  print('Current Installed Version : $lastVersion');
-  print('Latest Upgrade Version : $versionName');
+  // print('Current Installed Version : $lastVersion');
+  // print('Latest Upgrade Version : $versionName');
 
   if (versionName != lastVersion) {
     // await Hive.deleteFromDisk();
@@ -279,11 +279,11 @@ class _MyAppState extends State<MyApp> {
 
     final boxName = Hive.box("settings");
 
-    print('Settings Box: ${boxName.toMap()}');
+    // print('Settings Box: ${boxName.toMap()}');
 
     final boxNameDl = Hive.box("downloads");
 
-    print('Downloads Box: ${boxNameDl.toMap()}');
+    // print('Downloads Box: ${boxNameDl.toMap()}');
 
     final String lang =
         Hive.box('settings').get('lang', defaultValue: 'English') as String;

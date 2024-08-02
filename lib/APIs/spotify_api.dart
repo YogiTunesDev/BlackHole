@@ -16,8 +16,7 @@ class SpotifyApi {
   final String clientSecret = '622b4fbad33947c59b95a6ae607de11d';
   final String redirectUrl = 'app://yogitunes/auth';
   final String spotifyApiBaseUrl = 'https://accounts.spotify.com/api';
-  final String spotifyPlaylistBaseUrl =
-      'https://api.spotify.com/v1/me/playlists';
+  final String spotifyPlaylistBaseUrl = 'https://api.spotify.com/v1/me/playlists';
   final String spotifyTrackBaseUrl = 'https://api.spotify.com/v1/playlists';
   final String spotifyBaseUrl = 'https://accounts.spotify.com';
   final String requestToken = 'https://accounts.spotify.com/api/token';
@@ -43,8 +42,7 @@ class SpotifyApi {
 
   Future<List<String>> getAccessToken(String code) async {
     final Map<String, String> headers = {
-      'Authorization':
-          "Basic ${base64.encode(utf8.encode("$clientID:$clientSecret"))}",
+      'Authorization': "Basic ${base64.encode(utf8.encode("$clientID:$clientSecret"))}",
     };
 
     final Map<String, String> body = {
@@ -76,10 +74,7 @@ class SpotifyApi {
 
       final response = await get(
         path,
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Accept': 'application/json'
-        },
+        headers: {'Authorization': 'Bearer $accessToken', 'Accept': 'application/json'},
       );
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -103,10 +98,7 @@ class SpotifyApi {
       );
       final response = await get(
         path,
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Accept': 'application/json'
-        },
+        headers: {'Authorization': 'Bearer $accessToken', 'Accept': 'application/json'},
       );
 
       if (response.statusCode == 200) {

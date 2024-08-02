@@ -55,14 +55,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    playlistNames = settingsBox.get('playlistNames')?.toList() as List? ??
-        ['Favorite Songs'];
+    playlistNames =
+        settingsBox.get('playlistNames')?.toList() as List? ?? ['Favorite Songs'];
     if (!playlistNames.contains('Favorite Songs')) {
       playlistNames.insert(0, 'Favorite Songs');
       settingsBox.put('playlistNames', playlistNames);
     }
-    playlistDetails =
-        settingsBox.get('playlistDetails', defaultValue: {}) as Map;
+    playlistDetails = settingsBox.get('playlistDetails', defaultValue: {}) as Map;
 
     return GradientContainer(
       child: loading
@@ -79,10 +78,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         AppLocalizations.of(context)!.playlists,
                       ),
                       centerTitle: true,
-                      backgroundColor:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.transparent
-                              : Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.transparent
+                          : Theme.of(context).colorScheme.secondary,
                       elevation: 0,
                     ),
                     body: SingleChildScrollView(
@@ -92,8 +90,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         children: [
                           const SizedBox(height: 5),
                           ListTile(
-                            title: Text(
-                                AppLocalizations.of(context)!.createPlaylist),
+                            title: Text(AppLocalizations.of(context)!.createPlaylist),
                             leading: Card(
                               elevation: 0,
                               color: Colors.transparent,
@@ -111,8 +108,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             onTap: () async {
                               await showTextInputDialog(
                                 context: context,
-                                title: AppLocalizations.of(context)!
-                                    .createNewPlaylist,
+                                title: AppLocalizations.of(context)!.createNewPlaylist,
                                 initialText: '',
                                 keyboardType: TextInputType.name,
                                 onSubmitted: (String value) async {
@@ -150,8 +146,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .secondary)));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
+                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                   }
                                 },
                               );
@@ -206,8 +201,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                     ),
                                   ),
                                   title: Text(
-                                    customPlaylistResponse!
-                                        .data![index].playlist!.name
+                                    customPlaylistResponse!.data![index].playlist!.name
                                         .toString(),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -261,8 +255,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                             context);
 
                                         customPlaylistResponse =
-                                            await YogitunesAPI()
-                                                .fetchPlaylistData();
+                                            await YogitunesAPI().fetchPlaylistData();
 
                                         Navigator.pop(context);
                                         setState(() {});
@@ -445,8 +438,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                             const Icon(Icons.delete_rounded),
                                             const SizedBox(width: 10.0),
                                             Text(
-                                              AppLocalizations.of(context)!
-                                                  .delete,
+                                              AppLocalizations.of(context)!.delete,
                                             ),
                                           ],
                                         ),
@@ -471,8 +463,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                             Icon(MdiIcons.share),
                                             const SizedBox(width: 10.0),
                                             Text(
-                                              AppLocalizations.of(context)!
-                                                  .share,
+                                              AppLocalizations.of(context)!.share,
                                             ),
                                           ],
                                         ),
@@ -485,14 +476,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.playlist,
                                           playlistName: customPlaylistResponse!
                                               .data![index].playlist!.name
                                               .toString(),
-                                          playlistImage:
-                                              itemData.getQuadImages(),
+                                          playlistImage: itemData.getQuadImages(),
                                           id: customPlaylistResponse!
                                               .data![index].playlist!.id,
                                           isMyPlaylist: true,
@@ -543,8 +532,7 @@ Future<void> fetchPlaylists(
   final List data = await SpotifyApi().getAccessToken(code);
   if (data.isNotEmpty) {
     final String accessToken = data[0].toString();
-    final List spotifyPlaylists =
-        await SpotifyApi().getUserPlaylists(accessToken);
+    final List spotifyPlaylists = await SpotifyApi().getUserPlaylists(accessToken);
     final int? index = await showModalBottomSheet(
       isDismissible: true,
       backgroundColor: Colors.transparent,
@@ -586,16 +574,15 @@ Future<void> fetchPlaylists(
                         Navigator.pop(context);
                         value = value.split('?')[0].split('/').last;
 
-                        final Map data = await SpotifyApi()
-                            .getTracksOfPlaylist(accessToken, value, 0);
+                        final Map data =
+                            await SpotifyApi().getTracksOfPlaylist(accessToken, value, 0);
                         final int _total = data['total'] as int;
 
                         Stream<Map> songsAdder() async* {
                           int _done = 0;
                           final List tracks = [];
                           for (int i = 0; i * 100 <= _total; i++) {
-                            final Map data =
-                                await SpotifyApi().getTracksOfPlaylist(
+                            final Map data = await SpotifyApi().getTracksOfPlaylist(
                               accessToken,
                               value,
                               i * 100,
@@ -603,8 +590,7 @@ Future<void> fetchPlaylists(
                             tracks.addAll(data['tracks'] as List);
                           }
 
-                          String playName =
-                              AppLocalizations.of(context)!.spotifyPublic;
+                          String playName = AppLocalizations.of(context)!.spotifyPublic;
                           while (playlistNames.contains(playName) ||
                               await Hive.boxExists(value)) {
                             // ignore: use_string_buffers
@@ -617,8 +603,8 @@ Future<void> fetchPlaylists(
                             String? trackArtist;
                             String? trackName;
                             try {
-                              trackArtist = track['track']['artists'][0]['name']
-                                  .toString();
+                              trackArtist =
+                                  track['track']['artists'][0]['name'].toString();
                               trackName = track['track']['name'].toString();
                               yield {'done': ++_done, 'name': trackName};
                             } catch (e) {
@@ -651,11 +637,9 @@ Future<void> fetchPlaylists(
                 );
               }
 
-              final String playName = spotifyPlaylists[idx - 1]['name']
-                  .toString()
-                  .replaceAll('/', ' ');
-              final int playTotal =
-                  spotifyPlaylists[idx - 1]['tracks']['total'] as int;
+              final String playName =
+                  spotifyPlaylists[idx - 1]['name'].toString().replaceAll('/', ' ');
+              final int playTotal = spotifyPlaylists[idx - 1]['tracks']['total'] as int;
               return playTotal == 0
                   ? const SizedBox()
                   : ListTile(
@@ -669,8 +653,7 @@ Future<void> fetchPlaylists(
                           borderRadius: BorderRadius.circular(7.0),
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: (spotifyPlaylists[idx - 1]['images'] as List)
-                                .isEmpty
+                        child: (spotifyPlaylists[idx - 1]['images'] as List).isEmpty
                             ? Image.asset('assets/cover.jpg')
                             : CachedNetworkImage(
                                 fit: BoxFit.cover,
@@ -696,8 +679,7 @@ Future<void> fetchPlaylists(
       },
     );
     if (index != null) {
-      String playName =
-          spotifyPlaylists[index]['name'].toString().replaceAll('/', ' ');
+      String playName = spotifyPlaylists[index]['name'].toString().replaceAll('/', ' ');
       final int _total = spotifyPlaylists[index]['tracks']['total'] as int;
 
       Stream<Map> songsAdder() async* {
@@ -732,8 +714,8 @@ Future<void> fetchPlaylists(
             yield {'done': ++_done, 'name': ''};
           }
           try {
-            final List result = await YogitunesAPI()
-                .fetchTopSearchResult('$trackName by $trackArtist');
+            final List result =
+                await YogitunesAPI().fetchTopSearchResult('$trackName by $trackArtist');
             addMapToPlaylist(playName, result[0] as Map);
           } catch (e) {
             // print('Error in $_done: $e');

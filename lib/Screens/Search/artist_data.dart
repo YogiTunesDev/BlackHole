@@ -63,8 +63,8 @@ class _ArtistDataState extends State<ArtistData> {
         mainTitle = artistDataResponse?.data?.name;
       }
     }
-    print('Artist Id ::: ${widget.id}');
-    print('Artist Top Hits ::: ${artistDataResponse!.data!.topHits}');
+    // print('Artist Id ::: ${widget.id}');
+    // print('Artist Top Hits ::: ${artistDataResponse!.data!.topHits}');
 
     setState(() {
       apiLoading = false;
@@ -197,29 +197,24 @@ class _ArtistDataState extends State<ArtistData> {
                           child: Column(
                             children: [
                               if (artistDataResponse!.data!.topHits != null)
-                                if (artistDataResponse!
-                                    .data!.topHits!.isNotEmpty)
+                                if (artistDataResponse!.data!.topHits!.isNotEmpty)
                                   const Header(
                                     title: 'Top Hits',
                                   ),
                               if (artistDataResponse!.data!.topHits != null)
-                                if (artistDataResponse!
-                                    .data!.topHits!.isNotEmpty)
+                                if (artistDataResponse!.data!.topHits!.isNotEmpty)
                                   SizedBox(
                                     height: boxSize / 2 + 10,
                                     child: ListView.builder(
                                       physics: const BouncingScrollPhysics(),
                                       scrollDirection: Axis.horizontal,
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 0, 10, 0),
-                                      itemCount: artistDataResponse!
-                                          .data!.topHits!.length,
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                      itemCount:
+                                          artistDataResponse!.data!.topHits!.length,
                                       itemBuilder: (context, index) {
                                         final TracksOnly item =
-                                            artistDataResponse!
-                                                .data!.topHits![index];
-                                        final String itemImage = item.album !=
-                                                null
+                                            artistDataResponse!.data!.topHits![index];
+                                        final String itemImage = item.album != null
                                             ? ('${item.album!.cover!.imgUrl}/${item.album!.cover!.image}')
                                             : '';
 
@@ -237,27 +232,22 @@ class _ArtistDataState extends State<ArtistData> {
                                             final RadioStationsStreamResponse?
                                                 radioStationsStreamResponse =
                                                 await YogitunesAPI()
-                                                    .fetchSingleSongData(
-                                                        item.id!);
+                                                    .fetchSingleSongData(item.id!);
                                             Navigator.pop(context);
-                                            if (radioStationsStreamResponse !=
-                                                null) {
+                                            if (radioStationsStreamResponse != null) {
                                               if (radioStationsStreamResponse
                                                       .songItemModel !=
                                                   null) {
                                                 if (radioStationsStreamResponse
-                                                    .songItemModel!
-                                                    .isNotEmpty) {
-                                                  List<SongItemModel> lstSong =
-                                                      [];
+                                                    .songItemModel!.isNotEmpty) {
+                                                  List<SongItemModel> lstSong = [];
 
                                                   Navigator.push(
                                                     context,
                                                     PageRouteBuilder(
                                                       opaque: false,
-                                                      pageBuilder:
-                                                          (_, __, ___) =>
-                                                              PlayScreen(
+                                                      pageBuilder: (_, __, ___) =>
+                                                          PlayScreen(
                                                         songsList:
                                                             radioStationsStreamResponse
                                                                 .songItemModel!,
@@ -278,28 +268,23 @@ class _ArtistDataState extends State<ArtistData> {
                                     ),
                                   ),
                               if (artistDataResponse!.data!.albums != null)
-                                if (artistDataResponse!
-                                    .data!.albums!.isNotEmpty)
+                                if (artistDataResponse!.data!.albums!.isNotEmpty)
                                   const Header(
                                     title: 'Albums',
                                   ),
                               if (artistDataResponse!.data!.albums != null)
-                                if (artistDataResponse!
-                                    .data!.albums!.isNotEmpty)
+                                if (artistDataResponse!.data!.albums!.isNotEmpty)
                                   SizedBox(
                                     height: boxSize / 2 + 10,
                                     child: ListView.builder(
                                       physics: const BouncingScrollPhysics(),
                                       scrollDirection: Axis.horizontal,
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 0, 10, 0),
-                                      itemCount: artistDataResponse!
-                                          .data!.albums!.length,
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                      itemCount: artistDataResponse!.data!.albums!.length,
                                       itemBuilder: (context, index) {
-                                        final Album item = artistDataResponse!
-                                            .data!.albums![index];
-                                        final String itemImage = item.cover !=
-                                                null
+                                        final Album item =
+                                            artistDataResponse!.data!.albums![index];
+                                        final String itemImage = item.cover != null
                                             ? ('${item.cover!.imgUrl}/${item.cover!.image}')
                                             : '';
                                         return SongItem(
@@ -312,8 +297,7 @@ class _ArtistDataState extends State<ArtistData> {
                                                 opaque: false,
                                                 pageBuilder: (_, __, ___) =>
                                                     SongsListPage(
-                                                  songListType:
-                                                      SongListType.album,
+                                                  songListType: SongListType.album,
                                                   playlistName: item.name!,
                                                   playlistImage: [itemImage],
                                                   id: item.id,
@@ -326,27 +310,23 @@ class _ArtistDataState extends State<ArtistData> {
                                     ),
                                   ),
                               if (artistDataResponse!.data!.playlists != null)
-                                if (artistDataResponse!
-                                    .data!.playlists!.isNotEmpty)
+                                if (artistDataResponse!.data!.playlists!.isNotEmpty)
                                   const Header(
                                     title: 'Playlists',
                                   ),
                               if (artistDataResponse!.data!.playlists != null)
-                                if (artistDataResponse!
-                                    .data!.playlists!.isNotEmpty)
+                                if (artistDataResponse!.data!.playlists!.isNotEmpty)
                                   SizedBox(
                                     height: boxSize / 2 + 10,
                                     child: ListView.builder(
                                       physics: const BouncingScrollPhysics(),
                                       scrollDirection: Axis.horizontal,
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 0, 10, 0),
-                                      itemCount: artistDataResponse!
-                                          .data!.playlists!.length,
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                      itemCount:
+                                          artistDataResponse!.data!.playlists!.length,
                                       itemBuilder: (context, index) {
                                         final Playlist item =
-                                            artistDataResponse!
-                                                .data!.playlists![index];
+                                            artistDataResponse!.data!.playlists![index];
                                         final String itemImage = item
                                                 .quadImages!.isNotEmpty
                                             ? ('${item.quadImages![0].imageUrl!}/${item.quadImages![0].image!}')
@@ -361,11 +341,9 @@ class _ArtistDataState extends State<ArtistData> {
                                                 opaque: false,
                                                 pageBuilder: (_, __, ___) =>
                                                     SongsListPage(
-                                                  songListType:
-                                                      SongListType.playlist,
+                                                  songListType: SongListType.playlist,
                                                   playlistName: item.name!,
-                                                  playlistImage:
-                                                      item.getQuadImages(),
+                                                  playlistImage: item.getQuadImages(),
                                                   id: item.id,
                                                 ),
                                               ),

@@ -126,9 +126,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
           child: Row(
             children: [
               Icon(
-                widget.isFromLibrary
-                    ? Icons.remove_rounded
-                    : Icons.library_add_rounded,
+                widget.isFromLibrary ? Icons.remove_rounded : Icons.library_add_rounded,
                 color: Theme.of(context).iconTheme.color,
               ),
               const SizedBox(width: 10.0),
@@ -185,8 +183,8 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
               context,
             );
           } else {
-            await YogitunesAPI().trackAddToLibrary(
-                int.parse(widget.data.id.toString()), context);
+            await YogitunesAPI()
+                .trackAddToLibrary(int.parse(widget.data.id.toString()), context);
           }
         }
         if (value == 0) {
@@ -204,13 +202,13 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
 
             Navigator.pop(context);
             if (res['status'] as bool) {
-              print('FUNCTION remove song: ' + widget.data.id.toString());
+              // print('FUNCTION remove song: ' + widget.data.id.toString());
               widget.callback();
             } else {
               ShowSnackBar().showSnackBar(context, res['data'].toString());
             }
           } else {
-            print('FUNCTION add song: ');
+            // print('FUNCTION add song: ');
             print(mediaItem);
 
             AddToPlaylist().addToPlaylist(context, mediaItem);
@@ -229,8 +227,7 @@ class _SongTileTrailingMenuState extends State<SongTileTrailingMenu> {
 
 class YtSongTileTrailingMenu extends StatefulWidget {
   final Video data;
-  const YtSongTileTrailingMenu({Key? key, required this.data})
-      : super(key: key);
+  const YtSongTileTrailingMenu({Key? key, required this.data}) : super(key: key);
 
   @override
   _YtSongTileTrailingMenuState createState() => _YtSongTileTrailingMenuState();

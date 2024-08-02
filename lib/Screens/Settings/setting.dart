@@ -1212,7 +1212,7 @@ class _SettingPageState extends State<SettingPage> {
                                 try {
                                   await launchUrl(url);
                                 } catch (e) {
-                                  print('Error: $e');
+                                  // print('Error: $e');
                                 }
 
                                 // Navigator.pushNamed(context, '/subscribe');
