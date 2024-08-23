@@ -677,6 +677,11 @@ class _AlbumListState extends State<AlbumList> {
                         textAlign: TextAlign.center,
                       ),
                       centerTitle: true,
+                      titlePadding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        bottom: 20,
+                      ),
                       background: ShaderMask(
                         shaderCallback: (rect) {
                           return const LinearGradient(
