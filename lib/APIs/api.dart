@@ -47,11 +47,12 @@ class YogitunesAPI {
   Map<String, String> headers = {};
 
   // String baseUrl = 'https://cold-farm-1lijwhmxbepe.vapor-farm-g1.com/';
-  String baseUrl = 'https://api2.yogi-tunes.com/';
+  // String baseUrl = 'https://api2.yogi-tunes.com/';
   // String baseUrl = 'http://darkmatter.local:8000/';
   // String baseUrl = 'http://192.168.0.100:8000/';
+  // String baseUrl = 'https://api.yogitunes.dev/';
 
-  // String baseUrl = 'https://api-dev.yogitunes.dev/';
+  String baseUrl = 'https://api3.yogi-tunes.com/';
 
   String apiStr = 'api/';
   // Box settingsBox = Hive.box('settings');
