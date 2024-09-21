@@ -1,89 +1,107 @@
-<img width="125px" src="https://github.com/Sangwan5688/BlackHole/blob/main/assets/icon-white-trans.png" align="center" />
+# YogiTunes Mobile App
 
-# BlackHole
+## Development Flow
 
-Awesome Music Player made with Flutter!
+### 1. **Feature Branch Creation (Off Asana Tasks)**
 
-[![made-with-flutter](https://img.shields.io/badge/Made%20with-Flutter-1f425f.svg)](https://flutter.dev/) ![Release](https://img.shields.io/github/v/release/Sangwan5688/BlackHole) ![Downloads](https://img.shields.io/github/downloads/Sangwan5688/BlackHole/total)
-[![Build](https://github.com/Sangwan5688/BlackHole/actions/workflows/flutter.yml/badge.svg)](https://github.com/Sangwan5688/BlackHole/actions/workflows/flutter.yml)
+When you start work on a new feature or bugfix from an Asana task, follow these steps:
 
-### Dont forget to :star: the repo
+1. **Start by creating a feature branch** from the `development` branch. This branch name should reference the Asana task for clarity.
 
-[![GitHub stars](https://img.shields.io/github/stars/Sangwan5688/BlackHole.svg?style=social&label=Star)](https://github.com//Sangwan5688/BlackHole) ![GitHub forks](https://img.shields.io/github/forks/Sangwan5688/BlackHole.svg?style=social&label=Forks) ![GitHub followers](https://img.shields.io/github/followers/Sangwan5688.svg?style=social&label=Follow)
+    Example:
 
-## Download
+    ```bash
+    git checkout development
+    git pull origin development
+    git checkout -b feature/asana-task-123
+    ```
 
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
-     alt="Get it on IzzyDroid"
-     height="100">](https://android.izzysoft.de/repo/apk/com.app.yogitunes)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-     alt="Get it on F-Droid"
-     height="100">](https://f-droid.org/packages/com.app.yogitunes/)
+    This creates a new branch named `feature/asana-task-123` based on your Asana task (replace `123` with the actual Asana task ID or description).
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
-     alt="Download from GitHub"
-     height="60">](https://github.com/Sangwan5688/BlackHole/releases)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white"
-     alt="Join Telegram Channel"
-     height="60">](https://t.me/blackhole_official)
+2. **Work on your feature** and commit changes with descriptive commit messages. These commit messages will later be used in your release notes when you push the build to TestFlight.
 
-## Translations
+    Example:
 
-- [Spanish :es:](/README.ES.md)
-- [Russian :ru:](/README.RU.md)
-- [French :fr:](/README.FR.md)
+    ```bash
+    git add .
+    git commit -m "Implement user authentication (Asana Task #123)"
+    ```
 
-<a href="https://hosted.weblate.org/engage/blackhole/">
-<img src="https://hosted.weblate.org/widgets/blackhole/-/localization/svg-badge.svg" alt="Translation status" />
-</a>
+3. **Push your feature branch to the remote repository** to ensure it's backed up and can be reviewed later.
 
-[Translate App on Weblate](https://hosted.weblate.org/projects/blackhole/localization/)
+    ```bash
+    git push origin feature/asana-task-123
+    ```
 
-## Features
+### 2. **Feature Branch Merging Back into `development`**
 
-* Best Streaming Quality (320kbps aac)
-* Song, Album, Artist and Playlist Search
-* Language Specific Promoted Playlists
-* Trending Songs
-* Artist and Genre Radios
-* Support 15+ music languages
-* Local and Global Top Spotify songs
-* Add Songs to Favorite
-* Playlists support
-* Import Playlists from Spotify & YouTube
-* Import/Export Playlists as JSON File
-* Share Playlists
-* Sleep timer
-* Lyrics Support
-* Queue Management
-* Listening history record
-* Dark mode / accent color
-* Custom Gradients and other Theme options
-* Supports Portrait as well as Landscape mode
-* Download for offline play (320kbps with ID3 tags)
-* Play Online as well as Offline Songs
-* Tag Editing Support
-* Trending Search Results
-* YouTube Search Support
-* Promoted Youtube Playlists
-* Play videos as audio
-* Auto Song Recommendations
-* Inbuilt Equalizer
-* Backup & Restore
-* Auto Update Check
-* Cache support
-* No Subscription
-* No Ads
+Once you've completed the feature and it's ready for integration:
 
-and much more...
-Check it yourself :)
+1. **Create a pull request** (PR) from `feature/asana-task-123` into the `development` branch for code review.
 
-## Screenshots
-<img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true" width="32%"> <img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png?raw=true" width="32%"> <img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png?raw=true" width="32%"> <img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png?raw=true" width="32%"> <img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.png?raw=true" width="32%"> <img src="https://github.com/Sangwan5688/BlackHole/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/6.png?raw=true" width="32%">
+2. **After approval**, merge the feature branch into `development`. You can either merge manually after review or through your CI tool if it's configured to auto-merge.
+
+    Example using the command line:
+
+    ```bash
+    git checkout development
+    git pull origin development
+    git merge feature/asana-task-123
+    ```
+
+3. **Delete the feature branch** after merging to keep your repository clean.
+    ```bash
+    git branch -d feature/asana-task-123
+    git push origin --delete feature/asana-task-123
+    ```
+
+### 3. **Tagging for Release**
+
+Once your feature branch is merged into `development`, and you're ready to prepare the next release:
+
+1. **Tag the `development` branch** with the version and build number. This tag will be used by Fastlane for generating the release.
+
+    Example:
+
+    ```bash
+    git tag -a v3.0.12-9 -m "Release 3.0.12 (Build 9)"
+    git push origin v3.0.12-9
+    ```
+
+    - `v3.0.12-9` is the tag, where `3.0.12` is the version number and `9` is the build number.
+
+### 4. **Run Fastlane to Push to TestFlight**
+
+Once the changes are merged, tagged, and ready to release, you can run Fastlane to push the build to TestFlight. Fastlane will automatically pick up the commit messages from the development branch and send them to TestFlight as release notes.
+
+Example:
+
+```bash
+fastlane beta
+```
+
+### 5. **Announcing the Release (via Slack)**
+
+As part of the Fastlane script, a message will automatically be posted in your Slack channel with the version and build number, along with the release notes, which are based on the Git commit messages.
+
+Your Slack message would look like:
+
+```
+New Beta version 3.0.12 (Build 9) is live on TestFlight 🚀
+Release Notes:
+- Implement user authentication (Asana Task #123)
+- Fix login screen layout (Asana Task #124)
+```
+
+### GitFlow Overview in This Workflow:
+
+-   **Development Branch (`development`)**: This is the main working branch for upcoming releases.
+-   **Feature Branches (`feature/asana-task-123`)**: Created for each Asana task, they are merged back into `development` after completion.
+-   **Release Tags (`v3.0.12-9`)**: Each release is tagged from the `development` branch once the features are complete and ready for release.
+-   **Master/Production Branch (`main` or `master`)**: After the beta version is thoroughly tested, this branch is updated for the final release.
 
 ## License
+
 ```
 Copyright © 2021 Ankit Sangwan
 
@@ -95,6 +113,7 @@ BlackHole is distributed in the hope that it will be useful, but WITHOUT ANY WAR
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU General Public License for more details.
 ```
+
 [View License](https://github.com/Sangwan5688/BlackHole/blob/main/LICENSE)
 
 ## Building from Source
@@ -112,23 +131,3 @@ git clone https://github.com/Sangwan5688/BlackHole.git
 flutter pub get
 flutter run
 ```
-
-## Contribute
-
-Contributions are welcome. Please read our [contributing guidelines](https://github.com/Sangwan5688/BlackHole/blob/main/CONTRIBUTING.md) before contributing.
-
-## Facing any Issue?
-
-Have a look at some [common Issues](https://github.com/Sangwan5688/BlackHole/wiki/Common-Issues) that you might face. If your problem is not there, feel free to open an Issue :)
-
-## Want to test Beta Versions? Need help??
-
-You can join our [Telegram Channel](https://t.me/blackhole_official) or [Telegram Group](https://t.me/joinchat/fHDC1AWnOhw0ZmI9), if you have any query, or need help with something as well as to get beta updates of the project.
-
-## Liked my work?
-
-<a href="https://www.buymeacoffee.com/ankitsangwan" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-## What's New
-
-To read full changelog visit the [wiki page](https://github.com/Sangwan5688/BlackHole/wiki/Changelog)
