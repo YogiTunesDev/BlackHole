@@ -105,7 +105,7 @@ class _AlbumListState extends State<AlbumList> {
           if (playlistRes.data != null) {
             if (playlistRes.data!.data!.isNotEmpty) {
               // seeAllTrackLibrary.addAll(playlistRes.data!.data!);
-              for (int i = 0; i <= playlistRes.data!.data!.length; i++) {
+              for (int i = 0; i < playlistRes.data!.data!.length; i++) {
                 tempList.add(playlistRes.data!.data![i].songItemModel!);
                 selectedPlaylist.insert(i, playlistRes.data!.data![i].id.toString());
               }

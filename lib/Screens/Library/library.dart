@@ -38,8 +38,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               );
             },

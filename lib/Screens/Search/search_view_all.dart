@@ -71,17 +71,17 @@ class _SearchViewAllState extends State<SearchViewAll> {
       }
     } else {
       if (searchAllType == SearchAllType.tracks) {
-        searchAllTracksResponse = await YogitunesAPI()
-            .searchAllTrack(widget.keyword!, widget.isMyLibrary!);
+        searchAllTracksResponse =
+            await YogitunesAPI().searchAllTrack(widget.keyword!, widget.isMyLibrary!);
       } else if (searchAllType == SearchAllType.albums) {
-        searchAllAlbumResponse = await YogitunesAPI()
-            .searchAllAlbum(widget.keyword!, widget.isMyLibrary!);
+        searchAllAlbumResponse =
+            await YogitunesAPI().searchAllAlbum(widget.keyword!, widget.isMyLibrary!);
       } else if (searchAllType == SearchAllType.playlists) {
-        searchAllPlaylistsResponse = await YogitunesAPI()
-            .searchAllPlaylist(widget.keyword!, widget.isMyLibrary!);
+        searchAllPlaylistsResponse =
+            await YogitunesAPI().searchAllPlaylist(widget.keyword!, widget.isMyLibrary!);
       } else if (searchAllType == SearchAllType.artists) {
-        searchAllArtistsResponse = await YogitunesAPI()
-            .searchAllArtists(widget.keyword!, widget.isMyLibrary!);
+        searchAllArtistsResponse =
+            await YogitunesAPI().searchAllArtists(widget.keyword!, widget.isMyLibrary!);
       }
       // else if (searchAllType == SearchAllType.recent) {
       //   myRecentlyPlayedSongResponse = await YogitunesAPI().viewAllRecentTrack();
@@ -118,6 +118,11 @@ class _SearchViewAllState extends State<SearchViewAll> {
                         textAlign: TextAlign.center,
                       ),
                       centerTitle: true,
+                      titlePadding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        bottom: 20,
+                      ),
                       background: ShaderMask(
                         shaderCallback: (rect) {
                           return const LinearGradient(
@@ -200,8 +205,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                               ),
-                              itemCount:
-                                  seeAllLibraryAlbumsResponse!.data!.length,
+                              itemCount: seeAllLibraryAlbumsResponse!.data!.length,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
@@ -223,8 +227,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           isFromLibrary: widget.isFromLibrary,
                                           songListType: SongListType.album,
                                           playlistName: item.album!.name!,
@@ -380,13 +383,11 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                             .fetchingStream);
 
                                     final RadioStationsStreamResponse?
-                                        radioStationsStreamResponse =
-                                        await YogitunesAPI()
+                                        radioStationsStreamResponse = await YogitunesAPI()
                                             .fetchSingleSongData(item.id!);
                                     Navigator.pop(context);
                                     if (radioStationsStreamResponse != null) {
-                                      if (radioStationsStreamResponse
-                                              .songItemModel !=
+                                      if (radioStationsStreamResponse.songItemModel !=
                                           null) {
                                         if (radioStationsStreamResponse
                                             .songItemModel!.isNotEmpty) {
@@ -395,11 +396,9 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                             context,
                                             PageRouteBuilder(
                                               opaque: false,
-                                              pageBuilder: (_, __, ___) =>
-                                                  PlayScreen(
-                                                songsList:
-                                                    radioStationsStreamResponse
-                                                        .songItemModel!,
+                                              pageBuilder: (_, __, ___) => PlayScreen(
+                                                songsList: radioStationsStreamResponse
+                                                    .songItemModel!,
                                                 index: 0,
                                                 offline: false,
                                                 fromDownloads: false,
@@ -451,8 +450,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.album,
                                           playlistName: item.name!,
                                           playlistImage: [itemImage],
@@ -483,8 +481,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                               ),
-                              itemCount:
-                                  searchAllPlaylistsResponse!.data!.length,
+                              itemCount: searchAllPlaylistsResponse!.data!.length,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
@@ -501,8 +498,7 @@ class _SearchViewAllState extends State<SearchViewAll> {
                                       context,
                                       PageRouteBuilder(
                                         opaque: false,
-                                        pageBuilder: (_, __, ___) =>
-                                            SongsListPage(
+                                        pageBuilder: (_, __, ___) => SongsListPage(
                                           songListType: SongListType.playlist,
                                           playlistName: item.name!,
                                           playlistImage: item.getQuadImages(),
